@@ -61,7 +61,7 @@ export function BestSellersCarousel() {
             <p className="mt-2 text-sm text-slate-500">Los favoritos de nuestros clientes del sector electrico</p>
           </div>
         </motion.div>
-        <motion.div variants={fadeUp} className="overflow-hidden">
+        <motion.div variants={fadeUp} className="overflow-hidden py-2">
           <motion.div
             className="flex"
             animate={{ x: `-${currentIndex * (100 / itemsPerView)}%` }}
@@ -203,7 +203,7 @@ export function MarqueeBrands() {
         <motion.div variants={blurIn} className="marquee-container mb-6">
           <div className="marquee-content">
             {[...brands, ...brands].map((brand, index) => (
-              <div key={`brand-1-${index}`} className="group mx-3 flex h-[80px] min-w-[220px] items-center gap-4 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/20 hover:bg-white/[0.06] hover:shadow-[0_8px_30px_-10px_rgba(245,158,11,0.15)]">
+              <div key={`brand-1-${index}`} className="group mx-3 flex h-[80px] min-w-[220px] items-center gap-4 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-6 backdrop-blur-md transition-all duration-300 hover:border-amber-400/20 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(245,158,11,0.25)]">
                 <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08] transition-colors group-hover:bg-white/[0.1]">
                   <img src={brand.logo} alt={brand.name} className="max-h-[22px] max-w-[22px] object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100" crossOrigin="anonymous" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
                 </div>
@@ -216,7 +216,7 @@ export function MarqueeBrands() {
         <motion.div variants={blurIn} className="marquee-container-reverse">
           <div className="marquee-content-reverse">
             {[...brands].reverse().concat([...brands].reverse()).map((brand, index) => (
-              <div key={`brand-2-${index}`} className="group mx-3 flex h-[80px] min-w-[220px] items-center gap-4 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:bg-white/[0.06] hover:shadow-[0_8px_30px_-10px_rgba(59,130,246,0.2)]">
+              <div key={`brand-2-${index}`} className="group mx-3 flex h-[80px] min-w-[220px] items-center gap-4 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-6 backdrop-blur-md transition-all duration-300 hover:border-blue-500/30 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(59,130,246,0.20)]">
                 <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08] transition-colors group-hover:bg-white/[0.1]">
                   <img src={brand.logo} alt={brand.name} className="max-h-[22px] max-w-[22px] object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100" crossOrigin="anonymous" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
                 </div>
