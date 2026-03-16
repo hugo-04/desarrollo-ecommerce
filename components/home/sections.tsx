@@ -479,14 +479,12 @@ export function SectoresSection() {
       <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(0,51,160,0.03) 80px, rgba(0,51,160,0.03) 81px), repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(0,51,160,0.03) 80px, rgba(0,51,160,0.03) 81px)' }} />
       <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
       <div className="relative mx-auto max-w-7xl px-4">
-        <motion.div variants={fadeUp} className="mb-16 flex flex-col items-center text-center lg:flex-row lg:items-end lg:justify-between lg:text-left">
-          <div>
-            <div className="mb-3 flex items-center justify-center gap-3 lg:justify-start">
-              <div className="h-px w-8 bg-red-500" /><span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Sectores</span><div className="h-px w-8 bg-red-500" />
-            </div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">Sectores que Atendemos</h2>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-500">Experiencia comprobada suministrando materiales para los proyectos mas exigentes del sector electrico</p>
+        <motion.div variants={fadeUp} className="mb-16 text-center">
+          <div className="mb-3 flex items-center justify-center gap-3">
+            <div className="h-px w-8 bg-red-500" /><span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Sectores</span><div className="h-px w-8 bg-red-500" />
           </div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">Sectores que Atendemos</h2>
+          <p className="mt-3 mx-auto max-w-xl text-sm leading-relaxed text-slate-500">Experiencia comprobada suministrando materiales para los proyectos mas exigentes del sector electrico</p>
         </motion.div>
         <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {sectores.map((sector, index) => (
