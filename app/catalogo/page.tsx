@@ -7,7 +7,7 @@ import { ProductCard } from "@/components/product/ProductCard"
 import { products, categories } from "@/lib/data"
 import {
   IconChevronRight, IconFilter, IconX, IconSearch, IconGrid, IconList,
-  IconStar, IconEye, IconFire, IconCheck,
+  IconStar, IconEye, IconFire, IconCheck, IconWhatsApp,
 } from "@/components/icons"
 import {
   Pagination,
@@ -180,6 +180,13 @@ function CatalogoContent() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [onlyBestSellers, setOnlyBestSellers] = useState(bestSellersParam === "true")
   const [searchQuery] = useState(queryParam || "")
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 300)
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
   const itemsPerPage = 6
 
   useEffect(() => {
@@ -341,6 +348,33 @@ function CatalogoContent() {
 
             {/* Main Content */}
             <main className="flex-1 min-w-0">
+              {/* Category contextual banner */}
+              {selectedCategories.length === 1 && (() => {
+                const cat = categories.find((c) => c.name === selectedCategories[0])
+                if (!cat) return null
+                return (
+                  <div className={`mb-5 overflow-hidden rounded-2xl bg-gradient-to-r ${cat.color} p-5 text-white`}>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm">
+                          <cat.icon className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/60">Categoría seleccionada</p>
+                          <h3 className="text-lg font-extrabold text-white">{cat.name}</h3>
+                          <p className="mt-0.5 text-[11px] text-white/70">
+                            {cat.subcategories.slice(0, 3).join(" · ")}{cat.subcategories.length > 3 ? " · ..." : ""}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <p className="text-2xl font-extrabold text-white">{filteredProducts.length}</p>
+                        <p className="text-[10px] text-white/60">productos</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })()}
               {/* Active filter chips */}
               {activeFiltersCount > 0 && (
                 <div className="mb-4 flex flex-wrap gap-1.5">
@@ -491,6 +525,20 @@ function CatalogoContent() {
           </div>
         </div>
       </div>
+
+      {/* Floating "Cotizar selección" button (appears after 300px scroll) */}
+      {scrolled && (
+        <a
+          href="https://wa.me/51123456789?text=Hola%2C%20quisiera%20cotizar%20varios%20productos%20de%20su%20cat%C3%A1logo%20AT%2FMT"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-20 right-5 z-40 flex items-center gap-2 rounded-full bg-green-600 px-4 py-3 text-xs font-bold text-white shadow-2xl shadow-green-600/40 transition-all hover:bg-green-700 hover:scale-105 sm:bottom-8 sm:right-8"
+        >
+          <IconWhatsApp className="h-4 w-4 shrink-0" />
+          <span className="hidden sm:inline">Cotizar productos seleccionados</span>
+          <span className="sm:hidden">Cotizar</span>
+        </a>
+      )}
     </>
   )
 }

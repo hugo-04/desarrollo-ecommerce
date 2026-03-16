@@ -8,7 +8,7 @@ import { products } from "@/lib/data"
 import { useFadeInOnScroll } from "@/hooks/useAnimations"
 import {
   IconChevronRight, IconChevronLeft, IconStar, IconWhatsApp, IconDownload,
-  IconShield, IconPhone,
+  IconShield, IconPhone, IconCheck, IconCertificate, IconTools,
 } from "@/components/icons"
 
 export default function ProductoPage() {
@@ -102,7 +102,14 @@ export default function ProductoPage() {
                   <span className="text-xs font-bold text-slate-700">{product.rating}</span>
                 </div>
               </div>
-              <h1 className="mb-4 text-xl font-extrabold text-[#121A47] lg:text-2xl">{product.name}</h1>
+              <h1 className="mb-3 text-xl font-extrabold text-[#121A47] lg:text-2xl">{product.name}</h1>
+              {/* En Stock badge */}
+              <div className="mb-4 flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  En Stock — Despacho inmediato
+                </span>
+              </div>
               <p className="mb-5 text-sm leading-relaxed text-slate-500">{product.fullDescription}</p>
 
               {/* Specs Tags */}
@@ -172,12 +179,44 @@ export default function ProductoPage() {
             )}
           </div>
 
+          {/* Garantia y Soporte */}
+          <div className="mt-10 grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:grid-cols-3">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100">
+                <IconShield className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-800">Garantía 12 meses</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-slate-500">Por defecto de fabricación, respaldada por el fabricante original.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100">
+                <IconCertificate className="h-5 w-5 text-amber-600" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-800">Ficha Técnica</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-slate-500">Descarga disponible con especificaciones completas y certificaciones.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100">
+                <IconTools className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-800">Soporte Técnico</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-slate-500">Ingenieros AT/MT disponibles para asesoria de seleccion e instalacion.</p>
+              </div>
+            </div>
+          </div>
+
           {/* Related Products */}
           {relatedProducts.length > 0 && (
             <div className="mt-16">
-              <h2 className="mb-6 text-xl font-extrabold text-[#121A47]">Productos Relacionados</h2>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {relatedProducts.map((p) => (
+              <h2 className="mb-2 text-xl font-extrabold text-[#121A47]">Clientes que vieron este producto también compraron:</h2>
+              <p className="mb-6 text-sm text-slate-500">Productos complementarios del mismo sector</p>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 6).map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>
@@ -185,6 +224,19 @@ export default function ProductoPage() {
           )}
         </div>
       </div>
+
+      {/* Sticky WhatsApp bar — mobile only */}
+      <div className="fixed bottom-0 inset-x-0 z-50 sm:hidden">
+        <button
+          onClick={handleWhatsAppQuote}
+          className="flex w-full items-center justify-center gap-3 bg-green-600 py-4 text-sm font-bold text-white shadow-2xl shadow-green-600/40 active:bg-green-700"
+        >
+          <IconWhatsApp className="h-5 w-5" />
+          Cotizar este producto vía WhatsApp
+        </button>
+      </div>
+      {/* Bottom padding for mobile sticky bar */}
+      <div className="h-14 sm:hidden" />
     </>
   )
 }

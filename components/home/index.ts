@@ -14,4 +14,6 @@ export {
   ProcesoSection,
   CertificacionesStrip,
   CtaBand,
+  TrustBar,
+  FabricacionSection,
 } from "./sections"

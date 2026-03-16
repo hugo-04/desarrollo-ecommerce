@@ -4,6 +4,7 @@ import {
   HeroSection, BestSellersCarousel, CategoriesGrid, MarqueeBrands, BenefitsSection,
   TestimonialsSection, FeaturedOffers, SectoresSection, FullWidthStats,
   CompanyShowcase, ServiciosSection, ProcesoSection, CertificacionesStrip, CtaBand,
+  TrustBar, FabricacionSection,
 } from "@/components/home"
 
 export function HomeView() {
@@ -11,6 +12,9 @@ export function HomeView() {
     <>
       {/* DARK — Hero principal */}
       <HeroSection />
+
+      {/* LIGHT — Prueba social compacta (trust bar) */}
+      <TrustBar />
 
       {/* LIGHT — Productos: lo que vendemos */}
       <CategoriesGrid />
@@ -36,6 +40,9 @@ export function HomeView() {
 
       {/* LIGHT — Empresa */}
       <CompanyShowcase />
+
+      {/* LIGHT — Fabricación propia (diferenciador clave) */}
+      <FabricacionSection />
 
       {/* DARK — Por qué elegirnos (2-col narrativo) */}
       <BenefitsSection />

@@ -16,7 +16,7 @@ import {
   IconChevronLeft, IconChevronRight, IconArrowRight, IconShield, IconTruck,
   IconHeadphones, IconQuote, IconFire, IconClock, IconBox, IconBolt, IconTools,
   IconPhone, IconCertificate, IconLightning, IconZap, IconBuilding, IconFileText,
-  IconDownload, IconWhatsApp,
+  IconDownload, IconWhatsApp, IconCheck,
 } from "@/components/icons"
 import { StarsBackground } from '@/components/animate-ui/components/backgrounds/stars'
 
@@ -845,6 +845,142 @@ export function CertificacionesStrip() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </motion.section>
+  )
+}
+
+// ========== TRUST BAR (compact client logos band) ==========
+export function TrustBar() {
+  const trustLogos = [
+    "Luz del Sur", "Enel Distribución", "Electro Sur Este", "Hidrandina",
+    "Electronoroeste", "Minera Antamina", "Anglo American",
+  ]
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={fadeUp}
+      className="relative border-b border-slate-200/80 bg-gradient-to-r from-slate-50 via-white to-slate-50 py-5"
+    >
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+          <p className="shrink-0 text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400 sm:text-[10px]">
+            Confían en nosotros
+          </p>
+          <div className="h-px w-full bg-slate-200 sm:hidden" />
+          <div className="h-8 w-px bg-slate-200 hidden sm:block shrink-0" />
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-start">
+            {trustLogos.map((name, i) => (
+              <span key={i} className="text-xs font-semibold text-slate-400 transition-colors hover:text-slate-600">
+                {name}
+              </span>
+            ))}
+          </div>
+          <div className="shrink-0 ml-auto hidden sm:flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-100 px-3 py-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            <span className="text-[10px] font-bold text-emerald-600">120+ empresas</span>
+          </div>
+        </div>
+      </div>
+    </motion.section>
+  )
+}
+
+// ========== FABRICACION SECTION ==========
+export function FabricacionSection() {
+  const lineas = [
+    "Conectores y herrajes para AT/MT",
+    "Aisladores de porcelana y polímero",
+    "Accesorios para cable de energía",
+    "Protecciones y seccionadores",
+    "Ferretería para líneas aéreas",
+  ]
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={staggerContainer}
+      className="relative overflow-hidden py-24"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/80 to-white" />
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,51,160,0.07) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+
+      <div className="relative mx-auto max-w-7xl px-4">
+        <div className="grid items-center gap-14 lg:grid-cols-12">
+          {/* Left col — 7/12 */}
+          <motion.div variants={fadeLeft} className="lg:col-span-7">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="h-px w-8 bg-red-500" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Fabricación Propia</span>
+            </div>
+            <h2 className="mb-5 text-3xl font-extrabold leading-tight tracking-tight text-[#121A47] lg:text-4xl">
+              No solo distribuimos.<br />
+              <span className="bg-gradient-to-r from-primary to-red-600 bg-clip-text text-transparent">
+                También fabricamos.
+              </span>
+            </h2>
+            <p className="mb-6 max-w-lg text-sm leading-[1.85] text-slate-600">
+              Somos fabricantes de nuestra propia línea de accesorios eléctricos bajo estrictos controles de calidad IEC. Esto nos permite ofrecer trazabilidad completa, personalización técnica y garantías directas — lo que ningún revendedor puede dar.
+            </p>
+            <ul className="mb-8 space-y-2.5">
+              {lineas.map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-sm text-slate-700">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                    <IconCheck className="h-3 w-3 text-primary" />
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap items-center gap-4">
+              <Link href="/catalogo" className="group inline-flex items-center gap-2.5 rounded-xl bg-[#121A47] px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#121A47]/20 transition-all hover:bg-primary hover:shadow-primary/25">
+                Ver productos propios
+                <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 bg-amber-50 px-4 py-2">
+                <IconCertificate className="h-4 w-4 text-amber-600" />
+                <span className="text-xs font-bold text-amber-700">Marca Propia ET</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right col — 5/12 */}
+          <motion.div variants={fadeRight} className="lg:col-span-5">
+            <div className="relative">
+              <div className="overflow-hidden rounded-3xl shadow-2xl shadow-slate-200">
+                <motion.img
+                  whileHover={{ scale: 1.04 }}
+                  transition={{ duration: 0.6 }}
+                  src="https://images.unsplash.com/photo-1581093196867-ca9b9e02e42e?w=800&q=80"
+                  alt="Planta de fabricacion Electro Thina"
+                  className="h-[420px] w-full object-cover"
+                  crossOrigin="anonymous"
+                />
+              </div>
+              {/* Badge flotante */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={viewportOnce}
+                transition={{ delay: 0.4, duration: 0.5, type: "spring" }}
+                className="absolute -bottom-5 -right-5 rounded-2xl border border-emerald-200 bg-white p-4 shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100">
+                    <IconShield className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-extrabold text-slate-800">Fabricante</p>
+                    <p className="text-[10px] font-semibold text-emerald-600">Certificado IEC</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </motion.section>
