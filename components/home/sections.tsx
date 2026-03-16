@@ -16,7 +16,7 @@ import {
   IconChevronLeft, IconChevronRight, IconArrowRight, IconShield, IconTruck,
   IconHeadphones, IconQuote, IconFire, IconClock, IconBox, IconBolt, IconTools,
   IconPhone, IconCertificate, IconLightning, IconZap, IconBuilding, IconFileText,
-  IconDownload,
+  IconDownload, IconWhatsApp,
 } from "@/components/icons"
 import { StarsBackground } from '@/components/animate-ui/components/backgrounds/stars'
 
