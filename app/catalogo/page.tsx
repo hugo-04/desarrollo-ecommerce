@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { ProductCard } from "@/components/product/ProductCard"
@@ -166,7 +166,7 @@ function FilterContent({
 }
 
 // ========== CATALOG PAGE ==========
-export default function CatalogoPage() {
+function CatalogoContent() {
   const searchParams = useSearchParams()
   const categoriaParam = searchParams.get("categoria")
   const queryParam = searchParams.get("q")
@@ -492,5 +492,13 @@ export default function CatalogoPage() {
         </div>
       </div>
     </>
+  )
+}
+
+export default function CatalogoPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
+      <CatalogoContent />
+    </Suspense>
   )
 }
