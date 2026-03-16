@@ -66,7 +66,7 @@ function FilterSection({ title, children, badge, onClear }: {
           ) : null}
         </div>
       </div>
-      <div className="max-h-[200px] overflow-y-auto rounded-lg border border-slate-100 bg-slate-50/50 py-1 custom-scrollbar">
+      <div className="max-h-[200px] overflow-y-auto overscroll-contain rounded-lg border border-slate-100 bg-slate-50/50 py-1 custom-scrollbar">
         {children}
       </div>
     </div>
