@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { motion, useScroll, useMotionValueEvent } from "framer-motion"
 import { TopBar } from "./TopBar"
 import { Header } from "./Header"
@@ -17,15 +17,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [searchQuery, setSearchQuery] = useState("")
   const [hidden, setHidden] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  // Ref (no re-render) — tells us if we're near the top when transitioning to visible
+  const nearTop = useRef(true)
   const { scrollY } = useScroll()
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0
-    
-    // Check if we passed the actual top bar
+    nearTop.current = latest < 80
     setIsScrolled(latest > 50)
 
-    // Hide if scrolling down and passed 200px
     if (latest > previous && latest > 200) {
       setHidden(true)
     } else {
@@ -33,26 +33,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     }
   })
 
+  // Transition depends on direction and position:
+  // - hiding   → instant (0.12s sharp easeIn)
+  // - showing near top → no animation (instant snap, no bounce)
+  // - showing mid-page → quick easeOut (0.2s)
+  const navTransition = hidden
+    ? { duration: 0.12, ease: [0.55, 0, 1, 0.45] }
+    : nearTop.current
+      ? { duration: 0 }
+      : { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: globalAnimationsCSS }} />
       <div className="min-h-screen bg-gradient-to-b from-[#F0F0F5] via-[#EBEBF2] to-[#E7E7EF] font-sans antialiased">
         <TopBar />
-        
+
         {/* Sticky Wrapper for Header + Navigation */}
         <motion.div
           className={`sticky top-0 z-50 flex flex-col w-full transition-shadow duration-300 ${isScrolled ? "shadow-2xl shadow-black/20" : ""}`}
-          variants={{
-            visible: {
-              y: 0,
-              transition: { duration: 0.28, ease: [0.25, 0.46, 0.45, 0.94] }
-            },
-            hidden: {
-              y: "-100%",
-              transition: { duration: 0.2, ease: [0.55, 0, 1, 0.45] }
-            }
-          }}
-          animate={hidden ? "hidden" : "visible"}
+          animate={{ y: hidden ? "-100%" : 0 }}
+          transition={navTransition}
         >
           <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <Navigation />
