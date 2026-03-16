@@ -58,7 +58,7 @@ function MegaMenu({
             style={{ border: "1px solid rgba(255,255,255,0.08)" }}
           >
             {/* Left Column — tono oscuro navy */}
-            <div className="w-64 shrink-0 bg-[#0B1035] p-3 max-h-[62vh] overflow-y-auto custom-scrollbar">
+            <div className="w-64 shrink-0 bg-[#0B1035] p-3 max-h-[62vh] overflow-y-auto overscroll-contain custom-scrollbar">
               <h3 className="mb-3 px-3 text-[9px] font-bold uppercase tracking-[0.25em] text-slate-500">
                 Nuestro Catálogo
               </h3>
@@ -105,7 +105,7 @@ function MegaMenu({
             <div className="w-px bg-white/[0.06] shrink-0" />
 
             {/* Right Column — blanco limpio */}
-            <div className="flex-1 bg-white max-h-[62vh] overflow-y-auto custom-scrollbar">
+            <div className="flex-1 bg-white max-h-[62vh] overflow-y-auto overscroll-contain custom-scrollbar">
               {activeCategory && (() => {
                 const activeCat = categories.find((c) => c.id === activeCategory)
                 if (!activeCat) return null
