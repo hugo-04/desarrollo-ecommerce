@@ -51,15 +51,14 @@ export function BestSellersCarousel() {
       <div className="absolute inset-0 bg-gradient-to-b from-[#F0F0F5] via-[#F3F3F8] to-[#F0F0F5]" />
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/[0.015] to-transparent" />
       <div className="relative mx-auto max-w-7xl px-4">
-        <motion.div variants={fadeUp} className="mb-14 flex items-end justify-between">
-          <div>
-            <div className="mb-3 flex items-center gap-3">
-              <div className="h-px w-8 bg-red-500" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Destacados</span>
-            </div>
-            <h2 className="text-2xl font-extrabold tracking-tight text-[#121A47] lg:text-3xl">Productos Mas Vendidos</h2>
-            <p className="mt-2 text-sm text-slate-500">Los favoritos de nuestros clientes del sector electrico</p>
+        <motion.div variants={fadeUp} className="mb-14 text-center">
+          <div className="mb-4 flex items-center justify-center gap-3">
+            <div className="h-px w-8 bg-red-500" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Destacados</span>
+            <div className="h-px w-8 bg-red-500" />
           </div>
+          <h2 className="text-2xl font-extrabold tracking-tight text-[#121A47] lg:text-3xl">Productos Mas Vendidos</h2>
+          <p className="mt-2 text-sm text-slate-500">Los favoritos de nuestros clientes del sector electrico</p>
         </motion.div>
         <motion.div variants={fadeUp} className="overflow-hidden py-2">
           <motion.div
