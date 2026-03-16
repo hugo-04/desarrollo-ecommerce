@@ -165,6 +165,84 @@ export const globalAnimationsCSS = `
     background: linear-gradient(90deg, transparent, rgba(0,51,160,0.08), transparent);
   }
 
+  /* ===== ELECTRIC PULSE — radial amber glow ===== */
+  @keyframes electric-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    50%       { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.18), 0 0 24px 2px rgba(245, 158, 11, 0.12); }
+  }
+  .electric-pulse { animation: electric-pulse 2.8s ease-in-out infinite; }
+
+  /* ===== ARC FLASH — diagonal sweep de arco eléctrico ===== */
+  @keyframes arc-flash {
+    0%   { transform: translateX(-110%) skewX(-20deg); opacity: 0; }
+    10%  { opacity: 0.55; }
+    90%  { opacity: 0.55; }
+    100% { transform: translateX(210%) skewX(-20deg); opacity: 0; }
+  }
+  .arc-flash-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .arc-flash-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -50%;
+    width: 50%;
+    background: linear-gradient(
+      105deg,
+      transparent 20%,
+      rgba(245, 158, 11, 0.06) 45%,
+      rgba(251, 191, 36, 0.10) 50%,
+      rgba(245, 158, 11, 0.06) 55%,
+      transparent 80%
+    );
+    animation: arc-flash 9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation-delay: 3s;
+    pointer-events: none;
+  }
+
+  /* ===== VOLTAGE SCAN — línea horizontal que barre secciones dark ===== */
+  @keyframes voltage-scan {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    5%   { opacity: 1; }
+    95%  { opacity: 1; }
+    100% { transform: translateY(2000%); opacity: 0; }
+  }
+  .voltage-scan-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .voltage-scan-wrap::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(245,158,11,0.25) 30%, rgba(251,191,36,0.40) 50%, rgba(245,158,11,0.25) 70%, transparent 100%);
+    animation: voltage-scan 6s linear infinite;
+    animation-delay: 1s;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ===== NEON FLICKER — títulos "live" en secciones dark ===== */
+  @keyframes neon-flicker {
+    0%, 19%, 21%, 23%, 100% { opacity: 1; }
+    20%, 22%                 { opacity: 0.88; }
+    60%                      { opacity: 0.96; }
+    80%                      { opacity: 0.92; }
+  }
+  .neon-title { animation: neon-flicker 8s ease-in-out infinite; }
+
+  /* ===== POWER ON — elementos que "arrancan" al entrar al viewport ===== */
+  @keyframes power-on {
+    0%   { filter: brightness(3) saturate(0); opacity: 0.3; }
+    15%  { filter: brightness(2) saturate(0.5); opacity: 0.7; }
+    40%  { filter: brightness(1.4) saturate(0.8); opacity: 0.9; }
+    100% { filter: brightness(1) saturate(1); opacity: 1; }
+  }
+  .power-on { animation: power-on 0.55s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
   /* ===== SMOOTH SCROLL ===== */
   html { scroll-behavior: smooth; }
 

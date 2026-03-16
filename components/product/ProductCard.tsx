@@ -13,7 +13,7 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
   return (
     <Link
       href={`/producto/${product.id}`}
-      className="group block cursor-pointer overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm transition-all duration-500 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1"
+      className="group block cursor-pointer overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 hover:[box-shadow:0_0_0_1.5px_var(--primary),0_8px_30px_-8px_color-mix(in_srgb,var(--primary)_30%,transparent),0_0_20px_-6px_color-mix(in_srgb,var(--primary)_20%,transparent)]"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100/50 p-6">
         <img src={product.image} alt={product.name} className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-110" crossOrigin="anonymous" />

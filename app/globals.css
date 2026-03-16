@@ -32,6 +32,8 @@
   --chart-3: oklch(0.55 0.12 220);
   --chart-4: oklch(0.65 0.15 160);
   --chart-5: oklch(0.7 0.13 75);
+  --electric: oklch(0.78 0.17 85);        /* amber-400 — color electricidad */
+  --electric-blue: oklch(0.65 0.18 228);  /* sky-500 — corona discharge */
   --radius: 0.625rem;
   --sidebar: oklch(0.975 0.003 250);
   --sidebar-foreground: oklch(0.13 0.04 250);

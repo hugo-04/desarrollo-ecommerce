@@ -196,14 +196,14 @@ export function MarqueeBrands() {
           <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/[0.07] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-red-400">
             <span className="h-1.5 w-1.5 rounded-full shadow-[0_0_8px_#ef4444] bg-red-500" />Distribuidores Autorizados
           </span>
-          <h3 className="mb-1.5 text-2xl font-extrabold tracking-tight text-white">Marcas de Clase Mundial</h3>
+          <h3 className="mb-1.5 text-2xl font-extrabold tracking-tight text-white neon-title">Marcas de Clase Mundial</h3>
           <p className="text-xs text-slate-400">Comercializamos marcas líderes con certificaciones internacionales IEC y ANSI</p>
         </motion.div>
         
         <motion.div variants={blurIn} className="marquee-container mb-6">
           <div className="marquee-content">
             {[...brands, ...brands].map((brand, index) => (
-              <div key={`brand-1-${index}`} className="group mx-3 flex h-[80px] min-w-[220px] items-center gap-4 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-red-500/30 hover:bg-white/[0.06] hover:shadow-[0_8px_30px_-10px_rgba(239,68,68,0.2)]">
+              <div key={`brand-1-${index}`} className="group mx-3 flex h-[80px] min-w-[220px] items-center gap-4 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/20 hover:bg-white/[0.06] hover:shadow-[0_8px_30px_-10px_rgba(245,158,11,0.15)]">
                 <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08] transition-colors group-hover:bg-white/[0.1]">
                   <img src={brand.logo} alt={brand.name} className="max-h-[22px] max-w-[22px] object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100" crossOrigin="anonymous" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
                 </div>
@@ -257,9 +257,9 @@ export function BenefitsSection() {
         </motion.div>
         <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }} className="grid gap-6 md:grid-cols-3">
           {benefits.map((benefit, index) => (
-            <motion.div key={index} variants={fadeUp} whileHover={{ y: -8, transition: { duration: 0.3 } }} className="group rounded-2xl border border-white/[0.08] bg-white/[0.04] p-8 backdrop-blur-sm transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.08]">
+            <motion.div key={index} variants={fadeUp} whileHover={{ y: -8, transition: { duration: 0.3 } }} className="group rounded-2xl border border-white/[0.08] bg-white/[0.04] p-8 backdrop-blur-sm transition-all duration-500 hover:border-amber-400/[0.12] hover:bg-white/[0.08]">
               <motion.div
-                className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/10 text-red-400"
+                className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/10 text-red-400 transition-all duration-500 group-hover:from-amber-400/20 group-hover:to-amber-600/10 group-hover:text-amber-300 group-hover:[box-shadow:0_0_0_6px_rgba(245,158,11,0.12),0_0_20px_4px_rgba(245,158,11,0.10)]"
                 whileHover={{ scale: 1.15, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
@@ -533,7 +533,7 @@ export function FullWidthStats() {
       whileInView="visible"
       viewport={viewportOnce}
       variants={staggerContainer}
-      className="relative overflow-hidden"
+      className="relative overflow-hidden voltage-scan-wrap"
     >
       {/* CSS-only parallax effect (fixed background) */}
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -548,11 +548,11 @@ export function FullWidthStats() {
             return (
               <motion.div key={index} ref={ref} variants={scaleUp} className="group text-center">
                 <div className="mb-2 flex items-baseline justify-center gap-0.5">
-                  <span className="text-4xl font-extrabold tracking-tight text-white lg:text-5xl">{count}</span>
+                  <span className="neon-title text-4xl font-extrabold tracking-tight text-white lg:text-5xl power-on">{count}</span>
                   <span className="text-xl font-bold text-red-400">{stat.suffix}</span>
                 </div>
                 <p className="whitespace-pre-line text-xs font-medium uppercase tracking-wider text-slate-400">{stat.label}</p>
-                <div className="mx-auto mt-4 h-px w-12 bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
+                <div className="mx-auto mt-4 h-px w-12 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
               </motion.div>
             )
           })}
