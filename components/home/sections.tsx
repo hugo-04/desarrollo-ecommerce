@@ -233,8 +233,8 @@ export function MarqueeBrands() {
 export function BenefitsSection() {
   const benefits = [
     { icon: IconShield, title: "Certificaciones IEC & ANSI", description: "Todos nuestros productos cumplen normas internacionales IEC, ANSI y NTP para alta y media tension." },
-    { icon: IconTruck, title: "Stock Permanente", description: "Almacen con mas de 1,000 items en stock para despacho inmediato a nivel nacional." },
-    { icon: IconHeadphones, title: "Ingenieria Aplicada", description: "Equipo de ingenieros electricos especializados en seleccion de materiales AT/MT." },
+    { icon: IconTruck, title: "Stock Permanente Nacional", description: "Almacen con mas de 1,000 items en stock para despacho inmediato a cualquier region del pais." },
+    { icon: IconHeadphones, title: "Ingenieria Especializada", description: "Equipo de ingenieros electricos dedicados a la seleccion y especificacion de materiales AT/MT." },
   ]
   return (
     <motion.section
@@ -242,33 +242,77 @@ export function BenefitsSection() {
       whileInView="visible"
       viewport={viewportOnce}
       variants={staggerContainer}
-      className="relative overflow-hidden py-20"
+      className="relative overflow-hidden py-24"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-[#07091E] via-[#121A47] to-[#0B1035]" />
       <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
-      <div className="absolute -left-32 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-primary/8 blur-3xl" />
-      <div className="absolute -right-32 top-1/4 h-48 w-48 rounded-full bg-red-500/8 blur-3xl" />
+      <div className="absolute -left-40 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-primary/6 blur-3xl" />
+      <div className="absolute -right-40 top-1/3 h-64 w-64 rounded-full bg-red-500/6 blur-3xl" />
+
       <div className="relative mx-auto max-w-7xl px-4">
-        <motion.div variants={fadeUp} className="mb-14 text-center">
-          <span className="mb-2 inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-red-400">Beneficios</span>
-          <h2 className="mb-3 text-2xl font-extrabold tracking-tight text-white lg:text-3xl">Por que elegirnos?</h2>
-          <p className="mx-auto max-w-xl text-sm text-slate-400">Mas de 20 anos siendo el socio estrategico de las principales industrias del pais</p>
-        </motion.div>
-        <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }} className="grid gap-6 md:grid-cols-3">
-          {benefits.map((benefit, index) => (
-            <motion.div key={index} variants={fadeUp} whileHover={{ y: -8, transition: { duration: 0.3 } }} className="group rounded-2xl border border-white/[0.08] bg-white/[0.04] p-8 backdrop-blur-sm transition-all duration-500 hover:border-amber-400/[0.12] hover:bg-white/[0.08]">
+        <div className="grid items-center gap-16 lg:grid-cols-12">
+
+          {/* LEFT — Statement de empresa */}
+          <motion.div variants={fadeLeft} className="lg:col-span-5">
+            <span className="mb-4 inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-red-400">Por que elegirnos</span>
+            <div className="mb-8">
+              <div className="flex items-baseline gap-3">
+                <span className="text-7xl font-extrabold leading-none tracking-tight text-white lg:text-8xl">20</span>
+                <span className="text-4xl font-bold text-red-500">+</span>
+              </div>
+              <p className="mt-1 text-base font-semibold uppercase tracking-widest text-slate-400">Años de experiencia</p>
+            </div>
+            <p className="mb-8 text-[0.95rem] leading-[1.8] text-slate-400">
+              Somos el socio estrategico de las principales empresas electricas, mineras y de construccion del pais. Cada proyecto cuenta con el respaldo de nuestro equipo tecnico especializado.
+            </p>
+            <div className="mb-8 flex gap-8">
+              <div>
+                <p className="text-3xl font-extrabold text-white">350<span className="text-red-500">+</span></p>
+                <p className="mt-0.5 text-xs font-medium uppercase tracking-wider text-slate-500">Proyectos ejecutados</p>
+              </div>
+              <div className="w-px bg-white/[0.08]" />
+              <div>
+                <p className="text-3xl font-extrabold text-white">98<span className="text-red-500">%</span></p>
+                <p className="mt-0.5 text-xs font-medium uppercase tracking-wider text-slate-500">Clientes satisfechos</p>
+              </div>
+            </div>
+            <Link
+              href="/nosotros"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-white/70 transition-colors hover:text-white"
+            >
+              Conocer la empresa
+              <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
+
+          {/* RIGHT — Benefits list (rows, not cards) */}
+          <motion.div
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.14 } } }}
+            className="lg:col-span-7 space-y-0"
+          >
+            {benefits.map((benefit, index) => (
               <motion.div
-                className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/10 text-red-400 transition-all duration-500 group-hover:from-amber-400/20 group-hover:to-amber-600/10 group-hover:text-amber-300 group-hover:[box-shadow:0_0_0_6px_rgba(245,158,11,0.12),0_0_20px_4px_rgba(245,158,11,0.10)]"
-                whileHover={{ scale: 1.15, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                key={index}
+                variants={fadeRight}
+                className="group flex items-start gap-6 border-b border-white/[0.06] py-7 last:border-0 transition-all duration-300 hover:border-white/[0.12]"
               >
-                <benefit.icon className="h-7 w-7" />
+                <motion.div
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/10 text-red-400 transition-all duration-500 group-hover:from-amber-400/20 group-hover:to-amber-600/10 group-hover:text-amber-300 group-hover:[box-shadow:0_0_0_6px_rgba(245,158,11,0.10),0_0_20px_4px_rgba(245,158,11,0.08)]"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <benefit.icon className="h-6 w-6" />
+                </motion.div>
+                <div className="flex-1">
+                  <h3 className="mb-1.5 text-lg font-bold text-white">{benefit.title}</h3>
+                  <p className="text-sm leading-relaxed text-slate-400">{benefit.description}</p>
+                </div>
+                <IconArrowRight className="mt-1.5 h-4 w-4 shrink-0 text-white/10 transition-all group-hover:translate-x-1 group-hover:text-red-400/60" />
               </motion.div>
-              <h3 className="mb-2 text-lg font-bold text-white">{benefit.title}</h3>
-              <p className="text-sm leading-relaxed text-slate-400">{benefit.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </motion.div>
+
+        </div>
       </div>
     </motion.section>
   )
@@ -681,6 +725,172 @@ export function ServiciosSection() {
             </motion.div>
           ))}
         </motion.div>
+      </div>
+    </motion.section>
+  )
+}
+
+// ========== PROCESO SECTION ==========
+export function ProcesoSection() {
+  const pasos = [
+    {
+      num: "01",
+      icon: IconPhone,
+      title: "Consulta tu proyecto",
+      desc: "Contáctanos con los requerimientos técnicos de tu proyecto AT/MT. Nuestros ingenieros te orientan desde el primer contacto.",
+      color: "from-primary/20 to-primary/5",
+      text: "text-primary",
+      border: "border-primary/20",
+    },
+    {
+      num: "02",
+      icon: IconFileText,
+      title: "Recibe tu cotización",
+      desc: "Elaboramos una cotización detallada con ficha técnica, especificaciones IEC/ANSI y disponibilidad de stock en menos de 24 horas.",
+      color: "from-red-500/20 to-red-500/5",
+      text: "text-red-500",
+      border: "border-red-500/20",
+    },
+    {
+      num: "03",
+      icon: IconTruck,
+      title: "Despacho a todo el país",
+      desc: "Coordinamos el despacho desde nuestro almacén a cualquier región del país, con seguimiento en tiempo real.",
+      color: "from-emerald-500/20 to-emerald-500/5",
+      text: "text-emerald-600",
+      border: "border-emerald-500/20",
+    },
+  ]
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={staggerContainer}
+      className="relative overflow-hidden py-20"
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-[#F5F5FA] to-white" />
+      <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,51,160,0.05) 1px, transparent 0)', backgroundSize: '36px 36px' }} />
+      <div className="relative mx-auto max-w-7xl px-4">
+        <motion.div variants={fadeUp} className="mb-14 text-center">
+          <div className="mb-4 flex items-center justify-center gap-3">
+            <div className="h-px w-8 bg-red-500" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Cómo funciona</span>
+            <div className="h-px w-8 bg-red-500" />
+          </div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">Proceso de Compra</h2>
+          <p className="mt-3 mx-auto max-w-lg text-sm text-slate-500">Simple, rápido y respaldado por ingenieros especializados en AT/MT</p>
+        </motion.div>
+        <motion.div
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
+          className="relative grid gap-6 md:grid-cols-3"
+        >
+          <div className="absolute left-[16.66%] right-[16.66%] top-[2.2rem] hidden h-px md:block"
+            style={{ background: 'repeating-linear-gradient(90deg, #CBD5E1 0, #CBD5E1 6px, transparent 6px, transparent 14px)' }}
+          />
+          {pasos.map((paso, i) => (
+            <motion.div key={i} variants={scaleUp} className="relative flex flex-col items-center text-center">
+              <div className={`relative mb-6 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-2 bg-white shadow-lg ${paso.border}`}>
+                <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${paso.color} opacity-60`} />
+                <paso.icon className={`relative z-10 h-6 w-6 ${paso.text}`} />
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#121A47] text-[9px] font-extrabold text-white">{i + 1}</span>
+              </div>
+              <span className={`mb-2 text-[11px] font-extrabold tracking-[0.2em] ${paso.text}`}>{paso.num}</span>
+              <h3 className="mb-2 text-base font-bold text-[#121A47]">{paso.title}</h3>
+              <p className="text-sm leading-relaxed text-slate-500">{paso.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+        <motion.div variants={fadeUp} className="mt-12 flex justify-center">
+          <Link href="/contacto" className="group inline-flex items-center gap-3 rounded-xl bg-[#121A47] px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#121A47]/20 transition-all hover:bg-primary hover:shadow-primary/25">
+            Iniciar mi consulta
+            <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
+      </div>
+    </motion.section>
+  )
+}
+
+// ========== CERTIFICACIONES STRIP ==========
+export function CertificacionesStrip() {
+  const certs = [
+    { code: "IEC 60305", desc: "Aisladores para lineas aereas", color: "text-blue-700", bg: "bg-blue-50 border-blue-100" },
+    { code: "ANSI C29.2", desc: "Aisladores de suspension AT", color: "text-indigo-700", bg: "bg-indigo-50 border-indigo-100" },
+    { code: "ISO 9001", desc: "Sistema de Gestion de Calidad", color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-100" },
+    { code: "NTP 370.043", desc: "Norma Tecnica Peruana AT/MT", color: "text-amber-700", bg: "bg-amber-50 border-amber-100" },
+    { code: "IEEE STD", desc: "Estandar internacional AT", color: "text-red-700", bg: "bg-red-50 border-red-100" },
+  ]
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={fadeUp}
+      className="relative border-y border-slate-200/80 bg-white py-8"
+    >
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mb-6 flex items-center justify-center gap-3">
+          <IconShield className="h-3.5 w-3.5 text-slate-400" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">Certificaciones y Normas que cumplimos</span>
+          <IconShield className="h-3.5 w-3.5 text-slate-400" />
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {certs.map((cert, i) => (
+            <div key={i} className={`flex items-center gap-2.5 rounded-lg border px-4 py-2.5 ${cert.bg}`}>
+              <IconCertificate className={`h-4 w-4 shrink-0 ${cert.color}`} />
+              <div>
+                <p className={`text-[12px] font-extrabold tracking-wide ${cert.color}`}>{cert.code}</p>
+                <p className="text-[10px] text-slate-500">{cert.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.section>
+  )
+}
+
+// ========== CTA BAND ==========
+export function CtaBand() {
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={staggerContainer}
+      className="relative overflow-hidden arc-flash-wrap"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-[#07091E] via-[#121A47] to-[#07091E]" />
+      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+      <div className="absolute -left-32 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-primary/8 blur-3xl" />
+      <div className="absolute -right-32 bottom-0 h-64 w-64 rounded-full bg-red-600/6 blur-3xl" />
+      <div className="relative mx-auto max-w-7xl px-4 py-20">
+        <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-center lg:justify-between">
+          <motion.div variants={fadeLeft} className="max-w-xl text-center lg:text-left">
+            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.3em] text-red-400">¿Listo para cotizar?</p>
+            <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-white lg:text-4xl">
+              ¿Tienes un proyecto<br />
+              <span className="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">AT/MT en mente?</span>
+            </h2>
+            <p className="text-[0.95rem] leading-relaxed text-slate-400">Recibe una cotización técnica personalizada en menos de 24 horas. Sin compromisos.</p>
+          </motion.div>
+          <motion.div variants={fadeRight} className="flex flex-col items-center gap-4 lg:items-end">
+            <div className="flex flex-wrap justify-center gap-3 lg:justify-end">
+              <Link href="/contacto" className="group flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-red-600/25 transition-all hover:scale-[1.03] hover:shadow-red-600/40">
+                Solicitar Cotización
+                <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link href="/catalogo" className="flex items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.05] px-8 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all hover:bg-white/[0.1] hover:text-white">
+                Ver Catálogo
+              </Link>
+            </div>
+            <a href="https://wa.me/51123456789?text=Hola%2C%20quisiera%20cotizar%20materiales%20AT%2FMT" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-slate-400 transition-colors hover:text-green-400">
+              <IconWhatsApp className="h-3.5 w-3.5" />
+              O escríbenos por WhatsApp: +51 (01) 234-5678
+            </a>
+          </motion.div>
+        </div>
       </div>
     </motion.section>
   )

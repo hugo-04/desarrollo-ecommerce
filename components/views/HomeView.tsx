@@ -3,7 +3,7 @@
 import {
   HeroSection, BestSellersCarousel, CategoriesGrid, MarqueeBrands, BenefitsSection,
   TestimonialsSection, FeaturedOffers, SectoresSection, FullWidthStats,
-  CompanyShowcase, ServiciosSection,
+  CompanyShowcase, ServiciosSection, ProcesoSection, CertificacionesStrip, CtaBand,
 } from "@/components/home"
 
 export function HomeView() {
@@ -19,22 +19,33 @@ export function HomeView() {
       {/* DARK — Marcas */}
       <MarqueeBrands />
 
-      {/* LIGHT — A quién servimos (respiro visual entre los dos oscuros) */}
+      {/* LIGHT — Cómo funciona el proceso */}
+      <ProcesoSection />
+
+      {/* LIGHT — A quién servimos */}
       <SectoresSection />
 
       {/* DARK — Números de credibilidad */}
       <FullWidthStats />
 
-      {/* LIGHT — Especialidades y empresa */}
+      {/* LIGHT — Especialidades */}
       <FeaturedOffers />
+
+      {/* LIGHT — Strip de certificaciones (banda compacta) */}
+      <CertificacionesStrip />
+
+      {/* LIGHT — Empresa */}
       <CompanyShowcase />
 
-      {/* DARK — Por qué elegirnos */}
+      {/* DARK — Por qué elegirnos (2-col narrativo) */}
       <BenefitsSection />
 
-      {/* LIGHT — Servicios y cierre con prueba social */}
+      {/* LIGHT — Servicios y prueba social */}
       <ServiciosSection />
       <TestimonialsSection />
+
+      {/* DARK — CTA final de conversión */}
+      <CtaBand />
     </>
   )
 }

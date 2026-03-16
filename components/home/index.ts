@@ -11,4 +11,7 @@ export {
   FullWidthStats,
   CompanyShowcase,
   ServiciosSection,
+  ProcesoSection,
+  CertificacionesStrip,
+  CtaBand,
 } from "./sections"
