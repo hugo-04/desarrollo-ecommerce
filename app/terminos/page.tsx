@@ -76,7 +76,7 @@ export default function TerminosPage() {
         {/* Intro */}
         <div className="mb-8 rounded-2xl border border-primary/10 bg-primary/[0.03] p-6">
           <p className="text-sm leading-relaxed text-slate-600">
-            Estos Términos y Condiciones regulan el uso del sitio web y los servicios comerciales de <strong className="text-[#121A47]">Electro Thina S.A.C.</strong>, empresa distribuidora de materiales eléctricos para alta y media tension. Le recomendamos leerlos detenidamente antes de realizar cualquier solicitud o transacción.
+            Estos Términos y Condiciones regulan el uso del sitio web y los servicios comerciales de <strong className="text-[#121A47]">Electro Thina S.A.C.</strong>, empresa fabricante y distribuidora de materiales eléctricos para alta y media tension. Le recomendamos leerlos detenidamente antes de realizar cualquier solicitud o transacción.
           </p>
         </div>
 

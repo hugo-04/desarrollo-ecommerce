@@ -7,6 +7,7 @@ import {
   IconPhone, IconMail, IconMapPin, IconClock, IconWhatsApp, IconCheck,
   IconArrowRight, IconHeadphones,
 } from "@/components/icons"
+import { CONTACT, WA } from "@/lib/contact"
 
 export default function ContactoPage() {
   const { ref, isVisible } = useFadeInOnScroll()
@@ -45,10 +46,10 @@ export default function ContactoPage() {
               <h2 className="mb-6 text-xl font-bold text-slate-900">Informacion de Contacto</h2>
               <div className="space-y-4">
                 {[
-                  { icon: IconPhone, title: "Telefono", info: "(01) 234-5678", link: "tel:+5112345678" },
-                  { icon: IconWhatsApp, title: "WhatsApp", info: "+51 987 654 321", link: "https://wa.me/51987654321" },
-                  { icon: IconMail, title: "Email", info: "ventas@electrothina.com", link: "mailto:ventas@electrothina.com" },
-                  { icon: IconMapPin, title: "Direccion", info: "Av. Industrial 1234, Lima, Peru", link: "#" },
+                  { icon: IconPhone, title: "Telefono", info: `${CONTACT.phoneDisplay} / ${CONTACT.phone2Display}`, link: CONTACT.phoneTel },
+                  { icon: IconWhatsApp, title: "WhatsApp", info: `${CONTACT.phoneDisplay} / ${CONTACT.phone2Display}`, link: WA.cotizar },
+                  { icon: IconMail, title: "Email", info: CONTACT.email, link: `mailto:${CONTACT.email}` },
+                  { icon: IconMapPin, title: "Direccion", info: CONTACT.address, link: "#" },
                   { icon: IconClock, title: "Horario", info: "Lun - Vie: 8:00 am - 6:00 pm", link: "#" },
                 ].map((item, index) => (
                   <a key={index} href={item.link} target={item.link.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4 transition-all hover:border-primary/30 hover:shadow-md">
@@ -64,7 +65,7 @@ export default function ContactoPage() {
               </div>
 
               {/* Quick WhatsApp CTA */}
-              <a href="https://wa.me/51987654321?text=Hola%2C%20me%20gustaria%20solicitar%20una%20cotizacion." target="_blank" rel="noopener noreferrer" className="mt-6 flex items-center justify-center gap-3 rounded-xl bg-green-600 py-4 text-sm font-bold text-white shadow-lg shadow-green-600/25 transition-all hover:bg-green-700">
+              <a href={WA.cotizar} target="_blank" rel="noopener noreferrer" className="mt-6 flex items-center justify-center gap-3 rounded-xl bg-green-600 py-4 text-sm font-bold text-white shadow-lg shadow-green-600/25 transition-all hover:bg-green-700">
                 <IconWhatsApp className="h-5 w-5" />
                 Cotizar por WhatsApp
               </a>

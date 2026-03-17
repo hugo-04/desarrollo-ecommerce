@@ -123,13 +123,35 @@ export const globalAnimationsCSS = `
     animation-delay: 1.5s;
   }
 
-  /* ===== WHATSAPP BOUNCE ===== */
+  /* ===== WHATSAPP FLOAT — sube y baja suave, aplicado al wrapper ===== */
   @keyframes whatsapp-bounce {
-    0%, 100% { transform: translateY(0) scale(1); }
-    40% { transform: translateY(-10px) scale(1.05); }
-    60% { transform: translateY(-5px) scale(1.02); }
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-9px); }
   }
-  .whatsapp-bounce { animation: whatsapp-bounce 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+  .whatsapp-bounce { animation: whatsapp-bounce 3.2s ease-in-out infinite; }
+
+  /* ===== WHATSAPP RING — onda expansiva verde (doble, escalonada) ===== */
+  @keyframes whatsapp-ring {
+    0%   { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  .whatsapp-ring         { animation: whatsapp-ring 2.8s ease-out infinite; }
+  .whatsapp-ring-delayed { animation: whatsapp-ring 2.8s ease-out 1.4s infinite; }
+
+  /* ===== WHATSAPP LABEL — tooltip "Cotizar aquí" desliza con spring ===== */
+  @keyframes whatsapp-label {
+    0%          { opacity: 0; transform: translateX(18px) scale(0.94); }
+    14%, 68%    { opacity: 1; transform: translateX(0)    scale(1); }
+    88%, 100%   { opacity: 0; transform: translateX(10px) scale(0.97); }
+  }
+  .whatsapp-label { animation: whatsapp-label 7s cubic-bezier(0.16, 1, 0.3, 1) 2s infinite; }
+
+  /* ===== HEADER WA PULSE — glow verde en botón navbar ===== */
+  @keyframes header-wa-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.45); }
+    50%       { box-shadow: 0 0 0 7px rgba(22, 163, 74, 0); }
+  }
+  .header-wa-pulse { animation: header-wa-pulse 2.4s ease-in-out infinite; }
 
   /* ===== HERO ACCENT BAR PULSE ===== */
   @keyframes pulse-line {
