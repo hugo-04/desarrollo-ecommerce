@@ -43,6 +43,7 @@ export function Footer() {
               <li className="transition-colors hover:text-red-400">Certificaciones</li>
               <li className="transition-colors hover:text-red-400">FAQ</li>
               <li><Link href="/terminos" className="transition-colors hover:text-red-400">Términos y Condiciones</Link></li>
+              <li><Link href="/politica-privacidad" className="transition-colors hover:text-red-400">Política de Privacidad</Link></li>
             </ul>
           </div>
           <div>
@@ -51,15 +52,17 @@ export function Footer() {
               <li className="flex items-center gap-2"><IconPhone className="h-4 w-4 text-red-500/50" />(01) 234-5678</li>
               <li className="flex items-center gap-2"><IconMail className="h-4 w-4 text-red-500/50" />ventas@electrothina.com</li>
               <li className="flex items-center gap-2"><IconMapPin className="h-4 w-4 text-red-500/50" />Av. Industrial 1234, Lima</li>
-              <li className="flex items-center gap-2"><IconClock className="h-4 w-4 text-red-500/50" />Lun-Vie: 8am - 6pm</li>
+              <li className="flex items-center gap-2"><IconClock className="h-4 w-4 text-red-500/50" />L-V: 9am-6pm | Sáb: 9am-3pm</li>
             </ul>
           </div>
         </div>
         <div className="mt-10 border-t border-white/[0.06] pt-6 flex flex-col items-center justify-between gap-3 text-xs text-slate-600 sm:flex-row">
           <span>© 2026 Electro Thina S.A.C. Todos los derechos reservados.</span>
-          <Link href="/terminos" className="transition-colors hover:text-slate-400">
-            Términos y Condiciones
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/terminos" className="transition-colors hover:text-slate-400">Términos y Condiciones</Link>
+            <span className="text-slate-700">·</span>
+            <Link href="/politica-privacidad" className="transition-colors hover:text-slate-400">Política de Privacidad</Link>
+          </div>
         </div>
       </div>
     </footer>

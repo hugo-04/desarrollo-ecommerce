@@ -60,7 +60,7 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
           <button
             onClick={() => {
               const msg = encodeURIComponent("Hola, me gustaria solicitar una cotizacion directa.")
-              window.open(`https://wa.me/51123456789?text=${msg}`, "_blank")
+              window.open(`https://wa.me/51981375196?text=${msg}`, "_blank")
             }}
             className="flex shrink-0 items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-green-600/20 transition-all hover:bg-green-700 hover:shadow-lg hover:shadow-green-600/30"
           >

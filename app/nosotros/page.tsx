@@ -20,7 +20,7 @@ export default function NosotrosPage() {
   ]
 
   const stats = [
-    { value: "20+", label: "Años de experiencia" },
+    { value: "14+", label: "Años de experiencia" },
     { value: "350+", label: "Proyectos ejecutados" },
     { value: "1,162+", label: "Productos en stock" },
     { value: "98%", label: "Clientes satisfechos" },
@@ -49,7 +49,7 @@ export default function NosotrosPage() {
             Electro Thina
           </motion.h1>
           <motion.p variants={fadeUp} className="mx-auto max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
-            Distribuidores especializados en ferreteria y accesorios electricos para lineas de alta y media tension desde hace mas de 20 años.
+            Distribuidores especializados en ferreteria y accesorios electricos para lineas de alta y media tension desde hace 14 años.
           </motion.p>
         </motion.div>
 
@@ -72,7 +72,7 @@ export default function NosotrosPage() {
                 <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Nuestra Historia</span>
               </div>
               <h2 className="mb-5 text-3xl font-extrabold leading-tight tracking-tight text-[#121A47] lg:text-4xl">
-                Más de 20 años<br />de experiencia
+                Más de 14 años<br />de experiencia
               </h2>
               <p className="mb-6 text-sm leading-[1.85] text-slate-600">
                 Electro Thina nació con la visión de convertirse en el principal distribuidor y fabricante de materiales electricos para lineas de alta y media tension en Peru. A lo largo de dos decadas, hemos construido relaciones solidas con los principales fabricantes internacionales y desarrollado nuestra propia línea de productos certificados.
@@ -478,7 +478,7 @@ export default function NosotrosPage() {
               <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <a
-              href="https://wa.me/51123456789?text=Hola%2C%20quisiera%20hablar%20con%20un%20ingeniero%20sobre%20mi%20proyecto%20AT%2FMT"
+              href="https://wa.me/51981375196?text=Hola%2C%20quisiera%20hablar%20con%20un%20ingeniero%20sobre%20mi%20proyecto%20AT%2FMT"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/10"

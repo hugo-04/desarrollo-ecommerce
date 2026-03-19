@@ -529,7 +529,7 @@ function CatalogoContent() {
       {/* Floating "Cotizar selección" button (appears after 300px scroll) */}
       {scrolled && (
         <a
-          href="https://wa.me/51123456789?text=Hola%2C%20quisiera%20cotizar%20varios%20productos%20de%20su%20cat%C3%A1logo%20AT%2FMT"
+          href="https://wa.me/51981375196?text=Hola%2C%20quisiera%20cotizar%20varios%20productos%20de%20su%20cat%C3%A1logo%20AT%2FMT"
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-20 right-5 z-40 flex items-center gap-2 rounded-full bg-green-600 px-4 py-3 text-xs font-bold text-white shadow-2xl shadow-green-600/40 transition-all hover:bg-green-700 hover:scale-105 sm:bottom-8 sm:right-8"

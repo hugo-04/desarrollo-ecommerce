@@ -343,7 +343,7 @@ export function TestimonialsSection() {
             <span className="h-1.5 w-1.5 rounded-full bg-red-500" />Testimonios
           </span>
           <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">Lo que dicen nuestros clientes</h2>
-          <p className="mx-auto max-w-md text-sm text-slate-500">Empresas líderes del sector energético confían en nosotros desde hace más de 20 años</p>
+          <p className="mx-auto max-w-md text-sm text-slate-500">Empresas líderes del sector energético confían en nosotros desde hace 14 años</p>
         </motion.div>
         <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }} className="grid gap-6 md:grid-cols-3">
           {testimonials.map((testimonial, index) => {
@@ -1021,9 +1021,9 @@ export function CtaBand() {
                 Ver Catálogo
               </Link>
             </div>
-            <a href="https://wa.me/51123456789?text=Hola%2C%20quisiera%20cotizar%20materiales%20AT%2FMT" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-slate-400 transition-colors hover:text-green-400">
+            <a href="https://wa.me/51981375196?text=Hola%2C%20quisiera%20cotizar%20materiales%20AT%2FMT" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-slate-400 transition-colors hover:text-green-400">
               <IconWhatsApp className="h-3.5 w-3.5" />
-              O escríbenos por WhatsApp: +51 (01) 234-5678
+              O escríbenos por WhatsApp: +51 981 375 196
             </a>
           </motion.div>
         </div>
