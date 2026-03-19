@@ -3,17 +3,15 @@
 import { FilterCheckbox } from "./FilterCheckbox"
 import { FilterSection } from "./FilterSection"
 import { IconFire, IconCheck, IconX } from "@/components/icons"
-import type { Category } from "@/lib/types"
+import type { CategoryDTO } from "@/features/categorias/types"
 
 interface CatalogFiltersProps {
-  categories: Category[]
+  categories: CategoryDTO[]
   availableBrands: string[]
   selectedCategories: string[]
   selectedBrands: string[]
   onlyBestSellers: boolean
   activeFiltersCount: number
-  getCategoryCount: (name: string) => number
-  getBrandCount: (brand: string) => number
   toggleCategory: (cat: string) => void
   toggleBrand: (brand: string) => void
   clearCategories: () => void
@@ -29,8 +27,6 @@ export function CatalogFilters({
   selectedBrands,
   onlyBestSellers,
   activeFiltersCount,
-  getCategoryCount,
-  getBrandCount,
   toggleCategory,
   toggleBrand,
   clearCategories,
@@ -84,7 +80,7 @@ export function CatalogFilters({
             key={category.id}
             checked={selectedCategories.includes(category.name)}
             label={category.name}
-            count={getCategoryCount(category.name)}
+            count={category.count}
             onChange={() => toggleCategory(category.name)}
           />
         ))}
@@ -101,7 +97,7 @@ export function CatalogFilters({
             key={brand}
             checked={selectedBrands.includes(brand)}
             label={brand}
-            count={getBrandCount(brand)}
+            count={0}
             onChange={() => toggleBrand(brand)}
           />
         ))}

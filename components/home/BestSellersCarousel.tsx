@@ -3,14 +3,14 @@
 import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
 import { fadeUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
-import { products } from "@/lib/data"
+import { useBestSellers } from "@/features/productos/hooks"
 import { BEST_SELLERS_CONTENT } from "@/lib/data/mock/static-content.mock"
 import { ProductCard } from "@/components/product/ProductCard"
 import { IconChevronLeft, IconChevronRight } from "@/components/icons"
 
 export function BestSellersCarousel() {
+  const { products: bestSellers, loading } = useBestSellers()
   const [currentIndex, setCurrentIndex] = useState(0)
-  const bestSellers = products.filter((p) => p.bestSeller)
   const itemsPerView = 4
   const maxIndex = Math.max(0, bestSellers.length - itemsPerView)
 

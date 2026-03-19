@@ -20,6 +20,7 @@ export interface Product {
   featured: boolean
   bestSeller: boolean
   rating: number
+  fichaTecnica?: string
 }
 
 export interface Category {
@@ -34,6 +35,7 @@ export interface Category {
 }
 
 export interface Brand {
+  id: number
   name: string
   logo: string
 }

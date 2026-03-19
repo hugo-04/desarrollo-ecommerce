@@ -17,7 +17,7 @@ import { GarantiaStrip } from "@/components/product/GarantiaStrip"
 import { QuoteModal } from "@/components/product/QuoteModal"
 import { ProductCard } from "@/components/product/ProductCard"
 import { PRODUCT_DETAIL_CONTENT } from "@/lib/data/mock/static-content.mock"
-import { products } from "@/lib/data"
+import { useRelatedProducts } from "@/features/productos/hooks"
 import { useFadeInOnScroll } from "@/hooks/useAnimations"
 import { IconChevronRight, IconChevronLeft, IconWhatsApp } from "@/components/icons"
 import type { Product } from "@/lib/types"
@@ -33,13 +33,11 @@ export function ProductoView({ product }: ProductoViewProps) {
   const [showQuoteModal, setShowQuoteModal] = useState(false)
   const c = PRODUCT_DETAIL_CONTENT
 
-  // Navigation within category
-  const categoryProducts = products.filter((p) => p.category === product.category)
-  const currentIndex = categoryProducts.findIndex((p) => p.id === product.id)
-  const prevProduct = currentIndex > 0 ? categoryProducts[currentIndex - 1] : null
-  const nextProduct =
-    currentIndex < categoryProducts.length - 1 ? categoryProducts[currentIndex + 1] : null
-  const relatedProducts = categoryProducts.filter((p) => p.id !== product.id)
+  // Navigation within category — via API route interna
+  const categoryProducts = useRelatedProducts(product.id, product.category)
+  const prevProduct = categoryProducts[0] ?? null
+  const nextProduct = categoryProducts[1] ?? null
+  const relatedProducts = categoryProducts
 
   return (
     <>
@@ -73,7 +71,7 @@ export function ProductoView({ product }: ProductoViewProps) {
             {/* Prev / Next */}
             <div className="flex shrink-0 items-center gap-1.5">
               <span className="hidden text-[10px] text-slate-400 sm:inline">
-                {currentIndex + 1} / {categoryProducts.length}
+                {categoryProducts.length} en esta categoría
               </span>
               <Link
                 href={prevProduct ? `/producto/${prevProduct.id}` : "#"}

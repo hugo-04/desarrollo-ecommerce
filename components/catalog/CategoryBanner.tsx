@@ -1,14 +1,16 @@
 "use client"
 
-import type { Category } from "@/lib/types"
+import { getCategoryIcon } from "@/lib/category-icons"
+import type { CategoryDTO } from "@/features/categorias/types"
 
 interface CategoryBannerProps {
-  category: Category
+  category: CategoryDTO
   productCount: number
 }
 
 export function CategoryBanner({ category, productCount }: CategoryBannerProps) {
-  const Icon = category.icon
+  const Icon = getCategoryIcon(category.slug)
+
   return (
     <div className={`mb-5 overflow-hidden rounded-2xl bg-gradient-to-r ${category.color} p-5 text-white`}>
       <div className="flex items-center justify-between gap-4">

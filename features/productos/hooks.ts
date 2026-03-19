@@ -1,49 +1,39 @@
 "use client"
 
 /**
- * PRODUCT HOOKS — React integration layer
- *
- * Bridges the ProductService with React state/effects.
- * Components import these hooks — they never touch the service or repository directly.
- *
- * Principle: Dependency Inversion — hooks depend on service abstraction.
+ * PRODUCT HOOKS — Solo hooks de productos.
+ * Categorías → features/categorias/hooks.ts
+ * Marcas     → features/marcas/hooks.ts
  */
 
-import { useState, useEffect, useMemo } from "react"
-import { MockProductRepository } from "./repository"
-import { ProductService } from "./service"
-import type { Product, Category } from "@/lib/types"
+import { useState, useEffect } from "react"
+import {
+  getCatalogAction,
+  getProductAction,
+  getBestSellersAction,
+  getRelatedProductsAction,
+} from "./actions"
+import type { Product } from "@/lib/types"
 import type { ProductFilters } from "./types"
 
-// ─── Singleton service (swap repository here to switch data source) ───────────
-
-const productService = new ProductService(new MockProductRepository())
-
-// ─── useProducts ─────────────────────────────────────────────────────────────
-
 export function useProducts(filters: ProductFilters) {
-  const [products, setProducts] = useState<Product[]>([])
-  const [total, setTotal] = useState(0)
+  const [products, setProducts]     = useState<Product[]>([])
+  const [total, setTotal]           = useState(0)
   const [totalPages, setTotalPages] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading]       = useState(true)
 
   const filtersKey = JSON.stringify(filters)
 
   useEffect(() => {
     setLoading(true)
-    productService.getCatalog(filters).then((result) => {
-      setProducts(result.data)
-      setTotal(result.total)
-      setTotalPages(result.totalPages)
-      setLoading(false)
-    })
+    getCatalogAction(filters)
+      .then((r) => { setProducts(r.data); setTotal(r.total); setTotalPages(r.totalPages); setLoading(false) })
+      .catch(() => setLoading(false))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtersKey])
 
   return { products, total, totalPages, loading }
 }
-
-// ─── useProduct ──────────────────────────────────────────────────────────────
 
 export function useProduct(id: number) {
   const [product, setProduct] = useState<Product | null>(null)
@@ -51,68 +41,34 @@ export function useProduct(id: number) {
 
   useEffect(() => {
     setLoading(true)
-    productService.getProductById(id).then((p) => {
-      setProduct(p)
-      setLoading(false)
-    })
+    getProductAction(id)
+      .then((p) => { setProduct(p); setLoading(false) })
+      .catch(() => setLoading(false))
   }, [id])
 
   return { product, loading }
 }
 
-// ─── useBestSellers ──────────────────────────────────────────────────────────
-
 export function useBestSellers() {
   const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading]   = useState(true)
 
   useEffect(() => {
-    productService.getBestSellers().then((p) => {
-      setProducts(p)
-      setLoading(false)
-    })
+    getBestSellersAction()
+      .then((p) => { setProducts(p); setLoading(false) })
+      .catch(() => setLoading(false))
   }, [])
 
   return { products, loading }
 }
-
-// ─── useRelatedProducts ───────────────────────────────────────────────────────
 
 export function useRelatedProducts(productId: number, categoryName: string) {
   const [related, setRelated] = useState<Product[]>([])
 
   useEffect(() => {
     if (!categoryName) return
-    productService.getRelatedProducts(productId, categoryName).then(setRelated)
+    getRelatedProductsAction(productId, categoryName).then(setRelated).catch(() => {})
   }, [productId, categoryName])
 
   return related
-}
-
-// ─── useCategories ────────────────────────────────────────────────────────────
-
-export function useCategories() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    productService.getCategories().then((c) => {
-      setCategories(c)
-      setLoading(false)
-    })
-  }, [])
-
-  return { categories, loading }
-}
-
-// ─── useBrandNames ────────────────────────────────────────────────────────────
-
-export function useBrandNames() {
-  const [brands, setBrands] = useState<string[]>([])
-
-  useEffect(() => {
-    productService.getBrandNames().then(setBrands)
-  }, [])
-
-  return brands
 }

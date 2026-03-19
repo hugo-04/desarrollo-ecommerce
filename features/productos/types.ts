@@ -1,7 +1,4 @@
-/**
- * DOMAIN TYPES — Productos feature
- * Pure TypeScript, no React, no UI dependencies.
- */
+import type { Product } from "@/lib/types"
 
 export interface ProductFilters {
   categories?: string[]
@@ -19,3 +16,8 @@ export interface PaginatedResult<T> {
   page: number
   totalPages: number
 }
+
+// ─── CRUD DTOs ─────────────────────────────────────────────────────────────────
+
+export type CreateProductDTO = Omit<Product, "id">
+export type UpdateProductDTO = Partial<CreateProductDTO>

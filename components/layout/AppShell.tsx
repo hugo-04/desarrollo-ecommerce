@@ -42,10 +42,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // - showing near top → no animation (instant snap, no bounce)
   // - showing mid-page → quick easeOut (0.2s)
   const navTransition = hidden
-    ? { duration: 0.12, ease: [0.55, 0, 1, 0.45] }
+    ? { duration: 0.12, ease: [0.55, 0, 1, 0.45] as [number, number, number, number] }
     : nearTop.current
       ? { duration: 0 }
-      : { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }
+      : { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }
 
   return (
     <>

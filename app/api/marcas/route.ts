@@ -1,19 +1,17 @@
 /**
- * GET /api/marcas
- *
- * Returns the list of brand names available in the product catalog.
- * Used by the catalog filters to populate the brand checkbox list.
+ * GET /api/marcas — API pública REST (para uso externo/mobile futuro).
+ * Uso interno: usar getBrandNamesAction() directamente.
  */
 
 import { NextResponse } from "next/server"
-import { MockProductRepository } from "@/features/productos/repository"
-import { ProductService } from "@/features/productos/service"
+import { MockBrandRepository } from "@/features/marcas/repository"
+import { BrandService } from "@/features/marcas/service"
 
-const service = new ProductService(new MockProductRepository())
+const service = new BrandService(new MockBrandRepository())
 
 export async function GET() {
   try {
-    const brands = await service.getBrandNames()
+    const brands = await service.getNames()
     return NextResponse.json(brands)
   } catch (error) {
     console.error("[GET /api/marcas]", error)

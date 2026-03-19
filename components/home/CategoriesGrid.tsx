@@ -3,12 +3,14 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { fadeUp, scaleUp, cardHover, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
-import { categories } from "@/lib/data"
+import { useCategories } from "@/features/categorias/hooks"
 import { CATEGORIES_GRID_CONTENT } from "@/lib/data/mock/static-content.mock"
 import { IconArrowRight } from "@/components/icons"
+import { getCategoryIcon } from "@/lib/category-icons"
 
-function CategoryCard({ category }: { category: typeof categories[0] }) {
-  const Icon = category.icon
+function CategoryCard({ category }: { category: { id: number; name: string; slug: string; image: string; color: string; count: number; subcategories: string[] } }) {
+  const Icon = getCategoryIcon(category.slug)
+
   return (
     <motion.div variants={scaleUp} whileHover={cardHover} className="h-full w-full">
       <Link
@@ -52,6 +54,8 @@ function CategoryCard({ category }: { category: typeof categories[0] }) {
 }
 
 export function CategoriesGrid() {
+  const { categories, loading } = useCategories()
+
   return (
     <motion.section
       initial="hidden"
@@ -87,14 +91,22 @@ export function CategoriesGrid() {
         </motion.div>
       </div>
       <div className="relative mx-auto max-w-7xl px-4">
-        <motion.div
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.09 } } }}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {categories.slice(0, 6).map((category, index) => (
-            <CategoryCard key={category.id} category={category} />
-          ))}
-        </motion.div>
+        {loading ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-[340px] animate-pulse rounded-2xl bg-slate-200" />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.09 } } }}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {categories.slice(0, 6).map((category) => (
+              <CategoryCard key={category.id} category={category} />
+            ))}
+          </motion.div>
+        )}
       </div>
     </motion.section>
   )

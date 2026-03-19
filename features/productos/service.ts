@@ -1,51 +1,48 @@
 /**
- * PRODUCT SERVICE — Business logic layer
- *
- * Sits between the repository (data) and the hooks (UI).
- * Orchestrates calls, applies business rules.
- * Components never call the repository directly — they go through the service.
+ * PRODUCT SERVICE — Lógica de negocio.
+ * Orquesta llamadas al repository. No conoce la fuente de datos.
  */
 
-import type { Product, Category, Brand } from "@/lib/types"
+import type { Product } from "@/lib/types"
 import type { IProductRepository } from "./repository"
-import type { ProductFilters, PaginatedResult } from "./types"
+import type { ProductFilters, PaginatedResult, CreateProductDTO, UpdateProductDTO } from "./types"
 
 export class ProductService {
-  constructor(private readonly repository: IProductRepository) {}
+  constructor(private readonly repo: IProductRepository) {}
+
+  // ─── Lectura ──────────────────────────────────────────────────────────────────
 
   getCatalog(filters: ProductFilters): Promise<PaginatedResult<Product>> {
-    return this.repository.findAll(filters)
+    return this.repo.findAll(filters)
   }
 
   getProductById(id: number): Promise<Product | null> {
-    return this.repository.findById(id)
+    return this.repo.findById(id)
   }
 
   getBestSellers(): Promise<Product[]> {
-    return this.repository.findBestSellers()
+    return this.repo.findBestSellers()
   }
 
   getFeatured(): Promise<Product[]> {
-    return this.repository.findFeatured()
-  }
-
-  getProductsByCategory(categoryName: string): Promise<Product[]> {
-    return this.repository.findByCategory(categoryName)
+    return this.repo.findFeatured()
   }
 
   getRelatedProducts(productId: number, categoryName: string): Promise<Product[]> {
-    return this.repository.findRelated(productId, categoryName)
+    return this.repo.findRelated(productId, categoryName)
   }
 
-  getCategories(): Promise<Category[]> {
-    return this.repository.findCategories()
+  // ─── CRUD (admin) ─────────────────────────────────────────────────────────────
+
+  createProduct(data: CreateProductDTO): Promise<Product> {
+    return this.repo.create(data)
   }
 
-  getBrands(): Promise<Brand[]> {
-    return this.repository.findBrands()
+  updateProduct(id: number, data: UpdateProductDTO): Promise<Product> {
+    return this.repo.update(id, data)
   }
 
-  getBrandNames(): Promise<string[]> {
-    return this.repository.findBrandNames()
+  deleteProduct(id: number): Promise<void> {
+    return this.repo.delete(id)
   }
 }

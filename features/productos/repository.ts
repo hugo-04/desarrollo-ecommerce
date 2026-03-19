@@ -1,46 +1,37 @@
 /**
- * REPOSITORY PATTERN — Productos
+ * PRODUCT REPOSITORY
  *
- * IProductRepository defines the contract.
- * MockProductRepository implements it with local mock data.
- * ApiProductRepository will implement it with real HTTP calls when DB is ready.
+ * IProductRepository: contrato (interfaz) que el servicio usa.
+ * MockProductRepository: implementación con datos mock (actual).
  *
- * Principle: Dependency Inversion — components depend on the interface,
- * not on the concrete implementation.
+ * Al migrar a DB:
+ *   export class DbProductRepository implements IProductRepository { ... }
+ *   Usar en actions.ts: new DbProductRepository(db)
  */
 
-import type { Product, Category, Brand } from "@/lib/types"
-import type { ProductFilters, PaginatedResult } from "./types"
-import {
-  MOCK_PRODUCTS,
-} from "@/lib/data/mock/products.mock"
-import {
-  MOCK_CATEGORIES,
-} from "@/lib/data/mock/categories.mock"
-import {
-  MOCK_BRANDS,
-} from "@/lib/data/mock/brands.mock"
+import type { Product } from "@/lib/types"
+import type { ProductFilters, PaginatedResult, CreateProductDTO, UpdateProductDTO } from "./types"
+import { MOCK_PRODUCTS } from "@/lib/data/mock/products.mock"
 
-// ─── Interface (contract) ─────────────────────────────────────────────────────
+// ─── Interface ─────────────────────────────────────────────────────────────────
 
 export interface IProductRepository {
+  // Lectura
   findAll(filters: ProductFilters): Promise<PaginatedResult<Product>>
   findById(id: number): Promise<Product | null>
   findBestSellers(): Promise<Product[]>
   findFeatured(): Promise<Product[]>
-  findByCategory(categoryName: string): Promise<Product[]>
   findRelated(productId: number, categoryName: string): Promise<Product[]>
-  findCategories(): Promise<Category[]>
-  findBrands(): Promise<Brand[]>
-  findBrandNames(): Promise<string[]>
+  // CRUD (admin)
+  create(data: CreateProductDTO): Promise<Product>
+  update(id: number, data: UpdateProductDTO): Promise<Product>
+  delete(id: number): Promise<void>
 }
 
-// ─── Mock implementation (current) ────────────────────────────────────────────
+// ─── Mock implementation ───────────────────────────────────────────────────────
 
 export class MockProductRepository implements IProductRepository {
-  private products = MOCK_PRODUCTS
-  private categories = MOCK_CATEGORIES
-  private brands = MOCK_BRANDS
+  private products = [...MOCK_PRODUCTS]
 
   async findAll(filters: ProductFilters): Promise<PaginatedResult<Product>> {
     const {
@@ -55,23 +46,20 @@ export class MockProductRepository implements IProductRepository {
 
     let result = this.products.filter((p) => {
       const matchesCategory = categories.length === 0 || categories.includes(p.category)
-      const matchesBrand = brands.length === 0 || brands.includes(p.brand)
-      const matchesQuery =
-        !query ||
-        p.name.toLowerCase().includes(query.toLowerCase()) ||
-        p.sku.toLowerCase().includes(query.toLowerCase()) ||
-        p.brand.toLowerCase().includes(query.toLowerCase())
+      const matchesBrand    = brands.length === 0     || brands.includes(p.brand)
+      const matchesQuery    = !query || [p.name, p.sku, p.brand]
+        .some((f) => f.toLowerCase().includes(query.toLowerCase()))
       const matchesBestSeller = !onlyBestSellers || p.bestSeller
       return matchesCategory && matchesBrand && matchesQuery && matchesBestSeller
     })
 
-    if (sortBy === "az") result = [...result].sort((a, b) => a.name.localeCompare(b.name))
-    else if (sortBy === "za") result = [...result].sort((a, b) => b.name.localeCompare(a.name))
-    else if (sortBy === "rating") result = [...result].sort((a, b) => b.rating - a.rating)
+    if (sortBy === "az")     result = [...result].sort((a, b) => a.name.localeCompare(b.name))
+    if (sortBy === "za")     result = [...result].sort((a, b) => b.name.localeCompare(a.name))
+    if (sortBy === "rating") result = [...result].sort((a, b) => b.rating - a.rating)
 
-    const total = result.length
+    const total      = result.length
     const totalPages = Math.ceil(total / limit)
-    const data = result.slice((page - 1) * limit, page * limit)
+    const data       = result.slice((page - 1) * limit, page * limit)
 
     return { data, total, page, totalPages }
   }
@@ -88,44 +76,29 @@ export class MockProductRepository implements IProductRepository {
     return this.products.filter((p) => p.featured)
   }
 
-  async findByCategory(categoryName: string): Promise<Product[]> {
-    return this.products.filter((p) => p.category === categoryName)
-  }
-
   async findRelated(productId: number, categoryName: string): Promise<Product[]> {
     return this.products.filter((p) => p.category === categoryName && p.id !== productId)
   }
 
-  async findCategories(): Promise<Category[]> {
-    return this.categories
+  // ─── CRUD (en mock: sin persistencia — con DB: persistente) ─────────────────
+
+  async create(data: CreateProductDTO): Promise<Product> {
+    const id      = Math.max(...this.products.map((p) => p.id)) + 1
+    const product = { id, ...data }
+    this.products.push(product)
+    return product
   }
 
-  async findBrands(): Promise<Brand[]> {
-    return this.brands
+  async update(id: number, data: UpdateProductDTO): Promise<Product> {
+    const index = this.products.findIndex((p) => p.id === id)
+    if (index === -1) throw new Error(`Producto ${id} no encontrado`)
+    this.products[index] = { ...this.products[index], ...data }
+    return this.products[index]
   }
 
-  async findBrandNames(): Promise<string[]> {
-    return [...new Set(this.products.map((p) => p.brand))]
+  async delete(id: number): Promise<void> {
+    const index = this.products.findIndex((p) => p.id === id)
+    if (index === -1) throw new Error(`Producto ${id} no encontrado`)
+    this.products.splice(index, 1)
   }
 }
-
-// ─── Future: API implementation skeleton ──────────────────────────────────────
-// Uncomment and complete when the backend is ready.
-//
-// export class ApiProductRepository implements IProductRepository {
-//   constructor(private baseUrl: string) {}
-//
-//   async findAll(filters: ProductFilters): Promise<PaginatedResult<Product>> {
-//     const params = new URLSearchParams()
-//     if (filters.categories?.length) params.set("cat", filters.categories.join(","))
-//     if (filters.brands?.length) params.set("brand", filters.brands.join(","))
-//     if (filters.query) params.set("q", filters.query)
-//     if (filters.onlyBestSellers) params.set("bestSellers", "true")
-//     if (filters.page) params.set("page", String(filters.page))
-//     if (filters.limit) params.set("limit", String(filters.limit))
-//     if (filters.sortBy) params.set("sort", filters.sortBy)
-//     const res = await fetch(`${this.baseUrl}/api/productos?${params}`)
-//     return res.json()
-//   }
-//   ... etc
-// }

@@ -3,11 +3,10 @@
 /**
  * CATALOGO VIEW — Orquestador de la página de catálogo.
  *
- * Responsabilidad: componer los componentes y conectar el hook de filtros.
- * No contiene lógica de negocio propia — la delega a useCatalogFilters y useProducts.
+ * Usa hooks que llaman a las API routes internas (/api/productos, /api/categorias, /api/marcas).
+ * No importa datos directamente — toda la lógica de filtrado/paginación queda en el servidor.
  */
 
-import { useMemo } from "react"
 import Link from "next/link"
 import { ProductCard } from "@/components/product/ProductCard"
 import { CatalogFilters } from "@/components/catalog/CatalogFilters"
@@ -15,15 +14,18 @@ import { CategoryBanner } from "@/components/catalog/CategoryBanner"
 import { ActiveFilterChips } from "@/components/catalog/ActiveFilterChips"
 import { CatalogToolbar } from "@/components/catalog/CatalogToolbar"
 import { useCatalogFilters } from "@/features/catalogo/hooks"
-import { products, categories } from "@/lib/data"
+import { useProducts } from "@/features/productos/hooks"
+import { useCategories } from "@/features/categorias/hooks"
+import { useBrandNames } from "@/features/marcas/hooks"
 import {
-  IconChevronRight, IconFilter, IconX, IconSearch,
+  IconChevronRight, IconSearch,
   IconStar, IconEye,
 } from "@/components/icons"
 import {
   Pagination, PaginationContent, PaginationItem,
   PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis,
 } from "@/components/ui/pagination"
+import type { ProductFilters } from "@/features/productos/types"
 
 const ITEMS_PER_PAGE = 6
 
@@ -55,45 +57,25 @@ export function CatalogoView({
   const { selectedCategories, selectedBrands, onlyBestSellers, sortBy, viewMode, currentPage } =
     filters
 
-  // Data derivada — en producción vendrá del hook useProducts (API)
-  const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
-      const matchesCategory =
-        selectedCategories.length === 0 || selectedCategories.includes(p.category)
-      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(p.brand)
-      const matchesQuery =
-        !initialQuery ||
-        p.name.toLowerCase().includes(initialQuery.toLowerCase()) ||
-        p.sku.toLowerCase().includes(initialQuery.toLowerCase()) ||
-        p.brand.toLowerCase().includes(initialQuery.toLowerCase())
-      const matchesBestSeller = !onlyBestSellers || p.bestSeller
-      return matchesCategory && matchesBrand && matchesQuery && matchesBestSeller
-    })
-  }, [selectedCategories, selectedBrands, initialQuery, onlyBestSellers])
+  // Construir filtros para la API
+  const productFilters: ProductFilters = {
+    categories: selectedCategories,
+    brands: selectedBrands,
+    onlyBestSellers,
+    sortBy,
+    page: currentPage,
+    limit: ITEMS_PER_PAGE,
+    query: initialQuery,
+  }
 
-  const sortedProducts = useMemo(() => {
-    return [...filteredProducts].sort((a, b) => {
-      if (sortBy === "az") return a.name.localeCompare(b.name)
-      if (sortBy === "za") return b.name.localeCompare(a.name)
-      if (sortBy === "rating") return b.rating - a.rating
-      return 0
-    })
-  }, [filteredProducts, sortBy])
+  // Datos desde API routes internas
+  const { products, total, totalPages, loading } = useProducts(productFilters)
+  const { categories } = useCategories()
+  const availableBrands = useBrandNames()
 
-  const totalPages = Math.ceil(sortedProducts.length / ITEMS_PER_PAGE)
-  const paginatedProducts = sortedProducts.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  )
-
-  const availableBrands = [...new Set(products.map((p) => p.brand))]
-  const getCategoryCount = (name: string) => products.filter((p) => p.category === name).length
-  const getBrandCount = (brand: string) =>
-    products.filter((p) => {
-      const matchesCat =
-        selectedCategories.length === 0 || selectedCategories.includes(p.category)
-      return matchesCat && p.brand === brand
-    }).length
+  const selectedCat = selectedCategories.length === 1
+    ? categories.find((c) => c.name === selectedCategories[0]) ?? null
+    : null
 
   const getPageNumbers = () => {
     const pages: (number | "ellipsis")[] = []
@@ -108,10 +90,6 @@ export function CatalogoView({
     }
     return pages
   }
-
-  const selectedCat = selectedCategories.length === 1
-    ? categories.find((c) => c.name === selectedCategories[0])
-    : null
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -152,8 +130,6 @@ export function CatalogoView({
                 selectedBrands={selectedBrands}
                 onlyBestSellers={onlyBestSellers}
                 activeFiltersCount={activeFiltersCount}
-                getCategoryCount={getCategoryCount}
-                getBrandCount={getBrandCount}
                 toggleCategory={toggleCategory}
                 toggleBrand={toggleBrand}
                 clearCategories={clearCategories}
@@ -168,7 +144,10 @@ export function CatalogoView({
           <main className="flex-1 min-w-0">
             {/* Category Banner */}
             {selectedCat && (
-              <CategoryBanner category={selectedCat} productCount={filteredProducts.length} />
+              <CategoryBanner
+                category={selectedCat}
+                productCount={total}
+              />
             )}
 
             {/* Active Filter Chips */}
@@ -183,24 +162,35 @@ export function CatalogoView({
 
             {/* Toolbar */}
             <CatalogToolbar
-              total={sortedProducts.length}
-              showing={paginatedProducts.length}
+              total={total}
+              showing={products.length}
               viewMode={viewMode}
               sortBy={sortBy}
               onViewModeChange={setViewMode}
               onSortChange={setSortBy}
             />
 
-            {/* Products Grid / List */}
-            {viewMode === "grid" ? (
+            {/* Loading */}
+            {loading && (
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {paginatedProducts.map((product) => (
+                {Array.from({ length: ITEMS_PER_PAGE }).map((_, i) => (
+                  <div key={i} className="h-72 animate-pulse rounded-xl bg-slate-200" />
+                ))}
+              </div>
+            )}
+
+            {/* Products Grid / List */}
+            {!loading && viewMode === "grid" && (
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
-            ) : (
+            )}
+
+            {!loading && viewMode === "list" && (
               <div className="space-y-3">
-                {paginatedProducts.map((product) => (
+                {products.map((product) => (
                   <Link
                     key={product.id}
                     href={`/producto/${product.id}`}
@@ -258,7 +248,7 @@ export function CatalogoView({
             )}
 
             {/* Empty state */}
-            {sortedProducts.length === 0 && (
+            {!loading && products.length === 0 && (
               <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 py-16 text-center">
                 <IconSearch className="mb-3 h-12 w-12 text-slate-300" />
                 <h3 className="mb-1 text-base font-semibold text-slate-800">
@@ -277,7 +267,7 @@ export function CatalogoView({
             )}
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {!loading && totalPages > 1 && (
               <Pagination className="mt-10 mb-8">
                 <PaginationContent>
                   <PaginationItem>
