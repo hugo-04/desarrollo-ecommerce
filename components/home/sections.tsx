@@ -11,6 +11,7 @@ import {
   useScrollParallax
 } from "@/hooks/useAnimations"
 import { products, categories, brands, clients, testimonials } from "@/lib/data"
+import { WA, CONTACT } from "@/lib/contact"
 import { ProductCard } from "@/components/product/ProductCard"
 import {
   IconChevronLeft, IconChevronRight, IconArrowRight, IconShield, IconTruck,
@@ -343,7 +344,7 @@ export function TestimonialsSection() {
             <span className="h-1.5 w-1.5 rounded-full bg-red-500" />Testimonios
           </span>
           <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">Lo que dicen nuestros clientes</h2>
-          <p className="mx-auto max-w-md text-sm text-slate-500">Empresas líderes del sector energético confían en nosotros desde hace 14 años</p>
+          <p className="mx-auto max-w-md text-sm text-slate-500">Empresas líderes del sector energético confían en nosotros desde 2011</p>
         </motion.div>
         <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }} className="grid gap-6 md:grid-cols-3">
           {testimonials.map((testimonial, index) => {
@@ -621,7 +622,7 @@ export function CompanyShowcase() {
           <motion.div variants={fadeLeft} className="order-2 lg:order-1">
             <div className="mb-4 flex items-center gap-3"><div className="h-px w-8 bg-red-500" /><span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Nuestra Empresa</span></div>
             <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-[#121A47] lg:text-4xl">Suministro e Ingenieria<br /><span className="text-primary">Especializada en AT/MT</span></h2>
-            <p className="mb-6 text-sm leading-relaxed text-slate-600">Electro Thina es una empresa distribuidora de ferreteria y accesorios electricos para lineas de alta y media tension. Contamos con un amplio stock de aisladores, herrajes, conectores, cables y materiales de ferreteria electrica con certificaciones internacionales.</p>
+            <p className="mb-6 text-sm leading-relaxed text-slate-600">Electro Thina es una empresa fabricante y distribuidora de ferreteria y accesorios electricos para lineas de alta y media tension. Contamos con un amplio stock de aisladores, herrajes, conectores, cables y materiales de ferreteria electrica con certificaciones internacionales.</p>
             <div className="mb-8 grid grid-cols-2 gap-4">
               {[
                 { icon: IconShield, title: "Certificaciones", desc: "IEC, ANSI, NTP, ISO 9001", color: "bg-primary/10 text-primary" },
@@ -1021,9 +1022,9 @@ export function CtaBand() {
                 Ver Catálogo
               </Link>
             </div>
-            <a href="https://wa.me/51981375196?text=Hola%2C%20quisiera%20cotizar%20materiales%20AT%2FMT" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-slate-400 transition-colors hover:text-green-400">
+            <a href={WA.materiales} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-slate-400 transition-colors hover:text-green-400">
               <IconWhatsApp className="h-3.5 w-3.5" />
-              O escríbenos por WhatsApp: +51 981 375 196
+              O escríbenos por WhatsApp: {CONTACT.phoneDisplay}
             </a>
           </motion.div>
         </div>

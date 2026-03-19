@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { IconPhone, IconMail, IconMapPin, IconClock, IconFacebook, IconInstagram, IconLinkedIn } from "@/components/icons"
+import { CONTACT } from "@/lib/contact"
 
 export function Footer() {
   return (
@@ -18,7 +19,7 @@ export function Footer() {
               <span className="text-lg font-bold">Electro Thina</span>
             </div>
             <p className="mb-4 text-xs text-slate-500">
-              Distribuidores especializados en ferreteria y accesorios electricos para lineas de alta y media tension.
+              Fabricantes y distribuidores especializados en ferreteria y accesorios electricos para lineas de alta y media tension.
             </p>
             <div className="flex gap-2">
               <a href="#" className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.06] transition-all hover:bg-red-500/20 hover:text-red-400"><IconFacebook className="h-4 w-4" /></a>
@@ -49,10 +50,10 @@ export function Footer() {
           <div>
             <h4 className="mb-4 text-sm font-semibold text-slate-300">Contacto</h4>
             <ul className="space-y-3 text-xs text-slate-500">
-              <li className="flex items-center gap-2"><IconPhone className="h-4 w-4 text-red-500/50" />(01) 234-5678</li>
-              <li className="flex items-center gap-2"><IconMail className="h-4 w-4 text-red-500/50" />ventas@electrothina.com</li>
-              <li className="flex items-center gap-2"><IconMapPin className="h-4 w-4 text-red-500/50" />Av. Industrial 1234, Lima</li>
-              <li className="flex items-center gap-2"><IconClock className="h-4 w-4 text-red-500/50" />L-V: 9am-6pm | Sáb: 9am-3pm</li>
+              <li className="flex items-center gap-2"><IconPhone className="h-4 w-4 text-red-500/50" />{CONTACT.phoneDisplay} / {CONTACT.phone2Display}</li>
+              <li className="flex items-center gap-2"><IconMail className="h-4 w-4 text-red-500/50" />{CONTACT.email}</li>
+              <li className="flex items-center gap-2"><IconMapPin className="h-4 w-4 text-red-500/50" />{CONTACT.address}</li>
+              <li className="flex items-center gap-2"><IconClock className="h-4 w-4 text-red-500/50" />L-V: 9am-6pm / Sáb: 9am-3pm</li>
             </ul>
           </div>
         </div>

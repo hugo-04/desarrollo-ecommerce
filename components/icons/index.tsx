@@ -346,10 +346,12 @@ export function IconEye({ className }: { className?: string }) {
 export function IconPDF({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className}>
-      <rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M8 12h8M8 16h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M14 2v6h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M7 7h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      {/* Cuerpo del documento con esquina doblada */}
+      <path d="M4 4a2 2 0 0 1 2-2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      {/* Esquina doblada */}
+      <path d="M14 2v5a1 1 0 0 0 1 1h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Texto PDF */}
+      <text x="5.5" y="18.5" fontSize="5.5" fontWeight="700" fontFamily="sans-serif" fill="currentColor" letterSpacing="0.3">PDF</text>
     </svg>
   )
 }

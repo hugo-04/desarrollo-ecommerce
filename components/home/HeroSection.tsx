@@ -106,7 +106,7 @@ export function HeroSection() {
             </motion.h1>
 
             <motion.p variants={fadeUp} className="mb-12 max-w-xl text-base leading-[1.8] text-slate-400/90 sm:text-[1.05rem]">
-              Aisladores, herrajes, conectores, cables y ferreteria para lineas de alta y media tension. Distribuidores autorizados con certificaciones IEC, ANSI e ISO.
+              Aisladores, herrajes, conectores, cables y ferreteria para lineas de alta y media tension. Fabricantes y distribuidores con certificaciones IEC, ANSI e ISO.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5">

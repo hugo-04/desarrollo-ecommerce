@@ -4,7 +4,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Electro Thina | Ferretería y Accesorios Eléctricos AT/MT',
-  description: 'Electro Thina - Distribuidores de ferretería y accesorios eléctricos para alta y media tensión. Aisladores, herrajes, conectores, cables y transformadores con certificaciones IEC y ANSI.',
+  description: 'Electro Thina - Fabricantes y distribuidores de ferretería y accesorios eléctricos para alta y media tensión. Aisladores, herrajes, conectores, cables y transformadores con certificaciones IEC y ANSI.',
   generator: 'v0.app',
   icons: {
     icon: [

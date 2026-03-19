@@ -5,10 +5,11 @@ import { useParams } from "next/navigation"
 import Link from "next/link"
 import { ProductCard } from "@/components/product/ProductCard"
 import { products } from "@/lib/data"
+import { WA } from "@/lib/contact"
 import { useFadeInOnScroll } from "@/hooks/useAnimations"
 import {
-  IconChevronRight, IconChevronLeft, IconStar, IconWhatsApp, IconDownload,
-  IconShield, IconPhone, IconCheck, IconCertificate, IconTools, IconX,
+  IconChevronRight, IconChevronLeft, IconStar, IconWhatsApp, IconPDF,
+  IconShield, IconCheck, IconCertificate, IconTools, IconX,
 } from "@/components/icons"
 
 export default function ProductoPage() {
@@ -43,20 +44,20 @@ export default function ProductoPage() {
   const relatedProducts = categoryProducts.filter((p) => p.id !== product.id)
 
   const handleWhatsAppQuote = (note?: string) => {
-    const message = encodeURIComponent(
-      `Hola, me gustaria solicitar cotizacion del producto:\n*${product.name}*\nSKU: ${product.sku}\nMarca: ${product.brand}${note ? `\n\nNota: ${note}` : ""}`
-    )
-    window.open(`https://wa.me/51981375196?text=${message}`, "_blank")
+    const url = note
+      ? `https://wa.me/51981375196?text=${encodeURIComponent(`Hola, me gustaría solicitar cotización del producto:\n*${product.name}*\nSKU: ${product.sku}\nMarca: ${product.brand}\n\nNota: ${note}`)}`
+      : WA.producto(product.name, product.sku, product.brand)
+    window.open(url, "_blank")
     setShowQuoteModal(false)
   }
 
   return (
     <>
-      {/* Breadcrumbs + product nav */}
+      {/* Breadcrumbs + product navigation */}
       <div className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 text-xs min-w-0">
+            <div className="flex min-w-0 items-center gap-1.5 text-xs">
               <Link href="/" className="shrink-0 text-slate-500 hover:text-primary">Inicio</Link>
               <IconChevronRight className="h-3 w-3 shrink-0 text-slate-400" />
               <Link href="/catalogo" className="shrink-0 text-slate-500 hover:text-primary">Catalogo</Link>
@@ -65,20 +66,20 @@ export default function ProductoPage() {
               <IconChevronRight className="h-3 w-3 shrink-0 text-slate-400" />
               <span className="truncate font-medium text-slate-800">{product.name.length > 40 ? product.name.substring(0, 40) + "..." : product.name}</span>
             </div>
-            {/* Prev / Next navigation */}
+            {/* Prev / Next product in category */}
             <div className="flex shrink-0 items-center gap-1.5">
               <span className="hidden text-[10px] text-slate-400 sm:inline">{currentIndex + 1} / {categoryProducts.length}</span>
               <Link
                 href={prevProduct ? `/producto/${prevProduct.id}` : "#"}
-                className={`flex h-7 w-7 items-center justify-center rounded-lg border text-xs transition-all ${prevProduct ? "border-slate-200 bg-white text-slate-600 hover:border-primary hover:text-primary" : "pointer-events-none border-slate-100 bg-slate-50 text-slate-300"}`}
                 title={prevProduct?.name}
+                className={`flex h-7 w-7 items-center justify-center rounded-lg border text-xs transition-all ${prevProduct ? "border-slate-200 bg-white text-slate-600 hover:border-primary hover:text-primary" : "pointer-events-none border-slate-100 bg-slate-50 text-slate-300"}`}
               >
                 <IconChevronLeft className="h-3.5 w-3.5" />
               </Link>
               <Link
                 href={nextProduct ? `/producto/${nextProduct.id}` : "#"}
-                className={`flex h-7 w-7 items-center justify-center rounded-lg border text-xs transition-all ${nextProduct ? "border-slate-200 bg-white text-slate-600 hover:border-primary hover:text-primary" : "pointer-events-none border-slate-100 bg-slate-50 text-slate-300"}`}
                 title={nextProduct?.name}
+                className={`flex h-7 w-7 items-center justify-center rounded-lg border text-xs transition-all ${nextProduct ? "border-slate-200 bg-white text-slate-600 hover:border-primary hover:text-primary" : "pointer-events-none border-slate-100 bg-slate-50 text-slate-300"}`}
               >
                 <IconChevronRight className="h-3.5 w-3.5" />
               </Link>
@@ -155,18 +156,48 @@ export default function ProductoPage() {
                 <p className="mt-1 text-xs text-blue-700">Cumple normas IEC, ANSI y NTP. Respaldado por certificaciones internacionales.</p>
               </div>
 
-              {/* CTA Buttons */}
-              <div className="space-y-3">
-                <button onClick={() => setShowQuoteModal(true)} className="flex w-full items-center justify-center gap-3 rounded-xl bg-green-600 py-4 text-sm font-bold text-white shadow-lg shadow-green-600/25 transition-all hover:bg-green-700 hover:shadow-xl">
-                  <IconWhatsApp className="h-5 w-5" />Solicitar Cotizacion por WhatsApp
-                </button>
-                <div className="grid grid-cols-2 gap-3">
-                  <button onClick={() => alert("Descargando ficha tecnica...")} className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-3 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:text-primary">
-                    <IconDownload className="h-4 w-4" />Ficha Tecnica
+              {/* CTA Section */}
+              <div className="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50/80 to-white p-5 shadow-sm">
+                <p className="mb-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">Solicitar información</p>
+
+                {/* Fila única: Ficha Técnica izquierda · Cotizar derecha */}
+                <div className="flex gap-3">
+
+                  {/* Ficha Técnica — secundario, izquierda */}
+                  <button
+                    onClick={() => alert("Descargando ficha tecnica...")}
+                    className="group flex flex-1 items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3.5 transition-all duration-200 hover:border-red-200 hover:bg-red-50/40"
+                  >
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200/70 bg-red-50">
+                      <IconPDF className="h-4 w-4 text-red-600" />
+                    </span>
+                    <span className="text-left">
+                      <span className="block text-xs font-semibold text-slate-800 leading-tight">Ficha Técnica</span>
+                      <span className="block text-[10px] text-slate-400 mt-0.5 font-medium">PDF · Specs</span>
+                    </span>
                   </button>
-                  <Link href="/contacto" className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-3 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:text-primary">
-                    <IconPhone className="h-4 w-4" />Contactar Asesor
-                  </Link>
+
+                  {/* Cotizar — primario, derecha */}
+                  <button
+                    onClick={() => setShowQuoteModal(true)}
+                    className="group relative flex flex-[1.4] items-center gap-3 overflow-hidden rounded-xl bg-green-600 px-4 py-3.5 text-white shadow-md shadow-green-600/25 transition-all duration-300 hover:bg-green-700 hover:shadow-lg hover:shadow-green-600/30"
+                  >
+                    <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15 ring-1 ring-white/20">
+                      <IconWhatsApp className="h-4 w-4" />
+                    </span>
+                    <span className="text-left">
+                      <span className="block text-xs font-bold leading-tight">Solicitar Cotización</span>
+                      <span className="block text-[10px] text-green-100/75 mt-0.5">Respuesta &lt; 2 horas</span>
+                    </span>
+                  </button>
+
+                </div>
+
+                {/* Trust signal */}
+                <div className="mt-3.5 flex items-center justify-center gap-1.5">
+                  <IconCheck className="h-3 w-3 shrink-0 text-emerald-500" />
+                  <p className="text-[11px] text-slate-400">Cotización gratuita · Sin compromiso · Atención técnica especializada</p>
                 </div>
               </div>
             </div>
@@ -243,7 +274,7 @@ export default function ProductoPage() {
               <h2 className="mb-2 text-xl font-extrabold text-[#121A47]">Clientes que vieron este producto también compraron:</h2>
               <p className="mb-6 text-sm text-slate-500">Productos complementarios del mismo sector</p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 6).map((p) => (
+                {relatedProducts.slice(0, 6).map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>

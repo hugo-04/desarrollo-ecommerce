@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { usePathname } from "next/navigation"
 import { motion, useScroll, useMotionValueEvent } from "framer-motion"
 import { TopBar } from "./TopBar"
 import { Header } from "./Header"
@@ -8,12 +9,15 @@ import { Navigation } from "./Navigation"
 import { Footer } from "./Footer"
 import { IconWhatsApp } from "@/components/icons"
 import { globalAnimationsCSS } from "@/styles/animations"
+import { WA } from "@/lib/contact"
 
 /**
  * AppShell wraps all pages with the shared layout:
  * TopBar, Header, Navigation, Footer, WhatsApp FAB, and global CSS animations.
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  const isProductDetail = pathname?.startsWith("/producto/")
   const [searchQuery, setSearchQuery] = useState("")
   const [hidden, setHidden] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -63,16 +67,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <Footer />
 
-        {/* Floating WhatsApp Button */}
-        <a
-          href="https://wa.me/51981375196?text=Hola%2C%20me%20gustaria%20solicitar%20informacion."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="whatsapp-bounce fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-colors hover:bg-green-600"
-          aria-label="Contactar por WhatsApp"
-        >
-          <IconWhatsApp className="h-7 w-7" />
-        </a>
+        {/* Floating WhatsApp Button — oculto en detalle de producto */}
+        {!isProductDetail && (
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+            {/* Tooltip "Cotizar aquí" */}
+            <span className="whatsapp-label pointer-events-none whitespace-nowrap rounded-lg border border-green-100 bg-white px-3 py-1.5 text-sm font-semibold text-green-700 shadow-lg shadow-green-500/20">
+              Cotizar aquí
+            </span>
+            {/* Wrapper con bounce — ring y botón se mueven juntos */}
+            <div className="whatsapp-bounce relative flex h-14 w-14 items-center justify-center">
+              <span className="whatsapp-ring absolute inset-0 rounded-full bg-green-400" />
+              <span className="whatsapp-ring-delayed absolute inset-0 rounded-full bg-green-400" />
+              <a
+                href={WA.general}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-colors hover:bg-green-600"
+                aria-label="Contactar por WhatsApp"
+              >
+                <IconWhatsApp className="h-7 w-7" />
+              </a>
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

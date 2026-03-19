@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { clients } from "@/lib/data"
+import { WA } from "@/lib/contact"
 import {
   IconShield, IconTruck, IconClock, IconHeadphones, IconBuilding,
   IconArrowRight, IconCertificate, IconCheck, IconBolt, IconZap,
@@ -49,7 +50,7 @@ export default function NosotrosPage() {
             Electro Thina
           </motion.h1>
           <motion.p variants={fadeUp} className="mx-auto max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
-            Distribuidores especializados en ferreteria y accesorios electricos para lineas de alta y media tension desde hace 14 años.
+            Fabricantes y distribuidores especializados en ferreteria y accesorios electricos para lineas de alta y media tension desde 2011.
           </motion.p>
         </motion.div>
 
@@ -478,7 +479,7 @@ export default function NosotrosPage() {
               <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <a
-              href="https://wa.me/51981375196?text=Hola%2C%20quisiera%20hablar%20con%20un%20ingeniero%20sobre%20mi%20proyecto%20AT%2FMT"
+              href={WA.ingeniero}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/10"

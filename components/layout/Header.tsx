@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { IconSearch, IconWhatsApp } from "@/components/icons"
+import { WA } from "@/lib/contact"
 
 interface HeaderProps {
   searchQuery: string
@@ -58,14 +59,11 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
 
           {/* WhatsApp Cotizar */}
           <button
-            onClick={() => {
-              const msg = encodeURIComponent("Hola, me gustaria solicitar una cotizacion directa.")
-              window.open(`https://wa.me/51981375196?text=${msg}`, "_blank")
-            }}
-            className="flex shrink-0 items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-green-600/20 transition-all hover:bg-green-700 hover:shadow-lg hover:shadow-green-600/30"
+            onClick={() => window.open(WA.cotizar, "_blank")}
+            className="header-wa-pulse flex shrink-0 items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-green-700"
           >
             <IconWhatsApp className="h-4 w-4" />
-            <span className="hidden sm:inline">Cotizar</span>
+            <span className="hidden sm:inline">Cotizar aquí</span>
           </button>
 
         </div>

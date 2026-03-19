@@ -1,6 +1,7 @@
 "use client"
 
 import { IconMail, IconPhone, IconClock, IconFacebook, IconInstagram, IconLinkedIn } from "@/components/icons"
+import { CONTACT } from "@/lib/contact"
 
 export function TopBar() {
   return (
@@ -17,13 +18,13 @@ export function TopBar() {
               <span className="text-[10px] font-semibold uppercase tracking-widest text-emerald-400/80">En Línea</span>
             </span>
             <span className="hidden h-3 w-px bg-white/10 sm:block" />
-            <a href="mailto:ventas@electrothina.com" className="flex items-center gap-1.5 text-slate-400 transition-colors hover:text-white">
+            <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-1.5 text-slate-400 transition-colors hover:text-white">
               <IconMail className="h-3 w-3" />
-              <span className="hidden sm:inline">ventas@electrothina.com</span>
+              <span className="hidden sm:inline">{CONTACT.email}</span>
             </a>
-            <a href="tel:+51123456789" className="flex items-center gap-1.5 text-slate-400 transition-colors hover:text-white">
+            <a href={CONTACT.phoneTel} className="flex items-center gap-1.5 text-slate-400 transition-colors hover:text-white">
               <IconPhone className="h-3 w-3" />
-              <span>(01) 234-5678</span>
+              <span>{CONTACT.phoneDisplay}</span>
             </a>
             <div className="hidden items-center gap-1.5 text-slate-400 md:flex">
               <IconClock className="h-3 w-3" />
