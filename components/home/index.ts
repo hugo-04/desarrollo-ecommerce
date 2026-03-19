@@ -1,19 +1,18 @@
+// Home section components — each in its own file (Single Responsibility)
 export { HeroSection } from "./HeroSection"
-export {
-  BestSellersCarousel,
-  CategoriesGrid,
-  MarqueeBrands,
-  BenefitsSection,
-  TestimonialsSection,
-  PromoBanner,
-  FeaturedOffers,
-  SectoresSection,
-  FullWidthStats,
-  CompanyShowcase,
-  ServiciosSection,
-  ProcesoSection,
-  CertificacionesStrip,
-  CtaBand,
-  TrustBar,
-  FabricacionSection,
-} from "./sections"
+export { TrustBar } from "./TrustBar"
+export { CategoriesGrid } from "./CategoriesGrid"
+export { BestSellersCarousel } from "./BestSellersCarousel"
+export { MarqueeBrands } from "./MarqueeBrands"
+export { ProcesoSection } from "./ProcesoSection"
+export { SectoresSection } from "./SectoresSection"
+export { FullWidthStats } from "./FullWidthStats"
+export { FeaturedOffers } from "./FeaturedOffers"
+export { CertificacionesStrip } from "./CertificacionesStrip"
+export { CompanyShowcase } from "./CompanyShowcase"
+export { FabricacionSection } from "./FabricacionSection"
+export { BenefitsSection } from "./BenefitsSection"
+export { ServiciosSection } from "./ServiciosSection"
+export { TestimonialsSection } from "./TestimonialsSection"
+export { PromoBanner } from "./PromoBanner"
+export { CtaBand } from "./CtaBand"
