@@ -42,9 +42,15 @@ export async function POST(request: NextRequest) {
     // Crear directorio si no existe
     await mkdir(UPLOAD_DIR, { recursive: true })
 
-    // Nombre único: timestamp + nombre limpio
-    const ext      = file.name.split(".").pop() ?? "bin"
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").replace(`.${ext}`, "")
+    // Nombre único: timestamp + nombre SEO (si viene) o nombre original limpio
+    const ext     = file.name.split(".").pop()?.toLowerCase() ?? "bin"
+    const rawName = (formData.get("seoName") as string | null)?.trim() || file.name.replace(`.${file.name.split(".").pop() ?? ""}`, "")
+    const safeName = rawName
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")  // quita acentos
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+      .slice(0, 80)
     const filename = `${Date.now()}-${safeName}.${ext}`
     const filepath = join(UPLOAD_DIR, filename)
 

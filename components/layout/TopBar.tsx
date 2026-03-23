@@ -28,7 +28,7 @@ export function TopBar() {
             </a>
             <div className="hidden items-center gap-1.5 text-slate-400 md:flex">
               <IconClock className="h-3 w-3" />
-              <span>L-V: 9am-6pm | Sáb: 9am-3pm</span>
+              <span>{CONTACT.hours}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">

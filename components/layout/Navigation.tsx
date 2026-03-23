@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { Home, ShoppingBag, Users, PhoneCall, LogIn } from "lucide-react"
+import { Home, ShoppingBag, Users, PhoneCall, UserRound } from "lucide-react"
 import { IconMenu, IconChevronDown, IconChevronRight, IconFire } from "@/components/icons"
 import { useCategories } from "@/features/categorias/hooks"
 import { getCategoryIcon } from "@/lib/category-icons"
@@ -21,11 +21,17 @@ function MegaMenu({
   const [activeCategory, setActiveCategory] = useState<number | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Activa la primera categoría cuando se abre el menú por primera vez
   useEffect(() => {
     if (isOpen && !activeCategory && categories.length > 0) {
       setActiveCategory(categories[0]?.id || null)
     }
   }, [isOpen, activeCategory, categories])
+
+  // Cancela el timeout pendiente al desmontar para evitar memory leaks
+  useEffect(() => {
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
+  }, [])
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
@@ -258,10 +264,10 @@ export function Navigation() {
           <div className="flex items-center justify-end gap-2">
             <Link
               href="/login"
-              title="Iniciar sesión"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-white/20 hover:text-white"
+              className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-sm font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white"
             >
-              <LogIn size={16} />
+              <UserRound size={15} />
+              <span className="hidden sm:inline">Login</span>
             </Link>
             <Link
               href="/catalogo?bestSellers=true"

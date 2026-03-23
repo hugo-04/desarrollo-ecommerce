@@ -9,10 +9,12 @@ import { MockBrandRepository } from "./repository"
 import { BrandService } from "./service"
 import type { CreateBrandDTO, UpdateBrandDTO } from "./types"
 
-function getService() {
-  return new BrandService(new MockBrandRepository())
-  // TODO DB: return new BrandService(new DbBrandRepository(db))
-}
+// Singleton: una sola instancia compartida entre todas las llamadas del proceso.
+// Sin esto, cada acción creaba un repo nuevo y los cambios se perdían al instante.
+const _service = new BrandService(new MockBrandRepository())
+// TODO DB: const _service = new BrandService(new DbBrandRepository(db))
+
+function getService() { return _service }
 
 // ─── Lectura ──────────────────────────────────────────────────────────────────
 

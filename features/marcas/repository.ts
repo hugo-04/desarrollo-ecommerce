@@ -25,6 +25,15 @@ export interface IBrandRepository {
 
 // ─── Mock implementation ───────────────────────────────────────────────────────
 
+/**
+ * Calcula el próximo ID disponible.
+ * Usa `reduce` en lugar de spread + Math.max para evitar `-Infinity`
+ * cuando el array está vacío, lo que causaría IDs `NaN`.
+ */
+function nextId(items: { id: number }[]): number {
+  return items.reduce((max, item) => Math.max(max, item.id), 0) + 1
+}
+
 export class MockBrandRepository implements IBrandRepository {
   private brands = [...MOCK_BRANDS]
 
@@ -33,7 +42,7 @@ export class MockBrandRepository implements IBrandRepository {
   async findNames(): Promise<string[]>                 { return this.brands.map((b) => b.name) }
 
   async create(data: CreateBrandDTO): Promise<Brand> {
-    const id    = Math.max(...this.brands.map((b) => b.id)) + 1
+    const id    = nextId(this.brands)
     const brand = { id, ...data }
     this.brands.push(brand)
     return brand

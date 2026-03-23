@@ -8,6 +8,55 @@ interface ProductInfoProps {
   product: Product
 }
 
+// ─── Markdown renderer (bold + bullets) ──────────────────────────────────────
+
+function renderInline(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/)
+  return parts.map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={i} className="font-semibold text-slate-700">{part.slice(2, -2)}</strong>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  )
+}
+
+function MarkdownText({ text }: { text: string }) {
+  const lines = text.split("\n")
+  const result: React.ReactNode[] = []
+  let listBuffer: string[] = []
+
+  const flushList = (key: number) => {
+    if (listBuffer.length === 0) return
+    result.push(
+      <ul key={`ul-${key}`} className="my-2 list-disc space-y-0.5 pl-5">
+        {listBuffer.map((item, i) => (
+          <li key={i} className="text-slate-500">{renderInline(item)}</li>
+        ))}
+      </ul>
+    )
+    listBuffer = []
+  }
+
+  lines.forEach((line, i) => {
+    if (line.startsWith("- ") || line.startsWith("• ")) {
+      listBuffer.push(line.slice(2))
+    } else {
+      flushList(i)
+      if (line.trim()) {
+        result.push(
+          <p key={i} className="leading-relaxed text-slate-500">{renderInline(line)}</p>
+        )
+      }
+    }
+  })
+  flushList(lines.length)
+
+  return <div className="space-y-1 text-sm">{result}</div>
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export function ProductInfo({ product }: ProductInfoProps) {
   const c = PRODUCT_DETAIL_CONTENT
   return (
@@ -35,8 +84,17 @@ export function ProductInfo({ product }: ProductInfoProps) {
         </span>
       </div>
 
-      {/* Description */}
-      <p className="mb-5 text-sm leading-relaxed text-slate-500">{product.fullDescription}</p>
+      {/* Descripción corta */}
+      {product.description && (
+        <p className="mb-4 text-sm leading-relaxed text-slate-500">{product.description}</p>
+      )}
+
+      {/* Descripción completa (markdown) */}
+      {product.fullDescription && (
+        <div className="mb-5">
+          <MarkdownText text={product.fullDescription} />
+        </div>
+      )}
 
       {/* Specs tags */}
       <div className="mb-6 flex flex-wrap gap-2">

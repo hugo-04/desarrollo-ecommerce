@@ -5,7 +5,8 @@ import { PRODUCT_DETAIL_CONTENT } from "@/lib/data/mock/static-content.mock"
 
 interface ProductCTAProps {
   onCotizar: () => void
-  onFichaTecnica: () => void
+  /** Si es undefined, el botón de ficha técnica se oculta */
+  onFichaTecnica?: () => void
 }
 
 export function ProductCTA({ onCotizar, onFichaTecnica }: ProductCTAProps) {
@@ -17,23 +18,25 @@ export function ProductCTA({ onCotizar, onFichaTecnica }: ProductCTAProps) {
       </p>
 
       <div className="flex gap-3">
-        {/* Ficha Técnica */}
-        <button
-          onClick={onFichaTecnica}
-          className="group flex flex-1 items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3.5 transition-all duration-200 hover:border-red-200 hover:bg-red-50/40"
-        >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200/70 bg-red-50">
-            <IconPDF className="h-4 w-4 text-red-600" />
-          </span>
-          <span className="text-left">
-            <span className="block text-xs font-semibold text-slate-800 leading-tight">
-              {c.fichaTecnicaLabel}
+        {/* Ficha Técnica — solo se muestra si el producto tiene PDF */}
+        {onFichaTecnica && (
+          <button
+            onClick={onFichaTecnica}
+            className="group flex flex-1 items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3.5 transition-all duration-200 hover:border-red-200 hover:bg-red-50/40"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200/70 bg-red-50">
+              <IconPDF className="h-4 w-4 text-red-600" />
             </span>
-            <span className="block text-[10px] text-slate-400 mt-0.5 font-medium">
-              {c.fichaTecnicaSubLabel}
+            <span className="text-left">
+              <span className="block text-xs font-semibold text-slate-800 leading-tight">
+                {c.fichaTecnicaLabel}
+              </span>
+              <span className="block text-[10px] text-slate-400 mt-0.5 font-medium">
+                {c.fichaTecnicaSubLabel}
+              </span>
             </span>
-          </span>
-        </button>
+          </button>
+        )}
 
         {/* Cotizar */}
         <button

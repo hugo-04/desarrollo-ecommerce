@@ -1,36 +1,51 @@
 /**
- * SESSION UTILITIES — Gestión de sesión sin dependencias externas.
+ * SESSION UTILITIES — JWT + bcrypt
  *
- * Usa HMAC-SHA256 para firmar el token de sesión.
- * Al migrar a next-auth: reemplazar este archivo y features/auth/actions.ts.
+ * Usa JWT (jose) para firmar tokens y bcryptjs para validar contraseñas.
  *
  * Variables de entorno:
- *   AUTH_SECRET      — clave de firma (obligatoria en producción)
- *   ADMIN_EMAIL      — email del administrador
- *   ADMIN_PASSWORD   — contraseña del administrador
+ *   AUTH_SECRET           — clave de firma JWT (obligatoria en producción)
+ *   ADMIN_EMAIL           — email del administrador
+ *   ADMIN_PASSWORD_HASH   — hash bcrypt de la contraseña (recomendado)
+ *   ADMIN_PASSWORD        — contraseña en texto plano (solo desarrollo)
+ *
+ * Para generar un hash bcrypt:
+ *   node -e "const b=require('bcryptjs'); b.hash('tu_contraseña', 12).then(console.log)"
  */
 
-import crypto from "crypto"
+import { SignJWT, jwtVerify } from "jose"
+import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
 
-const SECRET       = process.env.AUTH_SECRET      ?? "electro-thina-dev-secret-2024"
-const ADMIN_EMAIL  = process.env.ADMIN_EMAIL      ?? "admin@electrothina.com"
-const ADMIN_PASS   = process.env.ADMIN_PASSWORD   ?? "admin123"
+const SECRET       = new TextEncoder().encode(
+  process.env.AUTH_SECRET ?? "electro-thina-dev-secret-2024"
+)
+const ADMIN_EMAIL  = process.env.ADMIN_EMAIL ?? "admin@electrothina.com"
 const COOKIE_NAME  = "et_admin_session"
 const COOKIE_MAX_AGE = 60 * 60 * 8 // 8 horas
 
-function sign(value: string): string {
-  return crypto.createHmac("sha256", SECRET).update(value).digest("hex")
-}
+export async function validateCredentials(email: string, password: string): Promise<boolean> {
+  if (email !== ADMIN_EMAIL) return false
 
-export function validateCredentials(email: string, password: string): boolean {
-  return email === ADMIN_EMAIL && password === ADMIN_PASS
+  const hash = process.env.ADMIN_PASSWORD_HASH
+  if (hash) {
+    return bcrypt.compare(password, hash)
+  }
+
+  // Fallback texto plano (solo desarrollo)
+  const plain = process.env.ADMIN_PASSWORD ?? "admin123"
+  return password === plain
 }
 
 export async function createSession(email: string): Promise<void> {
-  const token = sign(email)
-  const jar   = await cookies()
-  jar.set(COOKIE_NAME, `${email}:${token}`, {
+  const token = await new SignJWT({ email })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("8h")
+    .sign(SECRET)
+
+  const jar = await cookies()
+  jar.set(COOKIE_NAME, token, {
     httpOnly: true,
     secure:   process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -40,15 +55,18 @@ export async function createSession(email: string): Promise<void> {
 }
 
 export async function getSession(): Promise<{ email: string } | null> {
-  const jar    = await cookies()
-  const cookie = jar.get(COOKIE_NAME)?.value
-  if (!cookie) return null
+  const jar   = await cookies()
+  const token = jar.get(COOKIE_NAME)?.value
+  if (!token) return null
 
-  const [email, token] = cookie.split(":")
-  if (!email || !token) return null
-  if (token !== sign(email)) return null
-
-  return { email }
+  try {
+    const { payload } = await jwtVerify(token, SECRET)
+    const email = payload.email as string
+    if (!email) return null
+    return { email }
+  } catch {
+    return null
+  }
 }
 
 export async function clearSession(): Promise<void> {

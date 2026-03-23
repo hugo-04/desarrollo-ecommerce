@@ -1,456 +1,464 @@
 "use client"
 
-import { useState, useRef } from "react"
+/**
+ * ProductForm — formulario completo para crear y editar productos.
+ *
+ * Responsabilidades de este archivo:
+ *  - Orquestar el estado del formulario (selects controlados, imágenes, specs, etc.)
+ *  - Llamar a las server actions de creación / actualización
+ *  - Manejar la creación rápida de marca/categoría sin salir de la página
+ *
+ * Los sub-componentes viven en `./product-form/` para mantener SRP.
+ */
+
+import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { AlertCircle, CheckCircle2 } from "lucide-react"
+import { toast } from "sonner"
+
+import { productSchema, type ProductErrors } from "@/features/productos/schemas"
+
 import { createProductAction, updateProductAction } from "@/features/productos/actions"
-import type { Product } from "@/lib/types"
+import { createBrandAction } from "@/features/marcas/actions"
+import { createCategoryAction } from "@/features/categorias/actions"
+import { RichEditor } from "@/components/admin/RichEditor"
+import { ImageUpload } from "@/components/ui/ImageUpload"
+import { QuickCreateBrandDialog } from "@/components/admin/QuickCreateBrandDialog"
+import { QuickCreateCategoryDialog } from "@/components/admin/QuickCreateCategoryDialog"
+
+import { SearchableSelect } from "./product-form/SearchableSelect"
+import { PdfUploader } from "./product-form/PdfUploader"
+import { TagsEditor } from "./product-form/TagsEditor"
+import { TechSpecsEditor } from "./product-form/TechSpecsEditor"
+import { GalleryEditor } from "./product-form/GalleryEditor"
+import { Field, SectionHeader } from "./product-form/FormHelpers"
+
+import type { Product, TechnicalSpec } from "@/lib/types"
 import type { CategoryDTO } from "@/features/categorias/types"
 import type { Brand } from "@/lib/types"
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Tipos ─────────────────────────────────────────────────────────────────
 
 interface ProductFormProps {
-  product?: Product          // undefined = crear, definido = editar
+  product?: Product
   categories: CategoryDTO[]
   brands: Brand[]
 }
 
-interface TechSpec { label: string; value: string }
-
-// ─── Image Uploader ───────────────────────────────────────────────────────────
-
-function ImageUploader({
-  label,
-  value,
-  onChange,
-}: {
-  label: string
-  value: string
-  onChange: (url: string) => void
-}) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState("")
-
-  async function handleFile(file: File) {
-    setUploading(true)
-    setError("")
-    const fd = new FormData()
-    fd.append("file", file)
-    try {
-      const res  = await fetch("/api/upload", { method: "POST", body: fd })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
-      onChange(data.url)
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Error al subir")
-    } finally {
-      setUploading(false)
-    }
-  }
-
-  return (
-    <div>
-      <label className="mb-1.5 block text-xs font-semibold text-slate-600">{label}</label>
-
-      {/* Preview */}
-      {value && (
-        <div className="mb-2 relative h-32 w-32 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
-          <img src={value} alt="preview" className="h-full w-full object-contain p-2" />
-          <button
-            type="button"
-            onClick={() => onChange("")}
-            className="absolute right-1 top-1 rounded-full bg-red-500 px-1.5 text-[10px] text-white"
-          >✕</button>
-        </div>
-      )}
-
-      <div className="flex gap-2">
-        {/* Upload file */}
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={uploading}
-          className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-        >
-          {uploading ? "Subiendo…" : "📁 Subir archivo"}
-        </button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
-        />
-
-        {/* Or URL */}
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="O pegar URL de imagen"
-          className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700 outline-none focus:ring-2 focus:ring-[#1C2870]/20"
-        />
-      </div>
-
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
-    </div>
-  )
+/** Estado para el diálogo de creación rápida activo */
+interface QuickCreateState {
+  type: "brand" | "category"
+  defaultName: string
 }
 
-// ─── File Uploader (PDF ficha técnica) ───────────────────────────────────────
-
-function FileUploader({
-  label,
-  value,
-  onChange,
-}: {
-  label: string
-  value: string
-  onChange: (url: string) => void
-}) {
-  const inputRef  = useRef<HTMLInputElement>(null)
-  const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState("")
-
-  async function handleFile(file: File) {
-    setUploading(true)
-    setError("")
-    const fd = new FormData()
-    fd.append("file", file)
-    try {
-      const res  = await fetch("/api/upload", { method: "POST", body: fd })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
-      onChange(data.url)
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Error al subir")
-    } finally {
-      setUploading(false)
-    }
-  }
-
-  return (
-    <div>
-      <label className="mb-1.5 block text-xs font-semibold text-slate-600">{label}</label>
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={uploading}
-          className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
-        >
-          {uploading ? "Subiendo…" : "📄 Subir PDF"}
-        </button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="application/pdf"
-          className="hidden"
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
-        />
-        {value && (
-          <a href={value} target="_blank" rel="noopener noreferrer"
-             className="text-xs text-[#1C2870] underline">
-            Ver archivo actual
-          </a>
-        )}
-      </div>
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
-    </div>
-  )
-}
-
-// ─── Dynamic tags (specs cortas) ──────────────────────────────────────────────
-
-function TagsEditor({ label, values, onChange }: { label: string; values: string[]; onChange: (v: string[]) => void }) {
-  const [input, setInput] = useState("")
-  const add = () => {
-    const tag = input.trim()
-    if (tag && !values.includes(tag)) { onChange([...values, tag]); setInput("") }
-  }
-  return (
-    <div>
-      <label className="mb-1.5 block text-xs font-semibold text-slate-600">{label}</label>
-      <div className="mb-2 flex flex-wrap gap-1.5">
-        {values.map((v) => (
-          <span key={v} className="flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-            {v}
-            <button type="button" onClick={() => onChange(values.filter((x) => x !== v))}
-                    className="text-slate-400 hover:text-red-500">✕</button>
-          </span>
-        ))}
-      </div>
-      <div className="flex gap-2">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); add() }}}
-          placeholder="Ej: 22kV, ANSI C29.1"
-          className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#1C2870]/20"
-        />
-        <button type="button" onClick={add}
-                className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-200">
-          + Agregar
-        </button>
-      </div>
-    </div>
-  )
-}
-
-// ─── Dynamic key-value (ficha técnica) ───────────────────────────────────────
-
-function TechSpecsEditor({ values, onChange }: { values: TechSpec[]; onChange: (v: TechSpec[]) => void }) {
-  const update = (i: number, field: keyof TechSpec, val: string) => {
-    const next = [...values]
-    next[i] = { ...next[i], [field]: val }
-    onChange(next)
-  }
-  return (
-    <div>
-      <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-        Ficha Técnica (parámetros)
-      </label>
-      <div className="space-y-2">
-        {values.map((spec, i) => (
-          <div key={i} className="flex gap-2">
-            <input
-              value={spec.label}
-              onChange={(e) => update(i, "label", e.target.value)}
-              placeholder="Parámetro (ej: Tensión nominal)"
-              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#1C2870]/20"
-            />
-            <input
-              value={spec.value}
-              onChange={(e) => update(i, "value", e.target.value)}
-              placeholder="Valor (ej: 22 kV)"
-              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#1C2870]/20"
-            />
-            <button type="button" onClick={() => onChange(values.filter((_, j) => j !== i))}
-                    className="rounded-lg border border-red-100 px-2.5 text-xs text-red-500 hover:bg-red-50">✕</button>
-          </div>
-        ))}
-      </div>
-      <button
-        type="button"
-        onClick={() => onChange([...values, { label: "", value: "" }])}
-        className="mt-2 text-xs font-medium text-[#1C2870] hover:underline"
-      >
-        + Agregar parámetro
-      </button>
-    </div>
-  )
-}
-
-// ─── Gallery editor ───────────────────────────────────────────────────────────
-
-function GalleryEditor({ values, onChange }: { values: string[]; onChange: (v: string[]) => void }) {
-  return (
-    <div>
-      <label className="mb-1.5 block text-xs font-semibold text-slate-600">Galería de imágenes</label>
-      <div className="space-y-2">
-        {values.map((url, i) => (
-          <div key={i} className="flex items-center gap-2">
-            {url && <img src={url} alt="" className="h-10 w-10 rounded-lg border border-slate-200 object-contain p-1" />}
-            <ImageUploader label="" value={url} onChange={(v) => {
-              const next = [...values]; next[i] = v; onChange(next)
-            }} />
-            <button type="button" onClick={() => onChange(values.filter((_, j) => j !== i))}
-                    className="shrink-0 rounded-lg border border-red-100 px-2 py-1.5 text-xs text-red-500 hover:bg-red-50">✕</button>
-          </div>
-        ))}
-      </div>
-      <button
-        type="button"
-        onClick={() => onChange([...values, ""])}
-        className="mt-2 text-xs font-medium text-[#1C2870] hover:underline"
-      >
-        + Agregar imagen
-      </button>
-    </div>
-  )
-}
-
-// ─── MAIN FORM ────────────────────────────────────────────────────────────────
+// ─── Componente ─────────────────────────────────────────────────────────────
 
 export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const router = useRouter()
   const isEdit = Boolean(product)
 
-  // State
-  const [image, setImage]               = useState(product?.image ?? "")
-  const [gallery, setGallery]           = useState<string[]>(product?.gallery ?? [])
-  const [specs, setSpecs]               = useState<string[]>(product?.specs ?? [])
-  const [techSpecs, setTechSpecs]       = useState<TechSpec[]>(product?.technicalSpecs ?? [])
-  const [fichaTecnica, setFichaTecnica] = useState(product?.fichaTecnica ?? "")
-  const [saving, setSaving]             = useState(false)
-  const [error, setError]               = useState("")
+  // Opciones dinámicas (crecen con las creaciones rápidas)
+  const [categoryOptions, setCategoryOptions] = useState(
+    categories.map((c) => ({ value: c.name, label: c.name }))
+  )
+  const [brandOptions, setBrandOptions] = useState(
+    brands.map((b) => ({ value: b.name, label: b.name }))
+  )
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  // Selects controlados
+  const [selectedCategory, setSelectedCategory] = useState(product?.category ?? "")
+  const [selectedBrand, setSelectedBrand]       = useState(product?.brand    ?? "")
+
+  // Diálogo de creación rápida
+  const [quickCreate, setQuickCreate] = useState<QuickCreateState | null>(null)
+
+  // Estado del formulario
+  const [sku, setSku]                   = useState(product?.sku           ?? "")
+  const [name, setName]                 = useState(product?.name          ?? "")
+  const [description, setDesc]          = useState(product?.description   ?? "")
+  const [image, setImage]               = useState(product?.image         ?? "")
+  const [imageAlt, setImageAlt]         = useState(product?.imageAlt      ?? "")
+  const [gallery, setGallery]           = useState<string[]>(product?.gallery       ?? [])
+  const [galleryAlts, setGalleryAlts]   = useState<string[]>(product?.galleryAlts   ?? [])
+  const [specs, setSpecs]               = useState<string[]>(product?.specs         ?? [])
+  const [techSpecs, setTechSpecs]       = useState<TechnicalSpec[]>(product?.technicalSpecs ?? [])
+  const [fichaTecnica, setFichaTecnica] = useState(product?.fichaTecnica  ?? "")
+  const [saving, setSaving]             = useState(false)
+  const [serverError, setServerError]   = useState("")
+  const [errors, setErrors]             = useState<ProductErrors>({})
+
+  // ── Creación rápida de marca ──────────────────────────────────────────────
+
+  async function handleQuickCreateBrand(brandName: string) {
+    const newBrand = await createBrandAction({ name: brandName, logo: "" })
+    const opt      = { value: newBrand.name, label: newBrand.name }
+    setBrandOptions((prev) => [...prev, opt])
+    setSelectedBrand(newBrand.name)
+    setErrors((e) => ({ ...e, brand: undefined }))
+    toast.success(`Marca "${brandName}" creada`)
+  }
+
+  // ── Creación rápida de categoría ──────────────────────────────────────────
+
+  async function handleQuickCreateCategory(catName: string, slug: string) {
+    const newCat = await createCategoryAction({
+      name: catName,
+      slug,
+      image: "",
+      color: "#1C2870",
+      subcategories: [],
+      count: 0,
+    })
+    const opt = { value: newCat.name, label: newCat.name }
+    setCategoryOptions((prev) => [...prev, opt])
+    setSelectedCategory(newCat.name)
+    setErrors((e) => ({ ...e, category: undefined }))
+    toast.success(`Categoría "${catName}" creada`)
+  }
+
+  // ── Submit ────────────────────────────────────────────────────────────────
+
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
     setSaving(true)
-    setError("")
+    setServerError("")
 
-    const fd       = new FormData(e.currentTarget)
-    const data = {
-      sku:              (fd.get("sku")             as string).trim(),
-      name:             (fd.get("name")            as string).trim(),
-      brand:            (fd.get("brand")           as string).trim(),
-      category:         (fd.get("category")        as string).trim(),
-      description:      (fd.get("description")     as string).trim(),
-      fullDescription:  (fd.get("fullDescription") as string).trim(),
-      rating:           Number(fd.get("rating"))   || 4.5,
-      featured:         fd.get("featured")         === "on",
-      bestSeller:       fd.get("bestSeller")        === "on",
+    const fd = new FormData(e.currentTarget)
+    const raw = {
+      sku,
+      name,
+      brand:       selectedBrand,
+      category:    selectedCategory,
+      description,
       image,
-      gallery:          gallery.filter(Boolean),
+      imageAlt:    imageAlt.trim(),
+    }
+
+    const result = productSchema.safeParse(raw)
+    if (!result.success) {
+      const fieldErrors: ProductErrors = {}
+      for (const issue of result.error.issues) {
+        const key = issue.path[0] as keyof ProductErrors
+        if (!fieldErrors[key]) fieldErrors[key] = issue.message
+      }
+      setErrors(fieldErrors)
+      setSaving(false)
+      window.scrollTo({ top: 0, behavior: "smooth" })
+      return
+    }
+    setErrors({})
+
+    const data = {
+      sku,
+      name,
+      brand:           selectedBrand,
+      category:        selectedCategory,
+      description,
+      fullDescription: (fd.get("fullDescription") as string)?.trim(),
+      rating:          Number(fd.get("rating"))   || 4.5,
+      featured:        fd.get("featured")         === "on",
+      bestSeller:      fd.get("bestSeller")       === "on",
+      image,
+      imageAlt:       imageAlt.trim() || undefined,
+      gallery:        gallery.filter(Boolean),
+      galleryAlts:    galleryAlts.filter(Boolean).length > 0 ? galleryAlts : undefined,
       specs,
-      technicalSpecs:   techSpecs.filter((s) => s.label && s.value),
+      technicalSpecs: techSpecs.filter((s) => s.label && s.value),
       fichaTecnica,
     }
 
     try {
       if (isEdit && product) {
         await updateProductAction(product.id, data)
+        toast.success("Producto actualizado correctamente")
       } else {
         await createProductAction(data as Parameters<typeof createProductAction>[0])
+        toast.success("Producto creado correctamente")
       }
       router.push("/productos")
       router.refresh()
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Error al guardar")
+      setServerError(e instanceof Error ? e.message : "Error al guardar")
+      toast.error("No se pudo guardar el producto")
       setSaving(false)
     }
   }
 
+  // ── Render ────────────────────────────────────────────────────────────────
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
+    <form onSubmit={handleSubmit} className="space-y-6">
+
+      {/* Error global del servidor */}
+      {serverError && (
+        <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+          {serverError}
         </div>
       )}
 
-      {/* ── Información básica ── */}
-      <Section title="Información básica">
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="SKU *" name="sku" defaultValue={product?.sku} placeholder="ET-AIS-001" required />
-          <Field label="Nombre del producto *" name="name" defaultValue={product?.name} placeholder="Aislador Polimérico 22kV" required />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
+      {/* Resumen de validaciones */}
+      {Object.keys(errors).length > 0 && (
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3.5">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Categoría *</label>
-            <select name="category" defaultValue={product?.category} required
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1C2870]/20">
-              <option value="">Seleccionar…</option>
-              {categories.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Marca *</label>
-            <select name="brand" defaultValue={product?.brand} required
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1C2870]/20">
-              <option value="">Seleccionar…</option>
-              {brands.map((b) => <option key={b.id} value={b.name}>{b.name}</option>)}
-            </select>
+            <p className="text-sm font-semibold text-amber-800">
+              Completá los campos requeridos antes de guardar:
+            </p>
+            <ul className="mt-1 list-disc pl-4 text-xs text-amber-700">
+              {errors.sku        && <li>SKU</li>}
+              {errors.name       && <li>Nombre del producto</li>}
+              {errors.description && <li>Descripción corta</li>}
+              {errors.image      && <li>Imagen principal</li>}
+              {errors.imageAlt   && <li>Nombre SEO de la imagen</li>}
+              {errors.category   && <li>Categoría</li>}
+              {errors.brand      && <li>Marca</li>}
+            </ul>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 items-center">
-          <Field label="Rating (0-5)" name="rating" type="number" defaultValue={product?.rating?.toString() ?? "4.5"} step="0.1" min="0" max="5" />
-          <label className="flex cursor-pointer items-center gap-2 pt-5">
-            <input type="checkbox" name="featured" defaultChecked={product?.featured} className="h-4 w-4 rounded border-slate-300 text-[#1C2870]" />
-            <span className="text-sm font-medium text-slate-700">Destacado</span>
-          </label>
-          <label className="flex cursor-pointer items-center gap-2 pt-5">
-            <input type="checkbox" name="bestSeller" defaultChecked={product?.bestSeller} className="h-4 w-4 rounded border-slate-300 text-[#1C2870]" />
-            <span className="text-sm font-medium text-slate-700">Más vendido</span>
-          </label>
+      )}
+
+      {/* ── Card 1: Información básica ── */}
+      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <SectionHeader title="Información básica" subtitle="Identificación del producto" />
+        <div className="mt-5 space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <Field
+                label="SKU"
+                name="sku"
+                value={sku}
+                onChange={(e) => setSku((e.target as HTMLInputElement).value)}
+                placeholder="ET-AIS-001"
+                required
+              />
+              {errors.sku && <p className="mt-1 text-xs text-red-500">{errors.sku}</p>}
+            </div>
+            <div>
+              <Field
+                label="Nombre del producto"
+                name="name"
+                value={name}
+                onChange={(e) => setName((e.target as HTMLInputElement).value)}
+                placeholder="Aislador Polimérico 22kV"
+                required
+              />
+              {errors.name ? (
+                <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+              ) : name && name.trim().split(/\s+/).length < 3 ? (
+                <p className="mt-1 text-[11px] text-amber-600 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" /> Tip SEO: incluí marca, tipo y característica (ej: "Aislador Polimérico 22kV Schneider")
+                </p>
+              ) : name.trim().split(/\s+/).length >= 3 ? (
+                <p className="mt-1 text-[11px] text-green-600 flex items-center gap-1">
+                  <CheckCircle2 className="h-3 w-3" /> Nombre SEO óptimo
+                </p>
+              ) : null}
+            </div>
+            <SearchableSelect
+              name="category"
+              label="Categoría"
+              options={categoryOptions}
+              value={selectedCategory}
+              onChange={(v) => {
+                setSelectedCategory(v)
+                if (v) setErrors((e) => ({ ...e, category: undefined }))
+              }}
+              required
+              error={errors.category}
+              placeholder="Seleccionar categoría…"
+              createNewLabel="categoría"
+              onCreateNew={(n) => setQuickCreate({ type: "category", defaultName: n })}
+            />
+            <SearchableSelect
+              name="brand"
+              label="Marca"
+              options={brandOptions}
+              value={selectedBrand}
+              onChange={(v) => {
+                setSelectedBrand(v)
+                if (v) setErrors((e) => ({ ...e, brand: undefined }))
+              }}
+              required
+              error={errors.brand}
+              placeholder="Seleccionar marca…"
+              createNewLabel="marca"
+              onCreateNew={(n) => setQuickCreate({ type: "brand", defaultName: n })}
+            />
+          </div>
+          <div className="grid grid-cols-3 items-center gap-4 sm:max-w-md">
+            <Field
+              label="Rating"
+              name="rating"
+              type="number"
+              defaultValue={product?.rating?.toString() ?? "4.5"}
+              step="0.1"
+              min="0"
+              max="5"
+            />
+            <label className="flex cursor-pointer items-center gap-2 pt-5">
+              <input
+                type="checkbox"
+                name="featured"
+                defaultChecked={product?.featured}
+                className="h-4 w-4 rounded border-slate-300 accent-[#1C2870]"
+              />
+              <span className="text-sm font-medium text-slate-700">Destacado</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-2 pt-5">
+              <input
+                type="checkbox"
+                name="bestSeller"
+                defaultChecked={product?.bestSeller}
+                className="h-4 w-4 rounded border-slate-300 accent-[#1C2870]"
+              />
+              <span className="text-sm font-medium text-slate-700">Más vendido</span>
+            </label>
+          </div>
         </div>
-      </Section>
+      </div>
 
-      {/* ── Descripción ── */}
-      <Section title="Descripción">
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">Descripción corta *</label>
-          <textarea name="description" rows={2} required defaultValue={product?.description}
-                    placeholder="Descripción breve del producto para las tarjetas del catálogo."
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1C2870]/20" />
+      {/* ── Card 2: Imágenes | Ficha técnica ── */}
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:divide-x lg:divide-slate-100">
+
+          {/* Columna izquierda: imágenes */}
+          <div className="flex-1 p-6">
+            <SectionHeader title="Imágenes del producto" subtitle="Imagen principal y galería" />
+            <div className="mt-5 space-y-6">
+              <div>
+                <label className="mb-2 block text-xs font-semibold text-slate-600">
+                  Imagen principal <span className="text-red-500">*</span>
+                </label>
+                <div className="max-w-xs">
+                  <ImageUpload
+                    value={image}
+                    onChange={(v) => {
+                      setImage(v)
+                      if (v) setErrors((e) => ({ ...e, image: undefined }))
+                    }}
+                    altValue={imageAlt}
+                    onAltChange={(v) => {
+                      setImageAlt(v)
+                      if (v) setErrors((e) => ({ ...e, imageAlt: undefined }))
+                    }}
+                    required
+                    error={errors.image}
+                  />
+                  {errors.imageAlt && !imageAlt && (
+                    <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" /> {errors.imageAlt}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="border-t border-dashed border-slate-200" />
+              <GalleryEditor
+                values={gallery}
+                onChange={setGallery}
+                alts={galleryAlts}
+                onAltsChange={setGalleryAlts}
+              />
+            </div>
+          </div>
+
+          <div className="border-t border-slate-100 lg:hidden" />
+
+          {/* Columna derecha: ficha técnica + PDF */}
+          <div className="flex-1 p-6">
+            <SectionHeader title="Ficha técnica" subtitle="Parámetros y documentación" />
+            <div className="mt-5 space-y-6">
+              <TechSpecsEditor values={techSpecs} onChange={setTechSpecs} />
+              <div className="border-t border-dashed border-slate-200" />
+              <PdfUploader
+                label="PDF descargable (opcional)"
+                value={fichaTecnica}
+                onChange={setFichaTecnica}
+              />
+            </div>
+          </div>
+
         </div>
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">Descripción completa</label>
-          <textarea name="fullDescription" rows={5} defaultValue={product?.fullDescription}
-                    placeholder="Descripción detallada del producto, aplicaciones, ventajas, etc."
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1C2870]/20" />
+      </div>
+
+      {/* ── Card 3: Descripción ── */}
+      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <SectionHeader title="Descripción" subtitle="Texto del producto" />
+        <div className="mt-5 space-y-4">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div>
+              <label className="mb-0.5 block text-xs font-semibold text-slate-600">
+                Descripción corta <span className="text-red-500">*</span>
+              </label>
+              <p className="mb-2 text-[11px] text-slate-400">
+                Aparece en la tarjeta del catálogo y al costado de la imagen en el detalle
+              </p>
+              <textarea
+                name="description"
+                rows={3}
+                required
+                value={description}
+                onChange={(e) => setDesc(e.target.value)}
+                placeholder="Ej: Aislador polimérico para líneas de distribución de media tensión"
+                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder-slate-300 focus:border-[#1C2870]/40 focus:ring-2 focus:ring-[#1C2870]/15"
+              />
+              {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description}</p>}
+            </div>
+            <TagsEditor
+              label="Especificaciones / medidas (etiquetas)"
+              hint="Badges en la card y en el detalle — máx. 3 visibles en el catálogo"
+              values={specs}
+              onChange={setSpecs}
+              placeholder="Ej: 22kV, DN 50mm, ANSI C29.1"
+            />
+          </div>
+          <div>
+            <label className="mb-0.5 block text-xs font-semibold text-slate-600">
+              Descripción completa
+            </label>
+            <p className="mb-2 text-[11px] text-slate-400">
+              Página de detalle — usá la barra de herramientas para dar formato al texto
+            </p>
+            <RichEditor
+              name="fullDescription"
+              defaultValue={product?.fullDescription}
+              placeholder="Describí el producto en detalle: aplicaciones, material, construcción, ventajas…"
+            />
+          </div>
         </div>
-        <TagsEditor
-          label="Especificaciones rápidas (etiquetas)"
-          values={specs}
-          onChange={setSpecs}
-        />
-      </Section>
+      </div>
 
-      {/* ── Imágenes ── */}
-      <Section title="Imágenes">
-        <ImageUploader label="Imagen principal *" value={image} onChange={setImage} />
-        <GalleryEditor values={gallery} onChange={setGallery} />
-      </Section>
-
-      {/* ── Ficha técnica ── */}
-      <Section title="Ficha técnica">
-        <TechSpecsEditor values={techSpecs} onChange={setTechSpecs} />
-        <FileUploader
-          label="PDF de ficha técnica (opcional)"
-          value={fichaTecnica}
-          onChange={setFichaTecnica}
-        />
-      </Section>
-
-      {/* ── Acciones ── */}
-      <div className="flex items-center gap-3 border-t border-slate-200 pt-6">
+      {/* ── Barra de acciones ── */}
+      <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-sm">
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-[#1C2870] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1C2870]/90 disabled:opacity-60"
+          className="rounded-lg bg-[#1C2870] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1C2870]/90 disabled:opacity-60"
         >
           {saving ? "Guardando…" : isEdit ? "Guardar cambios" : "Crear producto"}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+          className="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
         >
           Cancelar
         </button>
       </div>
-    </form>
-  )
-}
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h3 className="mb-5 text-sm font-bold text-slate-800 border-b border-slate-100 pb-3">{title}</h3>
-      <div className="space-y-4">{children}</div>
-    </div>
-  )
-}
-
-function Field({
-  label, name, defaultValue, placeholder, required, type = "text", step, min, max,
-}: {
-  label: string; name: string; defaultValue?: string; placeholder?: string
-  required?: boolean; type?: string; step?: string; min?: string; max?: string
-}) {
-  return (
-    <div>
-      <label className="mb-1.5 block text-xs font-semibold text-slate-600">{label}</label>
-      <input
-        type={type} name={name} defaultValue={defaultValue} placeholder={placeholder}
-        required={required} step={step} min={min} max={max}
-        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1C2870]/20"
+      {/* ── Diálogos de creación rápida (fuera del flujo del form) ── */}
+      <QuickCreateBrandDialog
+        open={quickCreate?.type === "brand"}
+        onOpenChange={(open) => { if (!open) setQuickCreate(null) }}
+        defaultName={quickCreate?.defaultName ?? ""}
+        onCreate={handleQuickCreateBrand}
       />
-    </div>
+      <QuickCreateCategoryDialog
+        open={quickCreate?.type === "category"}
+        onOpenChange={(open) => { if (!open) setQuickCreate(null) }}
+        defaultName={quickCreate?.defaultName ?? ""}
+        onCreate={handleQuickCreateCategory}
+      />
+    </form>
   )
 }

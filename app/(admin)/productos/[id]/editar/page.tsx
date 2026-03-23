@@ -20,7 +20,7 @@ export default async function EditarProductoPage({ params }: PageProps) {
   if (!product) notFound()
 
   return (
-    <div className="max-w-3xl">
+    <div className="w-full">
       <h1 className="mb-1 text-2xl font-bold text-slate-900">Editar Producto</h1>
       <p className="mb-6 text-sm text-slate-500">SKU: {product.sku}</p>
       <ProductForm product={product} categories={categories} brands={brands} />

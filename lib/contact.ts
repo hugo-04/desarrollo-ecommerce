@@ -22,6 +22,9 @@ export const CONTACT = {
 
   /** Dirección física */
   address: "Av. Guillermo Dansey N° 481 - Int. 143 - C.C. Loreto, Lima",
+
+  /** Horario de atención — fuente única; usado en TopBar, Footer y Contacto */
+  hours: "L-V: 9am-6pm | Sáb: 9am-3pm",
 } as const
 
 // ─── URLs de WhatsApp prearmadas ──────────────────────────────────────────────

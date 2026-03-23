@@ -9,10 +9,12 @@ import { MockCategoryRepository } from "./repository"
 import { CategoryService } from "./service"
 import type { CreateCategoryDTO, UpdateCategoryDTO } from "./types"
 
-function getService() {
-  return new CategoryService(new MockCategoryRepository())
-  // TODO DB: return new CategoryService(new DbCategoryRepository(db))
-}
+// Singleton: una sola instancia compartida entre todas las llamadas del proceso.
+// Sin esto, cada acción creaba un repo nuevo y los cambios se perdían al instante.
+const _service = new CategoryService(new MockCategoryRepository())
+// TODO DB: const _service = new CategoryService(new DbCategoryRepository(db))
+
+function getService() { return _service }
 
 // ─── Lectura ──────────────────────────────────────────────────────────────────
 

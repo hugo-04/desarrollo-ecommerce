@@ -11,7 +11,7 @@ export async function loginAction(_prevState: unknown, formData: FormData) {
     return { error: "Completa todos los campos." }
   }
 
-  if (!validateCredentials(email, password)) {
+  if (!(await validateCredentials(email, password))) {
     return { error: "Credenciales incorrectas." }
   }
 

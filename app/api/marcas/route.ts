@@ -1,17 +1,20 @@
 /**
- * GET /api/marcas — API pública REST (para uso externo/mobile futuro).
- * Uso interno: usar getBrandNamesAction() directamente.
+ * GET /api/marcas — Endpoint REST público.
+ *
+ * Devuelve los nombres de marca (sin logo ni ID) para filtros del catálogo.
+ * Uso recomendado dentro de la app: `getBrandNamesAction()` directamente.
+ * Este endpoint existe para integraciones externas (apps mobile, terceros).
+ *
+ * Al migrar a DB: solo cambia `features/marcas/actions.ts` — este archivo
+ * no necesita modificarse (respeta el principio de inversión de dependencias).
  */
 
 import { NextResponse } from "next/server"
-import { MockBrandRepository } from "@/features/marcas/repository"
-import { BrandService } from "@/features/marcas/service"
-
-const service = new BrandService(new MockBrandRepository())
+import { getBrandNamesAction } from "@/features/marcas/actions"
 
 export async function GET() {
   try {
-    const brands = await service.getNames()
+    const brands = await getBrandNamesAction()
     return NextResponse.json(brands)
   } catch (error) {
     console.error("[GET /api/marcas]", error)

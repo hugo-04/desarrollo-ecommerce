@@ -124,6 +124,13 @@ export function useScrollX(ref: React.RefObject<HTMLElement | null>, distance = 
 
 // ========== FRAMER MOTION VARIANTS ==========
 
+/**
+ * Curva de easing estándar del sitio — usada en todas las variantes de animación.
+ * Equivale a cubic-bezier(0.22, 1, 0.36, 1): entrada rápida, salida suave.
+ * Centralizada aquí para mantener consistencia visual en todo el sitio (DRY).
+ */
+const EASE = [0.22, 1, 0.36, 1] as const
+
 /** Stagger children on viewport entry */
 export const staggerContainer = {
   hidden: {},
@@ -141,7 +148,7 @@ export const fadeUp = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.6, ease: EASE },
   },
 }
 
@@ -151,7 +158,7 @@ export const fadeDown = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.6, ease: EASE },
   },
 }
 
@@ -161,7 +168,7 @@ export const fadeLeft = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.7, ease: EASE },
   },
 }
 
@@ -171,7 +178,7 @@ export const fadeRight = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.7, ease: EASE },
   },
 }
 
@@ -181,7 +188,7 @@ export const scaleUp = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.5, ease: EASE },
   },
 }
 
@@ -191,7 +198,7 @@ export const blurIn = {
   visible: {
     opacity: 1,
     filter: "blur(0px)",
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.6, ease: EASE },
   },
 }
 
@@ -209,7 +216,7 @@ export const rotateIn = {
     opacity: 1,
     rotate: 0,
     scale: 1,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.6, ease: EASE },
   },
 }
 

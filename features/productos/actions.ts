@@ -14,10 +14,11 @@ import { MockProductRepository } from "./repository"
 import { ProductService } from "./service"
 import type { ProductFilters, CreateProductDTO, UpdateProductDTO } from "./types"
 
-function getService() {
-  return new ProductService(new MockProductRepository())
-  // TODO DB: return new ProductService(new DbProductRepository(db))
-}
+// Singleton: una sola instancia compartida entre todas las llamadas del proceso.
+const _service = new ProductService(new MockProductRepository())
+// TODO DB: const _service = new ProductService(new DbProductRepository(db))
+
+function getService() { return _service }
 
 // ─── Lectura ──────────────────────────────────────────────────────────────────
 

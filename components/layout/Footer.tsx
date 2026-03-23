@@ -53,12 +53,12 @@ export function Footer() {
               <li className="flex items-center gap-2"><IconPhone className="h-4 w-4 text-red-500/50" />{CONTACT.phoneDisplay} / {CONTACT.phone2Display}</li>
               <li className="flex items-center gap-2"><IconMail className="h-4 w-4 text-red-500/50" />{CONTACT.email}</li>
               <li className="flex items-center gap-2"><IconMapPin className="h-4 w-4 text-red-500/50" />{CONTACT.address}</li>
-              <li className="flex items-center gap-2"><IconClock className="h-4 w-4 text-red-500/50" />L-V: 9am-6pm / Sáb: 9am-3pm</li>
+              <li className="flex items-center gap-2"><IconClock className="h-4 w-4 text-red-500/50" />{CONTACT.hours}</li>
             </ul>
           </div>
         </div>
         <div className="mt-10 border-t border-white/[0.06] pt-6 flex flex-col items-center justify-between gap-3 text-xs text-slate-600 sm:flex-row">
-          <span>© 2026 Electro Thina S.A.C. Todos los derechos reservados.</span>
+          <span>© {new Date().getFullYear()} Electro Thina S.A.C. Todos los derechos reservados.</span>
           <div className="flex items-center gap-4">
             <Link href="/terminos" className="transition-colors hover:text-slate-400">Términos y Condiciones</Link>
             <span className="text-slate-700">·</span>

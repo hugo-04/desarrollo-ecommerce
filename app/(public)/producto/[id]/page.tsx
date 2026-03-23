@@ -1,19 +1,16 @@
 /**
- * /producto/[id] — Server Component
+ * /producto/[id] — Server Component de detalle de producto.
  *
- * Los Server Components pueden llamar directamente al servicio/repositorio
- * sin pasar por HTTP — es código que corre en el servidor.
+ * Llama a la server action en vez de instanciar el repositorio directamente,
+ * respetando el principio de inversión de dependencias (DIP):
+ * la página no sabe si los datos vienen de mock, DB o API externa.
  *
- * Al migrar a DB: reemplazar MockProductRepository por DbProductRepository.
- * Este archivo no necesita cambios adicionales.
+ * Al migrar a DB: solo cambia `features/productos/actions.ts`.
  */
 
-import Link from "next/link"
+import { notFound } from "next/navigation"
 import { ProductoView } from "@/components/views/ProductoView"
-import { MockProductRepository } from "@/features/productos/repository"
-import { ProductService } from "@/features/productos/service"
-
-const service = new ProductService(new MockProductRepository())
+import { getProductAction } from "@/features/productos/actions"
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -21,24 +18,13 @@ interface PageProps {
 
 export default async function ProductoPage({ params }: PageProps) {
   const { id } = await params
-  const product = await service.getProductById(Number(id))
+  const numId  = Number(id)
 
-  if (!product) {
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <h1 className="mb-4 text-2xl font-bold text-slate-900">Producto no encontrado</h1>
-        <p className="mb-6 text-sm text-slate-500">
-          El producto que buscas no existe o fue removido.
-        </p>
-        <Link
-          href="/catalogo"
-          className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white"
-        >
-          Ir al Catalogo
-        </Link>
-      </div>
-    )
-  }
+  // Rechazar IDs inválidos antes de consultar
+  if (!id || isNaN(numId) || numId < 1) notFound()
+
+  const product = await getProductAction(numId)
+  if (!product) notFound()
 
   return <ProductoView product={product} />
 }

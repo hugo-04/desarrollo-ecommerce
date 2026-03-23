@@ -1,17 +1,19 @@
 /**
- * GET /api/categorias — API pública REST (para uso externo/mobile futuro).
- * Uso interno: usar getCategoriesAction() directamente.
+ * GET /api/categorias — Endpoint REST público.
+ *
+ * Uso recomendado dentro de la app: `getCategoriesAction()` directamente.
+ * Este endpoint existe para integraciones externas (apps mobile, terceros).
+ *
+ * Al migrar a DB: solo cambia `features/categorias/actions.ts` — este archivo
+ * no necesita modificarse (respeta el principio de inversión de dependencias).
  */
 
 import { NextResponse } from "next/server"
-import { MockCategoryRepository } from "@/features/categorias/repository"
-import { CategoryService } from "@/features/categorias/service"
-
-const service = new CategoryService(new MockCategoryRepository())
+import { getCategoriesAction } from "@/features/categorias/actions"
 
 export async function GET() {
   try {
-    const categories = await service.getAll()
+    const categories = await getCategoriesAction()
     return NextResponse.json(categories)
   } catch (error) {
     console.error("[GET /api/categorias]", error)

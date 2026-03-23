@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion"
 import { fadeUp, blurIn, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
-import { brands } from "@/lib/data"
+import { brands as allBrands } from "@/lib/data"
 import { MARQUEE_BRANDS_CONTENT } from "@/lib/data/mock/static-content.mock"
+
+const brands = allBrands.filter((b) => b.showInCarousel)
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars"
 
 export function MarqueeBrands() {

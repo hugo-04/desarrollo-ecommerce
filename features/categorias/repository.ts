@@ -24,8 +24,17 @@ export interface ICategoryRepository {
 
 // ─── Mock implementation ───────────────────────────────────────────────────────
 
+/**
+ * Calcula el próximo ID disponible.
+ * Usa `reduce` en lugar de spread + Math.max para evitar `-Infinity`
+ * cuando el array está vacío, lo que causaría IDs `NaN`.
+ */
+function nextId(items: { id: number }[]): number {
+  return items.reduce((max, item) => Math.max(max, item.id), 0) + 1
+}
+
 export class MockCategoryRepository implements ICategoryRepository {
-  // Serializar al inicializar: quitar icon (React component)
+  // Omitir `icon` (React component): no es serializable a JSON
   private categories: CategoryDTO[] = MOCK_CATEGORIES.map(({ icon: _icon, ...rest }) => rest)
 
   async findAll(): Promise<CategoryDTO[]> {
@@ -41,7 +50,7 @@ export class MockCategoryRepository implements ICategoryRepository {
   }
 
   async create(data: CreateCategoryDTO): Promise<CategoryDTO> {
-    const id       = Math.max(...this.categories.map((c) => c.id)) + 1
+    const id       = nextId(this.categories)
     const category = { id, ...data }
     this.categories.push(category)
     return category

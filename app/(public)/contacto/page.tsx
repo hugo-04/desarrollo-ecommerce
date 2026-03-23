@@ -49,7 +49,7 @@ export default function ContactoPage() {
                   { icon: IconPhone, title: "Telefono", info: CONTACT.phone2Display, link: `tel:+51${CONTACT.phone2}` },
                   { icon: IconMail, title: "Email", info: CONTACT.email, link: `mailto:${CONTACT.email}` },
                   { icon: IconMapPin, title: "Direccion", info: CONTACT.address, link: "#" },
-                  { icon: IconClock, title: "Horario de Atención", info: "Lun-Vie: 9am-6pm / Sáb: 9am-3pm", link: "#" },
+                  { icon: IconClock, title: "Horario de Atención", info: CONTACT.hours, link: "#" },
                 ].map((item, index) => (
                   <a key={index} href={item.link} target={item.link.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4 transition-all hover:border-primary/30 hover:shadow-md">
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">

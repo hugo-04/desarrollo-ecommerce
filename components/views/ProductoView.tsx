@@ -115,7 +115,11 @@ export function ProductoView({ product }: ProductoViewProps) {
               <ProductInfo product={product} />
               <ProductCTA
                 onCotizar={() => setShowQuoteModal(true)}
-                onFichaTecnica={() => alert("Descargando ficha tecnica...")}
+                onFichaTecnica={
+                  product.fichaTecnica
+                    ? () => window.open(product.fichaTecnica, "_blank", "noopener,noreferrer")
+                    : undefined
+                }
               />
             </div>
           </div>

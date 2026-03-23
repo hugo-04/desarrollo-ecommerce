@@ -30,6 +30,15 @@ export interface IProductRepository {
 
 // ─── Mock implementation ───────────────────────────────────────────────────────
 
+/**
+ * Calcula el próximo ID disponible.
+ * Usa `reduce` en lugar de spread + Math.max para evitar `-Infinity`
+ * cuando el array está vacío, lo que causaría IDs `NaN`.
+ */
+function nextId(items: { id: number }[]): number {
+  return items.reduce((max, item) => Math.max(max, item.id), 0) + 1
+}
+
 export class MockProductRepository implements IProductRepository {
   private products = [...MOCK_PRODUCTS]
 
@@ -44,11 +53,14 @@ export class MockProductRepository implements IProductRepository {
       sortBy = "recommended",
     } = filters
 
+    const lq = query.toLowerCase()
+
     let result = this.products.filter((p) => {
-      const matchesCategory = categories.length === 0 || categories.includes(p.category)
-      const matchesBrand    = brands.length === 0     || brands.includes(p.brand)
-      const matchesQuery    = !query || [p.name, p.sku, p.brand]
-        .some((f) => f.toLowerCase().includes(query.toLowerCase()))
+      const matchesCategory   = categories.length === 0 || categories.includes(p.category)
+      const matchesBrand      = brands.length === 0     || brands.includes(p.brand)
+      // Busca en nombre, SKU, marca y descripción corta para mayor relevancia
+      const matchesQuery      = !query || [p.name, p.sku, p.brand, p.description]
+        .some((f) => f.toLowerCase().includes(lq))
       const matchesBestSeller = !onlyBestSellers || p.bestSeller
       return matchesCategory && matchesBrand && matchesQuery && matchesBestSeller
     })
@@ -83,7 +95,7 @@ export class MockProductRepository implements IProductRepository {
   // ─── CRUD (en mock: sin persistencia — con DB: persistente) ─────────────────
 
   async create(data: CreateProductDTO): Promise<Product> {
-    const id      = Math.max(...this.products.map((p) => p.id)) + 1
+    const id      = nextId(this.products)
     const product = { id, ...data }
     this.products.push(product)
     return product

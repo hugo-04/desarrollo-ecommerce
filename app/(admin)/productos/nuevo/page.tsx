@@ -9,7 +9,7 @@ export default async function NuevoProductoPage() {
   ])
 
   return (
-    <div className="max-w-3xl">
+    <div className="w-full">
       <h1 className="mb-6 text-2xl font-bold text-slate-900">Nuevo Producto</h1>
       <ProductForm categories={categories} brands={brands} />
     </div>

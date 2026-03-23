@@ -1,15 +1,21 @@
 /**
- * GET /api/productos/:id
+ * GET /api/productos/:id — Devuelve un producto por ID numérico.
  *
- * Returns a single product by numeric ID.
- * 404 if not found.
+ * Uso recomendado dentro de la app: `getProductAction(id)` directamente.
+ * Este endpoint existe para integraciones externas (apps mobile, terceros).
+ *
+ * Respuestas:
+ *   200 — producto encontrado
+ *   400 — ID inválido (no numérico o ≤ 0)
+ *   404 — producto no encontrado
+ *   500 — error interno
+ *
+ * Al migrar a DB: solo cambia `features/productos/actions.ts` — este archivo
+ * no necesita modificarse (respeta el principio de inversión de dependencias).
  */
 
 import { NextRequest, NextResponse } from "next/server"
-import { MockProductRepository } from "@/features/productos/repository"
-import { ProductService } from "@/features/productos/service"
-
-const service = new ProductService(new MockProductRepository())
+import { getProductAction } from "@/features/productos/actions"
 
 export async function GET(
   _request: NextRequest,
@@ -19,14 +25,14 @@ export async function GET(
     const { id } = await params
     const productId = Number(id)
 
-    if (isNaN(productId)) {
-      return NextResponse.json({ error: "Invalid product ID" }, { status: 400 })
+    if (!id || isNaN(productId) || productId < 1) {
+      return NextResponse.json({ error: "ID de producto inválido" }, { status: 400 })
     }
 
-    const product = await service.getProductById(productId)
+    const product = await getProductAction(productId)
 
     if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+      return NextResponse.json({ error: "Producto no encontrado" }, { status: 404 })
     }
 
     return NextResponse.json(product)
