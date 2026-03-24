@@ -1,53 +1,105 @@
-// ========== TYPE DEFINITIONS ==========
+/**
+ * TIPOS GLOBALES DE DOMINIO
+ *
+ * Estas interfaces representan las entidades del negocio de Electro Thina.
+ * Son usadas en toda la app: features, components, API routes y mocks.
+ *
+ * Principio clave: los tipos son independientes de la fuente de datos.
+ * Al migrar a Prisma/PostgreSQL, estas interfaces seguirán siendo las mismas;
+ * solo cambiarán los repositorios que las implementan.
+ */
 
+/** Par clave-valor para la ficha técnica de un producto (ej: Tensión → 22 kV) */
 export interface TechnicalSpec {
   label: string
   value: string
 }
 
+/**
+ * Producto del catálogo.
+ * Representa un item eléctrico AT/MT con toda su información comercial y técnica.
+ */
 export interface Product {
   id: number
+  /** Código único de identificación (ej: "ET-AIS-001") */
   sku: string
   name: string
+  /** Nombre de la marca (referencia por nombre, no por ID) */
   brand: string
+  /** Nombre de la categoría (referencia por nombre, no por ID) */
   category: string
+  /** URL de la imagen principal */
   image: string
+  /** Texto alternativo SEO de la imagen principal */
+  imageAlt?: string
+  /** Etiquetas técnicas cortas para mostrar como badges (ej: "22kV", "DN 50mm") */
   specs: string[]
+  /** Descripción corta — aparece en la tarjeta del catálogo */
   description: string
+  /** Descripción completa en HTML (generada por el editor TipTap) */
   fullDescription: string
+  /** Parámetros técnicos detallados para la ficha técnica */
   technicalSpecs: TechnicalSpec[]
+  /** URLs de imágenes adicionales para el carrusel */
   gallery: string[]
+  /** Textos alt SEO para cada imagen de la galería (mismo orden que gallery) */
+  galleryAlts?: string[]
   featured: boolean
   bestSeller: boolean
+  /** Calificación de 0 a 5 */
   rating: number
+  /** URL al PDF de la ficha técnica descargable (opcional) */
+  fichaTecnica?: string
 }
 
+/**
+ * Categoría del catálogo (versión con icono React — solo para client-side).
+ * El campo `icon` no es serializable a JSON; para la API usar `CategoryDTO`
+ * definido en `features/categorias/types.ts`.
+ */
 export interface Category {
   id: number
   name: string
+  /** Identificador de URL (ej: "aisladores") */
   slug: string
+  /** URL de imagen representativa */
   image: string
   subcategories: string[]
+  /** Cantidad de productos en esta categoría */
   count: number
+  /** Componente icono — solo válido en el cliente (no serializable) */
   icon: React.ComponentType<{ className?: string }>
+  /** Clases Tailwind de gradiente (ej: "from-blue-700 to-blue-900") */
   color: string
 }
 
+/** Marca fabricante o distribuidora de productos */
 export interface Brand {
+  id: number
   name: string
+  /** URL del logo (vacío si no tiene logo cargado) */
   logo: string
+  /** Texto alternativo SEO del logo */
+  logoAlt?: string
+  /** Si true, el logo aparece en el carrusel de marcas del home */
+  showInCarousel?: boolean
 }
 
+/** Cliente/empresa que aparece en la sección de clientes del home */
 export interface Client {
   name: string
+  /** URL del logo del cliente */
   logo: string
 }
 
+/** Testimonio de un cliente para la sección de testimonios */
 export interface Testimonial {
   id: number
   text: string
   author: string
+  /** Cargo del autor (ej: "Jefe de Proyectos") */
   position: string
   company: string
+  /** URL de foto de perfil */
   avatar: string
 }

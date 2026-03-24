@@ -13,7 +13,7 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
   return (
     <Link
       href={`/producto/${product.id}`}
-      className="group block cursor-pointer overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm transition-all duration-500 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1"
+      className="group block cursor-pointer overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 hover:[box-shadow:0_0_0_1.5px_var(--primary),0_8px_30px_-8px_color-mix(in_srgb,var(--primary)_30%,transparent),0_0_20px_-6px_color-mix(in_srgb,var(--primary)_20%,transparent)]"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100/50 p-6">
         <img src={product.image} alt={product.name} className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-110" crossOrigin="anonymous" />
@@ -22,13 +22,21 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
             <IconFire className="h-3 w-3" />Top Ventas
           </span>
         )}
-        <button
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); alert("Descargando ficha tecnica...") }}
-          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/90 text-primary shadow-md ring-1 ring-black/[0.04] backdrop-blur-sm transition-all hover:bg-primary hover:text-white group-hover:opacity-100 sm:opacity-0"
-          title="Descargar Ficha Tecnica"
-        >
-          <IconPDF className="h-4 w-4" />
-        </button>
+        {/* Solo muestra el botón de PDF si el producto tiene ficha técnica cargada */}
+        {product.fichaTecnica && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              window.open(product.fichaTecnica, "_blank", "noopener,noreferrer")
+            }}
+            className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/90 text-primary shadow-md ring-1 ring-black/[0.04] backdrop-blur-sm transition-all hover:bg-primary hover:text-white group-hover:opacity-100 sm:opacity-0"
+            title="Descargar Ficha Técnica (PDF)"
+          >
+            <IconPDF className="h-4 w-4" />
+          </button>
+        )}
         <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-white/90 px-2.5 py-1.5 shadow-sm ring-1 ring-black/[0.04] backdrop-blur-sm">
           <IconStar className="h-3 w-3 text-amber-500" />
           <span className="text-xs font-bold text-slate-800">{product.rating}</span>

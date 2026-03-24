@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { Home, ShoppingBag, Users, PhoneCall } from "lucide-react"
+import { Home, ShoppingBag, Users, PhoneCall, UserRound } from "lucide-react"
 import { IconMenu, IconChevronDown, IconChevronRight, IconFire } from "@/components/icons"
-import { categories } from "@/lib/data"
+import { useCategories } from "@/features/categorias/hooks"
+import { getCategoryIcon } from "@/lib/category-icons"
 
 // ========== MEGA MENU ==========
 function MegaMenu({
@@ -16,14 +17,21 @@ function MegaMenu({
   isOpen: boolean
   setIsOpen: (open: boolean) => void
 }) {
+  const { categories } = useCategories()
   const [activeCategory, setActiveCategory] = useState<number | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Activa la primera categoría cuando se abre el menú por primera vez
   useEffect(() => {
-    if (isOpen && !activeCategory) {
+    if (isOpen && !activeCategory && categories.length > 0) {
       setActiveCategory(categories[0]?.id || null)
     }
-  }, [isOpen, activeCategory])
+  }, [isOpen, activeCategory, categories])
+
+  // Cancela el timeout pendiente al desmontar para evitar memory leaks
+  useEffect(() => {
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
+  }, [])
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
@@ -64,7 +72,7 @@ function MegaMenu({
               </h3>
               <div className="space-y-0.5">
                 {categories.map((category) => {
-                  const Icon = category.icon
+                  const Icon = getCategoryIcon(category.slug)
                   const isActive = activeCategory === category.id
                   return (
                     <Link
@@ -253,7 +261,14 @@ export function Navigation() {
           </div>
 
           {/* Col 3 — derecha */}
-          <div className="flex justify-end">
+          <div className="flex items-center justify-end gap-2">
+            <Link
+              href="/login"
+              className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-sm font-semibold text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+            >
+              <UserRound size={15} />
+              <span className="hidden sm:inline">Login</span>
+            </Link>
             <Link
               href="/catalogo?bestSellers=true"
               className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-700 hover:shadow-lg"
