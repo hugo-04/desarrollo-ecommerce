@@ -5,25 +5,29 @@
  *
  * Punto de entrada para todo acceso a productos desde el cliente o Server Components.
  * No hay fetch(), no hay HTTP manual.
- *
- * MIGRACIÓN A DB: cambiar MockProductRepository → DbProductRepository aquí.
- * El resto del código no necesita cambios.
  */
 
-import { MockProductRepository } from "./repository"
+import { DbProductRepository } from "./repository"
 import { ProductService } from "./service"
 import type { ProductFilters, CreateProductDTO, UpdateProductDTO } from "./types"
+import { db } from "@/lib/db"
+import { getSession } from "@/lib/auth/session"
 
 // Singleton: una sola instancia compartida entre todas las llamadas del proceso.
-const _service = new ProductService(new MockProductRepository())
-// TODO DB: const _service = new ProductService(new DbProductRepository(db))
+const _service = new ProductService(new DbProductRepository(db))
 
 function getService() { return _service }
 
-// ─── Lectura ──────────────────────────────────────────────────────────────────
+// ─── Lectura (sin auth — datos públicos) ──────────────────────────────────────
 
 export async function getCatalogAction(filters: ProductFilters) {
   return getService().getCatalog(filters)
+}
+
+/** Versión paginada simplificada para el listado admin.
+ *  Acepta { page, query, limit } y delega a getCatalog. */
+export async function getProductsPagedAction(params: { page: number; query: string; limit: number }) {
+  return getService().getCatalog(params)
 }
 
 export async function getProductAction(id: number) {
@@ -38,19 +42,22 @@ export async function getRelatedProductsAction(productId: number, categoryName: 
   return getService().getRelatedProducts(productId, categoryName)
 }
 
-// ─── CRUD admin ───────────────────────────────────────────────────────────────
+// ─── CRUD admin (requieren sesión activa) ─────────────────────────────────────
 
 export async function createProductAction(data: CreateProductDTO) {
-  // TODO: validar sesión admin antes de crear
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
   return getService().createProduct(data)
 }
 
 export async function updateProductAction(id: number, data: UpdateProductDTO) {
-  // TODO: validar sesión admin
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
   return getService().updateProduct(id, data)
 }
 
 export async function deleteProductAction(id: number) {
-  // TODO: validar sesión admin
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
   return getService().deleteProduct(id)
 }

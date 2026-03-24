@@ -1,16 +1,19 @@
 "use client"
 
 /**
- * Página de listado de productos del panel admin.
- * Usa el hook genérico `useAdminList` para toda la lógica de estado:
- * carga, búsqueda, paginación y eliminación con animación.
+ * AdminProductosPage — Listado de productos del panel admin.
+ *
+ * Mejoras visuales respecto a la versión anterior:
+ *  - Columna de estado con badges Destacado y Más vendido
+ *  - Categoría + Marca como chips en lugar de texto plano
+ *  - SKU con estilo monospace más legible
+ *  - Rating con estrella visual
  */
 
 import Link from "next/link"
-import { getCatalogAction, deleteProductAction } from "@/features/productos/actions"
+import { getProductsPagedAction, deleteProductAction } from "@/features/productos/actions"
 import type { Product } from "@/lib/types"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import {
   Table,
   TableHeader,
@@ -23,15 +26,14 @@ import { AdminListHeader } from "@/components/admin/AdminListHeader"
 import { AdminPagination } from "@/components/admin/AdminPagination"
 import { DeleteDialog } from "@/components/admin/DeleteDialog"
 import { AdminTableThumb } from "@/components/admin/AdminTableThumb"
-import { useAdminList } from "@/hooks/admin/use-admin-list"
+import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 12
 
 export default function AdminProductosPage() {
   const {
-    allItems,
-    filteredCount,
-    paged,
+    items: paged,
+    total,
     loading,
     search,
     currentPage,
@@ -40,25 +42,18 @@ export default function AdminProductosPage() {
     handleSearch,
     setPage,
     handleDelete,
-  } = useAdminList<Product>({
+  } = useAdminPagedList<Product>({
     pageSize: PAGE_SIZE,
-    loadFn: () => getCatalogAction({ limit: 1000 }).then((r) => r.data),
-    filterFn: (p, q) => {
-      const lq = q.toLowerCase()
-      return (
-        p.name.toLowerCase().includes(lq) ||
-        p.sku.toLowerCase().includes(lq) ||
-        p.category.toLowerCase().includes(lq) ||
-        p.brand.toLowerCase().includes(lq)
-      )
-    },
+    /** Paginación server-side: el servidor devuelve solo la página solicitada */
+    loadFn: ({ page, query, limit }) =>
+      getProductsPagedAction({ page, query, limit }),
   })
 
   return (
     <div>
       <AdminListHeader
         title="Productos"
-        subtitle={loading ? "Cargando…" : `${filteredCount} de ${allItems.length} productos`}
+        subtitle={loading ? "Cargando…" : `${total} producto${total !== 1 ? "s" : ""}`}
         newHref="/productos/nuevo"
         newLabel="Nuevo producto"
         searchValue={search}
@@ -73,22 +68,26 @@ export default function AdminProductosPage() {
               <TableHead className="w-14 px-4 py-3 font-semibold text-slate-600">Img</TableHead>
               <TableHead className="px-4 py-3 font-semibold text-slate-600">SKU</TableHead>
               <TableHead className="px-4 py-3 font-semibold text-slate-600">Nombre</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Categoría</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Marca</TableHead>
+              <TableHead className="px-4 py-3 font-semibold text-slate-600">Categoría / Marca</TableHead>
               <TableHead className="px-4 py-3 font-semibold text-slate-600">Rating</TableHead>
+              <TableHead className="px-4 py-3 font-semibold text-slate-600">Estado</TableHead>
               <TableHead className="px-4 py-3 font-semibold text-slate-600">Acciones</TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={7} className="py-8 text-center text-slate-400">
-                  Cargando productos…
+                <TableCell colSpan={7} className="py-10 text-center text-slate-400">
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#1C2870] border-t-transparent" />
+                    Cargando productos…
+                  </span>
                 </TableCell>
               </TableRow>
             ) : paged.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="py-8 text-center text-slate-400">
+                <TableCell colSpan={7} className="py-10 text-center text-slate-400">
                   {search ? "Sin resultados." : "No hay productos aún."}
                 </TableCell>
               </TableRow>
@@ -96,13 +95,14 @@ export default function AdminProductosPage() {
               paged.map((product) => (
                 <TableRow
                   key={product.id}
-                  className="border-slate-100"
+                  className="border-slate-100 transition-colors hover:bg-slate-50/40"
                   style={{
                     opacity:    removingId === product.id ? 0 : 1,
                     transform:  removingId === product.id ? "translateX(12px) scale(0.98)" : "none",
                     transition: "all 0.3s",
                   }}
                 >
+                  {/* Miniatura */}
                   <TableCell className="px-4 py-2">
                     <AdminTableThumb
                       src={product.image}
@@ -111,19 +111,58 @@ export default function AdminProductosPage() {
                       variant="cover"
                     />
                   </TableCell>
-                  <TableCell className="px-4 py-3 font-mono text-xs text-slate-500">
-                    {product.sku}
+
+                  {/* SKU — monospace */}
+                  <TableCell className="px-4 py-3">
+                    <span className="rounded-md bg-slate-100 px-2 py-1 font-mono text-xs text-slate-500">
+                      {product.sku}
+                    </span>
                   </TableCell>
-                  <TableCell className="px-4 py-3 font-medium text-slate-800">
+
+                  {/* Nombre del producto */}
+                  <TableCell className="px-4 py-3 font-semibold text-slate-800">
                     {product.name}
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-slate-600">{product.category}</TableCell>
-                  <TableCell className="px-4 py-3 text-slate-600">{product.brand}</TableCell>
+
+                  {/* Categoría + Marca como chips apilados */}
                   <TableCell className="px-4 py-3">
-                    <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700">
-                      {product.rating}
-                    </Badge>
+                    <div className="flex flex-col gap-1">
+                      <span className="w-fit rounded-md bg-violet-50 px-2 py-0.5 text-[11px] font-medium text-violet-700">
+                        {product.category}
+                      </span>
+                      <span className="w-fit rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
+                        {product.brand}
+                      </span>
+                    </div>
                   </TableCell>
+
+                  {/* Rating con estrella */}
+                  <TableCell className="px-4 py-3">
+                    <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-600 ring-1 ring-amber-200">
+                      ★ {product.rating}
+                    </span>
+                  </TableCell>
+
+                  {/* Badges de estado: Destacado / Más vendido */}
+                  <TableCell className="px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      {product.featured && (
+                        <span className="w-fit rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-600">
+                          Destacado
+                        </span>
+                      )}
+                      {product.bestSeller && (
+                        <span className="w-fit rounded-md bg-rose-50 px-2 py-0.5 text-[11px] font-bold text-rose-500">
+                          Más vendido
+                        </span>
+                      )}
+                      {!product.featured && !product.bestSeller && (
+                        <span className="text-xs text-slate-300">—</span>
+                      )}
+                    </div>
+                  </TableCell>
+
+                  {/* Editar / Eliminar */}
                   <TableCell className="px-4 py-3">
                     <div className="flex gap-2">
                       <Button asChild variant="outline" size="xs">
@@ -158,7 +197,7 @@ export default function AdminProductosPage() {
         </Table>
       </div>
 
-      <AdminPagination currentPage={currentPage} totalPages={totalPages} onPage={setPage} />
+      <AdminPagination currentPage={currentPage} totalPages={totalPages} total={total} onPage={setPage} />
     </div>
   )
 }

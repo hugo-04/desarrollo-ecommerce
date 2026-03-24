@@ -6,8 +6,14 @@ import {
   CompanyShowcase, ServiciosSection, ProcesoSection, CertificacionesStrip, CtaBand,
   TrustBar, FabricacionSection,
 } from "@/components/home"
+import type { CategoryDTO } from "@/features/categorias/types"
 
-export function HomeView() {
+interface HomeViewProps {
+  /** Categorías cargadas server-side en page.tsx para evitar llamada al mock */
+  categories: CategoryDTO[]
+}
+
+export function HomeView({ categories }: HomeViewProps) {
   return (
     <>
       {/* DARK — Hero principal */}
@@ -17,7 +23,7 @@ export function HomeView() {
       <TrustBar />
 
       {/* LIGHT — Productos: lo que vendemos */}
-      <CategoriesGrid />
+      <CategoriesGrid categories={categories} />
       <BestSellersCarousel />
 
       {/* DARK — Marcas */}

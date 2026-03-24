@@ -2,24 +2,35 @@
 
 /**
  * BRAND SERVER ACTIONS
- * MIGRACIÓN A DB: cambiar MockBrandRepository → DbBrandRepository.
+ * Punto de entrada para todo acceso a marcas desde el cliente o Server Components.
  */
 
-import { MockBrandRepository } from "./repository"
+import { DbBrandRepository } from "./repository"
 import { BrandService } from "./service"
-import type { CreateBrandDTO, UpdateBrandDTO } from "./types"
+import type { CreateBrandDTO, UpdateBrandDTO, BrandFilters } from "./types"
+import { db } from "@/lib/db"
+import { getSession } from "@/lib/auth/session"
 
 // Singleton: una sola instancia compartida entre todas las llamadas del proceso.
-// Sin esto, cada acción creaba un repo nuevo y los cambios se perdían al instante.
-const _service = new BrandService(new MockBrandRepository())
-// TODO DB: const _service = new BrandService(new DbBrandRepository(db))
+const _service = new BrandService(new DbBrandRepository(db))
 
 function getService() { return _service }
 
-// ─── Lectura ──────────────────────────────────────────────────────────────────
+// ─── Lectura (sin auth — datos públicos) ──────────────────────────────────────
 
 export async function getBrandsAction() {
   return getService().getAll()
+}
+
+/** Solo las marcas con showInCarousel=true — para el carrusel/marquee del home */
+export async function getBrandsForCarouselAction() {
+  return getService().getCarousel()
+}
+
+/** Versión paginada — solo devuelve la página solicitada.
+ *  Usar en el listado admin para no cargar todas las marcas de una vez. */
+export async function getBrandsPagedAction(filters: BrandFilters) {
+  return getService().getPaged(filters)
 }
 
 export async function getBrandNamesAction() {
@@ -30,16 +41,22 @@ export async function getBrandByIdAction(id: number) {
   return getService().getById(id)
 }
 
-// ─── CRUD admin ───────────────────────────────────────────────────────────────
+// ─── CRUD admin (requieren sesión activa) ─────────────────────────────────────
 
 export async function createBrandAction(data: CreateBrandDTO) {
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
   return getService().create(data)
 }
 
 export async function updateBrandAction(id: number, data: UpdateBrandDTO) {
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
   return getService().update(id, data)
 }
 
 export async function deleteBrandAction(id: number) {
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
   return getService().delete(id)
 }

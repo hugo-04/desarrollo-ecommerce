@@ -2,19 +2,20 @@
  * CATEGORY REPOSITORY
  *
  * ICategoryRepository: contrato que el servicio usa.
- * MockCategoryRepository: implementación con datos mock (actual).
+ * DbCategoryRepository: implementación con Prisma/PostgreSQL.
  *
- * Al migrar a DB:
- *   export class DbCategoryRepository implements ICategoryRepository { ... }
+ * Las queries de texto usan ILIKE aceleradas por índice GIN de trigramas.
+ * findAll() ordena por count desc → home page muestra las más populares primero.
  */
 
-import type { CategoryDTO, CreateCategoryDTO, UpdateCategoryDTO } from "./types"
-import { MOCK_CATEGORIES } from "@/lib/data/mock/categories.mock"
+import type { CategoryDTO, CreateCategoryDTO, UpdateCategoryDTO, CategoryFilters, CategoryPaginatedResult } from "./types"
+import { PrismaClient } from "@prisma/client"
 
 // ─── Interface ─────────────────────────────────────────────────────────────────
 
 export interface ICategoryRepository {
   findAll(): Promise<CategoryDTO[]>
+  findPaged(filters: CategoryFilters): Promise<CategoryPaginatedResult>
   findById(id: number): Promise<CategoryDTO | null>
   findBySlug(slug: string): Promise<CategoryDTO | null>
   create(data: CreateCategoryDTO): Promise<CategoryDTO>
@@ -22,50 +23,66 @@ export interface ICategoryRepository {
   delete(id: number): Promise<void>
 }
 
-// ─── Mock implementation ───────────────────────────────────────────────────────
+// ─── Prisma DB implementation ──────────────────────────────────────────────────
 
-/**
- * Calcula el próximo ID disponible.
- * Usa `reduce` en lugar de spread + Math.max para evitar `-Infinity`
- * cuando el array está vacío, lo que causaría IDs `NaN`.
- */
-function nextId(items: { id: number }[]): number {
-  return items.reduce((max, item) => Math.max(max, item.id), 0) + 1
-}
+export class DbCategoryRepository implements ICategoryRepository {
+  constructor(private db: PrismaClient) {}
 
-export class MockCategoryRepository implements ICategoryRepository {
-  // Omitir `icon` (React component): no es serializable a JSON
-  private categories: CategoryDTO[] = MOCK_CATEGORIES.map(({ icon: _icon, ...rest }) => rest)
-
+  /**
+   * Ordena por count desc: las categorías con más productos aparecen
+   * primero → el slice(0,6) del home grid muestra las más relevantes.
+   */
   async findAll(): Promise<CategoryDTO[]> {
-    return this.categories
+    return this.db.category.findMany({ orderBy: { count: "desc" } })
+  }
+
+  /**
+   * COUNT + findMany en paralelo.
+   * La búsqueda ILIKE sobre name y slug usa los índices GIN de trigramas.
+   */
+  async findPaged(filters: CategoryFilters): Promise<CategoryPaginatedResult> {
+    const { query = "", page = 1, limit = 12 } = filters
+
+    const where = query
+      ? {
+          OR: [
+            { name: { contains: query, mode: "insensitive" as const } },
+            { slug: { contains: query, mode: "insensitive" as const } },
+          ],
+        }
+      : {}
+
+    const [total, data] = await Promise.all([
+      this.db.category.count({ where }),
+      this.db.category.findMany({
+        where,
+        skip:    (page - 1) * limit,
+        take:    limit,
+        orderBy: { name: "asc" },
+      }),
+    ])
+
+    const totalPages = Math.max(1, Math.ceil(total / limit))
+    return { data, total, page, totalPages }
   }
 
   async findById(id: number): Promise<CategoryDTO | null> {
-    return this.categories.find((c) => c.id === id) ?? null
+    return this.db.category.findUnique({ where: { id } })
   }
 
   async findBySlug(slug: string): Promise<CategoryDTO | null> {
-    return this.categories.find((c) => c.slug === slug) ?? null
+    return this.db.category.findUnique({ where: { slug } })
   }
 
   async create(data: CreateCategoryDTO): Promise<CategoryDTO> {
-    const id       = nextId(this.categories)
-    const category = { id, ...data }
-    this.categories.push(category)
-    return category
+    return this.db.category.create({ data })
   }
 
   async update(id: number, data: UpdateCategoryDTO): Promise<CategoryDTO> {
-    const index = this.categories.findIndex((c) => c.id === id)
-    if (index === -1) throw new Error(`Categoría ${id} no encontrada`)
-    this.categories[index] = { ...this.categories[index], ...data }
-    return this.categories[index]
+    return this.db.category.update({ where: { id }, data })
   }
 
   async delete(id: number): Promise<void> {
-    const index = this.categories.findIndex((c) => c.id === id)
-    if (index === -1) throw new Error(`Categoría ${id} no encontrada`)
-    this.categories.splice(index, 1)
+    await this.db.category.delete({ where: { id } })
   }
 }

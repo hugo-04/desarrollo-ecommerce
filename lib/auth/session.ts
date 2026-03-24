@@ -16,6 +16,7 @@
 import { SignJWT, jwtVerify } from "jose"
 import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
+import { db } from "@/lib/db"
 
 const SECRET       = new TextEncoder().encode(
   process.env.AUTH_SECRET ?? "electro-thina-dev-secret-2024"
@@ -25,16 +26,13 @@ const COOKIE_NAME  = "et_admin_session"
 const COOKIE_MAX_AGE = 60 * 60 * 8 // 8 horas
 
 export async function validateCredentials(email: string, password: string): Promise<boolean> {
-  if (email !== ADMIN_EMAIL) return false
+  const user = await db.adminUser.findUnique({
+    where: { email },
+  })
 
-  const hash = process.env.ADMIN_PASSWORD_HASH
-  if (hash) {
-    return bcrypt.compare(password, hash)
-  }
+  if (!user) return false
 
-  // Fallback texto plano (solo desarrollo)
-  const plain = process.env.ADMIN_PASSWORD ?? "admin123"
-  return password === plain
+  return bcrypt.compare(password, user.passwordHash)
 }
 
 export async function createSession(email: string): Promise<void> {

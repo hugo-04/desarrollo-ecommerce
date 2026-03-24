@@ -13,4 +13,5 @@ export const MOCK_BRANDS: Brand[] = [
   { id: 10, name: "PLP",       logo: "https://logo.clearbit.com/plp.com",       showInCarousel: false },
   { id: 11, name: "Hubbell",   logo: "https://logo.clearbit.com/hubbell.com",   showInCarousel: false },
   { id: 12, name: "Eaton",     logo: "https://logo.clearbit.com/eaton.com",     showInCarousel: false },
+  { id: 13, name: "Prodac",   logo: "",                                        showInCarousel: false },
 ]
