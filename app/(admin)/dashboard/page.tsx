@@ -253,13 +253,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Aviso mock — pequeño y no intrusivo */}
-          <div className="rounded-xl border border-amber-200/60 bg-amber-50/70 px-4 py-3">
-            <p className="text-xs font-semibold text-amber-700">Datos mock activos</p>
-            <p className="mt-0.5 text-[11px] leading-relaxed text-amber-600/80">
-              Para persistencia real instalá Prisma + PostgreSQL y actualizá el repositorio en cada feature.
-            </p>
-          </div>
+
         </div>
       </div>
     </div>
