@@ -28,6 +28,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: true,
     bestSeller: true,
     rating: 4.9,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 2,
@@ -52,6 +53,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: true,
     bestSeller: true,
     rating: 4.7,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 3,
@@ -76,6 +78,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: true,
     bestSeller: true,
     rating: 4.8,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 4,
@@ -100,6 +103,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: true,
     bestSeller: true,
     rating: 4.8,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 5,
@@ -125,6 +129,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: false,
     bestSeller: false,
     rating: 4.9,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 6,
@@ -149,6 +154,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: true,
     bestSeller: true,
     rating: 4.6,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 7,
@@ -172,6 +178,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: false,
     bestSeller: false,
     rating: 4.7,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 8,
@@ -195,6 +202,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: false,
     bestSeller: false,
     rating: 4.5,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 9,
@@ -218,6 +226,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: false,
     bestSeller: false,
     rating: 4.6,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 10,
@@ -242,6 +251,7 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: false,
     bestSeller: false,
     rating: 4.5,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 11,
@@ -265,19 +275,20 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: false,
     bestSeller: false,
     rating: 4.8,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 12,
     sku: "FER-PER-012",
-    name: "Perno de Maquina Galvanizado 5/8 x 10\" Grado 5",
+    name: 'Perno de Maquina Galvanizado 5/8 x 10" Grado 5',
     brand: "Prodac",
     category: "Ferreteria Electrica",
     image: "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?w=600&q=80",
-    specs: ["5/8\"", "10 pulg", "Grado 5", "Galvanizado"],
+    specs: ['5/8"', "10 pulg", "Grado 5", "Galvanizado"],
     description: "Perno de maquina para montaje de crucetas y herrajes en postes.",
     fullDescription: "Perno de maquina con rosca completa grado 5 galvanizado en caliente incluye tuerca y arandela. Para fijacion de herrajes, crucetas y accesorios en postes de concreto y madera.",
     technicalSpecs: [
-      { label: "Diametro", value: "5/8\"" },
+      { label: "Diametro", value: '5/8"' },
       { label: "Longitud", value: "10 pulg" },
       { label: "Grado", value: "5" },
       { label: "Recubrimiento", value: "Galvanizado en Caliente" },
@@ -288,5 +299,6 @@ export const MOCK_PRODUCTS: Product[] = [
     featured: false,
     bestSeller: false,
     rating: 4.4,
+    fichaTecnica: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
 ]

@@ -15,9 +15,11 @@ interface GalleryEditorProps {
   onChange: (v: string[]) => void
   alts?: string[]
   onAltsChange?: (alts: string[]) => void
+  /** Carpeta S3 destino — se pasa a cada ImageUpload */
+  folder?: string
 }
 
-export function GalleryEditor({ values, onChange, alts = [], onAltsChange }: GalleryEditorProps) {
+export function GalleryEditor({ values, onChange, alts = [], onAltsChange, folder }: GalleryEditorProps) {
   function setAlt(index: number, alt: string) {
     const next = [...alts]
     next[index] = alt
@@ -56,6 +58,7 @@ export function GalleryEditor({ values, onChange, alts = [], onAltsChange }: Gal
                   onChange(next)
                 }}
                 aspect="1/1"
+                folder={folder}
               />
               <button
                 type="button"

@@ -29,6 +29,7 @@ export function useCatalogFilters({
   const [sortBy, setSortBy] = useState<SortOption>("recommended")
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState(initialQuery)
 
   // Sync from URL params changes
   useEffect(() => {
@@ -39,10 +40,14 @@ export function useCatalogFilters({
     setOnlyBestSellers(initialBestSellers)
   }, [initialBestSellers])
 
+  useEffect(() => {
+    setSearchQuery(initialQuery)
+  }, [initialQuery])
+
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedCategories, selectedBrands, onlyBestSellers, sortBy])
+  }, [selectedCategories, selectedBrands, onlyBestSellers, sortBy, searchQuery])
 
   const toggleCategory = useCallback((category: string) => {
     setSelectedCategories((prev) =>
@@ -75,7 +80,7 @@ export function useCatalogFilters({
     sortBy,
     viewMode,
     currentPage,
-    searchQuery: initialQuery,
+    searchQuery,
   }
 
   return {
@@ -90,6 +95,7 @@ export function useCatalogFilters({
     setSortBy,
     setViewMode,
     setCurrentPage,
+    setSearchQuery,
     // Computed
     activeFiltersCount,
   }

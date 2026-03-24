@@ -24,16 +24,18 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
         )}
         {/* Solo muestra el botón de PDF si el producto tiene ficha técnica cargada */}
         {product.fichaTecnica && (
-          <a
-            href={product.fichaTecnica}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              window.open(product.fichaTecnica, "_blank", "noopener,noreferrer")
+            }}
             className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/90 text-primary shadow-md ring-1 ring-black/[0.04] backdrop-blur-sm transition-all hover:bg-primary hover:text-white group-hover:opacity-100 sm:opacity-0"
             title="Descargar Ficha Técnica (PDF)"
           >
             <IconPDF className="h-4 w-4" />
-          </a>
+          </button>
         )}
         <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-white/90 px-2.5 py-1.5 shadow-sm ring-1 ring-black/[0.04] backdrop-blur-sm">
           <IconStar className="h-3 w-3 text-amber-500" />

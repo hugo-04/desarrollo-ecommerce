@@ -54,7 +54,7 @@ export function CatalogoView({
     activeFiltersCount,
   } = useCatalogFilters({ initialCategory, initialQuery, initialBestSellers })
 
-  const { selectedCategories, selectedBrands, onlyBestSellers, sortBy, viewMode, currentPage } =
+  const { selectedCategories, selectedBrands, onlyBestSellers, sortBy, viewMode, currentPage, searchQuery } =
     filters
 
   // Construir filtros para la API
@@ -65,7 +65,7 @@ export function CatalogoView({
     sortBy,
     page: currentPage,
     limit: ITEMS_PER_PAGE,
-    query: initialQuery,
+    query: searchQuery,
   }
 
   // Datos desde API routes internas

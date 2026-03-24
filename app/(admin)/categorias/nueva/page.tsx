@@ -1,10 +1,14 @@
 "use client"
 
-import Link from "next/link"
+/**
+ * /categorias/nueva — Crear nueva categoría.
+ * Orquesta la navegación y la server action; el formulario vive en CategoryForm.
+ */
+
 import { useRouter } from "next/navigation"
 import { createCategoryAction } from "@/features/categorias/actions"
 import { CategoryForm } from "@/components/admin/CategoryForm"
-import { IconChevronLeft } from "@/components/icons"
+import { AdminFormHeader } from "@/components/admin/AdminFormHeader"
 import { toast } from "sonner"
 import type { CategoryDTO } from "@/features/categorias/types"
 
@@ -20,20 +24,13 @@ export default function NuevaCategoriaPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl">
-      <div className="mb-6">
-        <Link
-          href="/categorias"
-          className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-primary"
-        >
-          <IconChevronLeft className="h-3.5 w-3.5" />
-          Volver a Categorías
-        </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Nueva Categoría</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Completá los datos para agregar una nueva categoría al catálogo.
-        </p>
-      </div>
-
+      <AdminFormHeader
+        backHref="/categorias"
+        backLabel="Volver a Categorías"
+        title="Nueva Categoría"
+        subtitle="Completá los datos para agregar una nueva categoría al catálogo."
+        mode="crear"
+      />
       <CategoryForm onSave={handleSave} />
     </div>
   )

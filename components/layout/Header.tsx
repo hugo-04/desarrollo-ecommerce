@@ -1,6 +1,7 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRef, useCallback } from "react"
+import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { IconSearch, IconWhatsApp } from "@/components/icons"
 import { WA } from "@/lib/contact"
@@ -11,7 +12,21 @@ interface HeaderProps {
 }
 
 export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
-  const router = useRouter()
+  const router   = useRouter()
+  const pathname = usePathname()
+  const debounce = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  /** En catálogo: reemplaza la URL en tiempo real (debounce 300 ms).
+   *  En otras páginas: navega al catálogo solo al pulsar Enter / botón. */
+  const handleChange = useCallback((value: string) => {
+    setSearchQuery(value)
+    if (pathname === "/catalogo") {
+      if (debounce.current) clearTimeout(debounce.current)
+      debounce.current = setTimeout(() => {
+        router.replace(`/catalogo?q=${encodeURIComponent(value)}`)
+      }, 300)
+    }
+  }, [pathname, router, setSearchQuery])
 
   const handleSearch = () => {
     if (searchQuery.trim()) router.push(`/catalogo?q=${encodeURIComponent(searchQuery)}`)
@@ -45,7 +60,7 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
               type="text"
               placeholder="Buscar productos, SKU, marca..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleChange(e.target.value)}
               onKeyDown={handleKeyDown}
               className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-20 text-sm transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
             />

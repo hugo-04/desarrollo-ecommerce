@@ -2,14 +2,13 @@
 
 /**
  * /marcas/nueva — Crear nueva marca.
- * Delega todo el formulario a BrandForm; esta página solo orquesta la acción y navegación.
+ * Orquesta la navegación y la server action; el formulario vive en BrandForm.
  */
 
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createBrandAction } from "@/features/marcas/actions"
 import { BrandForm } from "@/components/admin/BrandForm"
-import { IconChevronLeft } from "@/components/icons"
+import { AdminFormHeader } from "@/components/admin/AdminFormHeader"
 import { toast } from "sonner"
 
 export default function NuevaMarcaPage() {
@@ -24,21 +23,13 @@ export default function NuevaMarcaPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl">
-      {/* Header */}
-      <div className="mb-6">
-        <Link
-          href="/marcas"
-          className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-primary"
-        >
-          <IconChevronLeft className="h-3.5 w-3.5" />
-          Volver a Marcas
-        </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Nueva Marca</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Agregá una nueva marca al catálogo de productos.
-        </p>
-      </div>
-
+      <AdminFormHeader
+        backHref="/marcas"
+        backLabel="Volver a Marcas"
+        title="Nueva Marca"
+        subtitle="Agregá una nueva marca al catálogo de productos."
+        mode="crear"
+      />
       <BrandForm onSave={handleSave} />
     </div>
   )

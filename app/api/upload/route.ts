@@ -1,19 +1,24 @@
 /**
  * POST /api/upload — Subida de imágenes y archivos.
  *
- * Guarda en /public/uploads/ (desarrollo).
- * En producción (Vercel) usar Cloudinary o S3:
- *   npm install cloudinary
- *   Reemplazar writeFile con cloudinary.uploader.upload()
+ * Cuando las variables de entorno de AWS S3 están configuradas, sube a S3 y
+ * devuelve la URL pública del bucket (o CDN si CDN_URL está definida).
+ * Sin variables de S3, hace fallback a /public/uploads/ (desarrollo local).
+ *
+ * FormData esperado:
+ *   file     — archivo binario
+ *   seoName  — nombre SEO para el filename (opcional)
+ *   folder   — carpeta S3 destino (whitelist: UPLOAD_FOLDERS de lib/storage/s3.ts)
  */
 
 import { writeFile, mkdir } from "fs/promises"
 import { join } from "path"
 import { NextRequest, NextResponse } from "next/server"
 import { getSession } from "@/lib/auth/session"
+import { uploadToS3, isS3Configured, UPLOAD_FOLDERS } from "@/lib/storage/s3"
 
 const UPLOAD_DIR = join(process.cwd(), "public", "uploads")
-const MAX_SIZE   = 5 * 1024 * 1024 // 5 MB
+const MAX_SIZE   = 10 * 1024 * 1024 // 10 MB (PDFs pueden ser más pesados)
 const ALLOWED    = ["image/jpeg", "image/png", "image/webp", "image/svg+xml", "application/pdf"]
 
 export async function POST(request: NextRequest) {
@@ -36,28 +41,42 @@ export async function POST(request: NextRequest) {
     }
 
     if (file.size > MAX_SIZE) {
-      return NextResponse.json({ error: "El archivo excede 5 MB" }, { status: 400 })
+      return NextResponse.json({ error: "El archivo excede 10 MB" }, { status: 400 })
     }
 
-    // Crear directorio si no existe
-    await mkdir(UPLOAD_DIR, { recursive: true })
-
-    // Nombre único: timestamp + nombre SEO (si viene) o nombre original limpio
-    const ext     = file.name.split(".").pop()?.toLowerCase() ?? "bin"
-    const rawName = (formData.get("seoName") as string | null)?.trim() || file.name.replace(`.${file.name.split(".").pop() ?? ""}`, "")
+    // Nombre SEO único: timestamp + slug limpio derivado del alt text
+    const ext      = file.name.split(".").pop()?.toLowerCase() ?? "bin"
+    const rawName  = (formData.get("seoName") as string | null)?.trim() ||
+                     file.name.replace(`.${file.name.split(".").pop() ?? ""}`, "")
     const safeName = rawName
       .toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")  // quita acentos
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "")
       .slice(0, 80)
-    const filename = `${Date.now()}-${safeName}.${ext}`
-    const filepath = join(UPLOAD_DIR, filename)
+    const uniqueName = `${Date.now()}-${safeName}.${ext}`
 
     const buffer = Buffer.from(await file.arrayBuffer())
-    await writeFile(filepath, buffer)
 
-    return NextResponse.json({ url: `/uploads/${filename}` })
+    // ── S3 (producción) ────────────────────────────────────────────────────
+    if (isS3Configured()) {
+      // Validar folder contra la whitelist — evita path traversal
+      const rawFolder = (formData.get("folder") as string | null)?.trim() ?? ""
+      const folder    = (UPLOAD_FOLDERS as readonly string[]).includes(rawFolder)
+        ? rawFolder
+        : "productos/imagenes"
+
+      const key = `${folder}/${uniqueName}`
+      const url = await uploadToS3(buffer, key, file.type)
+      return NextResponse.json({ url })
+    }
+
+    // ── Fallback local (desarrollo sin S3 configurado) ────────────────────
+    await mkdir(UPLOAD_DIR, { recursive: true })
+    const filepath = join(UPLOAD_DIR, uniqueName)
+    await writeFile(filepath, buffer)
+    return NextResponse.json({ url: `/uploads/${uniqueName}` })
+
   } catch (error) {
     console.error("[POST /api/upload]", error)
     return NextResponse.json({ error: "Error al subir el archivo" }, { status: 500 })

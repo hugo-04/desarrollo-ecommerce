@@ -71,6 +71,8 @@ interface ImageUploadProps {
   required?: boolean
   error?: string
   aspect?: string
+  /** Carpeta S3 destino — se valida en el servidor contra la whitelist */
+  folder?: string
 }
 
 export function ImageUpload({
@@ -82,6 +84,7 @@ export function ImageUpload({
   required,
   error,
   aspect = "4/3",
+  folder,
 }: ImageUploadProps) {
   const [uploading, setUploading]       = useState(false)
   const [uploadError, setUploadError]   = useState("")
@@ -96,6 +99,8 @@ export function ImageUpload({
       // Nombre SEO: usamos el alt text como filename para que la URL sea amigable para Google
       const seoName = (altValue ?? "").trim()
       if (seoName) fd.append("seoName", seoName)
+      // Carpeta S3 destino — el servidor valida contra la whitelist
+      if (folder) fd.append("folder", folder)
       try {
         const res  = await fetch("/api/upload", { method: "POST", body: fd })
         const data = await res.json()
@@ -107,7 +112,7 @@ export function ImageUpload({
         setUploading(false)
       }
     },
-    [onChange, altValue],
+    [onChange, altValue, folder],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

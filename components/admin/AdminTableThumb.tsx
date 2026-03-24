@@ -1,3 +1,5 @@
+"use client"
+
 /**
  * AdminTableThumb — miniatura cuadrada reutilizable para tablas del panel admin.
  * Siempre ocupa un contenedor fijo cuadrado con bordes redondeados.

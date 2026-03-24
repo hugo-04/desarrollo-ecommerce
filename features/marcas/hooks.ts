@@ -11,7 +11,7 @@
  */
 
 import { useState, useEffect } from "react"
-import { getBrandNamesAction, getBrandsAction } from "./actions"
+import { getBrandNamesAction, getBrandsAction, getBrandsForCarouselAction } from "./actions"
 import type { Brand } from "@/lib/types"
 
 // ─── useBrandNames ─────────────────────────────────────────────────────────────
@@ -61,4 +61,22 @@ export function useBrands(): UseBrandsReturn {
   }, [])
 
   return { brands, loading, error }
+}
+
+// ─── useBrandsCarousel ─────────────────────────────────────────────────────────
+
+/**
+ * Carga solo las marcas con showInCarousel=true desde el backend.
+ * Usado por el componente MarqueeBrands en el home.
+ */
+export function useBrandsCarousel(): Brand[] {
+  const [brands, setBrands] = useState<Brand[]>([])
+
+  useEffect(() => {
+    getBrandsForCarouselAction()
+      .then(setBrands)
+      .catch((err: unknown) => console.error("[useBrandsCarousel]", err))
+  }, [])
+
+  return brands
 }

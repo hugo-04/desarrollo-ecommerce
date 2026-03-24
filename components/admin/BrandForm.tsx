@@ -3,31 +3,24 @@
 /**
  * BrandForm — Formulario para crear y editar marcas.
  *
- * Props:
- *   initialData — datos de la marca existente (undefined = modo crear)
- *   onSave      — llamado al guardar con los datos validados
- *   onDelete    — llamado al confirmar eliminación (solo en modo editar)
- *
- * Lógica del carrusel:
- *   showInCarousel OFF → logo opcional, marca no aparece en el home
- *   showInCarousel ON  → logo REQUERIDO, marca aparece en el carrusel del home
+ * Layout 2 columnas:
+ *   Izquierda → Logo + switch de carrusel (relacionados: logo requerido si carrusel ON)
+ *   Derecha   → Nombre de la marca
  *
  * Validación:
- *   Toda la validación usa Zod con superRefine para la regla condicional del logo.
+ *   Toda la validación usa Zod (importado desde features/marcas/schemas.ts).
+ *   El logo es requerido SOLO cuando showInCarousel está activo (superRefine).
  */
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Switch } from "@/components/ui/switch"
-import { brandSchema } from "@/features/marcas/schemas"
 import { ImageUpload } from "@/components/ui/ImageUpload"
 import { DeleteDialog } from "@/components/admin/DeleteDialog"
 import { Button } from "@/components/ui/button"
+import { ImageIcon, Tag, Tv2 } from "lucide-react"
+import { brandSchema } from "@/features/marcas/schemas"
 import type { Brand } from "@/lib/types"
-
-// ---------------------------------------------------------------------------
-// Tipos
-// ---------------------------------------------------------------------------
 
 interface BrandFormProps {
   initialData?: Brand
@@ -35,38 +28,25 @@ interface BrandFormProps {
   onDelete?: () => Promise<void>
 }
 
-// ---------------------------------------------------------------------------
-// Componente
-// ---------------------------------------------------------------------------
-
-/**
- * Renderiza el formulario completo de marca con validación Zod unificada.
- */
 export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
   const router    = useRouter()
   const isEditing = !!initialData
 
-  // --- Estado del formulario ---
-  const [name, setName]               = useState(initialData?.name           ?? "")
-  const [logo, setLogo]               = useState(initialData?.logo           ?? "")
-  const [logoAlt, setLogoAlt]         = useState(initialData?.logoAlt        ?? "")
+  // ── Estado del formulario ────────────────────────────────────────────────
+  const [name,           setName]     = useState(initialData?.name           ?? "")
+  const [logo,           setLogo]     = useState(initialData?.logo           ?? "")
+  const [logoAlt,        setLogoAlt]  = useState(initialData?.logoAlt        ?? "")
   const [showInCarousel, setCarousel] = useState(initialData?.showInCarousel ?? false)
 
-  // --- Estado de UI ---
-  const [saving, setSaving]       = useState(false)
-  const [deleting, setDeleting]   = useState(false)
-  const [error, setError]         = useState("")
+  // ── Estado de UI ─────────────────────────────────────────────────────────
+  const [saving,    setSaving]    = useState(false)
+  const [deleting,  setDeleting]  = useState(false)
+  const [error,     setError]     = useState("")
   const [nameError, setNameError] = useState("")
   const [logoError, setLogoError] = useState("")
 
-  // ---------------------------------------------------------------------------
-  // Handlers
-  // ---------------------------------------------------------------------------
+  // ── Handlers ─────────────────────────────────────────────────────────────
 
-  /**
-   * Valida con Zod y llama a onSave si todo está correcto.
-   * Un único paso de validación cubre nombre Y logo condicional.
-   */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
@@ -92,10 +72,6 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
     }
   }
 
-  /**
-   * Confirma la eliminación llamando a onDelete.
-   * El estado `deleting` evita doble-click mientras el servidor procesa.
-   */
   async function handleDelete() {
     if (!onDelete) return
     setDeleting(true)
@@ -106,114 +82,138 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Render
-  // ---------------------------------------------------------------------------
+  // ── Render ───────────────────────────────────────────────────────────────
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-5">
 
-      {/* ── Error banner global ── */}
+      {/* Error banner global */}
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      {/* ── Switch carrusel ── */}
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-sm font-semibold text-slate-700">Mostrar en carrusel del home</h2>
-            <p className="mt-1 text-xs text-slate-400">
-              Cuando está activado, el logo de esta marca aparece en el carrusel de marcas de la página de inicio.
-              {showInCarousel && (
-                <span className="ml-1 font-medium text-amber-600">
-                  El logo es obligatorio si está activado.
+      {/* ── Layout 2 columnas ─────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+
+        {/* ── Columna izquierda: Logo + Carrusel ── */}
+        <div className="flex flex-col gap-5">
+
+          {/* Switch carrusel */}
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
+                <Tv2 className="h-3.5 w-3.5 text-[#1C2870]" />
+              </div>
+              <h2 className="text-sm font-semibold text-slate-700">Carrusel del home</h2>
+            </div>
+
+            <div className="flex items-start justify-between gap-4">
+              <p className="text-xs leading-relaxed text-slate-500">
+                Activá para mostrar esta marca en el carrusel de la página de inicio.
+                {showInCarousel && (
+                  <span className="mt-1 block font-medium text-amber-600">
+                    El logo es obligatorio cuando está activado.
+                  </span>
+                )}
+              </p>
+              <Switch
+                checked={showInCarousel}
+                onCheckedChange={(v) => {
+                  setCarousel(v)
+                  if (!v) setLogoError("")
+                }}
+              />
+            </div>
+
+            {/* Indicador de estado */}
+            <div className={`mt-4 flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold ${
+              showInCarousel
+                ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
+                : "bg-slate-50 text-slate-500 ring-1 ring-slate-200"
+            }`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${showInCarousel ? "bg-emerald-500" : "bg-slate-300"}`} />
+              {showInCarousel ? "Visible en el carrusel" : "No aparece en el carrusel"}
+            </div>
+          </div>
+
+          {/* Logo */}
+          <div className="flex-1 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
+                <ImageIcon className="h-3.5 w-3.5 text-[#1C2870]" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-slate-700">
+                  Logo de la marca
+                  {showInCarousel && <span className="ml-1 text-red-500">*</span>}
+                </h2>
+                <p className="text-[11px] text-slate-400">
+                  {showInCarousel ? "Requerido — PNG o WebP con fondo transparente" : "Opcional — PNG, JPG o WebP"}
+                </p>
+              </div>
+              {!showInCarousel && (
+                <span className="ml-auto rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                  Opcional
                 </span>
               )}
-            </p>
+            </div>
+
+            <ImageUpload
+              value={logo}
+              onChange={(v) => { setLogo(v); if (v) setLogoError("") }}
+              altValue={logoAlt}
+              onAltChange={setLogoAlt}
+              error={logoError}
+              aspect="16/9"
+              folder="marcas/logos"
+            />
           </div>
-          <Switch
-            checked={showInCarousel}
-            onCheckedChange={(v) => {
-              setCarousel(v)
-              // Al desactivar el carrusel, el logo ya no es requerido → limpiar error
-              if (!v) setLogoError("")
-            }}
-          />
         </div>
 
-        {/* Indicador de estado visual */}
-        <div className={`mt-4 flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium ${
-          showInCarousel
-            ? "bg-green-50 text-green-700 border border-green-200"
-            : "bg-slate-50 text-slate-500 border border-slate-200"
-        }`}>
-          <span className={`h-2 w-2 rounded-full ${showInCarousel ? "bg-green-500" : "bg-slate-300"}`} />
-          {showInCarousel ? "Visible en el carrusel del home" : "No aparece en el carrusel"}
-        </div>
-      </div>
+        {/* ── Columna derecha: Información ── */}
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="mb-5 flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
+              <Tag className="h-3.5 w-3.5 text-[#1C2870]" />
+            </div>
+            <h2 className="text-sm font-semibold text-slate-700">Información de la marca</h2>
+          </div>
 
-      {/* ── Logo — obligatorio si showInCarousel, opcional si no ── */}
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="mb-4 flex items-start gap-2">
           <div>
-            <h2 className="text-sm font-semibold text-slate-700">
-              Logo de la marca
-              {showInCarousel && <span className="ml-1 text-red-500">*</span>}
-            </h2>
-            <p className="mt-0.5 text-xs text-slate-400">
-              {showInCarousel
-                ? "Requerido — se mostrará en el carrusel. PNG o WebP con fondo transparente ideal."
-                : "Opcional — solo necesario si activás el carrusel. PNG, JPG o WebP."}
-            </p>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Nombre <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => { setName(e.target.value); if (nameError) setNameError("") }}
+              placeholder="Ej: ABB, Schneider Electric, Siemens…"
+              required
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-[#1C2870]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C2870]/15"
+            />
+            {nameError && <p className="mt-1.5 text-xs text-red-500">{nameError}</p>}
           </div>
-          {!showInCarousel && (
-            <span className="ml-auto shrink-0 rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
-              Opcional
-            </span>
-          )}
-        </div>
 
-        <ImageUpload
-          value={logo}
-          onChange={(v) => { setLogo(v); if (v) setLogoError("") }}
-          altValue={logoAlt}
-          onAltChange={setLogoAlt}
-          error={logoError}
-          aspect="16/9"
-        />
-      </div>
-
-      {/* ── Nombre de la marca ── */}
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-sm font-semibold text-slate-700">Información de la marca</h2>
-        <div>
-          <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-            Nombre <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => { setName(e.target.value); if (nameError) setNameError("") }}
-            placeholder="Ej: ABB, Schneider Electric, Siemens…"
-            required
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
-          />
-          {nameError && (
-            <p className="mt-1 text-xs text-red-500">{nameError}</p>
-          )}
+          {/* Tip sobre el logo + carrusel */}
+          <div className="mt-5 rounded-lg bg-slate-50 px-4 py-3.5 text-xs leading-relaxed text-slate-500">
+            <p className="font-semibold text-slate-600">¿Cómo funciona el carrusel?</p>
+            <ul className="mt-1.5 space-y-1 text-slate-500">
+              <li>→ <strong>Carrusel OFF</strong>: la marca existe en el sistema pero no se muestra en el home</li>
+              <li>→ <strong>Carrusel ON</strong>: el logo aparece en la sección de marcas de la página de inicio</li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      {/* ── Acciones: guardar / cancelar / eliminar ── */}
-      <div className="flex items-center justify-between gap-3">
+      {/* ── Barra de acciones ─────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
         <div className="flex gap-3">
           <Button
             type="submit"
             disabled={saving || deleting}
-            className="bg-primary px-6 hover:bg-primary/90"
+            className="bg-[#1C2870] px-6 hover:bg-[#1C2870]/90"
           >
             {saving
               ? isEditing ? "Guardando…" : "Creando…"
@@ -229,7 +229,7 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
           </Button>
         </div>
 
-        {/* Botón eliminar — solo en modo editar */}
+        {/* Eliminar — solo en modo editar */}
         {onDelete && (
           <DeleteDialog
             trigger={

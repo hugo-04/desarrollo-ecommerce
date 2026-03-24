@@ -40,9 +40,9 @@ export function PdfUploader({ label, value, onChange }: PdfUploaderProps) {
     setFileName(file.name)
     const fd = new FormData()
     fd.append("file", file)
-    if (seoName.trim()) {
-      fd.append("seoName", seoName.trim())
-    }
+    if (seoName.trim()) fd.append("seoName", seoName.trim())
+    // Las fichas técnicas siempre van a la carpeta de fichas en S3
+    fd.append("folder", "productos/fichas")
     try {
       const res  = await fetch("/api/upload", { method: "POST", body: fd })
       const data = await res.json()
