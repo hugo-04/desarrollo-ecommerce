@@ -11,3 +11,8 @@ node_modules/
 .DS_Store
 logs/
 weaviate-mcp.log
+
+# Herramientas locales (no forman parte del proyecto)
+.agent/
+design-system/
+.claude/
