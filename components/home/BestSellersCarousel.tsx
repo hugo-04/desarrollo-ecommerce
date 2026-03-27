@@ -33,11 +33,12 @@ export function BestSellersCarousel() {
       whileInView="visible"
       viewport={viewportOnce}
       variants={staggerContainer}
-      className="relative overflow-hidden py-24"
+      className="relative overflow-hidden py-32"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F0F0F5] via-[#F3F3F8] to-[#F0F0F5]" />
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/[0.015] to-transparent" />
-      <div className="relative mx-auto max-w-7xl px-4">
+      <div className="absolute inset-0 bg-slate-50" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(204,27,27,0.03)_0,transparent_50%)]" />
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white to-transparent" />
+      <div className="relative mx-auto max-w-[1400px] px-6">
         <motion.div variants={fadeUp} className="mb-14 text-center">
           <div className="mb-4 flex items-center justify-center gap-3">
             <div className="h-px w-8 bg-red-500" />
@@ -64,12 +65,12 @@ export function BestSellersCarousel() {
             ))}
           </motion.div>
         </motion.div>
-        <div className="mt-10 flex items-center justify-center gap-4">
+        <div className="mt-14 flex items-center justify-center gap-6">
           <button
             onClick={prevSlide}
-            className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#121A47]/10 bg-white text-[#121A47] shadow-sm transition-all hover:border-[#121A47] hover:bg-[#121A47] hover:text-white hover:shadow-md"
+            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:-translate-x-1 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-xl"
           >
-            <IconChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+            <IconChevronLeft className="h-6 w-6 transition-transform group-hover:-translate-x-1" />
           </button>
           <div className="flex items-center gap-2">
             {Array.from({ length: Math.max(1, bestSellers.length - itemsPerView + 1) }).map((_, i) => (
@@ -85,9 +86,9 @@ export function BestSellersCarousel() {
           </div>
           <button
             onClick={nextSlide}
-            className="group flex h-11 w-11 items-center justify-center rounded-full border border-[#121A47]/10 bg-white text-[#121A47] shadow-sm transition-all hover:border-[#121A47] hover:bg-[#121A47] hover:text-white hover:shadow-md"
+            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:translate-x-1 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-xl"
           >
-            <IconChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+            <IconChevronRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
           </button>
         </div>
       </div>

@@ -58,10 +58,9 @@ export function SectoresSection() {
               <motion.div
                 key={index}
                 variants={fadeUp}
-                whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-7 transition-all duration-500 hover:border-primary/30 hover:shadow-2xl"
+                className="group relative overflow-hidden rounded-[24px] border border-slate-200/50 bg-white/80 p-8 backdrop-blur-md transition-all duration-700 hover:-translate-y-2 hover:border-[#1C2870]/30 hover:shadow-[0_20px_40px_rgba(28,40,112,0.1)]"
               >
-                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-red-500 to-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#1c2870] via-[#cc1b1b] to-[#1c2870] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 <motion.div
                   className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary transition-all group-hover:bg-primary group-hover:text-white group-hover:shadow-lg group-hover:shadow-primary/25"
                   whileHover={{ rotate: 10 }}

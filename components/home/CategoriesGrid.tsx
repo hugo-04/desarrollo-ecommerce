@@ -8,38 +8,39 @@ import { IconArrowRight } from "@/components/icons"
 import { getCategoryIcon } from "@/lib/category-icons"
 import type { CategoryDTO } from "@/features/categorias/types"
 
-function CategoryCard({ category }: { category: CategoryDTO }) {
+function CategoryCard({ category, index }: { category: CategoryDTO; index: number }) {
   const Icon = getCategoryIcon(category.slug)
+  const isFeatured = index === 0
 
   return (
-    <motion.div variants={scaleUp} whileHover={cardHover} className="h-full w-full">
+    <motion.div variants={scaleUp} className={`h-full w-full ${isFeatured ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
       <Link
         href={`/catalogo?categoria=${encodeURIComponent(category.name)}`}
-        className="group relative block h-full w-full overflow-hidden rounded-2xl text-left transition-shadow duration-500 hover:shadow-2xl"
+        className="group relative block h-full w-full overflow-hidden rounded-3xl border border-slate-200/50 bg-white text-left transition-all duration-700 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#1C2870]/20"
       >
-        <div className="relative h-[340px] w-full overflow-hidden">
+        <div className={`relative w-full overflow-hidden ${isFeatured ? 'h-[400px] lg:h-full' : 'h-[340px]'}`}>
+          <div className="absolute inset-0 bg-slate-900/10 z-10 transition-opacity duration-500 group-hover:opacity-0" />
           <img
             src={category.image}
             alt={category.name}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
             crossOrigin="anonymous"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#121A47] via-[#121A47]/50 to-transparent" />
+          <div className={`absolute inset-0 bg-gradient-to-t from-[#07091E]/95 ${isFeatured ? 'via-[#07091E]/40' : 'via-[#07091E]/60'} to-transparent z-10`} />
           <div
-            className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-30 mix-blend-multiply transition-opacity group-hover:opacity-50`}
+            className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-20 mix-blend-color z-10 transition-opacity duration-500 group-hover:opacity-40`}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] transition-transform duration-700 group-hover:translate-x-[100%]" />
-          <div className="absolute inset-0 flex flex-col justify-end p-7">
+          <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md ring-1 ring-white/20 transition-all group-hover:bg-white/20 group-hover:shadow-lg">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md ring-1 ring-white/30 transition-all duration-500 group-hover:bg-[#CC1B1B] group-hover:ring-[#CC1B1B] group-hover:shadow-[0_0_20px_rgba(204,27,27,0.4)]">
                 <Icon className="h-5 w-5 text-white" />
               </div>
-              <div className="rounded-full bg-red-500/90 px-3 py-1 text-[10px] font-bold text-white shadow-lg">
-                {category.count} productos
+              <div className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] font-bold text-white backdrop-blur-md">
+                {category.count} PRODUCTOS
               </div>
             </div>
-            <h3 className="mb-1 text-xl font-extrabold text-white">{category.name}</h3>
-            <p className="mb-3 text-xs text-white/60">
+            <h3 className={`mb-2 font-black text-white ${isFeatured ? 'text-3xl lg:text-4xl' : 'text-xl'}`}>{category.name}</h3>
+            <p className={`text-white/70 ${isFeatured ? 'mb-6 max-w-sm text-sm' : 'mb-4 text-xs'}`}>
               {category.subcategories.slice(0, 3).join(" · ")}
             </p>
             <div className="flex items-center gap-2 text-xs font-semibold text-red-400 transition-all group-hover:gap-3">
@@ -96,12 +97,12 @@ export function CategoriesGrid({ categories }: CategoriesGridProps) {
       </div>
       <div className="relative mx-auto max-w-7xl px-4">
         <motion.div
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.09 } } }}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {categories.slice(0, 6).map((category) => (
-            <CategoryCard key={category.id} category={category} />
-          ))}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:gap-6 auto-rows-fr"
+          >
+            {categories.slice(0, 5).map((category, index) => (
+              <CategoryCard key={category.id} category={category} index={index} />
+            ))}
         </motion.div>
       </div>
     </motion.section>

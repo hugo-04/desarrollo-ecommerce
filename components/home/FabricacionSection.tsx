@@ -57,10 +57,11 @@ export function FabricacionSection() {
             <div className="flex flex-wrap items-center gap-4">
               <Link
                 href={c.ctaHref}
-                className="group inline-flex items-center gap-2.5 rounded-xl bg-[#121A47] px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#121A47]/20 transition-all hover:bg-primary hover:shadow-primary/25"
+                className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#1c2870] to-[#121a47] px-8 py-4 text-sm font-bold text-white shadow-xl shadow-[#1c2870]/20 transition-all duration-300 hover:shadow-2xl hover:shadow-[#1c2870]/30 hover:-translate-y-1"
               >
-                {c.ctaLabel}
-                <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <span className="relative z-10">{c.ctaLabel}</span>
+                <IconArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#cc1b1b] to-[#b01010] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </Link>
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 bg-amber-50 px-4 py-2">
                 <IconCertificate className="h-4 w-4 text-amber-600" />
@@ -83,11 +84,11 @@ export function FabricacionSection() {
                 />
               </div>
               <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={viewportOnce}
-                transition={{ delay: 0.4, duration: 0.5, type: "spring" }}
-                className="absolute -bottom-5 -right-5 rounded-2xl border border-emerald-200 bg-white p-4 shadow-xl"
+                transition={{ delay: 0.4, duration: 0.6, type: "spring", bounce: 0.5 }}
+                className="absolute -bottom-6 -right-6 rounded-2xl border border-emerald-500/30 bg-white/95 p-5 shadow-2xl shadow-emerald-900/10 backdrop-blur-md"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100">

@@ -22,7 +22,7 @@ export function AdminNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="flex-1 space-y-0.5 px-3 py-4">
+    <nav className="relative z-10 flex-1 space-y-1.5">
       {NAV.map(({ href, label, icon: Icon }) => {
         /**
          * Dashboard solo activo en /dashboard exacto.
@@ -36,29 +36,41 @@ export function AdminNav() {
             key={href}
             href={href}
             className={cn(
-              "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
+              "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 overflow-hidden",
               isActive
-                ? "bg-white/[0.08] text-white"
-                : "text-white/40 hover:bg-white/[0.05] hover:text-white/75",
+                ? "text-white"
+                : "text-slate-400 hover:text-slate-100"
             )}
           >
+            {/* Background pill for active state */}
+            {isActive && (
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-transparent border-l-2 border-cyan-400" />
+            )}
+            
+            {/* Hover background for inactive state */}
+            {!isActive && (
+              <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-200" />
+            )}
+
             {/* Ícono con fondo sutil cuando está activo */}
             <div
               className={cn(
-                "flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors",
+                "relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-300",
                 isActive
-                  ? "bg-[#1C2870]/70 text-blue-200"
-                  : "group-hover:bg-white/[0.06] text-current",
+                  ? "bg-[#1C2870] text-cyan-400 shadow-md shadow-cyan-500/20 scale-105"
+                  : "bg-slate-800/40 text-slate-400 group-hover:bg-slate-700/50 group-hover:text-cyan-200"
               )}
             >
-              <Icon className="h-3.5 w-3.5" />
+              <Icon className="h-4 w-4" />
             </div>
 
-            <span>{label}</span>
+            <span className="relative z-10 drop-shadow-sm">{label}</span>
 
             {/* Indicador activo — punto a la derecha */}
             {isActive && (
-              <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400" />
+              <span className="ml-auto flex items-center shrink-0">
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+              </span>
             )}
           </Link>
         )

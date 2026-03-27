@@ -13,13 +13,14 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
   return (
     <Link
       href={`/producto/${product.id}`}
-      className="group block cursor-pointer overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 hover:[box-shadow:0_0_0_1.5px_var(--primary),0_8px_30px_-8px_color-mix(in_srgb,var(--primary)_30%,transparent),0_0_20px_-6px_color-mix(in_srgb,var(--primary)_20%,transparent)]"
+      className="group block cursor-pointer overflow-hidden rounded-[24px] border border-slate-200/50 bg-white transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(28,40,112,0.12)] hover:border-red-500/40"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100/50 p-6">
-        <img src={product.image} alt={product.name} className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-110" crossOrigin="anonymous" />
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100 p-8">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(28,40,112,0.03)_0,transparent_70%)] opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+        <img src={product.image} alt={product.name} className="relative z-10 h-full w-full object-contain drop-shadow-xl transition-transform duration-700 group-hover:scale-110" crossOrigin="anonymous" />
         {showBadge && (
-          <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-lg bg-red-600 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg shadow-red-600/25">
-            <IconFire className="h-3 w-3" />Top Ventas
+          <span className="absolute left-4 top-4 z-20 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-red-600 to-red-500 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-red-600/30 ring-1 ring-white/20">
+            <IconFire className="h-3 w-3 animate-pulse text-amber-300" />MAS VENDIDO
           </span>
         )}
         {/* Solo muestra el botón de PDF si el producto tiene ficha técnica cargada */}
@@ -31,32 +32,36 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
               e.stopPropagation()
               window.open(product.fichaTecnica, "_blank", "noopener,noreferrer")
             }}
-            className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/90 text-primary shadow-md ring-1 ring-black/[0.04] backdrop-blur-sm transition-all hover:bg-primary hover:text-white group-hover:opacity-100 sm:opacity-0"
+            className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-2 text-[10px] font-bold text-[#cc1b1b] shadow-lg shadow-black/5 ring-1 ring-slate-200/50 backdrop-blur-md transition-all duration-300 hover:bg-[#cc1b1b] hover:text-white hover:shadow-[#cc1b1b]/30"
             title="Descargar Ficha Técnica (PDF)"
           >
-            <IconPDF className="h-4 w-4" />
+            <IconPDF className="h-4 w-4" /> FICHA PDF
           </button>
         )}
-        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-white/90 px-2.5 py-1.5 shadow-sm ring-1 ring-black/[0.04] backdrop-blur-sm">
-          <IconStar className="h-3 w-3 text-amber-500" />
-          <span className="text-xs font-bold text-slate-800">{product.rating}</span>
+        <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1.5 shadow-sm ring-1 ring-black/[0.04] backdrop-blur-sm">
+          <IconStar className="h-3 w-3 text-amber-400" />
+          <span className="text-[10px] font-bold text-slate-800">{product.rating}</span>
         </div>
       </div>
-      <div className="p-4">
-        <div className="mb-2 flex items-center gap-2">
-          <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">{product.brand}</span>
-          <span className="text-[10px] font-medium text-slate-400">SKU: {product.sku}</span>
+      <div className="flex flex-col p-6">
+        <div className="mb-3 flex items-center gap-2">
+          <span className="rounded-md bg-[#1C2870] px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-white shadow-sm">{product.brand}</span>
+          <span className="text-[10px] font-bold text-slate-400">SKU: {product.sku}</span>
         </div>
-        <h3 className="mb-1.5 line-clamp-2 text-sm font-bold leading-snug text-[#121A47] transition-colors group-hover:text-primary">{product.name}</h3>
-        <p className="mb-3 line-clamp-1 text-[11px] text-slate-400">{product.description}</p>
-        <div className="mb-4 flex flex-wrap gap-1.5">
+        <h3 className="mb-2 line-clamp-2 min-h-[44px] text-[15px] font-extrabold leading-snug text-[#121A47] transition-colors group-hover:text-[#cc1b1b]">{product.name}</h3>
+        <p className="mb-4 line-clamp-2 text-xs leading-relaxed text-slate-500">{product.description}</p>
+        
+        <div className="mb-6 flex flex-wrap gap-1.5">
           {product.specs.slice(0, 3).map((spec, index) => (
-            <span key={index} className="rounded-md border border-slate-200/80 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-600">{spec}</span>
+            <span key={index} className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[10px] font-bold text-slate-600">{spec}</span>
           ))}
         </div>
-        <span className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#121A47] to-primary py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:shadow-lg hover:shadow-primary/20">
-          <IconEye className="h-3.5 w-3.5" />Ver Detalles y Cotizar
-        </span>
+        
+        <div className="mt-auto">
+          <span className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 py-3 text-xs font-bold text-[#1C2870] transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[#1C2870] group-hover:to-[#121A47] group-hover:text-white group-hover:shadow-lg group-hover:shadow-[#1C2870]/25">
+            <IconEye className="h-4 w-4 transition-transform group-hover:scale-110" /> Ver Detalles
+          </span>
+        </div>
       </div>
     </Link>
   )
