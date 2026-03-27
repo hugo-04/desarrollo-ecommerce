@@ -5,6 +5,7 @@
  * Punto de entrada para todo acceso a categorías desde el cliente o Server Components.
  */
 
+import { revalidatePath } from "next/cache"
 import { DbCategoryRepository } from "./repository"
 import { CategoryService } from "./service"
 import type { CreateCategoryDTO, UpdateCategoryDTO, CategoryFilters } from "./types"
@@ -37,17 +38,23 @@ export async function getCategoryByIdAction(id: number) {
 export async function createCategoryAction(data: CreateCategoryDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().create(data)
+  const result = await getService().create(data)
+  revalidatePath("/categorias")
+  return result
 }
 
 export async function updateCategoryAction(id: number, data: UpdateCategoryDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().update(id, data)
+  const result = await getService().update(id, data)
+  revalidatePath("/categorias")
+  return result
 }
 
 export async function deleteCategoryAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().delete(id)
+  const result = await getService().delete(id)
+  revalidatePath("/categorias")
+  return result
 }

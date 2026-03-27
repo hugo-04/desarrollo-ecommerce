@@ -19,7 +19,6 @@ export default function NuevaCategoriaPage() {
     await createCategoryAction({ ...data, count: 0 })
     toast.success("Categoría creada correctamente")
     router.push("/categorias")
-    router.refresh()
   }
 
   return (

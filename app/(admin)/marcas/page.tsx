@@ -18,7 +18,8 @@ import { AdminPagination } from "@/components/admin/AdminPagination"
 import { DeleteDialog } from "@/components/admin/DeleteDialog"
 import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
 
-const PAGE_SIZE = 11
+const PAGE_SIZE = 12
+const PAGE_SIZE_OPTIONS = [12, 24, 48]
 
 export default function AdminMarcasPage() {
   const {
@@ -26,11 +27,13 @@ export default function AdminMarcasPage() {
     total,
     loading,
     search,
+    pageSize,
     currentPage,
     totalPages,
     removingId,
     handleSearch,
     setPage,
+    setPageSize,
     handleDelete,
   } = useAdminPagedList<Brand>({
     pageSize: PAGE_SIZE,
@@ -136,7 +139,15 @@ export default function AdminMarcasPage() {
         </div>
       )}
 
-      <AdminPagination currentPage={currentPage} totalPages={totalPages} total={total} onPage={setPage} />
+      <AdminPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        total={total}
+        onPage={setPage}
+        pageSize={pageSize}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageSize={setPageSize}
+      />
     </div>
   )
 }

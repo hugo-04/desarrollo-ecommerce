@@ -62,7 +62,7 @@ function SectionStep({ n, icon: Icon, title, subtitle }: {
 }) {
   return (
     <div className="mb-5 flex items-center gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#1C2870] text-xs font-bold text-white shadow-sm">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-lg shadow-primary/20">
         {n}
       </div>
       <div className="flex items-center gap-2">
@@ -126,7 +126,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
   async function handleQuickCreateCategory(catName: string, slug: string) {
     const newCat = await createCategoryAction({
-      name: catName, slug, image: "", color: "#1C2870", subcategories: [], count: 0,
+      name: catName, slug, image: "", color: "var(--color-primary)", subcategories: [], count: 0,
     })
     setCategoryOptions((prev) => [...prev, { value: newCat.name, label: newCat.name }])
     setSelectedCategory(newCat.name)
@@ -188,7 +188,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         toast.success("Producto creado correctamente")
       }
       router.push("/productos")
-      router.refresh()
     } catch (e: unknown) {
       setServerError(e instanceof Error ? e.message : "Error al guardar")
       toast.error("No se pudo guardar el producto")
@@ -199,8 +198,8 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="space-y-5 pb-24">
+    <form onSubmit={handleSubmit} className="relative flex flex-col min-h-full">
+      <div className="space-y-5 pb-8">
 
         {/* ── Errores globales ── */}
         {serverError && (
@@ -317,7 +316,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 type="checkbox"
                 name="featured"
                 defaultChecked={product?.featured}
-                className="h-4 w-4 rounded border-slate-300 accent-[#1C2870]"
+                className="h-4 w-4 rounded border-slate-300 accent-primary"
               />
               <span className="text-sm font-medium text-slate-700">Destacado</span>
             </label>
@@ -326,7 +325,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 type="checkbox"
                 name="bestSeller"
                 defaultChecked={product?.bestSeller}
-                className="h-4 w-4 rounded border-slate-300 accent-[#1C2870]"
+                className="h-4 w-4 rounded border-slate-300 accent-primary"
               />
               <span className="text-sm font-medium text-slate-700">Más vendido</span>
             </label>
@@ -391,7 +390,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 value={description}
                 onChange={(e) => setDesc(e.target.value)}
                 placeholder="Ej: Aislador polimérico para líneas de distribución de media tensión"
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder-slate-300 focus:border-[#1C2870]/40 focus:ring-2 focus:ring-[#1C2870]/15"
+                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder-slate-300 focus:border-primary/40 focus:ring-2 focus:ring-primary/15"
               />
               {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description}</p>}
             </div>
@@ -440,28 +439,42 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       </div>
 
       {/* ── Barra de acciones sticky ──────────────────────────────────────── */}
-      <div className="fixed bottom-0 left-60 right-0 z-40 border-t border-slate-200 bg-white/95 px-8 py-4 shadow-[0_-4px_24px_-4px_rgba(0,0,0,0.08)] backdrop-blur-sm">
-        <div className="flex items-center gap-3">
+      <div className="sticky bottom-0 z-40 mt-6 flex w-full items-center justify-between rounded-2xl border border-slate-200/80 bg-white/80 px-6 py-4 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)] backdrop-blur-xl transition-all duration-300">
+        <div className="flex items-center gap-4">
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-[#1C2870] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1C2870]/90 disabled:opacity-60"
+            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#1C2870] to-[#0ea5e9] px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#1C2870]/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-cyan-500/30 disabled:opacity-50 disabled:hover:scale-100"
           >
-            {saving ? "Guardando…" : isEdit ? "Guardar cambios" : "Crear producto"}
+            <div className="absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0" />
+            <Package className="relative z-10 h-4 w-4" />
+            <span className="relative z-10">{saving ? "Guardando cambios..." : isEdit ? "Actualizar producto" : "Publicar producto"}</span>
           </button>
+          
           <button
             type="button"
             onClick={() => router.back()}
-            className="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+            className="rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-sm font-bold text-slate-600 shadow-sm transition-all duration-300 hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-100 disabled:opacity-50"
           >
-            Cancelar
+            Descartar y volver
           </button>
-          {isEdit && product && (
-            <span className="ml-auto text-xs text-slate-400">
-              ID: {product.id} · SKU: <span className="font-mono font-semibold text-slate-600">{product.sku}</span>
-            </span>
-          )}
         </div>
+
+        {isEdit && product && (
+          <div className="hidden items-center gap-3 md:flex">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-xs font-semibold text-slate-400">
+              ID <span className="text-slate-600">{product.id}</span>
+            </span>
+            <span className="h-4 w-px bg-slate-200" />
+            <span className="text-xs font-semibold text-slate-400">
+              SKU <span className="font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded-md">{product.sku}</span>
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Diálogos de creación rápida */}

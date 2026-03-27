@@ -3,13 +3,8 @@
 /**
  * useAdminPagedList — Hook para listados con paginación SERVER-SIDE.
  *
- * A diferencia de `useAdminList` (que carga todos los registros de una vez
- * y pagina/filtra en el cliente), este hook llama al servidor en cada cambio
- * de página o búsqueda, trayendo SOLO los registros de la página actual.
- *
- * Cuándo usar cada uno:
- *  - useAdminList       → colecciones pequeñas (< ~100 registros), filtrado instantáneo sin re-fetch
- *  - useAdminPagedList  → colecciones grandes donde traer todo sería costoso (marcas, productos en escala)
+ * Soporta cambio dinámico de tamaño de página mediante `setPageSize`.
+ * Todos los valores mutables se guardan en refs para evitar closures obsoletas.
  *
  * @template T - Cualquier entidad que tenga un campo `id: number`.
  */
@@ -19,7 +14,6 @@ import { toast } from "sonner"
 
 // ─── Tipos ─────────────────────────────────────────────────────────────────────
 
-/** Forma del resultado que debe devolver el `loadFn` */
 export interface PagedResult<T> {
   data:       T[]
   total:      number
@@ -28,67 +22,75 @@ export interface PagedResult<T> {
 }
 
 export interface UseAdminPagedListOptions<T extends { id: number }> {
-  /** Ítems por página */
   pageSize: number
-  /**
-   * Server action que acepta `{ page, query, limit }` y devuelve `PagedResult<T>`.
-   * El hook la llama cada vez que cambia la página o la búsqueda.
-   */
   loadFn: (params: { page: number; query: string; limit: number }) => Promise<PagedResult<T>>
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useAdminPagedList<T extends { id: number }>({
-  pageSize,
+  pageSize: initialPageSize,
   loadFn,
 }: UseAdminPagedListOptions<T>) {
-  const [items, setItems]           = useState<T[]>([])
-  const [total, setTotal]           = useState(0)
-  const [totalPages, setTotalPages] = useState(1)
+  const [items, setItems]             = useState<T[]>([])
+  const [total, setTotal]             = useState(0)
+  const [totalPages, setTotalPages]   = useState(1)
   const [currentPage, setCurrentPage] = useState(1)
-  const [search, setSearch]         = useState("")
-  const [loading, setLoading]       = useState(true)
-  const [removingId, setRemovingId] = useState<number | null>(null)
+  const [search, setSearch]           = useState("")
+  const [loading, setLoading]         = useState(true)
+  const [removingId, setRemovingId]   = useState<number | null>(null)
+  const [pageSize, setPageSizeState]  = useState(initialPageSize)
 
-  // Guardar loadFn en ref para que no recree `load` si el padre pasa una función inline
-  const loadFnRef = useRef(loadFn)
+  // Refs para evitar closures obsoletas en el handler de focus y llamadas manuales
+  const loadFnRef   = useRef(loadFn)
+  const searchRef   = useRef("")
+  const pageRef     = useRef(1)
+  const pageSizeRef = useRef(initialPageSize)
+
   useEffect(() => { loadFnRef.current = loadFn })
 
-  /** Llama al servidor con la página y búsqueda actuales */
-  const load = useCallback(async (page: number, query: string) => {
+  /** Carga una página sin depender de estado — recibe todo por argumento */
+  const load = useCallback(async (page: number, query: string, limit: number) => {
     setLoading(true)
     try {
-      const result = await loadFnRef.current({ page, query, limit: pageSize })
+      const result = await loadFnRef.current({ page, query, limit })
+      pageRef.current = result.page
       setItems(result.data)
       setTotal(result.total)
       setTotalPages(result.totalPages)
-      setCurrentPage(result.page) // el servidor puede corregir la página si estaba fuera de rango
+      setCurrentPage(result.page)
     } finally {
       setLoading(false)
     }
-  }, [pageSize])
+  }, [])
 
   // Carga inicial al montar
-  useEffect(() => { load(1, "") }, [load])
+  useEffect(() => { load(1, "", pageSizeRef.current) }, [load])
 
   // Recarga al volver a la pestaña (útil después de crear/editar en otra ruta)
   useEffect(() => {
-    function onFocus() { load(currentPage, search) }
+    function onFocus() { load(pageRef.current, searchRef.current, pageSizeRef.current) }
     window.addEventListener("focus", onFocus)
     return () => window.removeEventListener("focus", onFocus)
-  }, [load, currentPage, search])
+  }, [load])
 
-  /** Cambia la búsqueda y resetea a página 1 */
   function handleSearch(q: string) {
+    searchRef.current = q
     setSearch(q)
-    load(1, q)
+    load(1, q, pageSizeRef.current)
   }
 
-  /** Cambia de página */
   function handlePage(p: number) {
+    pageRef.current = p
     setCurrentPage(p)
-    load(p, search)
+    load(p, searchRef.current, pageSizeRef.current)
+  }
+
+  /** Cambia el tamaño de página y recarga desde la primera página */
+  function handlePageSize(size: number) {
+    pageSizeRef.current = size
+    setPageSizeState(size)
+    load(1, searchRef.current, size)
   }
 
   /**
@@ -122,11 +124,13 @@ export function useAdminPagedList<T extends { id: number }>({
     total,
     loading,
     search,
+    pageSize,
     currentPage,
     totalPages,
     removingId,
     handleSearch,
-    setPage: handlePage,
+    setPage:     handlePage,
+    setPageSize: handlePageSize,
     handleDelete,
   }
 }

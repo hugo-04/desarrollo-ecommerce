@@ -18,7 +18,6 @@ export default function NuevaMarcaPage() {
     await createBrandAction(data)
     toast.success("Marca creada correctamente")
     router.push("/marcas")
-    router.refresh()
   }
 
   return (

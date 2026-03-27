@@ -38,14 +38,12 @@ export default function EditarCategoriaPage() {
     await updateCategoryAction(category!.id, data)
     toast.success("Categoría actualizada correctamente")
     router.push("/categorias")
-    router.refresh()
   }
 
   async function handleDelete() {
     await deleteCategoryAction(category!.id)
     toast.success(`"${category!.name}" eliminada correctamente`)
     router.push("/categorias")
-    router.refresh()
   }
 
   return (

@@ -26,7 +26,8 @@ import { AdminPagination } from "@/components/admin/AdminPagination"
 import { DeleteDialog } from "@/components/admin/DeleteDialog"
 import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
 
-const PAGE_SIZE = 12
+const PAGE_SIZE = 10
+const PAGE_SIZE_OPTIONS = [10, 25, 50]
 
 export default function AdminCategoriasPage() {
   const {
@@ -34,11 +35,13 @@ export default function AdminCategoriasPage() {
     total,
     loading,
     search,
+    pageSize,
     currentPage,
     totalPages,
     removingId,
     handleSearch,
     setPage,
+    setPageSize,
     handleDelete,
   } = useAdminPagedList<CategoryDTO>({
     pageSize: PAGE_SIZE,
@@ -63,12 +66,12 @@ export default function AdminCategoriasPage() {
         <Table>
           <TableHeader className="bg-slate-50">
             <TableRow className="border-slate-100">
-              <TableHead className="w-8 px-0 py-3" />
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Nombre</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Slug</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Productos</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Subcategorías</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Acciones</TableHead>
+              <TableHead className="w-8 px-0 py-4" />
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Nombre</TableHead>
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Slug</TableHead>
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Productos</TableHead>
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Subcategorías</TableHead>
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Acciones</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -102,45 +105,45 @@ export default function AdminCategoriasPage() {
                   {/* Franja de color derivada del campo color de la categoría */}
                   <TableCell className="w-2 p-0">
                     <div
-                      className={`h-full min-h-[48px] w-1.5 rounded-r-full bg-gradient-to-b ${cat.color || "from-slate-300 to-slate-400"}`}
+                      className={`h-full min-h-[60px] w-1.5 rounded-r-full bg-gradient-to-b ${cat.color || "from-slate-300 to-slate-400"}`}
                     />
                   </TableCell>
 
                   {/* Nombre */}
-                  <TableCell className="px-4 py-3 font-semibold text-slate-800">
+                  <TableCell className="px-5 py-4 font-semibold text-slate-800">
                     {cat.name}
                   </TableCell>
 
                   {/* Slug — monospace */}
-                  <TableCell className="px-4 py-3">
-                    <span className="rounded-md bg-slate-100 px-2 py-1 font-mono text-xs text-slate-500">
+                  <TableCell className="px-5 py-4">
+                    <span className="rounded-md bg-slate-100 px-2.5 py-1.5 font-mono text-xs text-slate-500">
                       {cat.slug}
                     </span>
                   </TableCell>
 
                   {/* Contador de productos */}
-                  <TableCell className="px-4 py-3">
-                    <span className="inline-flex h-6 min-w-[24px] items-center justify-center rounded-full bg-[#1C2870]/8 px-2 text-xs font-bold text-[#1C2870]">
+                  <TableCell className="px-5 py-4">
+                    <span className="inline-flex h-7 min-w-[28px] items-center justify-center rounded-full bg-[#1C2870]/8 px-2.5 text-xs font-bold text-[#1C2870]">
                       {cat.count}
                     </span>
                   </TableCell>
 
                   {/* Subcategorías como chips (máx. 3 visibles + overflow) */}
-                  <TableCell className="px-4 py-3">
+                  <TableCell className="px-5 py-4">
                     {cat.subcategories.length === 0 ? (
                       <span className="text-xs text-slate-300">—</span>
                     ) : (
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1.5">
                         {cat.subcategories.slice(0, 3).map((sub) => (
                           <span
                             key={sub}
-                            className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600"
+                            className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600"
                           >
                             {sub}
                           </span>
                         ))}
                         {cat.subcategories.length > 3 && (
-                          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-400">
+                          <span className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-400">
                             +{cat.subcategories.length - 3}
                           </span>
                         )}
@@ -149,7 +152,7 @@ export default function AdminCategoriasPage() {
                   </TableCell>
 
                   {/* Acciones */}
-                  <TableCell className="px-4 py-3">
+                  <TableCell className="px-5 py-4">
                     <div className="flex gap-2">
                       <Button asChild variant="outline" size="xs">
                         <Link href={`/categorias/${cat.id}/editar`}>Editar</Link>
@@ -179,7 +182,15 @@ export default function AdminCategoriasPage() {
         </Table>
       </div>
 
-      <AdminPagination currentPage={currentPage} totalPages={totalPages} total={total} onPage={setPage} />
+      <AdminPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        total={total}
+        onPage={setPage}
+        pageSize={pageSize}
+        pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageSize={setPageSize}
+      />
     </div>
   )
 }

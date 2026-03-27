@@ -27,7 +27,6 @@ async function main() {
       where: { slug: cat.slug },
       update: {},
       create: {
-        id: cat.id,
         name: cat.name,
         slug: cat.slug,
         image: cat.image,
@@ -45,7 +44,6 @@ async function main() {
       where: { name: brand.name },
       update: {},
       create: {
-        id: brand.id,
         name: brand.name,
         logo: brand.logo,
         showInCarousel: brand.showInCarousel || false,
@@ -69,7 +67,6 @@ async function main() {
       where: { sku: product.sku },
       update: {},
       create: {
-        id: product.id,
         sku: product.sku,
         name: product.name,
         description: product.description,

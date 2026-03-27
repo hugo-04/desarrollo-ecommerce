@@ -5,6 +5,7 @@
  * Punto de entrada para todo acceso a marcas desde el cliente o Server Components.
  */
 
+import { revalidatePath } from "next/cache"
 import { DbBrandRepository } from "./repository"
 import { BrandService } from "./service"
 import type { CreateBrandDTO, UpdateBrandDTO, BrandFilters } from "./types"
@@ -46,17 +47,23 @@ export async function getBrandByIdAction(id: number) {
 export async function createBrandAction(data: CreateBrandDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().create(data)
+  const result = await getService().create(data)
+  revalidatePath("/marcas")
+  return result
 }
 
 export async function updateBrandAction(id: number, data: UpdateBrandDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().update(id, data)
+  const result = await getService().update(id, data)
+  revalidatePath("/marcas")
+  return result
 }
 
 export async function deleteBrandAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().delete(id)
+  const result = await getService().delete(id)
+  revalidatePath("/marcas")
+  return result
 }

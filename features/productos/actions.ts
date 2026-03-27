@@ -7,6 +7,7 @@
  * No hay fetch(), no hay HTTP manual.
  */
 
+import { revalidatePath } from "next/cache"
 import { DbProductRepository } from "./repository"
 import { ProductService } from "./service"
 import type { ProductFilters, CreateProductDTO, UpdateProductDTO } from "./types"
@@ -47,17 +48,23 @@ export async function getRelatedProductsAction(productId: number, categoryName: 
 export async function createProductAction(data: CreateProductDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().createProduct(data)
+  const result = await getService().createProduct(data)
+  revalidatePath("/productos")
+  return result
 }
 
 export async function updateProductAction(id: number, data: UpdateProductDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().updateProduct(id, data)
+  const result = await getService().updateProduct(id, data)
+  revalidatePath("/productos")
+  return result
 }
 
 export async function deleteProductAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
-  return getService().deleteProduct(id)
+  const result = await getService().deleteProduct(id)
+  revalidatePath("/productos")
+  return result
 }

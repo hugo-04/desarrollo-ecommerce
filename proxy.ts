@@ -1,5 +1,5 @@
 /**
- * MIDDLEWARE DE AUTENTICACIÓN — Electro Thina
+ * PROXY DE AUTENTICACIÓN — Electro Thina
  *
  * Este archivo DEBE estar en la raíz del proyecto (junto a package.json).
  * Next.js lo ejecuta automáticamente en el Edge Runtime para cada petición
@@ -11,7 +11,7 @@
  * Rutas de auth:    /login  (redirige al dashboard si ya hay sesión)
  */
 
-export { authMiddleware as middleware } from "./lib/middleware/auth"
+export { authMiddleware as proxy } from "./lib/middleware/auth"
 
 export const config = {
   matcher: [
