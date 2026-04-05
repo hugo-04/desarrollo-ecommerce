@@ -7,12 +7,15 @@
  * No importa datos directamente — toda la lógica de filtrado/paginación queda en el servidor.
  */
 
+import { useState } from "react"
 import Link from "next/link"
+import { SlidersHorizontal } from "lucide-react"
 import { ProductCard } from "@/components/product/ProductCard"
 import { CatalogFilters } from "@/components/catalog/CatalogFilters"
 import { CategoryBanner } from "@/components/catalog/CategoryBanner"
 import { ActiveFilterChips } from "@/components/catalog/ActiveFilterChips"
 import { CatalogToolbar } from "@/components/catalog/CatalogToolbar"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useCatalogFilters } from "@/features/catalogo/hooks"
 import { useProducts } from "@/features/productos/hooks"
 import { useCategories } from "@/features/categorias/hooks"
@@ -40,6 +43,7 @@ export function CatalogoView({
   initialQuery = "",
   initialBestSellers = false,
 }: CatalogoViewProps) {
+  const [filterOpen, setFilterOpen] = useState(false)
   const {
     filters,
     toggleCategory,
@@ -160,15 +164,55 @@ export function CatalogoView({
               onRemoveBestSellers={() => setOnlyBestSellers(false)}
             />
 
-            {/* Toolbar */}
-            <CatalogToolbar
-              total={total}
-              showing={products.length}
-              viewMode={viewMode}
-              sortBy={sortBy}
-              onViewModeChange={setViewMode}
-              onSortChange={setSortBy}
-            />
+            {/* Toolbar + botón filtros mobile */}
+            <div className="flex items-center gap-3">
+              {/* Botón filtros — solo mobile */}
+              <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
+                <SheetTrigger asChild>
+                  <button className="lg:hidden flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-primary hover:text-primary">
+                    <SlidersHorizontal className="h-3.5 w-3.5" />
+                    Filtros
+                    {activeFiltersCount > 0 && (
+                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-white">
+                        {activeFiltersCount}
+                      </span>
+                    )}
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[300px] p-0">
+                  <SheetHeader className="border-b border-slate-100 px-5 py-4">
+                    <SheetTitle className="text-sm font-bold text-slate-800">Filtros</SheetTitle>
+                  </SheetHeader>
+                  <div className="overflow-y-auto p-5">
+                    <CatalogFilters
+                      categories={categories}
+                      availableBrands={availableBrands}
+                      selectedCategories={selectedCategories}
+                      selectedBrands={selectedBrands}
+                      onlyBestSellers={onlyBestSellers}
+                      activeFiltersCount={activeFiltersCount}
+                      toggleCategory={toggleCategory}
+                      toggleBrand={toggleBrand}
+                      clearCategories={clearCategories}
+                      clearBrands={clearBrands}
+                      clearFilters={clearFilters}
+                      setOnlyBestSellers={setOnlyBestSellers}
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+
+              <div className="flex-1">
+                <CatalogToolbar
+                  total={total}
+                  showing={products.length}
+                  viewMode={viewMode}
+                  sortBy={sortBy}
+                  onViewModeChange={setViewMode}
+                  onSortChange={setSortBy}
+                />
+              </div>
+            </div>
 
             {/* Loading */}
             {loading && (

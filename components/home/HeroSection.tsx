@@ -105,16 +105,16 @@ export function HeroSection() {
             </motion.div>
 
             <motion.h1 variants={fadeUp} className="mb-8 text-balance text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[3.5rem]">
-              Ferreteria y Accesorios
+              Ferretería y Accesorios Eléctricos
               <span
                 className="mt-2 block bg-gradient-to-r from-red-400 via-red-500 to-[#CC1B1B] bg-clip-text text-transparent"
               >
-                Electricos AT/MT
+                para Alta y Media Tensión
               </span>
             </motion.h1>
 
-            <motion.p variants={fadeUp} className="mb-12 max-w-xl text-base leading-[1.8] text-slate-400/90 sm:text-[1.05rem]">
-              Aisladores, herrajes, conectores, cables y ferreteria para lineas de alta y media tension. Fabricantes y distribuidores con certificaciones IEC, ANSI e ISO.
+            <motion.p variants={fadeUp} className="mb-12 max-w-xl text-base leading-[1.8] text-white/90 sm:text-[1.05rem]">
+              Aisladores, herrajes, conectores y cables para líneas de alta y media tensión. Fabricantes y distribuidores con certificaciones IEC, ANSI y NTP — despacho en 48 h a nivel nacional.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5">

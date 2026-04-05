@@ -202,6 +202,14 @@
   font-style: italic;
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .tiptap pre {
   background: #1e293b;
   color: #e2e8f0;

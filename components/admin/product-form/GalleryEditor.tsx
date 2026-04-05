@@ -17,23 +17,33 @@ interface GalleryEditorProps {
   onAltsChange?: (alts: string[]) => void
   /** Carpeta S3 destino — se pasa a cada ImageUpload */
   folder?: string
+  tempKeys?: (string | null)[]
+  onTempKeysChange?: (keys: (string | null)[]) => void
 }
 
-export function GalleryEditor({ values, onChange, alts = [], onAltsChange, folder }: GalleryEditorProps) {
+export function GalleryEditor({ values, onChange, alts = [], onAltsChange, folder, tempKeys = [], onTempKeysChange }: GalleryEditorProps) {
   function setAlt(index: number, alt: string) {
     const next = [...alts]
     next[index] = alt
     onAltsChange?.(next)
   }
 
+  function setTempKey(index: number, key: string | null) {
+    const next = [...tempKeys]
+    next[index] = key
+    onTempKeysChange?.(next)
+  }
+
   function removeItem(index: number) {
     onChange(values.filter((_, j) => j !== index))
     onAltsChange?.((alts ?? []).filter((_, j) => j !== index))
+    onTempKeysChange?.(tempKeys.filter((_, j) => j !== index))
   }
 
   function addItem() {
     onChange([...values, ""])
     onAltsChange?.([...alts, ""])
+    onTempKeysChange?.([...tempKeys, null])
   }
 
   return (
@@ -57,6 +67,7 @@ export function GalleryEditor({ values, onChange, alts = [], onAltsChange, folde
                   next[i] = v
                   onChange(next)
                 }}
+                onTempKey={(key) => setTempKey(i, key)}
                 aspect="1/1"
                 folder={folder}
               />

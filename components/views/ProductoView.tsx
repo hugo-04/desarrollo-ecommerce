@@ -11,11 +11,11 @@ import { useState } from "react"
 import Link from "next/link"
 import { ProductGallery } from "@/components/product/ProductGallery"
 import { ProductInfo } from "@/components/product/ProductInfo"
-import { ProductCTA } from "@/components/product/ProductCTA"
 import { ProductTabs } from "@/components/product/ProductTabs"
 import { GarantiaStrip } from "@/components/product/GarantiaStrip"
 import { QuoteModal } from "@/components/product/QuoteModal"
 import { ProductCard } from "@/components/product/ProductCard"
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel"
 import { PRODUCT_DETAIL_CONTENT } from "@/lib/data/mock/static-content.mock"
 import { useRelatedProducts } from "@/features/productos/hooks"
 import { useFadeInOnScroll } from "@/hooks/useAnimations"
@@ -110,17 +110,10 @@ export function ProductoView({ product }: ProductoViewProps) {
               bestSeller={product.bestSeller}
               selectedImage={selectedImage}
               onSelectImage={setSelectedImage}
+              fichaTecnica={product.fichaTecnica}
             />
             <div>
               <ProductInfo product={product} />
-              <ProductCTA
-                onCotizar={() => setShowQuoteModal(true)}
-                onFichaTecnica={
-                  product.fichaTecnica
-                    ? () => window.open(product.fichaTecnica, "_blank", "noopener,noreferrer")
-                    : undefined
-                }
-              />
             </div>
           </div>
 
@@ -132,17 +125,36 @@ export function ProductoView({ product }: ProductoViewProps) {
 
           <GarantiaStrip />
 
-          {/* Related Products */}
+          {/* Related Products — Carrusel shadcn */}
           {relatedProducts.length > 0 && (
             <div className="mt-16">
-              <h2 className="mb-2 text-xl font-extrabold text-[#121A47]">
-                {c.relatedTitle}
-              </h2>
-              <p className="mb-6 text-sm text-slate-500">{c.relatedSubtitle}</p>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {relatedProducts.slice(0, 6).map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
+              <div className="mb-6">
+                <h2 className="text-xl font-extrabold text-[#121A47]">{c.relatedTitle}</h2>
+                <p className="mt-1 text-sm text-slate-500">{c.relatedSubtitle}</p>
+              </div>
+
+              {/* Wrapper con padding lateral para que los botones no tapen las cards */}
+              <div className="px-10">
+                <Carousel
+                  opts={{ loop: true, align: "start", dragFree: false }}
+                  className="w-full [&_[data-slot=carousel-content]]:cursor-grab [&_[data-slot=carousel-content]:active]:cursor-grabbing"
+                >
+                  {/* Fade izquierdo */}
+                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent" />
+                  {/* Fade derecho */}
+                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent" />
+
+                  <CarouselContent className="-ml-4">
+                    {relatedProducts.map((p) => (
+                      <CarouselItem key={p.id} className="pl-4 basis-[285px] sm:basis-[305px]">
+                        <ProductCard product={p} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+
+                  <CarouselPrevious className="-left-10 h-9 w-9 border-slate-200 bg-white shadow-md transition-all hover:border-primary hover:text-primary hover:scale-110" />
+                  <CarouselNext className="-right-10 h-9 w-9 border-slate-200 bg-white shadow-md transition-all hover:border-primary hover:text-primary hover:scale-110" />
+                </Carousel>
               </div>
             </div>
           )}

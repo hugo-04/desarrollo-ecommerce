@@ -4,20 +4,23 @@
  * Cambia aquí para actualizar cualquier texto en el sitio sin tocar los componentes.
  */
 
+export const FOUNDING_YEAR = 2010
+const YEARS_ACTIVE = new Date().getFullYear() - FOUNDING_YEAR
+
 // ─── HERO SECTION ────────────────────────────────────────────────────────────
 
 export const HERO_CONTENT = {
-  badge: "Suministro AT/MT · Lima, Peru",
-  title: "Materiales Electricos",
-  titleHighlight: "de Alta Tension",
-  subtitle: "Aisladores, herrajes, conectores, cables y ferreteria electrica certificados IEC/ANSI para distribucion y transmision electrica.",
+  badge: "Ferretería Eléctrica AT/MT · Lima, Perú",
+  title: "Ferretería y Accesorios Eléctricos",
+  titleHighlight: "para Alta y Media Tensión",
+  subtitle: "Aisladores, herrajes, conectores y cables para líneas de alta y media tensión. Fabricantes y distribuidores con certificaciones IEC, ANSI y NTP.",
   ctaPrimary: "Ver Catalogo",
   ctaPrimaryHref: "/catalogo",
   ctaSecondary: "Solicitar Cotizacion",
   stats: [
-    { value: "1,162+", label: "Productos en Stock" },
-    { value: "20+", label: "Años de Experiencia" },
-    { value: "350+", label: "Proyectos Ejecutados" },
+    { value: "1,162+",           label: "Productos en Stock" },
+    { value: `${YEARS_ACTIVE}+`, label: "Años de Experiencia" },
+    { value: "350+",             label: "Proyectos Ejecutados" },
   ],
 } as const
 
@@ -40,9 +43,9 @@ export const TRUST_BAR_CONTENT = {
 // ─── CATEGORIES GRID ─────────────────────────────────────────────────────────
 
 export const CATEGORIES_GRID_CONTENT = {
-  badge: "Lineas de Producto",
-  title: "Nuestras Categorias",
-  subtitle: "Suministro de aisladores, herrajes, conectores, cables, transformadores y ferreteria para lineas de alta y media tension",
+  badge: "Líneas de Producto",
+  title: "Nuestras Categorías",
+  subtitle: "Ferretería y accesorios eléctricos para alta y media tensión: aisladores, herrajes, conectores, cables y más",
 } as const
 
 // ─── BEST SELLERS CAROUSEL ───────────────────────────────────────────────────
@@ -135,7 +138,7 @@ export const SECTORES_CONTENT = {
 
 export const STATS_CONTENT = {
   stats: [
-    { value: 20, label: "Anos de\nExperiencia", suffix: "+" },
+    { value: YEARS_ACTIVE, label: "Anos de\nExperiencia", suffix: "+" },
     { value: 1162, label: "Productos\nen Stock", suffix: "+" },
     { value: 350, label: "Proyectos\nEjecutados", suffix: "+" },
     { value: 98, label: "Clientes\nSatisfechos", suffix: "%" },
@@ -146,9 +149,9 @@ export const STATS_CONTENT = {
 // ─── FEATURED OFFERS ──────────────────────────────────────────────────────────
 
 export const FEATURED_OFFERS_CONTENT = {
-  badge: "Lineas de Producto",
+  badge: "Líneas de Producto",
   title: "Nuestras Especialidades",
-  subtitle: "Soluciones electricas industriales para los sectores mas exigentes",
+  subtitle: "Ferretería y accesorios eléctricos para alta y media tensión en los sectores más exigentes del país",
   offers: [
     {
       iconName: "shield",
@@ -191,9 +194,9 @@ export const CERTIFICACIONES_CONTENT = {
 
 export const COMPANY_SHOWCASE_CONTENT = {
   badge: "Nuestra Empresa",
-  title: "Suministro e Ingenieria",
-  titleHighlight: "Especializada en AT/MT",
-  description: "Electro Thina es una empresa fabricante y distribuidora de ferreteria y accesorios electricos para lineas de alta y media tension. Contamos con un amplio stock de aisladores, herrajes, conectores, cables y materiales de ferreteria electrica con certificaciones internacionales.",
+  title: "Fabricantes y Distribuidores",
+  titleHighlight: "de Ferretería Eléctrica AT/MT",
+  description: "Electro Thina fabrica y distribuye ferretería y accesorios eléctricos para alta y media tensión en el Perú. Contamos con stock permanente de aisladores, herrajes, conectores, cables y ferretería eléctrica con certificaciones IEC, ANSI y NTP.",
   ctaNosotros: "Conocer Mas",
   ctaContacto: "Contactanos",
   image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80",
@@ -209,10 +212,10 @@ export const COMPANY_SHOWCASE_CONTENT = {
 // ─── FABRICACION SECTION ──────────────────────────────────────────────────────
 
 export const FABRICACION_CONTENT = {
-  badge: "Fabricacion Propia",
+  badge: "Fabricación Propia",
   title: "No solo distribuimos.",
-  titleHighlight: "Tambien fabricamos.",
-  description: "Somos fabricantes de nuestra propia linea de accesorios electricos bajo estrictos controles de calidad IEC. Esto nos permite ofrecer trazabilidad completa, personalizacion tecnica y garantias directas — lo que ningun revendedor puede dar.",
+  titleHighlight: "También fabricamos.",
+  description: "Producimos nuestra propia línea de ferretería y accesorios eléctricos para alta y media tensión con control de calidad IEC en cada etapa. Trazabilidad completa por lote, personalización técnica por proyecto y garantía directa de fábrica.",
   ctaLabel: "Ver productos propios",
   ctaHref: "/catalogo",
   badgeLabel: "Marca Propia ET",
@@ -231,7 +234,7 @@ export const FABRICACION_CONTENT = {
 
 export const BENEFITS_CONTENT = {
   badge: "Por que elegirnos",
-  yearsExperience: 20,
+  yearsExperience: YEARS_ACTIVE,
   experienceLabel: "Anos de experiencia",
   description: "Somos el socio estrategico de las principales empresas electricas, mineras y de construccion del pais. Cada proyecto cuenta con el respaldo de nuestro equipo tecnico especializado.",
   ctaLabel: "Conocer la empresa",
@@ -328,10 +331,10 @@ export const PROMO_BANNER_CONTENT = {
 // ─── CTA BAND ─────────────────────────────────────────────────────────────────
 
 export const CTA_BAND_CONTENT = {
-  badge: "Listo para cotizar?",
-  title: "Tienes un proyecto",
-  titleHighlight: "AT/MT en mente?",
-  subtitle: "Recibe una cotizacion tecnica personalizada en menos de 24 horas. Sin compromisos.",
+  badge: "¿Listo para cotizar?",
+  title: "¿Tienes un proyecto de",
+  titleHighlight: "alta y media tensión?",
+  subtitle: "Recibe una cotización técnica de ferretería y accesorios eléctricos AT/MT en menos de 24 horas. Sin compromisos.",
   ctaPrimary: "Solicitar Cotizacion",
   ctaPrimaryHref: "/contacto",
   ctaSecondary: "Ver Catalogo",

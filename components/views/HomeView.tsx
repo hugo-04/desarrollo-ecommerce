@@ -6,6 +6,7 @@ import {
   CompanyShowcase, ServiciosSection, ProcesoSection, CertificacionesStrip, CtaBand,
   TrustBar, FabricacionSection,
 } from "@/components/home"
+import { GrupoEmpresarialBand } from "@/components/sections/GrupoEmpresarial"
 import type { CategoryDTO } from "@/features/categorias/types"
 
 interface HomeViewProps {
@@ -19,8 +20,8 @@ export function HomeView({ categories }: HomeViewProps) {
       {/* DARK — Hero principal */}
       <HeroSection />
 
-      {/* LIGHT — Prueba social compacta (trust bar) */}
-      <TrustBar />
+      {/* NAVY — Grupo empresarial (identidad temprana, antes de productos) */}
+      <GrupoEmpresarialBand />
 
       {/* LIGHT — Productos: lo que vendemos */}
       <CategoriesGrid categories={categories} />

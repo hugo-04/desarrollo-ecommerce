@@ -21,12 +21,17 @@ export default function LoginPage() {
       <div className="w-full max-w-sm relative z-10 animate-in fade-in zoom-in-95 duration-500">
         {/* Logo / marca */}
         <div className="mb-8 text-center flex flex-col items-center">
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1C2870] to-[#0ea5e9] shadow-lg shadow-blue-500/20 ring-1 ring-white/20 relative group cursor-default">
-            <div className="absolute inset-0 rounded-2xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
-            <span className="text-xl font-black tracking-tight text-white relative z-10 drop-shadow-md">ET</span>
+          <div className="mb-5 relative flex flex-col items-center">
+            {/* Resplandor difuso que se funde con el fondo — no hay borde visible */}
+            <div className="absolute inset-0 scale-150 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+            <img
+              src="/logotipo.png"
+              alt="Electro Thina"
+              className="relative h-14 w-auto object-contain"
+              style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.6)) drop-shadow(0 0 3px rgba(255,255,255,0.9)) brightness(1.15)" }}
+            />
           </div>
           <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cyan-400 drop-shadow-sm">Panel de Administración</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">Electro Thina</h1>
         </div>
 
         <form action={action} className="rounded-3xl border border-white/10 bg-[#0f172a]/60 backdrop-blur-xl px-8 py-10 shadow-2xl shadow-black/60 relative overflow-hidden">

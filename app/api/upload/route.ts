@@ -60,15 +60,10 @@ export async function POST(request: NextRequest) {
 
     // ── S3 (producción) ────────────────────────────────────────────────────
     if (isS3Configured()) {
-      // Validar folder contra la whitelist — evita path traversal
-      const rawFolder = (formData.get("folder") as string | null)?.trim() ?? ""
-      const folder    = (UPLOAD_FOLDERS as readonly string[]).includes(rawFolder)
-        ? rawFolder
-        : "productos/imagenes"
-
-      const key = `${folder}/${uniqueName}`
+      // Sube siempre a temp/ — se finaliza con el nombre SEO correcto al guardar el formulario
+      const key = `temp/${uniqueName}`
       const url = await uploadToS3(buffer, key, file.type)
-      return NextResponse.json({ url })
+      return NextResponse.json({ url, tempKey: key })
     }
 
     // ── Fallback local (desarrollo sin S3 configurado) ────────────────────

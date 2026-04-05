@@ -1,5 +1,8 @@
 import { Suspense } from "react"
+import { SEO } from "@/lib/seo"
 import { CatalogoView } from "@/components/views/CatalogoView"
+
+export const metadata = SEO.catalogo
 
 interface PageProps {
   searchParams: Promise<{ categoria?: string; q?: string; bestSellers?: string }>

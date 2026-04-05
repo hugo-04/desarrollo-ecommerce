@@ -65,6 +65,8 @@ function analyzeSeo(text: string): SeoIssue[] {
 interface ImageUploadProps {
   value: string
   onChange: (url: string) => void
+  /** Recibe la key temporal en R2 cuando se sube un archivo nuevo (null al limpiar) */
+  onTempKey?: (key: string | null) => void
   altValue?: string
   onAltChange?: (alt: string) => void
   label?: string
@@ -78,6 +80,7 @@ interface ImageUploadProps {
 export function ImageUpload({
   value,
   onChange,
+  onTempKey,
   altValue,
   onAltChange,
   label,
@@ -96,23 +99,22 @@ export function ImageUpload({
       setUploadError("")
       const fd = new FormData()
       fd.append("file", file)
-      // Nombre SEO: usamos el alt text como filename para que la URL sea amigable para Google
-      const seoName = (altValue ?? "").trim()
-      if (seoName) fd.append("seoName", seoName)
-      // Carpeta S3 destino — el servidor valida contra la whitelist
+      // El seoName se aplica al finalizar (al guardar el formulario), no aquí
       if (folder) fd.append("folder", folder)
       try {
         const res  = await fetch("/api/upload", { method: "POST", body: fd })
         const data = await res.json()
         if (!res.ok) throw new Error(data.error ?? "Error al subir")
         onChange(data.url)
+        // Notificar la key temporal para que el formulario pueda finalizarla al guardar
+        if (data.tempKey) onTempKey?.(data.tempKey)
       } catch (e: unknown) {
         setUploadError(e instanceof Error ? e.message : "Error al subir")
       } finally {
         setUploading(false)
       }
     },
-    [onChange, altValue, folder],
+    [onChange, onTempKey, folder],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -218,7 +220,7 @@ export function ImageUpload({
             {/* Quitar */}
             <button
               type="button"
-              onClick={() => { onChange(""); setDimensions(null) }}
+              onClick={() => { onChange(""); onTempKey?.(null); setDimensions(null) }}
               className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white shadow-lg hover:bg-red-600"
             >
               Quitar

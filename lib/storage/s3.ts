@@ -14,7 +14,7 @@
  * MIGRACIÓN A DB: este archivo no cambia — solo la capa de repository.
  */
 
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
+import { S3Client, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
 
 /**
  * Carpetas válidas dentro del bucket.
@@ -35,7 +35,8 @@ export type UploadFolder = (typeof UPLOAD_FOLDERS)[number]
  */
 function createS3Client() {
   return new S3Client({
-    region: process.env.AWS_REGION!,
+    region: process.env.AWS_REGION ?? "auto",
+    endpoint: process.env.AWS_ENDPOINT, // Requerido para Cloudflare R2
     credentials: {
       accessKeyId:     process.env.AWS_ACCESS_KEY_ID!,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
@@ -64,9 +65,7 @@ export async function uploadToS3(
       Key:         key,
       Body:        buffer,
       ContentType: contentType,
-      // ACL public-read permite acceso sin firma desde cualquier navegador.
-      // Requiere que el bucket tenga "Block Public Access" desactivado para ACLs.
-      ACL:         "public-read",
+      // R2 no soporta ACLs — el acceso público se habilita en el dashboard de Cloudflare.
     }),
   )
 
@@ -77,6 +76,27 @@ export async function uploadToS3(
     `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com`
 
   return `${baseUrl}/${key}`
+}
+
+/**
+ * Mueve un objeto dentro del mismo bucket (copy + delete).
+ * Usado para renombrar archivos temporales al nombre SEO final.
+ */
+export async function moveS3Object(sourceKey: string, destKey: string): Promise<void> {
+  const client = createS3Client()
+  await client.send(
+    new CopyObjectCommand({
+      Bucket:     process.env.AWS_S3_BUCKET!,
+      CopySource: `${process.env.AWS_S3_BUCKET}/${sourceKey}`,
+      Key:        destKey,
+    }),
+  )
+  await client.send(
+    new DeleteObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET!,
+      Key:    sourceKey,
+    }),
+  )
 }
 
 /** Devuelve true si las variables de entorno de S3 están configuradas */

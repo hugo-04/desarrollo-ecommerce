@@ -108,6 +108,13 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const [specs,        setSpecs]        = useState<string[]>(product?.specs         ?? [])
   const [techSpecs,    setTechSpecs]    = useState<TechnicalSpec[]>(product?.technicalSpecs ?? [])
   const [fichaTecnica, setFichaTecnica] = useState(product?.fichaTecnica ?? "")
+
+  // Temp keys — se finalizan (renombran con SEO) al guardar el formulario
+  const [imageTempKey,   setImageTempKey]   = useState<string | null>(null)
+  const [galleryTempKeys,setGalleryTempKeys]= useState<(string | null)[]>([])
+  const [pdfTempKey,     setPdfTempKey]     = useState<string | null>(null)
+  const [pdfSeoName,     setPdfSeoName]     = useState("")
+
   const [saving,       setSaving]       = useState(false)
   const [serverError,  setServerError]  = useState("")
   const [errors,       setErrors]       = useState<ProductErrors>({})
@@ -132,6 +139,21 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     setSelectedCategory(newCat.name)
     setErrors((e) => ({ ...e, category: undefined }))
     toast.success(`Categoría "${catName}" creada`)
+  }
+
+  // ── Finalizar uploads temporales con el nombre SEO correcto ──────────────
+
+  async function finalize(tempKey: string, seoName: string, folder: string): Promise<string | null> {
+    const res  = await fetch("/api/upload/finalize", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ tempKey, seoName, folder }),
+    })
+    const data = await res.json()
+    // 409 = archivo ya fue finalizado (doble submit) — ignorar, usar URL actual
+    if (res.status === 409) return null
+    if (!res.ok) throw new Error(data.error ?? "Error al finalizar subida")
+    return data.url as string
   }
 
   // ── Submit ────────────────────────────────────────────────────────────────
@@ -161,6 +183,42 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     }
     setErrors({})
 
+    // Mover archivos de temp/ a sus carpetas finales con nombre SEO
+    let finalImage      = image
+    let finalGallery    = [...gallery]
+    let finalFicha      = fichaTecnica
+
+    try {
+      if (imageTempKey) {
+        const url = await finalize(imageTempKey, imageAlt.trim(), "productos/imagenes")
+        if (url) { finalImage = url; setImage(url) }
+        setImageTempKey(null)
+      }
+
+      // Galería: limpiar cada tempKey inmediatamente al finalizar
+      // para que un reintento no intente mover archivos ya movidos
+      for (let i = 0; i < galleryTempKeys.length; i++) {
+        const key = galleryTempKeys[i]
+        if (!key) continue
+        const url = await finalize(key, galleryAlts[i] ?? "", "productos/galeria")
+        if (url) {
+          finalGallery[i] = url
+          setGallery(prev => { const n = [...prev]; n[i] = url; return n })
+        }
+        setGalleryTempKeys(prev => { const n = [...prev]; n[i] = null; return n })
+      }
+
+      if (pdfTempKey) {
+        const url = await finalize(pdfTempKey, pdfSeoName.trim(), "productos/fichas")
+        if (url) { finalFicha = url; setFichaTecnica(url) }
+        setPdfTempKey(null)
+      }
+    } catch (e: unknown) {
+      setServerError(e instanceof Error ? e.message : "Error al finalizar subida de archivos")
+      setSaving(false)
+      return
+    }
+
     const data = {
       sku, name,
       brand:           selectedBrand,
@@ -170,13 +228,13 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       rating:          Number(fd.get("rating"))  || 4.5,
       featured:        fd.get("featured")        === "on",
       bestSeller:      fd.get("bestSeller")      === "on",
-      image,
+      image:           finalImage,
       imageAlt:        imageAlt.trim() || undefined,
-      gallery:         gallery.filter(Boolean),
+      gallery:         finalGallery.filter(Boolean),
       galleryAlts:     galleryAlts.filter(Boolean).length > 0 ? galleryAlts : undefined,
       specs,
       technicalSpecs:  techSpecs.filter((s) => s.label && s.value),
-      fichaTecnica,
+      fichaTecnica:    finalFicha,
     }
 
     try {
@@ -344,6 +402,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               <ImageUpload
                 value={image}
                 onChange={(v) => { setImage(v); if (v) setErrors((e) => ({ ...e, image: undefined })) }}
+                onTempKey={setImageTempKey}
                 altValue={imageAlt}
                 onAltChange={(v) => { setImageAlt(v); if (v) setErrors((e) => ({ ...e, imageAlt: undefined })) }}
                 required
@@ -366,6 +425,8 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 alts={galleryAlts}
                 onAltsChange={setGalleryAlts}
                 folder="productos/galeria"
+                tempKeys={galleryTempKeys}
+                onTempKeysChange={setGalleryTempKeys}
               />
             </div>
           </div>
@@ -432,6 +493,8 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               label="PDF descargable"
               value={fichaTecnica}
               onChange={setFichaTecnica}
+              onTempKey={setPdfTempKey}
+              onSeoNameChange={setPdfSeoName}
             />
           </div>
         </div>

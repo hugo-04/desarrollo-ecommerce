@@ -1,8 +1,9 @@
 "use client"
 
-import { useRef, useCallback } from "react"
+import { useRef, useCallback, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
+import { X } from "lucide-react"
 import { IconSearch, IconWhatsApp } from "@/components/icons"
 import { WA } from "@/lib/contact"
 
@@ -15,9 +16,8 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
   const router   = useRouter()
   const pathname = usePathname()
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
 
-  /** En catálogo: reemplaza la URL en tiempo real (debounce 300 ms).
-   *  En otras páginas: navega al catálogo solo al pulsar Enter / botón. */
   const handleChange = useCallback((value: string) => {
     setSearchQuery(value)
     if (pathname === "/catalogo") {
@@ -29,31 +29,32 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
   }, [pathname, router, setSearchQuery])
 
   const handleSearch = () => {
-    if (searchQuery.trim()) router.push(`/catalogo?q=${encodeURIComponent(searchQuery)}`)
+    if (searchQuery.trim()) {
+      router.push(`/catalogo?q=${encodeURIComponent(searchQuery)}`)
+      setMobileSearchOpen(false)
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleSearch()
+    if (e.key === "Escape") setMobileSearchOpen(false)
   }
 
   return (
     <header className="border-b border-slate-200 bg-white shadow-sm relative z-50">
-      <div className="mx-auto max-w-7xl px-4 py-3">
-        <div className="flex items-center justify-between gap-4">
+      <div className="mx-auto max-w-7xl px-3 py-2.5 sm:px-4 sm:py-3">
+        <div className="flex items-center justify-between gap-3">
 
           {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]">
-            <div className="relative flex h-10 w-10 items-center justify-center">
-              <div className="absolute inset-0 rotate-45 rounded-md border-2 border-red-600 bg-white" />
-              <span className="relative z-10 text-xs font-extrabold text-[#121A47]">ET</span>
-            </div>
-            <div className="hidden flex-col items-start sm:flex">
-              <span className="text-lg font-bold tracking-tight text-[#1C2870]">ELECTRO <span className="text-[#1C2870]">THINA</span></span>
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-slate-500">Soluciones Eléctricas</span>
-            </div>
+          <Link href="/" className="flex shrink-0 items-center transition-transform hover:scale-[1.02]">
+            <img
+              src="/logotipo.png"
+              alt="Electro Thina — Soluciones Eléctricas"
+              className="h-9 w-auto object-contain drop-shadow-sm sm:h-10"
+            />
           </Link>
 
-          {/* Search */}
+          {/* Search — desktop */}
           <div className="relative hidden w-full max-w-xl lg:block">
             <IconSearch className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
@@ -72,17 +73,60 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
             </button>
           </div>
 
-          {/* WhatsApp Cotizar */}
-          <button
-            onClick={() => window.open(WA.cotizar, "_blank")}
-            className="header-wa-pulse flex shrink-0 items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-green-700"
-          >
-            <IconWhatsApp className="h-4 w-4" />
-            <span className="hidden sm:inline">Cotizar aquí</span>
-          </button>
+          {/* Acciones derecha */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Lupa — mobile/tablet */}
+            <button
+              onClick={() => setMobileSearchOpen(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition-colors hover:bg-slate-100 lg:hidden"
+              aria-label="Buscar"
+            >
+              <IconSearch className="h-4 w-4" />
+            </button>
 
+            {/* WhatsApp Cotizar */}
+            <button
+              onClick={() => window.open(WA.cotizar, "_blank")}
+              className="header-wa-pulse flex shrink-0 items-center gap-2 rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white transition-all hover:bg-green-700 sm:px-4 sm:py-2.5"
+            >
+              <IconWhatsApp className="h-4 w-4" />
+              <span className="hidden sm:inline">Cotizar aquí</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Search expandible — mobile */}
+      {mobileSearchOpen && (
+        <div className="border-t border-slate-100 bg-white px-3 pb-3 pt-2 lg:hidden">
+          <div className="relative flex items-center gap-2">
+            <div className="relative flex-1">
+              <IconSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input
+                autoFocus
+                type="text"
+                placeholder="Buscar productos..."
+                value={searchQuery}
+                onChange={(e) => handleChange(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+            <button
+              onClick={handleSearch}
+              className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white"
+            >
+              Buscar
+            </button>
+            <button
+              onClick={() => setMobileSearchOpen(false)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-400"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   )
 }

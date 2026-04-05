@@ -18,6 +18,7 @@ model AdminUser {
   id           Int      @id @default(autoincrement())
   email        String   @unique
   passwordHash String
+  isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
 
   @@map("admin_users")
@@ -65,6 +66,40 @@ model Brand {
   @@index([showInCarousel])
 
   @@map("brands")
+}
+
+// ──────────────────────────────────────────────────────────
+// Libro de Reclamaciones (INDECOPI — Ley N° 29571)
+// ──────────────────────────────────────────────────────────
+model Reclamacion {
+  id          Int      @id @default(autoincrement())
+
+  // Datos del consumidor
+  nombres     String
+  apellidos   String
+  tipoDoc     String   // DNI | RUC | CE | Pasaporte
+  nroDoc      String
+  domicilio   String   @default("")
+  email       String
+  telefono    String   @default("")
+
+  // Tipo de reclamo (INDECOPI distingue queja y reclamación)
+  tipo        String   // RECLAMACION | QUEJA
+  tipoBien    String   // PRODUCTO | SERVICIO
+  descripcion String
+  pedido      String
+
+  // Gestión interna
+  estado      String   @default("PENDIENTE") // PENDIENTE | EN_PROCESO | RESPONDIDO | CERRADO
+  respuesta   String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([estado])
+  @@index([createdAt(sort: Desc)])
+
+  @@map("reclamaciones")
 }
 
 // ──────────────────────────────────────────────────────────

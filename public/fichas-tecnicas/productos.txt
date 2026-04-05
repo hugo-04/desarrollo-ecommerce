@@ -1,0 +1,44 @@
+LISTADO DE PRODUCTOS - NOMBRES SEGÚN FICHA TÉCNICA
+===================================================
+
+N°  | ARCHIVO PDF                                          | NOMBRE EN LA FICHA
+----|------------------------------------------------------|----------------------------------------------------
+01  | FT-ABRAZADERA PARA PASTORAL SIMPLE 120-180MM.pdf    | ABRAZADERA DE A°G° PARA PASTORAL SIMPLE (120-180 mm)
+02  | FT-ABRAZADERA PARA PASTORAL SIMPLE 125-135-155MM.pdf| ABRAZADERA DE A°G° PARA PASTORAL SIMPLE DE 125 MM        solo producto     categoria abrazaderas
+03  | FT-ABRAZADERA PARA PASTORAL SIMPLE 200-300MM.pdf    | ABRAZADERA DE A°G° PARA PASTORAL SIMPLE (200-300 mm)
+04  | FT-AISLADOR 56-3.pdf                                | AISLADOR DE PORCELANA TIPO PIN DE 56-3
+05  | FT-AISLADOR 56-4 (SM).pdf                           | AISLADOR DE PORCELANA TIPO PIN DE 56-4
+06  | FT-AISLADOR CARRETE 53-1.pdf                        | AISLADOR CARRETE 53-1
+07  | FT-AISLADOR CARRETE 53-2.pdf                        | AISLADOR CARRETE 53-2                             categoria : accesorios de baja tension   
+08  | FT-AISLADOR TRACCIÓN 54-1.pdf                       | (no legible - archivo con caracteres especiales)
+09  | FT-AISLADOR TRACCIÓN 54-2.pdf                       | (no legible - archivo con caracteres especiales)
+10  | FT-AMARRE PREFORMADO.pdf                            | AMARRE PREFORMADO DE F°G°              
+11  | FT-ARANDELA CUADRADA.pdf                            | ARANDELA CUADRADA CURVA DE A°G°
+12  | FT-CONECTOR DOBLE VÍA AL-AL 2P.pdf                  | (no legible - archivo con caracteres especiales)
+13  | FT-CONECTOR DOBLE VÍA AL-AL 3P 25-240MM.pdf         | (no legible - archivo con caracteres especiales)
+14  | FT-CONECTOR DOBLE VÍA AL-AL DE 3P 35-300MM.pdf      | (no legible - archivo con caracteres especiales)
+15  | FT-CONECTOR DOBLE VÍA AL-CU 3P.pdf                  | (no legible - archivo con caracteres especiales)
+16  | FT-GRAPA DE ANCLAJE TIPO PISTOLA 2 P..pdf           | GRAPA DE ANCLAJE TIPO PISTOLA DE 2 PERNOS
+17  | FT-GRAPA DE ANCLAJE TIPO PISTOLA 3 P..pdf           | GRAPA DE ANCLAJE TIPO PISTOLA DE 3 PERNOS
+18  | FT-GRAPA FORJADA.pdf                                | GRAPA FORJADA
+19  | FT-GRAPA PARALELA DOS VIAS 3 PERNOS.pdf             | GRAPA PARALELA DOS VÍAS - 3 PERNOS
+20  | FT-GRAPA TIPO U.pdf                                 | GRAPA COBREADA TIPO U
+21  | FT-GRILLETE LIRA.pdf                                | ADAPTADOR GRILLETE TIPO LIRA DE 5/8
+22  | FT-GUARDACABLE.pdf                                  | GUARDACABLE DE ACERO FORJADO
+23  | FT-GUARDACABO.pdf                                   | GUARDACABO DE ACERO FORJADO
+24  | FT-PERNO ANGULAR 5-8 (SM).pdf                       | PERNO ANGULAR DE A°G° CON TUERCA
+25  | FT-PERNO COCHE.pdf                                  | PERNO COCHE DE A°G° CON TUERCA
+26  | FT-PERNO DOBLE ARMADO 3-4.pdf                       | PERNO DOBLE ARMADO DE A°G° CON 4 TUERCAS (D=3/4")
+27  | FT-PERNO DOBLE ARMADO 5-8.pdf                       | PERNO DOBLE ARMADO DE A°G° CON 4 TUERCAS (D=5/8")
+28  | FT-PERNO MAQUINADO 3-4.pdf                          | PERNO MAQUINADO DE A°G° CON TUERCA Y CONTRATUERCA (D=3/4")
+29  | FT-PERNO MAQUINADO 5-8.pdf                          | PERNO MAQUINADO DE A°G° CON TUERCA Y CONTRATUERCA (D=5/8")    categoria: pernos 
+30  | FT-PERNO OJO 3-4.pdf                                | PERNO OJO DE A°G° CON TUERCA Y CONTRATUERCA (D=3/4")
+31  | FT-PERNO OJO 5-8.pdf                                | PERNO OJO DE A°G° CON TUERCA Y CONTRATUERCA (D=5/8")
+32  | FT-TEMPLADOR MONOFASICO (SM).pdf                    | TEMPLADOR DE FIERRO GALVANIZADO PARA ACOMETIDA MONOFASICA
+33  | FT-TUERCA GANCHO.pdf                                | TUERCA GANCHO DE A°G°
+34  | FT-TUERCA OJO.pdf                                   | TUERCA OJO DE A°G°
+35  | FT-VARILLA DE ANCLAJE.pdf                           | VARILLA DE ANCLAJE DE A°G° CON TUERCA
+
+===================================================
+NOTA: Los N°08, 09, 12, 13, 14 y 15 tienen caracteres especiales (Ó/Í)
+en el nombre del archivo que impiden su lectura automática.

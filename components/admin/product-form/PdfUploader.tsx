@@ -14,6 +14,8 @@ interface PdfUploaderProps {
   label: string
   value: string
   onChange: (url: string) => void
+  onTempKey?: (key: string | null) => void
+  onSeoNameChange?: (name: string) => void
 }
 
 function toSeoSlug(text: string): string {
@@ -27,7 +29,7 @@ function toSeoSlug(text: string): string {
     .slice(0, 70)
 }
 
-export function PdfUploader({ label, value, onChange }: PdfUploaderProps) {
+export function PdfUploader({ label, value, onChange, onTempKey, onSeoNameChange }: PdfUploaderProps) {
   const inputRef              = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [error, setError]     = useState("")
@@ -48,6 +50,7 @@ export function PdfUploader({ label, value, onChange }: PdfUploaderProps) {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       onChange(data.url)
+      if (data.tempKey) onTempKey?.(data.tempKey)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Error al subir")
       setFileName("")
@@ -91,7 +94,7 @@ export function PdfUploader({ label, value, onChange }: PdfUploaderProps) {
             </button>
             <button
               type="button"
-              onClick={() => { onChange(""); setFileName("") }}
+              onClick={() => { onChange(""); setFileName(""); onTempKey?.(null) }}
               className="flex h-7 w-7 items-center justify-center rounded-lg border border-red-100 text-red-400 transition hover:bg-red-50"
             >
               <X className="h-3.5 w-3.5" />
@@ -137,7 +140,7 @@ export function PdfUploader({ label, value, onChange }: PdfUploaderProps) {
           <input
             type="text"
             value={seoName}
-            onChange={(e) => setSeoName(e.target.value)}
+            onChange={(e) => { setSeoName(e.target.value); onSeoNameChange?.(e.target.value) }}
             placeholder='Ej: "ficha-tecnica-aislador-polimerico-22kv"'
             className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
           />

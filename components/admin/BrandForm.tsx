@@ -37,6 +37,7 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
   const [logo,           setLogo]     = useState(initialData?.logo           ?? "")
   const [logoAlt,        setLogoAlt]  = useState(initialData?.logoAlt        ?? "")
   const [showInCarousel, setCarousel] = useState(initialData?.showInCarousel ?? false)
+  const [logoTempKey,    setLogoTempKey] = useState<string | null>(null)
 
   // ── Estado de UI ─────────────────────────────────────────────────────────
   const [saving,    setSaving]    = useState(false)
@@ -64,8 +65,28 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
       return
     }
 
+    let finalLogo = logo
     try {
-      await onSave({ name: name.trim(), logo, logoAlt: logoAlt.trim() || undefined, showInCarousel })
+      if (logoTempKey) {
+        const res  = await fetch("/api/upload/finalize", {
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify({ tempKey: logoTempKey, seoName: logoAlt.trim(), folder: "marcas/logos" }),
+        })
+        const data = await res.json()
+        // 409 = ya fue finalizado (doble submit) — continuar con URL actual
+        if (!res.ok && res.status !== 409) throw new Error(data.error ?? "Error al finalizar subida")
+        if (res.ok) { finalLogo = data.url as string; setLogo(finalLogo) }
+        setLogoTempKey(null)
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Error al finalizar subida")
+      setSaving(false)
+      return
+    }
+
+    try {
+      await onSave({ name: name.trim(), logo: finalLogo, logoAlt: logoAlt.trim() || undefined, showInCarousel })
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error al guardar")
       setSaving(false)
@@ -163,6 +184,7 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
             <ImageUpload
               value={logo}
               onChange={(v) => { setLogo(v); if (v) setLogoError("") }}
+              onTempKey={setLogoTempKey}
               altValue={logoAlt}
               onAltChange={setLogoAlt}
               error={logoError}

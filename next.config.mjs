@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone", // Genera build auto-contenido para Docker
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -7,7 +8,13 @@ const nextConfig = {
     unoptimized: true,
   },
   experimental: {
-    turbopackUseSystemTlsCerts: true,
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "*.brs.devtunnels.ms",
+        "*.devtunnels.ms",
+      ],
+    },
   },
 }
 

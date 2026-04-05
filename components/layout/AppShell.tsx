@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { motion, useScroll, useMotionValueEvent } from "framer-motion"
 import { TopBar } from "./TopBar"
@@ -12,8 +12,12 @@ import { globalAnimationsCSS } from "@/styles/animations"
 import { WA } from "@/lib/contact"
 
 /**
- * AppShell wraps all pages with the shared layout:
- * TopBar, Header, Navigation, Footer, WhatsApp FAB, and global CSS animations.
+ * AppShell wraps all pages with the shared layout.
+ *
+ * El nav usa `position: fixed` (no sticky) para que al ocultarse con
+ * translateY(-100%) NO revele contenido que estaba detrás del nav.
+ * Con sticky ocurría un flash blanco en páginas con contenido claro al top.
+ * Con fixed, el nav flota sobre el contenido y el padding-top compensa su altura.
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -21,9 +25,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [searchQuery, setSearchQuery] = useState("")
   const [hidden, setHidden] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  // Ref (no re-render) — tells us if we're near the top when transitioning to visible
   const nearTop = useRef(true)
   const { scrollY } = useScroll()
+
+  // Medir el alto real del nav para el padding-top del contenido
+  const navRef = useRef<HTMLDivElement>(null)
+  const [navHeight, setNavHeight] = useState(136) // aproximado inicial para evitar FOUC
+
+  useEffect(() => {
+    const measure = () => {
+      if (navRef.current) setNavHeight(navRef.current.offsetHeight)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    if (navRef.current) observer.observe(navRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0
@@ -37,44 +54,44 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     }
   })
 
-  // Transition depends on direction and position:
-  // - hiding   → instant (0.12s sharp easeIn)
-  // - showing near top → no animation (instant snap, no bounce)
-  // - showing mid-page → quick easeOut (0.2s)
+  // Transition según dirección y posición
   const navTransition = hidden
-    ? { duration: 0.12, ease: [0.55, 0, 1, 0.45] as [number, number, number, number] }
+    ? { duration: 0.15, ease: [0.55, 0, 1, 0.45] as [number, number, number, number] }
     : nearTop.current
       ? { duration: 0 }
-      : { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }
+      : { duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: globalAnimationsCSS }} />
-      <div className="min-h-screen bg-gradient-to-b from-[#F0F0F5] via-[#EBEBF2] to-[#E7E7EF] font-sans antialiased">
-        <TopBar />
+      <div className="min-h-screen bg-white font-sans antialiased">
 
-        {/* Sticky Wrapper for Header + Navigation */}
+        {/* Nav fijo — TopBar + Header + Navigation se mueven como una unidad */}
         <motion.div
-          className={`sticky top-0 z-50 flex flex-col w-full transition-shadow duration-300 ${isScrolled ? "shadow-2xl shadow-black/20" : ""}`}
+          ref={navRef}
+          className={`fixed inset-x-0 top-0 z-50 flex flex-col transition-shadow duration-300 ${
+            isScrolled ? "shadow-2xl shadow-black/20" : ""
+          }`}
           animate={{ y: hidden ? "-100%" : 0 }}
           transition={navTransition}
         >
+          <TopBar />
           <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <Navigation />
         </motion.div>
 
-        {children}
-
-        <Footer />
+        {/* Contenido desplazado exactamente el alto del nav fijo */}
+        <div style={{ paddingTop: navHeight }}>
+          {children}
+          <Footer />
+        </div>
 
         {/* Floating WhatsApp Button — oculto en detalle de producto */}
         {!isProductDetail && (
-          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
-            {/* Tooltip "Cotizar aquí" */}
+          <div className="fixed bottom-30 right-6 z-50 flex items-center gap-3">
             <span className="whatsapp-label pointer-events-none whitespace-nowrap rounded-lg border border-green-100 bg-white px-3 py-1.5 text-sm font-semibold text-green-700 shadow-lg shadow-green-500/20">
               Cotizar aquí
             </span>
-            {/* Wrapper con bounce — ring y botón se mueven juntos */}
             <div className="whatsapp-bounce relative flex h-14 w-14 items-center justify-center">
               <span className="whatsapp-ring absolute inset-0 rounded-full bg-green-400" />
               <span className="whatsapp-ring-delayed absolute inset-0 rounded-full bg-green-400" />

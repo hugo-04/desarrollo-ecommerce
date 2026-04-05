@@ -1,6 +1,6 @@
 "use client"
 
-import { IconChevronLeft, IconChevronRight } from "@/components/icons"
+import { IconChevronLeft, IconChevronRight, IconPDF } from "@/components/icons"
 
 interface ProductGalleryProps {
   gallery: string[]
@@ -8,6 +8,7 @@ interface ProductGalleryProps {
   bestSeller: boolean
   selectedImage: number
   onSelectImage: (index: number) => void
+  fichaTecnica?: string
 }
 
 export function ProductGallery({
@@ -16,6 +17,7 @@ export function ProductGallery({
   bestSeller,
   selectedImage,
   onSelectImage,
+  fichaTecnica,
 }: ProductGalleryProps) {
   const prev = () => onSelectImage(selectedImage > 0 ? selectedImage - 1 : gallery.length - 1)
   const next = () => onSelectImage(selectedImage < gallery.length - 1 ? selectedImage + 1 : 0)
@@ -34,6 +36,16 @@ export function ProductGallery({
           <span className="absolute left-4 top-4 rounded-lg bg-red-600 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
             Top Ventas
           </span>
+        )}
+        {fichaTecnica && (
+          <button
+            type="button"
+            onClick={() => window.open(fichaTecnica, "_blank", "noopener,noreferrer")}
+            className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-2 text-[10px] font-bold text-[#cc1b1b] shadow-lg ring-1 ring-slate-200/50 backdrop-blur-md transition-all duration-300 hover:bg-[#cc1b1b] hover:text-white"
+            title="Descargar Ficha Técnica (PDF)"
+          >
+            <IconPDF className="h-4 w-4" /> FICHA PDF
+          </button>
         )}
         {gallery.length > 1 && (
           <>

@@ -1,40 +1,22 @@
-/**
- * SESSION UTILITIES — JWT + bcrypt
- *
- * Usa JWT (jose) para firmar tokens y bcryptjs para validar contraseñas.
- *
- * Variables de entorno:
- *   AUTH_SECRET           — clave de firma JWT (obligatoria en producción)
- *   ADMIN_EMAIL           — email del administrador
- *   ADMIN_PASSWORD_HASH   — hash bcrypt de la contraseña (recomendado)
- *   ADMIN_PASSWORD        — contraseña en texto plano (solo desarrollo)
- *
- * Para generar un hash bcrypt:
- *   node -e "const b=require('bcryptjs'); b.hash('tu_contraseña', 12).then(console.log)"
- */
-
 import { SignJWT, jwtVerify } from "jose"
 import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
 import { db } from "@/lib/db"
 
-const SECRET       = new TextEncoder().encode(
+const SECRET = new TextEncoder().encode(
   process.env.AUTH_SECRET ?? "electro-thina-dev-secret-2024"
 )
-const ADMIN_EMAIL  = process.env.ADMIN_EMAIL ?? "admin@electrothina.com"
-const COOKIE_NAME  = "et_admin_session"
+const COOKIE_NAME    = "et_admin_session"
 const COOKIE_MAX_AGE = 60 * 60 * 8 // 8 horas
 
+// Verifica credenciales contra la DB — única vez que se consulta isActive
 export async function validateCredentials(email: string, password: string): Promise<boolean> {
-  const user = await db.adminUser.findUnique({
-    where: { email },
-  })
-
-  if (!user) return false
-
+  const user = await db.adminUser.findUnique({ where: { email } })
+  if (!user || !user.isActive) return false
   return bcrypt.compare(password, user.passwordHash)
 }
 
+// Crea el JWT y lo guarda en cookie httpOnly (inaccesible desde JS)
 export async function createSession(email: string): Promise<void> {
   const token = await new SignJWT({ email })
     .setProtectedHeader({ alg: "HS256" })
@@ -52,6 +34,8 @@ export async function createSession(email: string): Promise<void> {
   })
 }
 
+// Lee y verifica el JWT — NO consulta la DB para evitar bucles de redirección.
+// El JWT es la fuente de verdad (firmado, con expiración de 8h).
 export async function getSession(): Promise<{ email: string } | null> {
   const jar   = await cookies()
   const token = jar.get(COOKIE_NAME)?.value
@@ -60,9 +44,10 @@ export async function getSession(): Promise<{ email: string } | null> {
   try {
     const { payload } = await jwtVerify(token, SECRET)
     const email = payload.email as string
-    if (!email) return null
+    if (!email || typeof email !== "string") return null
     return { email }
   } catch {
+    // Token expirado o corrupto
     return null
   }
 }
