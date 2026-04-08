@@ -88,7 +88,7 @@ export function HeroSection() {
           >
             <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-red-500/30 bg-red-500/10 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#f8fafc] backdrop-blur-md">
               <span className="flex h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-              Especialistas en Alta y Media Tension
+              Especialistas en Alta y Media Tensión
             </motion.div>
 
             {/* Voltage range badge */}
@@ -119,13 +119,13 @@ export function HeroSection() {
 
             <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5">
               <Link href="/catalogo" className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#CC1B1B] to-[#B01010] px-9 py-4 text-sm font-bold text-white shadow-2xl shadow-red-600/30 transition-all duration-300 hover:shadow-red-600/50 hover:scale-[1.03]">
-                <span className="relative z-10">Ver Catalogo</span>
+                <span className="relative z-10">Ver Catálogo</span>
                 <IconArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#B01010] to-[#990a0a] opacity-0 transition-opacity group-hover:opacity-100" />
               </Link>
               <Link href="/contacto" className="group inline-flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] px-9 py-4 text-sm font-semibold text-white/90 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:border-red-500/30 hover:text-white">
                 <IconPhone className="h-4 w-4 text-red-500 transition-colors group-hover:text-red-400" />
-                Contactanos
+                Contáctanos
               </Link>
             </motion.div>
           </motion.div>

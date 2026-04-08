@@ -1,10 +1,7 @@
 import Link from "next/link"
-import type { Metadata } from "next"
+import { SEO } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Política de Privacidad | Electro Thina",
-  description: "Política de privacidad y tratamiento de datos personales de Electro Thina S.A.C.",
-}
+export const metadata = SEO.politicaPrivacidad
 
 export default function PoliticaPrivacidadPage() {
   return (
@@ -35,10 +32,10 @@ export default function PoliticaPrivacidadPage() {
                 title: "1. Responsable del Tratamiento",
                 content: [
                   "Razón Social: Electro Thina S.A.C.",
-                  "RUC: [Número de RUC]",
-                  "Domicilio: Av. Industrial 1234, Lima, Perú",
-                  "Correo electrónico: ventas@electrothina.com",
-                  "Teléfono: (01) 234-5678",
+                  "RUC: 20609410711",
+                  "Domicilio: Av. Guillermo Dansey N° 481 - Int. 143 - C.C. Loreto, Lima, Perú",
+                  "Correo electrónico: electrothina522@gmail.com",
+                  "Teléfono: +51 995 318 976",
                 ],
               },
               {
@@ -96,7 +93,7 @@ export default function PoliticaPrivacidadPage() {
                 title: "8. Derechos del Titular",
                 content: [
                   "Conforme a la Ley N° 29733, usted tiene derecho a: (a) Acceso — conocer qué datos personales tratamos; (b) Rectificación — corregir datos inexactos o incompletos; (c) Cancelación — solicitar la eliminación de sus datos cuando ya no sean necesarios; (d) Oposición — oponerse al tratamiento de sus datos para finalidades de marketing.",
-                  "Para ejercer sus derechos, puede escribirnos a: ventas@electrothina.com, indicando en el asunto 'Derechos ARCO' y adjuntando una copia de su documento de identidad.",
+                  "Para ejercer sus derechos, puede escribirnos a: electrothina522@gmail.com, indicando en el asunto 'Derechos ARCO' y adjuntando una copia de su documento de identidad.",
                   "Responderemos su solicitud en un plazo máximo de 20 días hábiles.",
                 ],
               },
@@ -127,7 +124,7 @@ export default function PoliticaPrivacidadPage() {
               {
                 title: "13. Contacto y Autoridad de Control",
                 content: [
-                  "Para consultas relacionadas con esta Política o el tratamiento de sus datos, puede contactarnos en: ventas@electrothina.com o llamar al (01) 234-5678.",
+                  "Para consultas relacionadas con esta Política o el tratamiento de sus datos, puede contactarnos en: electrothina522@gmail.com o por WhatsApp al +51 981 375 196.",
                   "Si considera que sus derechos no han sido atendidos, puede presentar una reclamación ante la Autoridad Nacional de Protección de Datos Personales del Ministerio de Justicia y Derechos Humanos del Perú (MINJUS).",
                 ],
               },
@@ -149,8 +146,8 @@ export default function PoliticaPrivacidadPage() {
           <div className="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-200 bg-slate-50 px-6 py-4">
             <p className="text-xs text-slate-500">
               ¿Preguntas? Escríbenos a{" "}
-              <a href="mailto:ventas@electrothina.com" className="font-semibold text-primary hover:underline">
-                ventas@electrothina.com
+              <a href="mailto:electrothina522@gmail.com" className="font-semibold text-primary hover:underline">
+                electrothina522@gmail.com
               </a>
             </p>
             <Link href="/terminos" className="text-xs font-semibold text-primary hover:underline">

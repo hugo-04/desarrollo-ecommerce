@@ -1,5 +1,8 @@
 import Link from "next/link"
+import { SEO } from "@/lib/seo"
 import { IconChevronRight } from "@/components/icons"
+
+export const metadata = SEO.terminos
 
 const sections = [
   {

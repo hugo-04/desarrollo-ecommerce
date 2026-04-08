@@ -29,9 +29,9 @@ export function ContactoView() {
         <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h40v40H0z\' fill=\'none\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")' }} />
         <div className="relative mx-auto max-w-7xl px-4 text-center">
           <span className="mb-2 inline-block text-xs font-bold uppercase tracking-widest text-red-400">Contacto</span>
-          <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">Hablemos de tu proyecto</h1>
+          <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">Cotizaciones y Asesoría Técnica AT/MT</h1>
           <p className="mx-auto max-w-2xl text-base text-slate-400 sm:text-lg">
-            Si tienes un proyecto en mente, cuéntanos. Nuestros ingenieros pueden ayudarte a definir los materiales correctos antes de que arranque la obra.
+            Cuéntanos tu proyecto. Nuestros ingenieros te ayudan a seleccionar los materiales eléctricos correctos antes de que arranque la obra.
           </p>
         </div>
       </section>

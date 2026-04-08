@@ -79,24 +79,24 @@ export const SEO = {
   root: {
     metadataBase: new URL(SITE_URL),
     title: {
-      default:  `${SITE_NAME} | Ferretería y Accesorios Eléctricos AT/MT en Perú`,
+      default:  `${SITE_NAME} | Ferretería Eléctrica AT/MT en Perú`,
       template: `%s | ${SITE_NAME}`,
     },
     description:
-      `Fabricantes y distribuidores de ${KW_CORE} en Perú. Aisladores, herrajes, conectores y cables con certificaciones IEC, ANSI y NTP. Despacho en 48 h a nivel nacional.`,
+      `Fabricantes de ferretería eléctrica AT/MT en Lima, Perú. Aisladores, herrajes, conectores y cables certificados IEC, ANSI y NTP. Despacho en 48 h.`,
     keywords: [KW_CORE, ...KW_SECONDARY],
     authors:  [{ name: "Electro Thina S.A.C." }],
     creator:  "Electro Thina S.A.C.",
     openGraph: {
       ...defaultOG,
       url:         SITE_URL,
-      title:       `${SITE_NAME} | Ferretería y Accesorios Eléctricos AT/MT en Perú`,
-      description: `Fabricantes y distribuidores de ${KW_CORE} en Lima, Perú. Más de 1,000 productos certificados con despacho en 48 h.`,
+      title:       `${SITE_NAME} | Ferretería Eléctrica AT/MT en Perú`,
+      description: `Fabricantes de ferretería eléctrica AT/MT en Lima, Perú. Aisladores, herrajes y conectores certificados IEC, ANSI y NTP. Despacho en 48 h.`,
     },
     twitter: {
       card:        "summary_large_image" as const,
-      title:       `${SITE_NAME} | Ferretería y Accesorios Eléctricos AT/MT`,
-      description: `Fabricantes y distribuidores de ${KW_CORE} en Perú.`,
+      title:       `${SITE_NAME} | Ferretería Eléctrica AT/MT en Perú`,
+      description: `Fabricantes de ferretería eléctrica AT/MT en Lima. Certificaciones IEC, ANSI y NTP. Despacho en 48 h.`,
     },
     robots: {
       index:     true,
@@ -107,54 +107,75 @@ export const SEO = {
 
   /** / — Página principal */
   home: {
-    title:       "Inicio",
-    description: `${KW_CORE} en Lima, Perú. Más de 1,000 productos certificados IEC, ANSI y NTP con despacho en 48 h a nivel nacional.`,
+    title:       { absolute: `${SITE_NAME} — Ferretería Eléctrica AT/MT en Perú` },
+    description: `Ferretería y accesorios eléctricos AT/MT en Lima, Perú. Más de 1,000 productos certificados IEC, ANSI y NTP. Despacho en 48 h a nivel nacional.`,
     alternates:  { canonical: "/" },
     openGraph: {
       ...defaultOG,
       url:         "/",
-      title:       `${SITE_NAME} | ${SITE_NAME.toUpperCase()} — Ferretería Eléctrica AT/MT`,
-      description: `Fabricantes y distribuidores de ${KW_CORE}. Stock permanente de aisladores, herrajes y conectores certificados. Despacho en 48 h.`,
+      title:       `${SITE_NAME} — Ferretería Eléctrica AT/MT en Perú`,
+      description: `Fabricantes de ferretería eléctrica AT/MT. Stock permanente de aisladores, herrajes y conectores certificados. Despacho en 48 h.`,
     },
   } satisfies Metadata,
 
   /** /nosotros */
   nosotros: {
-    title:       "Quiénes Somos",
-    description: `Electro Thina fabrica y distribuye ${KW_CORE} desde Lima desde el año 2010. Planta de fabricación propia, certificaciones IEC y ANSI, e ingenieros especializados en AT/MT.`,
+    title:       "Fabricantes de Ferretería AT/MT en Perú",
+    description: `Electro Thina fabrica y distribuye ferretería eléctrica AT/MT en Lima desde 2010. Planta propia, certificaciones IEC y ANSI, e ingenieros especializados AT/MT.`,
     alternates:  { canonical: "/nosotros" },
     openGraph: {
       ...defaultOG,
       url:         "/nosotros",
-      title:       `Quiénes Somos | ${SITE_NAME} — Ferretería Eléctrica AT/MT`,
-      description: `Más de 15 años fabricando y distribuyendo ${KW_CORE} en Perú. Herrajes, aisladores y conectores con certificaciones IEC y ANSI.`,
+      title:       `Fabricantes AT/MT | ${SITE_NAME}`,
+      description: `Más de 15 años fabricando ferretería eléctrica AT/MT en Perú. Herrajes, aisladores y conectores certificados IEC y ANSI.`,
     },
   } satisfies Metadata,
 
   /** /contacto */
   contacto: {
-    title:       "Contacto",
-    description: `Solicita cotización o asesoría técnica en ${KW_CORE}. Ingenieros especializados en AT/MT disponibles en Lima. Respondemos en menos de 24 h.`,
+    title:       "Cotizaciones y Asesoría Técnica AT/MT",
+    description: `Solicita cotización de ferretería eléctrica AT/MT en Lima. Ingenieros especializados disponibles. Respondemos en menos de 24 h.`,
     alternates:  { canonical: "/contacto" },
     openGraph: {
       ...defaultOG,
       url:         "/contacto",
-      title:       `Contacto | ${SITE_NAME} — Ferretería Eléctrica AT/MT`,
-      description: `Cotizaciones y asesoría técnica en ${KW_CORE}. Ingenieros especializados. Respuesta en menos de 24 h.`,
+      title:       `Contacto AT/MT | ${SITE_NAME}`,
+      description: `Cotizaciones y asesoría técnica AT/MT en Lima. Ingenieros especializados. Respuesta en menos de 24 h.`,
     },
   } satisfies Metadata,
 
   /** /catalogo */
   catalogo: {
     title:       "Catálogo AT/MT",
-    description: `Catálogo de ${KW_CORE}: aisladores, herrajes, conectores y cables certificados IEC, ANSI y NTP. Más de 1,000 referencias. Cotización técnica en 24 h.`,
+    description: `Catálogo de ferretería eléctrica AT/MT: aisladores, herrajes, conectores y cables certificados IEC, ANSI y NTP. Más de 1,000 referencias. Cotización en 24 h.`,
     alternates:  { canonical: "/catalogo" },
     openGraph: {
       ...defaultOG,
       url:         "/catalogo",
-      title:       `Catálogo AT/MT | ${SITE_NAME} — Ferretería Eléctrica Certificada`,
-      description: `Aisladores, herrajes, conectores y cables para ${KW_CORE}. Certificaciones IEC, ANSI y NTP. Más de 1,000 productos en stock.`,
+      title:       `Catálogo AT/MT | ${SITE_NAME}`,
+      description: `Aisladores, herrajes, conectores y cables AT/MT. Certificaciones IEC, ANSI y NTP. Más de 1,000 productos en stock.`,
     },
+  } satisfies Metadata,
+
+  /** /terminos */
+  terminos: {
+    title:       "Términos y Condiciones",
+    description: `Términos y condiciones de uso del sitio web y servicios comerciales de Electro Thina S.A.C., fabricante y distribuidor de ${KW_CORE} en Lima, Perú.`,
+    alternates:  { canonical: "/terminos" },
+  } satisfies Metadata,
+
+  /** /politica-privacidad */
+  politicaPrivacidad: {
+    title:       "Política de Privacidad",
+    description: `Política de privacidad y tratamiento de datos personales de Electro Thina S.A.C. conforme a la Ley N° 29733 — Ley de Protección de Datos Personales del Perú.`,
+    alternates:  { canonical: "/politica-privacidad" },
+  } satisfies Metadata,
+
+  /** /libro-reclamaciones */
+  libroReclamaciones: {
+    title:       "Libro de Reclamaciones",
+    description: `Libro de Reclamaciones Virtual de Electro Thina S.A.C. conforme a la Ley N° 29571 — Código de Protección y Defensa del Consumidor (INDECOPI). Lima, Perú.`,
+    alternates:  { canonical: "/libro-reclamaciones" },
   } satisfies Metadata,
 
 } as const

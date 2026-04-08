@@ -77,7 +77,7 @@ export function NosotrosView() {
           </motion.div>
           {/* H1 con keyword principal */}
           <motion.h1 variants={fadeUp} className="mb-5 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-            Electro Thina
+            Electro Thina — Fabricantes de Accesorios Eléctricos AT/MT en Perú
           </motion.h1>
           <motion.p variants={fadeUp} className="mx-auto max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
             Fabricantes y distribuidores de ferretería y accesorios eléctricos para alta y media tensión en Lima, Perú — desde el año 2010.
