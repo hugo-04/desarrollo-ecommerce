@@ -53,7 +53,7 @@ export function HeroSection() {
       {/* === BACKGROUND === */}
       <div className="absolute inset-0">
         <img
-          src="/electric-towers-with-blue-cloudy-sky-background.jpg"
+          src="/banner.jpg"
           alt="Torres eléctricas"
           className="h-full w-full object-cover"
         />
