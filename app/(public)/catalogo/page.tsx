@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { SEO } from "@/lib/seo"
 import { CatalogoView } from "@/components/views/CatalogoView"
 
+export const dynamic = "force-dynamic"
 export const metadata = SEO.catalogo
 
 interface PageProps {

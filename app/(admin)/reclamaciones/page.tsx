@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import { getReclamacionesAction } from "@/features/reclamaciones/actions"
 import { ReclamacionesList } from "./ReclamacionesList"
 import { ClipboardList } from "lucide-react"

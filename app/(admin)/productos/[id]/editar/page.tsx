@@ -3,6 +3,8 @@
  * Server Component: obtiene el producto, categorías y marcas antes de renderizar.
  */
 
+export const dynamic = "force-dynamic"
+
 import { getProductAction }   from "@/features/productos/actions"
 import { getCategoriesAction } from "@/features/categorias/actions"
 import { getBrandsAction }     from "@/features/marcas/actions"

@@ -8,6 +8,8 @@
  *  - Links al sitio público
  */
 
+export const dynamic = "force-dynamic"
+
 import { getCatalogAction } from "@/features/productos/actions"
 import { getCategoriesAction } from "@/features/categorias/actions"
 import { getBrandsAction } from "@/features/marcas/actions"

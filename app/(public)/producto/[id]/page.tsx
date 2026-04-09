@@ -12,6 +12,8 @@ import { notFound } from "next/navigation"
 import { ProductoView } from "@/components/views/ProductoView"
 import { getProductAction } from "@/features/productos/actions"
 
+export const dynamic = "force-dynamic"
+
 interface PageProps {
   params: Promise<{ id: string }>
 }
