@@ -75,9 +75,10 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
   const [name,     setName]     = useState(initialData?.name           ?? "")
   const [slug,     setSlug]     = useState(initialData?.slug           ?? "")
   const [subcats,  setSubcats]  = useState<string[]>(initialData?.subcategories ?? [])
-  const [image,    setImage]    = useState(initialData?.image          ?? "")
-  const [imageAlt, setImageAlt] = useState(initialData?.imageAlt      ?? "")
-  const [featured, setFeatured] = useState(initialData?.featured       ?? false)
+  const [image,        setImage]        = useState(initialData?.image    ?? "")
+  const [imageAlt,     setImageAlt]     = useState(initialData?.imageAlt ?? "")
+  const [imageTempKey, setImageTempKey] = useState<string | null>(null)
+  const [featured,     setFeatured]     = useState(initialData?.featured ?? false)
   const [saving,   setSaving]   = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error,    setError]    = useState("")
@@ -111,10 +112,27 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
     setErrors({})
 
     try {
+      // Finalizar imagen con nombre SEO si hay un upload temporal pendiente
+      let finalImage = image
+      if (imageTempKey) {
+        const res  = await fetch("/api/upload/finalize", {
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify({
+            tempKey: imageTempKey,
+            seoName: imageAlt.trim() || slugify(name),
+            folder:  "categorias/imagenes",
+          }),
+        })
+        const data = await res.json()
+        if (res.ok) { finalImage = data.url; setImage(data.url) }
+        setImageTempKey(null)
+      }
+
       await onSave({
         name:          name.trim(),
         slug:          slug.trim() || slugify(name),
-        image,
+        image:         finalImage,
         imageAlt:      imageAlt.trim() || undefined,
         color:         initialData?.color || autoColor(name.trim()),
         subcategories: subcats,
@@ -236,10 +254,12 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
         <ImageUpload
           value={image}
           onChange={setImage}
+          onTempKey={setImageTempKey}
           altValue={imageAlt}
           onAltChange={setImageAlt}
           label="Imagen representativa"
           aspect="4/3"
+          folder="categorias/imagenes"
         />
       </div>
 
