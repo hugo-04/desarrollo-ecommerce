@@ -241,12 +241,14 @@ export function CatalogoView({
                     className="group flex cursor-pointer gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white p-3 transition-all hover:border-primary/30 hover:shadow-md"
                   >
                     <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-lg bg-slate-50">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
-                        crossOrigin="anonymous"
-                      />
+                      {product.image && (
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                          crossOrigin="anonymous"
+                        />
+                      )}
                     </div>
                     <div className="flex flex-1 flex-col justify-between">
                       <div>

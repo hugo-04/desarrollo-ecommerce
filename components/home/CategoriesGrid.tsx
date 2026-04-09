@@ -20,12 +20,14 @@ function CategoryCard({ category, index }: { category: CategoryDTO; index: numbe
       >
         <div className={`relative w-full overflow-hidden ${isFeatured ? 'h-[400px] lg:h-full' : 'h-[340px]'}`}>
           <div className="absolute inset-0 bg-slate-900/10 z-10 transition-opacity duration-500 group-hover:opacity-0" />
-          <img
-            src={category.image}
-            alt={category.name}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
-            crossOrigin="anonymous"
-          />
+          {category.image && (
+            <img
+              src={category.image}
+              alt={category.name}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              crossOrigin="anonymous"
+            />
+          )}
           <div className={`absolute inset-0 bg-gradient-to-t from-[#07091E]/95 ${isFeatured ? 'via-[#07091E]/40' : 'via-[#07091E]/60'} to-transparent z-10`} />
           <div
             className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-20 mix-blend-color z-10 transition-opacity duration-500 group-hover:opacity-40`}
