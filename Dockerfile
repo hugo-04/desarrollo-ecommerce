@@ -44,7 +44,6 @@ RUN npx esbuild prisma/seed.ts \
       --bundle \
       --platform=node \
       --external:@prisma/client \
-      --external:bcryptjs \
       --outfile=seed.cjs
 
 # ── Etapa 3: Runner (imagen final mínima) ────────────────────
