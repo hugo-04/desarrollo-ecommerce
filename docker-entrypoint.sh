@@ -3,8 +3,7 @@ set -e
 
 echo "⏳ Esperando base de datos PostgreSQL..."
 
-# Espera hasta que Postgres acepte conexiones
-until pg_isready -h "$PGHOST" -p "${PGPORT:-5432}" -U "$PGUSER" -q; do
+until psql "$DATABASE_URL" -c '\q' > /dev/null 2>&1; do
   echo "   DB no lista — reintentando en 2s..."
   sleep 2
 done
