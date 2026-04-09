@@ -44,7 +44,7 @@ export async function createCategoryAction(data: CreateCategoryDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().create(data)
-  revalidatePath("/categorias")
+  revalidatePath("/", "layout")
   return result
 }
 
@@ -52,7 +52,7 @@ export async function updateCategoryAction(id: number, data: UpdateCategoryDTO) 
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().update(id, data)
-  revalidatePath("/categorias")
+  revalidatePath("/", "layout")
   return result
 }
 
@@ -60,6 +60,6 @@ export async function deleteCategoryAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().delete(id)
-  revalidatePath("/categorias")
+  revalidatePath("/", "layout")
   return result
 }
