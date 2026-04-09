@@ -39,6 +39,14 @@ RUN npx prisma generate
 # Build de producción (output: standalone en next.config.mjs)
 RUN npm run build
 
+# Compila el seed a JS puro para que corra en el runner sin tsx
+RUN npx esbuild prisma/seed.ts \
+      --bundle \
+      --platform=node \
+      --external:@prisma/client \
+      --external:bcryptjs \
+      --outfile=seed.cjs
+
 # ── Etapa 3: Runner (imagen final mínima) ────────────────────
 FROM node:20-alpine AS runner
 
@@ -61,8 +69,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Script de inicialización SQL y entrypoint
+# Script de inicialización SQL, seed compilado y entrypoint
 COPY --from=builder /app/docker/init.sql ./docker/init.sql
+COPY --from=builder --chown=nextjs:nodejs /app/seed.cjs ./seed.cjs
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
 
