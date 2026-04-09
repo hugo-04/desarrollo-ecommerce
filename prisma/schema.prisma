@@ -33,9 +33,11 @@ model Category {
   name          String    @unique           // @unique ya crea B-tree index
   slug          String    @unique           // @unique ya crea B-tree index
   image         String    @default("")
+  imageAlt      String?
   color         String    @default("#1C2870")
   subcategories String[]
   count         Int       @default(0)
+  featured      Boolean   @default(false)
 
   products      Product[]
 

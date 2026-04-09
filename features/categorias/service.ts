@@ -9,6 +9,7 @@ export class CategoryService {
   constructor(private readonly repo: ICategoryRepository) {}
 
   getAll(): Promise<CategoryDTO[]>                                          { return this.repo.findAll() }
+  getFeatured(): Promise<CategoryDTO[]>                                     { return this.repo.findFeatured() }
   getPaged(filters: CategoryFilters): Promise<CategoryPaginatedResult>      { return this.repo.findPaged(filters) }
   getById(id: number): Promise<CategoryDTO | null>                          { return this.repo.findById(id) }
   getBySlug(slug: string): Promise<CategoryDTO | null>                      { return this.repo.findBySlug(slug) }

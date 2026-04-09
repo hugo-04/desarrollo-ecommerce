@@ -71,6 +71,10 @@ export interface Category {
   icon: React.ComponentType<{ className?: string }>
   /** Clases Tailwind de gradiente (ej: "from-blue-700 to-blue-900") */
   color: string
+  /** Alt text SEO de la imagen */
+  imageAlt?: string
+  /** Si aparece en la grilla del home */
+  featured: boolean
 }
 
 /** Marca fabricante o distribuidora de productos */

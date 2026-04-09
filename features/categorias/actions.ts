@@ -23,6 +23,11 @@ export async function getCategoriesAction() {
   return getService().getAll()
 }
 
+/** Solo las categorías marcadas como destacadas — para la grilla del home */
+export async function getFeaturedCategoriesAction() {
+  return getService().getFeatured()
+}
+
 /** Versión paginada — solo devuelve la página solicitada.
  *  Usar en el listado admin para no cargar todas las categorías de una vez. */
 export async function getCategoriesPagedAction(filters: CategoryFilters) {

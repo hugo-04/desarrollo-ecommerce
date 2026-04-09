@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { fadeUp, scaleUp, cardHover, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
+import { fadeUp, scaleUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
 import { CATEGORIES_GRID_CONTENT } from "@/lib/data/mock/static-content.mock"
 import { IconArrowRight } from "@/components/icons"
 import { getCategoryIcon } from "@/lib/category-icons"
@@ -102,7 +102,7 @@ export function CategoriesGrid({ categories }: CategoriesGridProps) {
             variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
             className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:gap-6 auto-rows-fr"
           >
-            {categories.slice(0, 5).map((category, index) => (
+            {categories.map((category, index) => (
               <CategoryCard key={category.id} category={category} index={index} />
             ))}
         </motion.div>

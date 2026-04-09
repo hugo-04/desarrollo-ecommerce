@@ -15,6 +15,7 @@ import { PrismaClient } from "@prisma/client"
 
 export interface ICategoryRepository {
   findAll(): Promise<CategoryDTO[]>
+  findFeatured(): Promise<CategoryDTO[]>
   findPaged(filters: CategoryFilters): Promise<CategoryPaginatedResult>
   findById(id: number): Promise<CategoryDTO | null>
   findBySlug(slug: string): Promise<CategoryDTO | null>
@@ -34,6 +35,14 @@ export class DbCategoryRepository implements ICategoryRepository {
    */
   async findAll(): Promise<CategoryDTO[]> {
     return this.db.category.findMany({ orderBy: { count: "desc" } })
+  }
+
+  /** Solo las categorías marcadas como destacadas, ordenadas por count desc */
+  async findFeatured(): Promise<CategoryDTO[]> {
+    return this.db.category.findMany({
+      where:   { featured: true },
+      orderBy: { count: "desc" },
+    })
   }
 
   /**

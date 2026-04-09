@@ -18,10 +18,11 @@
 
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { Info, CheckCircle2, Layers, Hash } from "lucide-react"
+import { Info, CheckCircle2, Layers, Hash, Star } from "lucide-react"
 import { TagsEditor } from "@/components/admin/product-form/TagsEditor"
 import { DeleteDialog } from "@/components/admin/DeleteDialog"
 import { Button } from "@/components/ui/button"
+import { ImageUpload } from "@/components/ui/ImageUpload"
 import { categorySchema, type CatErrors } from "@/features/categorias/schemas"
 import type { CategoryDTO } from "@/features/categorias/types"
 
@@ -71,13 +72,16 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
   const router    = useRouter()
   const isEditing = !!initialData
 
-  const [name,    setName]    = useState(initialData?.name           ?? "")
-  const [slug,    setSlug]    = useState(initialData?.slug           ?? "")
-  const [subcats, setSubcats] = useState<string[]>(initialData?.subcategories ?? [])
-  const [saving,  setSaving]  = useState(false)
-  const [deleting,setDeleting]= useState(false)
-  const [error,   setError]   = useState("")
-  const [errors,  setErrors]  = useState<CatErrors>({})
+  const [name,     setName]     = useState(initialData?.name           ?? "")
+  const [slug,     setSlug]     = useState(initialData?.slug           ?? "")
+  const [subcats,  setSubcats]  = useState<string[]>(initialData?.subcategories ?? [])
+  const [image,    setImage]    = useState(initialData?.image          ?? "")
+  const [imageAlt, setImageAlt] = useState(initialData?.imageAlt      ?? "")
+  const [featured, setFeatured] = useState(initialData?.featured       ?? false)
+  const [saving,   setSaving]   = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [error,    setError]    = useState("")
+  const [errors,   setErrors]   = useState<CatErrors>({})
 
   // Indica si el slug fue editado manualmente (para no sobreescribirlo)
   const slugManual = useRef(isEditing)
@@ -110,9 +114,11 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
       await onSave({
         name:          name.trim(),
         slug:          slug.trim() || slugify(name),
-        image:         initialData?.image ?? "",
+        image,
+        imageAlt:      imageAlt.trim() || undefined,
         color:         initialData?.color || autoColor(name.trim()),
         subcategories: subcats,
+        featured,
       })
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error al guardar")
@@ -216,7 +222,28 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
         </div>
       </div>
 
-      {/* ── Fila 2: Subcategorías ─────────────────────────────────────── */}
+      {/* ── Fila 2: Imagen (opcional) ────────────────────────────────── */}
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="mb-4 flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
+            <Star className="h-3.5 w-3.5 text-[#1C2870]" />
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-slate-700">Imagen de la categoría</h2>
+            <p className="text-[11px] text-slate-400">Opcional — se muestra en la grilla del home si la categoría es destacada</p>
+          </div>
+        </div>
+        <ImageUpload
+          value={image}
+          onChange={setImage}
+          altValue={imageAlt}
+          onAltChange={setImageAlt}
+          label="Imagen representativa"
+          aspect="4/3"
+        />
+      </div>
+
+      {/* ── Fila 3: Subcategorías ─────────────────────────────────────── */}
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <TagsEditor
           label="Subcategorías"
@@ -226,6 +253,34 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
           placeholder="Ej: Aisladores Poliméricos"
           seoHint
         />
+      </div>
+
+      {/* ── Fila 4: Destacada en home ─────────────────────────────────── */}
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <label className="flex cursor-pointer items-start gap-4">
+          <div className="relative mt-0.5">
+            <input
+              type="checkbox"
+              checked={featured}
+              onChange={(e) => setFeatured(e.target.checked)}
+              className="peer sr-only"
+            />
+            <div className="h-5 w-5 rounded border-2 border-slate-300 bg-white transition-colors peer-checked:border-[#1C2870] peer-checked:bg-[#1C2870] flex items-center justify-center">
+              {featured && (
+                <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 12 12">
+                  <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-slate-800">Mostrar en el home</p>
+            <p className="mt-0.5 text-xs text-slate-500">
+              La categoría aparecerá en la grilla de "Nuestras Categorías" de la página principal.
+              Se recomienda tener imagen cargada.
+            </p>
+          </div>
+        </label>
       </div>
 
       {/* ── Barra de acciones ─────────────────────────────────────────── */}

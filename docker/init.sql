@@ -39,13 +39,19 @@ CREATE TABLE IF NOT EXISTS categories (
   name            TEXT NOT NULL UNIQUE,
   slug            TEXT NOT NULL UNIQUE,
   image           TEXT NOT NULL DEFAULT '',
+  "imageAlt"      TEXT,
   color           TEXT NOT NULL DEFAULT '#1C2870',
   subcategories   TEXT[] NOT NULL DEFAULT '{}',
   count           INT NOT NULL DEFAULT 0,
+  featured        BOOLEAN NOT NULL DEFAULT FALSE,
   "createdAt"     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   "updatedAt"     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+-- Migración segura para instancias existentes
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS "imageAlt" TEXT;
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS featured BOOLEAN NOT NULL DEFAULT FALSE;
 CREATE INDEX IF NOT EXISTS categories_count_desc_idx ON categories (count DESC);
+CREATE INDEX IF NOT EXISTS categories_featured_idx   ON categories (featured);
 
 -- ── Marcas ───────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS brands (
