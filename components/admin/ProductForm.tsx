@@ -133,7 +133,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
   async function handleQuickCreateCategory(catName: string, slug: string) {
     const newCat = await createCategoryAction({
-      name: catName, slug, image: "", color: "var(--color-primary)", subcategories: [], count: 0,
+      name: catName, slug, image: "", color: "var(--color-primary)", subcategories: [], count: 0, featured: false,
     })
     setCategoryOptions((prev) => [...prev, { value: newCat.name, label: newCat.name }])
     setSelectedCategory(newCat.name)

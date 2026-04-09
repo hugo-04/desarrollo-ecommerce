@@ -18,6 +18,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 3,
     icon: IconTools,
     color: "from-slate-600 to-slate-800",
+    featured: false,
   },
   {
     id: 2,
@@ -28,6 +29,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 2,
     icon: IconBolt,
     color: "from-red-700 to-red-900",
+    featured: false,
   },
   {
     id: 3,
@@ -38,6 +40,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 3,
     icon: IconTools,
     color: "from-zinc-600 to-zinc-800",
+    featured: false,
   },
   {
     id: 4,
@@ -48,6 +51,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconShield,
     color: "from-emerald-700 to-emerald-900",
+    featured: false,
   },
   {
     id: 5,
@@ -58,6 +62,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 2,
     icon: IconShield,
     color: "from-blue-700 to-blue-900",
+    featured: false,
   },
   {
     id: 6,
@@ -68,6 +73,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 3,
     icon: IconBox,
     color: "from-amber-700 to-amber-900",
+    featured: false,
   },
   {
     id: 7,
@@ -78,6 +84,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 4,
     icon: IconTools,
     color: "from-slate-700 to-slate-900",
+    featured: false,
   },
   {
     id: 8,
@@ -88,6 +95,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconTools,
     color: "from-zinc-700 to-zinc-900",
+    featured: false,
   },
   {
     id: 9,
@@ -98,6 +106,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconLightning,
     color: "from-red-600 to-red-800",
+    featured: false,
   },
   {
     id: 10,
@@ -108,6 +117,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconBox,
     color: "from-blue-600 to-blue-800",
+    featured: false,
   },
   {
     id: 11,
@@ -118,6 +128,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 4,
     icon: IconTools,
     color: "from-violet-700 to-violet-900",
+    featured: false,
   },
   {
     id: 12,
@@ -128,6 +139,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 0,
     icon: IconBox,
     color: "from-slate-600 to-slate-800",
+    featured: false,
   },
   {
     id: 13,
@@ -138,6 +150,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 0,
     icon: IconBox,
     color: "from-amber-600 to-amber-800",
+    featured: false,
   },
   {
     id: 14,
@@ -148,6 +161,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconBox,
     color: "from-slate-500 to-slate-700",
+    featured: false,
   },
   {
     id: 15,
@@ -158,6 +172,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 0,
     icon: IconPanel,
     color: "from-cyan-700 to-cyan-900",
+    featured: false,
   },
   {
     id: 16,
@@ -168,6 +183,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconBolt,
     color: "from-emerald-600 to-emerald-800",
+    featured: false,
   },
   {
     id: 17,
@@ -178,6 +194,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 0,
     icon: IconTools,
     color: "from-amber-700 to-orange-900",
+    featured: false,
   },
   {
     id: 18,
@@ -188,6 +205,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 2,
     icon: IconBox,
     color: "from-slate-600 to-zinc-800",
+    featured: false,
   },
   {
     id: 19,
@@ -198,6 +216,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconLightning,
     color: "from-orange-600 to-orange-800",
+    featured: false,
   },
   {
     id: 20,
@@ -208,6 +227,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconBox,
     color: "from-zinc-600 to-zinc-800",
+    featured: false,
   },
   {
     id: 21,
@@ -218,6 +238,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconBox,
     color: "from-slate-500 to-slate-700",
+    featured: false,
   },
   {
     id: 22,
@@ -228,6 +249,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 0,
     icon: IconLightning,
     color: "from-amber-500 to-orange-700",
+    featured: false,
   },
   {
     id: 23,
@@ -238,6 +260,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 4,
     icon: IconTools,
     color: "from-slate-700 to-slate-900",
+    featured: false,
   },
   {
     id: 24,
@@ -248,6 +271,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconBolt,
     color: "from-blue-700 to-blue-900",
+    featured: false,
   },
   {
     id: 25,
@@ -258,6 +282,7 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 1,
     icon: IconBolt,
     color: "from-slate-600 to-slate-800",
+    featured: false,
   },
   {
     id: 26,
@@ -268,5 +293,6 @@ export const MOCK_CATEGORIES: Category[] = [
     count: 0,
     icon: IconPanel,
     color: "from-slate-700 to-blue-900",
+    featured: false,
   },
 ]
