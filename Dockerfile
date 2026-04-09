@@ -42,7 +42,7 @@ RUN npm run build
 # ── Etapa 3: Runner (imagen final mínima) ────────────────────
 FROM node:20-alpine AS runner
 
-RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache postgresql-client openssl
 
 WORKDIR /app
 
