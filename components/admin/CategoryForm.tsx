@@ -129,8 +129,10 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
             folder:  "categorias/imagenes",
           }),
         })
-        const data = await res.json()
-        if (res.ok) { finalImage = data.url; setImage(data.url) }
+        let data: Record<string, unknown> = {}
+        try { data = await res.json() } catch { /* respuesta no-JSON (502, nginx error, etc.) */ }
+        if (!res.ok) throw new Error((data.error as string) ?? `Error al finalizar subida (${res.status})`)
+        if (res.ok) { finalImage = data.url as string; setImage(data.url as string) }
         setImageTempKey(null)
       }
 

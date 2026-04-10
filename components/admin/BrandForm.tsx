@@ -73,9 +73,10 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
           headers: { "Content-Type": "application/json" },
           body:    JSON.stringify({ tempKey: logoTempKey, seoName: logoAlt.trim(), folder: "marcas/logos" }),
         })
-        const data = await res.json()
+        let data: Record<string, unknown> = {}
+        try { data = await res.json() } catch { /* respuesta no-JSON (502, nginx error, etc.) */ }
         // 409 = ya fue finalizado (doble submit) — continuar con URL actual
-        if (!res.ok && res.status !== 409) throw new Error(data.error ?? "Error al finalizar subida")
+        if (!res.ok && res.status !== 409) throw new Error((data.error as string) ?? `Error al finalizar subida (${res.status})`)
         if (res.ok) { finalLogo = data.url as string; setLogo(finalLogo) }
         setLogoTempKey(null)
       }

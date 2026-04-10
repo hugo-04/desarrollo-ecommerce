@@ -47,8 +47,9 @@ export function PdfUploader({ label, value, onChange, onTempKey, onSeoNameChange
     fd.append("folder", "productos/fichas")
     try {
       const res  = await fetch("/api/upload", { method: "POST", body: fd })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
+      let data: Record<string, unknown> = {}
+      try { data = await res.json() } catch { /* respuesta no-JSON (502, nginx error, etc.) */ }
+      if (!res.ok) throw new Error((data.error as string) ?? `Error al subir (${res.status})`)
       onChange(data.url)
       if (data.tempKey) onTempKey?.(data.tempKey)
     } catch (e: unknown) {
