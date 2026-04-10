@@ -65,11 +65,12 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Prisma CLI copiado del builder (engines ya compilados para Linux, ownership correcto)
-# Se llama via "node node_modules/prisma/build/index.js" para que __dirname apunte
-# al directorio correcto donde viven los archivos .wasm
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma  ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+# Prisma CLI instalado en directorio aislado con todas sus dependencias
+# transitivas (effect, c12, etc.) resueltas por npm.
+# --prefix evita conflicto con el standalone build.
+# Se hace como root antes del USER switch; chown al final entrega ownership a nextjs.
+RUN npm install --prefix /prisma-cli prisma@7 --no-audit --no-fund && \
+    chown -R nextjs:nodejs /prisma-cli
 
 # Migraciones
 COPY --from=builder --chown=nextjs:nodejs /app/prisma/schema.prisma ./prisma/schema.prisma
