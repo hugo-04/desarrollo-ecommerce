@@ -51,7 +51,7 @@ export function ProductTabs({ product, activeTab, onTabChange }: ProductTabsProp
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-slate-200 shadow-sm max-w-4xl">
-          {product.technicalSpecs.map((spec, index) => (
+          {(product.technicalSpecs ?? []).map((spec, index) => (
             <div
               key={index}
               className={`flex items-center justify-between px-6 py-4 text-sm transition-colors hover:bg-slate-100/50 ${

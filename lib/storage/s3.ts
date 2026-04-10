@@ -59,15 +59,19 @@ export async function uploadToS3(
 ): Promise<string> {
   const client = createS3Client()
 
-  await client.send(
-    new PutObjectCommand({
-      Bucket:      process.env.AWS_S3_BUCKET!,
-      Key:         key,
-      Body:        buffer,
-      ContentType: contentType,
-      // R2 no soporta ACLs — el acceso público se habilita en el dashboard de Cloudflare.
-    }),
-  )
+  try {
+    await client.send(
+      new PutObjectCommand({
+        Bucket:      process.env.AWS_S3_BUCKET!,
+        Key:         key,
+        Body:        buffer,
+        ContentType: contentType,
+        // R2 no soporta ACLs — el acceso público se habilita en el dashboard de Cloudflare.
+      }),
+    )
+  } catch (err) {
+    throw new Error(`Error al subir archivo a S3 (${key}): ${err instanceof Error ? err.message : String(err)}`)
+  }
 
   // CDN_URL tiene prioridad sobre AWS_S3_PUBLIC_URL para cacheo de edge
   const baseUrl =
@@ -84,19 +88,23 @@ export async function uploadToS3(
  */
 export async function moveS3Object(sourceKey: string, destKey: string): Promise<void> {
   const client = createS3Client()
-  await client.send(
-    new CopyObjectCommand({
-      Bucket:     process.env.AWS_S3_BUCKET!,
-      CopySource: `${process.env.AWS_S3_BUCKET}/${sourceKey}`,
-      Key:        destKey,
-    }),
-  )
-  await client.send(
-    new DeleteObjectCommand({
-      Bucket: process.env.AWS_S3_BUCKET!,
-      Key:    sourceKey,
-    }),
-  )
+  try {
+    await client.send(
+      new CopyObjectCommand({
+        Bucket:     process.env.AWS_S3_BUCKET!,
+        CopySource: `${process.env.AWS_S3_BUCKET}/${sourceKey}`,
+        Key:        destKey,
+      }),
+    )
+    await client.send(
+      new DeleteObjectCommand({
+        Bucket: process.env.AWS_S3_BUCKET!,
+        Key:    sourceKey,
+      }),
+    )
+  } catch (err) {
+    throw new Error(`Error al mover archivo S3 (${sourceKey} → ${destKey}): ${err instanceof Error ? err.message : String(err)}`)
+  }
 }
 
 /** Devuelve true si las variables de entorno de S3 están configuradas */

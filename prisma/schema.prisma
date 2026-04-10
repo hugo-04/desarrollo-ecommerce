@@ -127,10 +127,10 @@ model Product {
   bestSeller      Boolean  @default(false)
   rating          Float    @default(4.5)
 
-  category        Category @relation(fields: [categoryId], references: [id])
+  category        Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   categoryId      Int
 
-  brand           Brand    @relation(fields: [brandId], references: [id])
+  brand           Brand    @relation(fields: [brandId], references: [id], onDelete: Restrict)
   brandId         Int
 
   technicalSpecs  Json?

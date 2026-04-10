@@ -174,10 +174,16 @@ export class DbProductRepository implements IProductRepository {
     const { brandId, categoryId } = await this.resolveRelations(data.brand, data.category)
     const { brand: _b, category: _c, technicalSpecs, ...rest } = data
 
-    const created = await this.db.product.create({
-      data: { ...rest, brandId, categoryId, technicalSpecs: (technicalSpecs ?? []) as object[] },
-      include: { category: true, brand: true },
-    })
+    const [created] = await this.db.$transaction([
+      this.db.product.create({
+        data: { ...rest, brandId, categoryId, technicalSpecs: (technicalSpecs ?? []) as object[] },
+        include: { category: true, brand: true },
+      }),
+      this.db.category.update({
+        where: { id: categoryId },
+        data:  { count: { increment: 1 } },
+      }),
+    ])
     return this.mapProduct(created)
   }
 
@@ -214,6 +220,15 @@ export class DbProductRepository implements IProductRepository {
   }
 
   async delete(id: number): Promise<void> {
-    await this.db.product.delete({ where: { id } })
+    const product = await this.db.product.findUnique({ where: { id }, select: { categoryId: true } })
+    if (!product) throw new Error(`Producto con id ${id} no encontrado`)
+
+    await this.db.$transaction([
+      this.db.product.delete({ where: { id } }),
+      this.db.category.update({
+        where: { id: product.categoryId },
+        data:  { count: { decrement: 1 } },
+      }),
+    ])
   }
 }

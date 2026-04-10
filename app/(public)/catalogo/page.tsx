@@ -2,8 +2,12 @@ import { Suspense } from "react"
 import type { Metadata } from "next"
 import { SEO, generateCategoryMeta } from "@/lib/seo"
 import { CatalogoView } from "@/components/views/CatalogoView"
+import { cache } from "react"
 import { getCategoriesAction } from "@/features/categorias/actions"
 import { getBrandNamesAction } from "@/features/marcas/actions"
+
+// cache() deduplica llamadas idénticas dentro del mismo request (generateMetadata + component)
+const getCategories = cache(getCategoriesAction)
 
 export const dynamic = "force-dynamic"
 
@@ -15,7 +19,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const { categoria } = await searchParams
   if (!categoria) return SEO.catalogo
 
-  const cats = await getCategoriesAction()
+  const cats = await getCategories()
   const cat  = cats.find((c) => c.name === categoria)
   return cat ? generateCategoryMeta(cat) : SEO.catalogo
 }
@@ -25,7 +29,7 @@ export default async function CatalogoPage({ searchParams }: PageProps) {
 
   // Cargar filtros en el servidor — llegan con el HTML, sin espera cliente
   const [categories, brandNames] = await Promise.all([
-    getCategoriesAction(),
+    getCategories(),
     getBrandNamesAction(),
   ])
 

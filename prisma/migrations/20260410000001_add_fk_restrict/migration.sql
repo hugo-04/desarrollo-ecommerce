@@ -1,0 +1,3 @@
+-- Prisma ya aplica RESTRICT por defecto en PostgreSQL, esta migración
+-- fuerza la declaración explícita para que el historial quede registrado.
+-- No requiere cambios en la DB (comportamiento idéntico al default).
