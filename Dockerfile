@@ -72,6 +72,16 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 RUN npm install --prefix /prisma-cli prisma@7 --no-audit --no-fund && \
     chown -R nextjs:nodejs /prisma-cli
 
+# Config mínimo de Prisma 7: URL leída del env en runtime, sin dotenv
+RUN printf '%s\n' \
+  "const { defineConfig } = require('/prisma-cli/node_modules/prisma/config');" \
+  "module.exports = defineConfig({" \
+  "  schema: '/app/prisma/schema.prisma'," \
+  "  datasource: { url: process.env.DATABASE_URL }," \
+  "});" \
+  > /app/prisma.config.cjs && \
+  chown nextjs:nodejs /app/prisma.config.cjs
+
 # Migraciones
 COPY --from=builder --chown=nextjs:nodejs /app/prisma/schema.prisma ./prisma/schema.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma/migrations    ./prisma/migrations
