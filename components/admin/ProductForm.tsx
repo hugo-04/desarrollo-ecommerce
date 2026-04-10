@@ -149,10 +149,11 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       headers: { "Content-Type": "application/json" },
       body:    JSON.stringify({ tempKey, seoName, folder }),
     })
-    const data = await res.json()
+    let data: Record<string, unknown> = {}
+    try { data = await res.json() } catch { /* respuesta no-JSON (502, nginx error, etc.) */ }
     // 409 = archivo ya fue finalizado (doble submit) — ignorar, usar URL actual
     if (res.status === 409) return null
-    if (!res.ok) throw new Error(data.error ?? "Error al finalizar subida")
+    if (!res.ok) throw new Error((data.error as string) ?? `Error al finalizar subida (${res.status})`)
     return data.url as string
   }
 

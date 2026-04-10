@@ -43,7 +43,7 @@ function CategoryCard({ category, index }: { category: CategoryDTO; index: numbe
             </div>
             <h3 className={`mb-2 font-black text-white ${isFeatured ? 'text-3xl lg:text-4xl' : 'text-xl'}`}>{category.name}</h3>
             <p className={`text-white/70 ${isFeatured ? 'mb-6 max-w-sm text-sm' : 'mb-4 text-xs'}`}>
-              {category.subcategories.slice(0, 3).join(" · ")}
+              {(category.subcategories ?? []).slice(0, 3).join(" · ")}
             </p>
             <div className="flex items-center gap-2 text-xs font-semibold text-red-400 transition-all group-hover:gap-3">
               <span>Ver productos</span>
