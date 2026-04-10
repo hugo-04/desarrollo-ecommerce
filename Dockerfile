@@ -46,6 +46,13 @@ RUN npx esbuild prisma/seed.ts \
       --external:@prisma/client \
       --outfile=seed.cjs
 
+# Compila prisma.config.ts a JS para que migrate deploy funcione en el runner sin tsx
+RUN npx esbuild prisma.config.ts \
+      --bundle \
+      --platform=node \
+      --packages=external \
+      --outfile=prisma.config.cjs
+
 # ── Etapa 3: Runner (imagen final mínima) ────────────────────
 FROM node:20-alpine AS runner
 
@@ -68,8 +75,13 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Script de inicialización SQL, seed compilado y entrypoint
-COPY --from=builder /app/docker/init.sql ./docker/init.sql
+# Prisma CLI + migraciones (para migrate deploy automático en cada deploy)
+RUN npm install --global prisma@7 --ignore-scripts
+COPY --from=builder /app/prisma/schema.prisma  ./prisma/schema.prisma
+COPY --from=builder /app/prisma/migrations     ./prisma/migrations
+COPY --from=builder /app/prisma.config.cjs     ./prisma.config.cjs
+
+# Seed compilado y entrypoint
 COPY --from=builder --chown=nextjs:nodejs /app/seed.cjs ./seed.cjs
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh

@@ -48,8 +48,9 @@ CREATE TABLE IF NOT EXISTS categories (
   "updatedAt"     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 -- Migración segura para instancias existentes
-ALTER TABLE categories ADD COLUMN IF NOT EXISTS "imageAlt" TEXT;
-ALTER TABLE categories ADD COLUMN IF NOT EXISTS featured BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS "imageAlt"    TEXT;
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS featured      BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS description   TEXT    NOT NULL DEFAULT '';
 CREATE INDEX IF NOT EXISTS categories_count_desc_idx ON categories (count DESC);
 CREATE INDEX IF NOT EXISTS categories_featured_idx   ON categories (featured);
 

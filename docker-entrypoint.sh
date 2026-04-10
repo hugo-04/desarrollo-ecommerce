@@ -10,9 +10,9 @@ done
 
 echo "✅ Base de datos lista"
 
-echo "🔧 Creando/actualizando tablas..."
-psql "$DATABASE_URL" -f /app/docker/init.sql -v ON_ERROR_STOP=1
-echo "✅ Tablas sincronizadas"
+echo "🔧 Aplicando migraciones pendientes..."
+prisma migrate deploy --config prisma.config.cjs
+echo "✅ Migraciones aplicadas"
 
 # Ejecutar seed solo si la BD está vacía (primer deploy)
 BRAND_COUNT=$(psql "$DATABASE_URL" -t -c "SELECT COUNT(*) FROM brands;" | tr -d ' \n')
