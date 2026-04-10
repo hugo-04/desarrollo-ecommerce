@@ -13,13 +13,10 @@
 # ── Etapa 1: Dependencias ────────────────────────────────────
 FROM node:20-alpine AS deps
 
-# postgresql-client para pg_isready y psql en el entrypoint
-RUN apk add --no-cache libc6-compat postgresql-client
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-# Copiar SOLO los archivos de dependencias primero
-# Docker cachea esta capa hasta que package.json o el lockfile cambien
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma
 
@@ -75,11 +72,11 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Prisma CLI + migraciones (para migrate deploy automático en cada deploy)
+# Prisma CLI + migraciones (migrate deploy automático en cada deploy)
 RUN npm install --global prisma@7 --ignore-scripts
-COPY --from=builder /app/prisma/schema.prisma  ./prisma/schema.prisma
-COPY --from=builder /app/prisma/migrations     ./prisma/migrations
-COPY --from=builder /app/prisma.config.cjs     ./prisma.config.cjs
+COPY --from=builder /app/prisma/schema.prisma ./prisma/schema.prisma
+COPY --from=builder /app/prisma/migrations    ./prisma/migrations
+COPY --from=builder /app/prisma.config.cjs    ./prisma.config.cjs
 
 # Seed compilado y entrypoint
 COPY --from=builder --chown=nextjs:nodejs /app/seed.cjs ./seed.cjs
