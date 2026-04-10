@@ -43,13 +43,6 @@ RUN npx esbuild prisma/seed.ts \
       --external:@prisma/client \
       --outfile=seed.cjs
 
-# Compila prisma.config.ts a JS para que migrate deploy funcione en el runner sin tsx
-RUN npx esbuild prisma.config.ts \
-      --bundle \
-      --platform=node \
-      --packages=external \
-      --outfile=prisma.config.cjs
-
 # ── Etapa 3: Runner (imagen final mínima) ────────────────────
 FROM node:22-alpine AS runner
 
@@ -76,7 +69,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 RUN npm install --global prisma@7 --ignore-scripts --no-audit --no-fund
 COPY --from=builder /app/prisma/schema.prisma ./prisma/schema.prisma
 COPY --from=builder /app/prisma/migrations    ./prisma/migrations
-COPY --from=builder /app/prisma.config.cjs    ./prisma.config.cjs
 
 # Seed compilado y entrypoint
 COPY --from=builder --chown=nextjs:nodejs /app/seed.cjs ./seed.cjs
