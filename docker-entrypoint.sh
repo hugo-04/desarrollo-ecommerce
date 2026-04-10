@@ -11,7 +11,7 @@ done
 echo "✅ Base de datos lista"
 
 echo "🔧 Aplicando migraciones pendientes..."
-/app/node_modules/.bin/prisma migrate deploy --schema=/app/prisma/schema.prisma --url "$DATABASE_URL"
+node /app/node_modules/prisma/build/index.js migrate deploy --schema=/app/prisma/schema.prisma --url "$DATABASE_URL"
 echo "✅ Migraciones aplicadas"
 
 # Ejecutar seed solo si la BD está vacía (primer deploy)
