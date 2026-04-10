@@ -18,8 +18,6 @@ import { CatalogToolbar } from "@/components/catalog/CatalogToolbar"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useCatalogFilters } from "@/features/catalogo/hooks"
 import { useProducts } from "@/features/productos/hooks"
-import { useCategories } from "@/features/categorias/hooks"
-import { useBrandNames } from "@/features/marcas/hooks"
 import {
   IconChevronRight, IconSearch,
   IconStar, IconEye,
@@ -29,6 +27,7 @@ import {
   PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis,
 } from "@/components/ui/pagination"
 import type { ProductFilters } from "@/features/productos/types"
+import type { CategoryDTO } from "@/features/categorias/types"
 
 const ITEMS_PER_PAGE = 6
 
@@ -36,12 +35,16 @@ interface CatalogoViewProps {
   initialCategory?: string
   initialQuery?: string
   initialBestSellers?: boolean
+  initialCategories: CategoryDTO[]
+  initialBrands: string[]
 }
 
 export function CatalogoView({
   initialCategory,
   initialQuery = "",
   initialBestSellers = false,
+  initialCategories,
+  initialBrands,
 }: CatalogoViewProps) {
   const [filterOpen, setFilterOpen] = useState(false)
   const {
@@ -72,10 +75,11 @@ export function CatalogoView({
     query: searchQuery,
   }
 
-  // Datos desde API routes internas
+  // Productos desde API (paginado + filtrado dinámico)
+  // Categorías y marcas vienen del servidor — disponibles sin espera
   const { products, total, totalPages, loading, fetching } = useProducts(productFilters)
-  const { categories } = useCategories()
-  const availableBrands = useBrandNames()
+  const categories      = initialCategories
+  const availableBrands = initialBrands
 
   const selectedCat = selectedCategories.length === 1
     ? categories.find((c) => c.name === selectedCategories[0]) ?? null
