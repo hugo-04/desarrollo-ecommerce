@@ -9,7 +9,7 @@
  */
 
 import type { CategoryDTO, CreateCategoryDTO, UpdateCategoryDTO, CategoryFilters, CategoryPaginatedResult } from "./types"
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, Prisma } from "@prisma/client"
 
 // ─── Interface ─────────────────────────────────────────────────────────────────
 
@@ -84,14 +84,32 @@ export class DbCategoryRepository implements ICategoryRepository {
   }
 
   async create(data: CreateCategoryDTO): Promise<CategoryDTO> {
-    return this.db.category.create({ data })
+    try {
+      return await this.db.category.create({ data })
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
+        throw new Error(`Ya existe una categoría con ese nombre o slug`)
+      throw e
+    }
   }
 
   async update(id: number, data: UpdateCategoryDTO): Promise<CategoryDTO> {
-    return this.db.category.update({ where: { id }, data })
+    try {
+      return await this.db.category.update({ where: { id }, data })
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
+        throw new Error(`Ya existe una categoría con ese nombre o slug`)
+      throw e
+    }
   }
 
   async delete(id: number): Promise<void> {
-    await this.db.category.delete({ where: { id } })
+    try {
+      await this.db.category.delete({ where: { id } })
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2003")
+        throw new Error(`No se puede eliminar: la categoría tiene productos asociados`)
+      throw e
+    }
   }
 }

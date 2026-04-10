@@ -88,7 +88,9 @@ export function useRelatedProducts(productId: number, categoryName: string) {
 
   useEffect(() => {
     if (!categoryName) return
-    getRelatedProductsAction(productId, categoryName).then(setRelated).catch(() => {})
+    getRelatedProductsAction(productId, categoryName)
+      .then(setRelated)
+      .catch((err: unknown) => console.error("[useRelatedProducts]", err))
   }, [productId, categoryName])
 
   return related

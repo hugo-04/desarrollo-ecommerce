@@ -19,7 +19,9 @@ export default function EditarCategoriaPage() {
   const [category, setCategory] = useState<CategoryDTO | null>(null)
 
   useEffect(() => {
-    getCategoryByIdAction(Number(id)).then((c) => {
+    const numId = parseInt(id, 10)
+    if (isNaN(numId) || numId < 1) { router.replace("/categorias"); return }
+    getCategoryByIdAction(numId).then((c) => {
       if (!c) router.replace("/categorias")
       else setCategory(c)
     })

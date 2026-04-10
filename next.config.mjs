@@ -11,8 +11,6 @@ const nextConfig = {
     serverActions: {
       allowedOrigins: [
         "localhost:3000",
-        "*.brs.devtunnels.ms",
-        "*.devtunnels.ms",
       ],
     },
   },

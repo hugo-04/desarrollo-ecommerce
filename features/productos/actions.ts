@@ -49,7 +49,9 @@ export async function createProductAction(data: CreateProductDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().createProduct(data)
-  revalidatePath("/", "layout")
+  revalidatePath("/catalogo")
+  revalidatePath("/producto/[id]", "page")
+  revalidatePath("/")
   return result
 }
 
@@ -57,7 +59,9 @@ export async function updateProductAction(id: number, data: UpdateProductDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().updateProduct(id, data)
-  revalidatePath("/", "layout")
+  revalidatePath("/catalogo")
+  revalidatePath("/producto/[id]", "page")
+  revalidatePath("/")
   return result
 }
 
@@ -65,6 +69,8 @@ export async function deleteProductAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().deleteProduct(id)
-  revalidatePath("/", "layout")
+  revalidatePath("/catalogo")
+  revalidatePath("/producto/[id]", "page")
+  revalidatePath("/")
   return result
 }

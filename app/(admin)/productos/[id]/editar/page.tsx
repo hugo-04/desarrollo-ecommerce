@@ -18,9 +18,11 @@ interface PageProps {
 
 export default async function EditarProductoPage({ params }: PageProps) {
   const { id } = await params
+  const numId = parseInt(id, 10)
+  if (!id || isNaN(numId) || numId < 1) notFound()
 
   const [product, categories, brands] = await Promise.all([
-    getProductAction(Number(id)),
+    getProductAction(numId),
     getCategoriesAction(),
     getBrandsAction(),
   ])

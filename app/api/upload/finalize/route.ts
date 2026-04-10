@@ -11,8 +11,15 @@
  */
 
 import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
 import { getSession } from "@/lib/auth/session"
 import { moveS3Object, isS3Configured, UPLOAD_FOLDERS } from "@/lib/storage/s3"
+
+const finalizeSchema = z.object({
+  tempKey: z.string().startsWith("temp/"),
+  seoName: z.string().max(200).optional(),
+  folder:  z.enum(UPLOAD_FOLDERS).optional(),
+})
 
 function toSlug(text: string): string {
   return text
@@ -34,20 +41,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { tempKey, seoName, folder } = await request.json() as {
-      tempKey: string
-      seoName?: string
-      folder?: string
+    const parsed = finalizeSchema.safeParse(await request.json())
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Datos inválidos", details: parsed.error.flatten() }, { status: 400 })
     }
+    const { tempKey, seoName, folder } = parsed.data
 
-    if (!tempKey?.startsWith("temp/")) {
-      return NextResponse.json({ error: "tempKey inválido" }, { status: 400 })
-    }
-
-    // Validar carpeta destino
-    const destFolder = (UPLOAD_FOLDERS as readonly string[]).includes(folder ?? "")
-      ? folder!
-      : "productos/imagenes"
+    const destFolder = folder ?? "productos/imagenes"
 
     // Extraer extensión del archivo temporal
     const ext      = tempKey.split(".").pop()?.toLowerCase() ?? "bin"

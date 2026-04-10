@@ -19,7 +19,9 @@ export default function EditarMarcaPage() {
   const [brand, setBrand] = useState<Brand | null>(null)
 
   useEffect(() => {
-    getBrandByIdAction(Number(id)).then((b) => {
+    const numId = parseInt(id, 10)
+    if (isNaN(numId) || numId < 1) { router.replace("/marcas"); return }
+    getBrandByIdAction(numId).then((b) => {
       if (!b) router.replace("/marcas")
       else setBrand(b)
     })

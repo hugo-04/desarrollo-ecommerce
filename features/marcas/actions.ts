@@ -48,7 +48,8 @@ export async function createBrandAction(data: CreateBrandDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().create(data)
-  revalidatePath("/", "layout")
+  revalidatePath("/catalogo")
+  revalidatePath("/")
   return result
 }
 
@@ -56,7 +57,8 @@ export async function updateBrandAction(id: number, data: UpdateBrandDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().update(id, data)
-  revalidatePath("/", "layout")
+  revalidatePath("/catalogo")
+  revalidatePath("/")
   return result
 }
 
@@ -64,6 +66,7 @@ export async function deleteBrandAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
   const result = await getService().delete(id)
-  revalidatePath("/", "layout")
+  revalidatePath("/catalogo")
+  revalidatePath("/")
   return result
 }
