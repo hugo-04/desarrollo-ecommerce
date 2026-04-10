@@ -65,10 +65,14 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Prisma CLI + migraciones (migrate deploy automático en cada deploy)
-RUN npm install --global prisma@7 --ignore-scripts --no-audit --no-fund
-COPY --from=builder /app/prisma/schema.prisma ./prisma/schema.prisma
-COPY --from=builder /app/prisma/migrations    ./prisma/migrations
+# Prisma CLI copiado del builder (engines ya compilados para Linux, ownership correcto)
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.bin/prisma      ./node_modules/.bin/prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma           ./node_modules/prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma          ./node_modules/@prisma
+
+# Migraciones
+COPY --from=builder --chown=nextjs:nodejs /app/prisma/schema.prisma ./prisma/schema.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/prisma/migrations    ./prisma/migrations
 
 # Seed compilado y entrypoint
 COPY --from=builder --chown=nextjs:nodejs /app/seed.cjs ./seed.cjs
