@@ -13,6 +13,14 @@ node_modules
 .env.*
 !.env.example
 
+# Docker
+Dockerfile
+docker-compose*
+
+# Documentación
+*.md
+LICENSE
+
 # Archivos de desarrollo
 *.log
 .DS_Store
