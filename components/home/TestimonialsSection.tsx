@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { fadeUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
-import { testimonials } from "@/lib/data"
+import { MOCK_TESTIMONIALS as testimonials } from "@/lib/data/mock/testimonials.mock"
 import { IconQuote } from "@/components/icons"
 
 const ACCENT_COLORS = [

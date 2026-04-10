@@ -64,6 +64,8 @@ export interface Category {
   slug: string
   /** URL de imagen representativa */
   image: string
+  /** Meta description SEO (~155 chars) mostrada en resultados de Google */
+  description?: string
   subcategories: string[]
   /** Cantidad de productos en esta categoría */
   count: number

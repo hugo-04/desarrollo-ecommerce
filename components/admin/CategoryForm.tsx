@@ -72,9 +72,10 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
   const router    = useRouter()
   const isEditing = !!initialData
 
-  const [name,     setName]     = useState(initialData?.name           ?? "")
-  const [slug,     setSlug]     = useState(initialData?.slug           ?? "")
-  const [subcats,  setSubcats]  = useState<string[]>(initialData?.subcategories ?? [])
+  const [name,        setName]        = useState(initialData?.name           ?? "")
+  const [slug,        setSlug]        = useState(initialData?.slug           ?? "")
+  const [description, setDescription] = useState(initialData?.description   ?? "")
+  const [subcats,     setSubcats]     = useState<string[]>(initialData?.subcategories ?? [])
   const [image,        setImage]        = useState(initialData?.image    ?? "")
   const [imageAlt,     setImageAlt]     = useState(initialData?.imageAlt ?? "")
   const [imageTempKey, setImageTempKey] = useState<string | null>(null)
@@ -98,11 +99,15 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
     setSaving(true)
     setError("")
 
-    const result = categorySchema.safeParse({ name: name.trim(), slug: slug.trim() })
+    const result = categorySchema.safeParse({
+      name:        name.trim(),
+      slug:        slug.trim(),
+      description: description.trim() || undefined,
+    })
     if (!result.success) {
       const errs: CatErrors = {}
       for (const issue of result.error.issues) {
-        const k = issue.path[0] as "name" | "slug"
+        const k = issue.path[0] as keyof CatErrors
         if (!errs[k]) errs[k] = issue.message
       }
       setErrors(errs)
@@ -132,6 +137,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
       await onSave({
         name:          name.trim(),
         slug:          slug.trim() || slugify(name),
+        description:   description.trim() || undefined,
         image:         finalImage,
         imageAlt:      imageAlt.trim() || undefined,
         color:         initialData?.color || autoColor(name.trim()),
@@ -237,6 +243,61 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
               </p>
             ) : null}
           </div>
+        </div>
+
+        {/* Descripción SEO */}
+        <div className="mt-4">
+          <div className="mb-1.5 flex items-center justify-between">
+            <label className="text-xs font-semibold text-slate-600">
+              Descripción SEO
+              <span className="ml-1.5 text-[11px] font-normal text-slate-400">(meta description para Google)</span>
+            </label>
+            <span className={`text-[11px] tabular-nums ${
+              description.length === 0      ? "text-slate-400"
+              : description.length < 100   ? "text-amber-500"
+              : description.length <= 155  ? "text-emerald-600"
+              :                              "text-red-500"
+            }`}>
+              {description.length} / 155
+            </span>
+          </div>
+          <textarea
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value)
+              if (errors.description) setErrors((p) => ({ ...p, description: undefined }))
+            }}
+            placeholder="Ej: Grapas de anclaje tipo pistola, suspensión y preformadas para conductores AAAC y cable ABC en líneas de alta y media tensión."
+            rows={3}
+            maxLength={200}
+            className={`${inputClass} resize-none ${errors.description ? "border-red-300 focus:border-red-400 focus:ring-red-100" : ""}`}
+          />
+          {errors.description ? (
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-red-500">
+              <Info className="h-3 w-3 shrink-0" />
+              {errors.description}
+            </p>
+          ) : description.length === 0 ? (
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-slate-400">
+              <Info className="h-3 w-3 shrink-0" />
+              Aparece bajo el título en resultados de Google. Objetivo: 130–155 caracteres.
+            </p>
+          ) : description.length < 100 ? (
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-amber-600">
+              <Info className="h-3 w-3 shrink-0" />
+              Muy corta — ampliá con especificaciones técnicas o contexto de uso.
+            </p>
+          ) : description.length <= 155 ? (
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-emerald-600">
+              <CheckCircle2 className="h-3 w-3 shrink-0" />
+              Longitud ideal para Google ({description.length} chars)
+            </p>
+          ) : (
+            <p className="mt-1 flex items-center gap-1 text-[11px] text-red-500">
+              <Info className="h-3 w-3 shrink-0" />
+              Demasiado larga — Google la cortará en {description.length - 155} caracteres.
+            </p>
+          )}
         </div>
       </div>
 

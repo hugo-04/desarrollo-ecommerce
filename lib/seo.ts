@@ -179,3 +179,82 @@ export const SEO = {
   } satisfies Metadata,
 
 } as const
+
+// ─── Metadata dinámica por categoría ─────────────────────────────────────────
+//
+// La descripción viene del campo `description` de la DB (tabla `categories`).
+// Se carga vía `getCategoriesAction()` en el Server Component / generateMetadata.
+// Fallback: descripción genérica con el nombre de la categoría.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Genera metadata Next.js para una página de categoría.
+ * La `description` se toma del campo `Category.description` almacenado en DB.
+ *
+ * @example
+ * // app/(public)/catalogo/page.tsx
+ * export async function generateMetadata({ searchParams }) {
+ *   const { categoria } = await searchParams
+ *   if (!categoria) return SEO.catalogo
+ *   const cats = await getCategoriesAction()
+ *   const cat  = cats.find(c => c.name === categoria)
+ *   return cat ? generateCategoryMeta(cat) : SEO.catalogo
+ * }
+ */
+export function generateCategoryMeta(category: {
+  name: string
+  slug: string
+  description?: string | null
+}): Metadata {
+  const title       = `${category.name} | ${SITE_NAME}`
+  const description = (category.description?.trim())
+    || `${category.name} — ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Stock permanente en Lima, Perú. Cotización en 24 h.`
+  const url         = `/catalogo?categoria=${encodeURIComponent(category.name)}`
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      ...defaultOG,
+      url,
+      title,
+      description,
+    },
+    twitter: {
+      card:        "summary_large_image",
+      title,
+      description,
+    },
+  }
+}
+
+/**
+ * JSON-LD Schema.org para una página de categoría (ItemList).
+ * Insertar en la página con:
+ *   <script type="application/ld+json">{JSON.stringify(buildCategorySchema(cat, products))}</script>
+ */
+export function buildCategorySchema(
+  category: { name: string; slug: string; description?: string | null },
+  productNames: string[] = [],
+) {
+  return {
+    "@context":   "https://schema.org",
+    "@type":      "CollectionPage",
+    name:         category.name,
+    description:  category.description ?? undefined,
+    url:          `${SITE_URL}/catalogo?categoria=${encodeURIComponent(category.name)}`,
+    provider:     { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    ...(productNames.length > 0 && {
+      mainEntity: {
+        "@type":           "ItemList",
+        numberOfItems:     productNames.length,
+        itemListElement:   productNames.map((name, i) => ({
+          "@type":    "ListItem",
+          position:  i + 1,
+          name,
+        })),
+      },
+    }),
+  }
+}

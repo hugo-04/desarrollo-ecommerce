@@ -3,13 +3,12 @@
 // ============================================================
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // ──────────────────────────────────────────────────────────
@@ -34,6 +33,7 @@ model Category {
   slug          String    @unique           // @unique ya crea B-tree index
   image         String    @default("")
   imageAlt      String?
+  description   String    @default("")
   color         String    @default("#1C2870")
   subcategories String[]
   count         Int       @default(0)

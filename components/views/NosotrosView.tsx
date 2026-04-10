@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { clients } from "@/lib/data"
+import { MOCK_CLIENTS as clients } from "@/lib/data/mock/clients.mock"
 import { WA } from "@/lib/contact"
 import {
   IconShield, IconTruck, IconClock, IconHeadphones, IconBuilding,
