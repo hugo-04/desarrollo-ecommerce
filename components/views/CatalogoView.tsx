@@ -73,7 +73,7 @@ export function CatalogoView({
   }
 
   // Datos desde API routes internas
-  const { products, total, totalPages, loading } = useProducts(productFilters)
+  const { products, total, totalPages, loading, fetching } = useProducts(productFilters)
   const { categories } = useCategories()
   const availableBrands = useBrandNames()
 
@@ -214,7 +214,7 @@ export function CatalogoView({
               </div>
             </div>
 
-            {/* Loading */}
+            {/* Skeleton — solo primera carga */}
             {loading && (
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {Array.from({ length: ITEMS_PER_PAGE }).map((_, i) => (
@@ -223,9 +223,9 @@ export function CatalogoView({
               </div>
             )}
 
-            {/* Products Grid / List */}
+            {/* Products Grid / List — se mantiene visible al cambiar filtros */}
             {!loading && viewMode === "grid" && (
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <div className={`grid gap-4 sm:grid-cols-2 xl:grid-cols-3 transition-opacity duration-200 ${fetching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -233,7 +233,7 @@ export function CatalogoView({
             )}
 
             {!loading && viewMode === "list" && (
-              <div className="space-y-3">
+              <div className={`space-y-3 transition-opacity duration-200 ${fetching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
                 {products.map((product) => (
                   <Link
                     key={product.id}

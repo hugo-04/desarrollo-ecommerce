@@ -6,7 +6,7 @@
  * Marcas     → features/marcas/hooks.ts
  */
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import {
   getCatalogAction,
   getProductAction,
@@ -20,19 +20,40 @@ export function useProducts(filters: ProductFilters) {
   const [products, setProducts]     = useState<Product[]>([])
   const [total, setTotal]           = useState(0)
   const [totalPages, setTotalPages] = useState(0)
-  const [loading, setLoading]       = useState(true)
+  const [loading, setLoading]       = useState(true)   // skeleton primera carga
+  const [fetching, setFetching]     = useState(false)  // recarga por filtro
+  const isFirstLoad                 = useRef(true)
 
   const filtersKey = JSON.stringify(filters)
 
   useEffect(() => {
-    setLoading(true)
+    let cancelled = false
+
+    if (isFirstLoad.current) {
+      setLoading(true)
+    } else {
+      setFetching(true)
+    }
+
     getCatalogAction(filters)
-      .then((r) => { setProducts(r.data); setTotal(r.total); setTotalPages(r.totalPages); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then((r) => {
+        if (cancelled) return
+        setProducts(r.data)
+        setTotal(r.total)
+        setTotalPages(r.totalPages)
+        setLoading(false)
+        setFetching(false)
+        isFirstLoad.current = false
+      })
+      .catch(() => {
+        if (!cancelled) { setLoading(false); setFetching(false) }
+      })
+
+    return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtersKey])
 
-  return { products, total, totalPages, loading }
+  return { products, total, totalPages, loading, fetching }
 }
 
 export function useProduct(id: number) {

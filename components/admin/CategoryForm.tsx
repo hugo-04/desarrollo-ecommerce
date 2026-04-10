@@ -136,7 +136,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
 
       await onSave({
         name:          name.trim(),
-        slug:          slug.trim() || slugify(name),
+        slug:          slug.trim() || slugify(name.trim()),
         description:   description.trim() || undefined,
         image:         finalImage,
         imageAlt:      imageAlt.trim() || undefined,
