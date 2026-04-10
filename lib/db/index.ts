@@ -13,6 +13,18 @@ function createClient() {
   return new PrismaClient({ adapter, log })
 }
 
-export const db = globalForPrisma.prisma ?? createClient()
+function getClient(): PrismaClient {
+  if (globalForPrisma.prisma) return globalForPrisma.prisma
+  const client = createClient()
+  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = client
+  return client
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db
+// Proxy lazy: createClient() solo se ejecuta cuando se accede a una propiedad
+// (ej: db.product.findMany), no al importar el módulo. Esto evita que el build
+// de Next.js falle por ausencia de DATABASE_URL en tiempo de compilación.
+export const db = new Proxy({} as PrismaClient, {
+  get(_, prop: string) {
+    return (getClient() as any)[prop]
+  },
+})
