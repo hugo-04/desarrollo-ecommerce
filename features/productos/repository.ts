@@ -190,9 +190,10 @@ export class DbProductRepository implements IProductRepository {
       const row  = await this.db.product.findUnique({
         where: { id }, include: { brand: true, category: true },
       })
+      if (!row) throw new Error(`Producto con id ${id} no encontrado`)
       const ids  = await this.resolveRelations(
-        data.brand    ?? row?.brand?.name    ?? "",
-        data.category ?? row?.category?.name ?? "",
+        data.brand    ?? row.brand.name,
+        data.category ?? row.category.name,
       )
       connect = {
         brand:    { connect: { id: ids.brandId } },

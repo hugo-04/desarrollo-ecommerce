@@ -69,8 +69,8 @@ export interface Category {
   subcategories: string[]
   /** Cantidad de productos en esta categoría */
   count: number
-  /** Componente icono — solo válido en el cliente (no serializable) */
-  icon: React.ComponentType<{ className?: string }>
+  /** Componente icono — solo válido en el cliente, resuelto con getCategoryIcon(slug) */
+  icon?: React.ComponentType<{ className?: string }>
   /** Clases Tailwind de gradiente (ej: "from-blue-700 to-blue-900") */
   color: string
   /** Alt text SEO de la imagen */

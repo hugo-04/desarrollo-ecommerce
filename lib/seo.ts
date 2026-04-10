@@ -209,7 +209,7 @@ export function generateCategoryMeta(category: {
   const title       = `${category.name} | ${SITE_NAME}`
   const description = (category.description?.trim())
     || `${category.name} — ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Stock permanente en Lima, Perú. Cotización en 24 h.`
-  const url         = `/catalogo?categoria=${encodeURIComponent(category.name)}`
+  const url         = `/catalogo?categoria=${category.slug}`
 
   return {
     title,

@@ -1,7 +1,6 @@
 import type { Category } from "@/lib/types"
 
-// DTO: Category sin icon (React component, no serializable a JSON / DB)
-// En DB: guardar iconSlug (string) y resolver el componente en el cliente
+// DTO: Category desde DB — icon es opcional, se resuelve en cliente con getCategoryIcon(slug)
 export type CategoryDTO = Omit<Category, "icon">
 
 // ─── CRUD DTOs ─────────────────────────────────────────────────────────────────
