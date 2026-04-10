@@ -10,7 +10,7 @@ interface Props {
 
 export default async function ReclamacionesPage({ searchParams }: Props) {
   const { page: pageParam } = await searchParams
-  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1)
+  const page = Math.min(100000, Math.max(1, parseInt(pageParam ?? "1", 10) || 1))
 
   const data = await getReclamacionesAction(page)
 

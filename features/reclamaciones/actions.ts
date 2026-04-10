@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db"
 import { revalidatePath } from "next/cache"
+import { getSession } from "@/lib/auth/session"
 
 export interface ReclamacionInput {
   nombres:     string
@@ -47,9 +48,17 @@ export async function getReclamacionesAction(page = 1) {
 }
 
 export async function resolverReclamacionAction(id: number) {
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
+
+  if (!Number.isInteger(id) || id < 1) throw new Error("ID de reclamación inválido")
+
+  const exists = await db.reclamacion.findUnique({ where: { id }, select: { id: true } })
+  if (!exists) throw new Error("Reclamación no encontrada")
+
   await db.reclamacion.update({
     where: { id },
-    data: { estado: "RESUELTO" },
+    data:  { estado: "RESUELTO" },
   })
   revalidatePath("/reclamaciones")
 }

@@ -107,7 +107,7 @@ function ReclamacionCard({ r }: { r: Reclamacion }) {
               "flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl font-black text-sm",
               isResuelto ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
             )}>
-              {r.nombres[0]}{r.apellidos[0]}
+              {r.nombres?.[0] ?? "?"}{r.apellidos?.[0] ?? "?"}
             </div>
             <div>
               <p className="font-extrabold text-slate-800 text-sm leading-tight">
