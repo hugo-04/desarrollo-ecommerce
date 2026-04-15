@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
-import { useRef } from "react"
+
 import { fadeUp, staggerContainer, scaleUp, viewportOnce, useCountUp } from "@/hooks/useAnimations"
 import { IconBox, IconCertificate, IconBuilding, IconTruck, IconArrowRight, IconPhone } from "@/components/icons"
 
@@ -52,10 +53,13 @@ export function HeroSection() {
     <section className="relative overflow-hidden mb-12 voltage-scan-wrap arc-flash-wrap">
       {/* === BACKGROUND === */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src="/banner.jpg"
-          alt="Torres eléctricas"
-          className="h-full w-full object-cover"
+          alt="Torres eléctricas de alta tensión"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
       </div>
 
