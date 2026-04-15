@@ -54,7 +54,6 @@ export function MarqueeBrands() {
                           src={brand.logo}
                           alt={brand.logoAlt ?? brand.name}
                           className="max-h-[22px] max-w-[22px] object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100"
-                          crossOrigin="anonymous"
                           onError={(e) => {
                             ;(e.target as HTMLImageElement).style.display = "none"
                           }}
@@ -85,7 +84,6 @@ export function MarqueeBrands() {
                             src={brand.logo}
                             alt={brand.logoAlt ?? brand.name}
                             className="max-h-[22px] max-w-[22px] object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100"
-                            crossOrigin="anonymous"
                             onError={(e) => {
                               ;(e.target as HTMLImageElement).style.display = "none"
                             }}
