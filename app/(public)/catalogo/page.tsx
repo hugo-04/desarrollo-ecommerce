@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import type { Metadata } from "next"
-import { SEO, generateCategoryMeta } from "@/lib/seo"
+import { SEO, SITE_URL, SITE_NAME, generateCategoryMeta, buildCategorySchema } from "@/lib/seo"
 import { CatalogoView } from "@/components/views/CatalogoView"
 import { cache } from "react"
 import { getCategoriesAction } from "@/features/categorias/actions"
@@ -27,21 +27,48 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 export default async function CatalogoPage({ searchParams }: PageProps) {
   const params = await searchParams
 
-  // Cargar filtros en el servidor — llegan con el HTML, sin espera cliente
   const [categories, brandNames] = await Promise.all([
     getCategories(),
     getBrandNamesAction(),
   ])
 
+  // Schema dinámico: si hay categoría activa → CollectionPage, si no → BreadcrumbList del catálogo
+  const selectedCat = params.categoria
+    ? categories.find((c) => c.name === params.categoria)
+    : null
+
+  const pageSchema = selectedCat
+    ? buildCategorySchema(selectedCat)
+    : {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: `Catálogo de Ferretería Eléctrica AT/MT — ${SITE_NAME}`,
+        description: "Herrajes, aisladores, conectores y accesorios eléctricos certificados IEC, ANSI y NTP. Stock permanente en Lima, Perú.",
+        url: `${SITE_URL}/catalogo`,
+        breadcrumb: {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Inicio",   item: SITE_URL },
+            { "@type": "ListItem", position: 2, name: "Catálogo", item: `${SITE_URL}/catalogo` },
+          ],
+        },
+      }
+
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
-      <CatalogoView
-        initialCategory={params.categoria}
-        initialQuery={params.q}
-        initialBestSellers={params.bestSellers === "true"}
-        initialCategories={categories}
-        initialBrands={brandNames}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
       />
-    </Suspense>
+      <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
+        <CatalogoView
+          initialCategory={params.categoria}
+          initialQuery={params.q}
+          initialBestSellers={params.bestSellers === "true"}
+          initialCategories={categories}
+          initialBrands={brandNames}
+        />
+      </Suspense>
+    </>
   )
 }

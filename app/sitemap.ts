@@ -54,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const [products, categories] = await Promise.all([
       db.product.findMany({ select: { id: true, updatedAt: true } }),
-      db.category.findMany({ select: { slug: true, updatedAt: true } }),
+      db.category.findMany({ select: { name: true, updatedAt: true } }),
     ])
 
     const productPages: MetadataRoute.Sitemap = products.map((p: { id: any; updatedAt: any }) => ({
@@ -64,8 +64,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }))
 
-    const categoryPages: MetadataRoute.Sitemap = categories.map((c: { slug: any; updatedAt: any }) => ({
-      url: `${BASE_URL}/catalogo?categoria=${c.slug}`,
+    const categoryPages: MetadataRoute.Sitemap = categories.map((c: { name: any; updatedAt: any }) => ({
+      url: `${BASE_URL}/catalogo?categoria=${encodeURIComponent(c.name)}`,
       lastModified: c.updatedAt,
       changeFrequency: "weekly",
       priority: 0.8,

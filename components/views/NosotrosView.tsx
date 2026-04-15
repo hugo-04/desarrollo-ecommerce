@@ -26,7 +26,7 @@ export function NosotrosView() {
     {
       icon: IconTruck,
       title: "Disponibilidad",
-      description: "Stock permanente de más de 1,000 referencias AT/MT. Despacho en 48 horas a nivel nacional, sin depender de importaciones de largo plazo.",
+      description: "Stock permanente de más de 50 referencias AT/MT. Despacho en 48 horas a nivel nacional, sin depender de importaciones de largo plazo.",
     },
     {
       icon: IconClock,
@@ -43,7 +43,7 @@ export function NosotrosView() {
   const stats = [
     { value: `${yearsActive}+`, label: "Años en el sector AT/MT" },
     { value: "350+",            label: "Proyectos ejecutados" },
-    { value: "1,162+",         label: "Productos en stock" },
+    { value: "50+",             label: "Productos en stock" },
     { value: "98%",             label: "Clientes satisfechos" },
   ]
 
@@ -108,7 +108,7 @@ export function NosotrosView() {
               </h2>
               {/* Primer párrafo — keyword natural + especificidad */}
               <p className="mb-4 text-sm leading-[1.85] text-slate-600">
-                Electro Thina nació en Lima con un objetivo concreto: garantizar suministro confiable de ferretería y accesorios eléctricos para alta y media tensión en el Perú. Aisladores, herrajes, conectores y cables que lleguen a tiempo y con la documentación técnica que exige el proyecto.
+                Electro Thina nació en Lima con un objetivo concreto: garantizar suministro confiable de ferretería y accesorios eléctricos para alta y media tensión en el Perú. Aisladores, grapas, conectores y herrajes galvanizados que lleguen a tiempo y con la documentación técnica que exige el proyecto.
               </p>
               <p className="mb-6 text-sm leading-[1.85] text-slate-600">
                 Con el tiempo armamos alianzas directas con fabricantes internacionales y desarrollamos nuestra propia línea de accesorios eléctricos certificados bajo normas IEC, ANSI y NTP. Eso nos da control sobre la calidad y los plazos, sin depender de intermediarios.
@@ -302,7 +302,7 @@ export function NosotrosView() {
                 {[
                   "Accesorios certificados IEC, ANSI y NTP",
                   "Asesoría de ingenieros especializados en AT/MT",
-                  "Más de 1,000 referencias en stock — despacho en 48 h",
+                  "Más de 50 referencias en stock — despacho en 48 h",
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs text-slate-400">
                     <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-red-500/15 text-red-400">
@@ -462,7 +462,7 @@ export function NosotrosView() {
             Revisa el catálogo de ferretería eléctrica AT/MT
           </motion.h2>
           <motion.p variants={fadeUp} className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-slate-400">
-            Más de 1,000 accesorios eléctricos certificados para alta y media tensión. Cotización técnica en menos de 24 horas.
+            Más de 50 accesorios eléctricos certificados para alta y media tensión. Cotización técnica en menos de 24 horas.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4">
             <Link

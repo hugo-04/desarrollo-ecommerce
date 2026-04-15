@@ -1,33 +1,30 @@
 "use client"
 
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { fadeUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
 
 // ─── Datos del grupo ───────────────────────────────────────────────────────────
-// Reemplaza los nombres y RUCs con los reales cuando estén disponibles
 const EMPRESAS = [
   {
     nombre:   "Electro Thina S.A.C.",
     ruc:      "20601523847",
     giro:     "Fabricación y distribución de ferretería eléctrica AT/MT",
+    logo:     "/logotipo.png",
     actual:   true,
   },
   {
-    nombre:   "Thina Ingeniería S.A.C.",
-    ruc:      "20601589234",
-    giro:     "Ingeniería y proyectos del sector eléctrico",
-    actual:   false,
-  },
-  {
-    nombre:   "Distribuidora Thina E.I.R.L.",
-    ruc:      "10423187650",
+    nombre:   "T & V Electro Comercial E.I.R.L.",
+    ruc:      "20600389867",
     giro:     "Comercialización de materiales eléctricos",
+    logo:     "/T&V-Electro-Comercial.jpeg",
     actual:   false,
   },
   {
-    nombre:   "Corporación Thina S.A.C.",
-    ruc:      "20601612093",
-    giro:     "Holding y gestión de inversiones del grupo",
+    nombre:   "Alexza Corporación Ferretera E.I.R.L.",
+    ruc:      "20600389964",
+    giro:     "Distribución de materiales y ferretería eléctrica",
+    logo:     "/ALEXZA-CORPORACION-SF.png",
     actual:   false,
   },
 ]
@@ -75,7 +72,7 @@ export function GrupoEmpresarialSection() {
           {/* Cards grid */}
           <motion.div
             variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+            className="grid gap-4 sm:grid-cols-3 lg:grid-cols-3"
           >
             {EMPRESAS.map((empresa, i) => (
               <motion.div
@@ -114,7 +111,18 @@ export function GrupoEmpresarialSection() {
                     </span>
                   </div>
                 )}
-                {!empresa.actual && <div className="mb-4 h-[18px]" />}
+
+                {/* Logo */}
+                <div className="mb-4 flex h-14 items-center">
+                  <Image
+                    src={empresa.logo}
+                    alt={`Logo ${empresa.nombre}`}
+                    width={120}
+                    height={56}
+                    className="h-12 w-auto object-contain"
+                    unoptimized
+                  />
+                </div>
 
                 {/* Nombre */}
                 <h3 className={`mb-1 text-base font-bold leading-tight ${empresa.actual ? "text-[#121A47]" : "text-slate-700 group-hover:text-[#121A47] transition-colors"}`}>
@@ -122,7 +130,7 @@ export function GrupoEmpresarialSection() {
                 </h3>
 
                 {/* Giro */}
-                <p className="mb-5 text-[11px] leading-relaxed text-slate-500">
+                <p className="mb-4 text-[11px] leading-relaxed text-slate-500">
                   {empresa.giro}
                 </p>
 
@@ -183,7 +191,7 @@ export function GrupoEmpresarialBand() {
           </motion.div>
 
           {/* Empresas en banda horizontal */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {EMPRESAS.map((empresa, i) => (
               <motion.div
                 key={i}
@@ -205,7 +213,18 @@ export function GrupoEmpresarialBand() {
                 )}
 
                 <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
+                    {/* Mini logo en la banda compacta */}
+                    <div className="mb-2 flex h-7 items-center">
+                      <Image
+                        src={empresa.logo}
+                        alt={`Logo ${empresa.nombre}`}
+                        width={80}
+                        height={28}
+                        className={`h-6 w-auto object-contain ${empresa.actual ? "" : "brightness-0 invert opacity-60 group-hover:opacity-90 transition-opacity"}`}
+                        unoptimized
+                      />
+                    </div>
                     <p className={`truncate text-[11px] font-bold leading-tight ${empresa.actual ? "text-white" : "text-white/60 group-hover:text-white/90 transition-colors"}`}>
                       {empresa.nombre}
                     </p>

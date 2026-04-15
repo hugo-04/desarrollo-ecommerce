@@ -9,13 +9,26 @@
  */
 
 import { notFound } from "next/navigation"
+import type { Metadata } from "next"
 import { ProductoView } from "@/components/views/ProductoView"
 import { getProductAction } from "@/features/productos/actions"
+import { generateProductMeta, buildProductSchema } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
 
 interface PageProps {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params
+  const numId   = Number(id)
+  if (!id || isNaN(numId) || numId < 1) return {}
+
+  const product = await getProductAction(numId)
+  if (!product) return {}
+
+  return generateProductMeta(product)
 }
 
 export default async function ProductoPage({ params }: PageProps) {
@@ -28,5 +41,15 @@ export default async function ProductoPage({ params }: PageProps) {
   const product = await getProductAction(numId)
   if (!product) notFound()
 
-  return <ProductoView product={product} />
+  const productSchema = buildProductSchema(product)
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <ProductoView product={product} />
+    </>
+  )
 }
