@@ -12,7 +12,7 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { ProductoView } from "@/components/views/ProductoView"
 import { getProductAction } from "@/features/productos/actions"
-import { generateProductMeta, buildProductSchema } from "@/lib/seo"
+import { generateProductMeta, buildProductSchema, SITE_URL } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
 
@@ -43,11 +43,26 @@ export default async function ProductoPage({ params }: PageProps) {
 
   const productSchema = buildProductSchema(product)
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio",   item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Catálogo", item: `${SITE_URL}/catalogo` },
+      { "@type": "ListItem", position: 3, name: product.category, item: product.categorySlug ? `${SITE_URL}/categoria/${product.categorySlug}` : `${SITE_URL}/catalogo?categoria=${encodeURIComponent(product.category)}` },
+      { "@type": "ListItem", position: 4, name: product.name,     item: `${SITE_URL}/producto/${product.id}` },
+    ],
+  }
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <ProductoView product={product} />
     </>

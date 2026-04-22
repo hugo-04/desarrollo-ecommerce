@@ -5,75 +5,38 @@ export const dynamic = "force-dynamic"
 
 const BASE_URL = "https://electrothina.com"
 
+// Fecha fija para páginas cuyo contenido no cambia con cada request.
+// Actualizar manualmente cuando se edite el contenido de esas páginas.
+const SITE_LAUNCH = new Date("2026-04-01")
+
+// Solo las páginas indexables (noindex excluidas: /terminos, /politica-privacidad, /libro-reclamaciones)
+// Google ignora priority y changeFrequency — solo <loc> y <lastmod> son relevantes.
 const staticPages: MetadataRoute.Sitemap = [
-  {
-    url: BASE_URL,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 1.0,
-  },
-  {
-    url: `${BASE_URL}/catalogo`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.9,
-  },
-  {
-    url: `${BASE_URL}/nosotros`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  },
-  {
-    url: `${BASE_URL}/contacto`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  },
-  {
-    url: `${BASE_URL}/libro-reclamaciones`,
-    lastModified: new Date(),
-    changeFrequency: "yearly",
-    priority: 0.4,
-  },
-  {
-    url: `${BASE_URL}/terminos`,
-    lastModified: new Date(),
-    changeFrequency: "yearly",
-    priority: 0.3,
-  },
-  {
-    url: `${BASE_URL}/politica-privacidad`,
-    lastModified: new Date(),
-    changeFrequency: "yearly",
-    priority: 0.3,
-  },
+  { url: BASE_URL,                    lastModified: SITE_LAUNCH },
+  { url: `${BASE_URL}/catalogo`,      lastModified: SITE_LAUNCH },
+  { url: `${BASE_URL}/nosotros`,      lastModified: SITE_LAUNCH },
+  { url: `${BASE_URL}/contacto`,      lastModified: SITE_LAUNCH },
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const [products, categories] = await Promise.all([
       db.product.findMany({ select: { id: true, updatedAt: true } }),
-      db.category.findMany({ select: { name: true, updatedAt: true } }),
+      db.category.findMany({ select: { slug: true, updatedAt: true } }),
     ])
 
     const productPages: MetadataRoute.Sitemap = products.map((p: { id: any; updatedAt: any }) => ({
       url: `${BASE_URL}/producto/${p.id}`,
       lastModified: p.updatedAt,
-      changeFrequency: "monthly",
-      priority: 0.6,
     }))
 
-    const categoryPages: MetadataRoute.Sitemap = categories.map((c: { name: any; updatedAt: any }) => ({
-      url: `${BASE_URL}/catalogo?categoria=${encodeURIComponent(c.name)}`,
+    const categoryPages: MetadataRoute.Sitemap = categories.map((c: { slug: any; updatedAt: any }) => ({
+      url: `${BASE_URL}/categoria/${c.slug}`,
       lastModified: c.updatedAt,
-      changeFrequency: "weekly",
-      priority: 0.8,
     }))
 
     return [...staticPages, ...categoryPages, ...productPages]
   } catch {
-    // Si la DB no está disponible, retorna solo las páginas estáticas
     return staticPages
   }
 }

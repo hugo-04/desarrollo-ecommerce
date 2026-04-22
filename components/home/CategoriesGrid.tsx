@@ -8,6 +8,23 @@ import { IconArrowRight } from "@/components/icons"
 import { getCategoryIcon } from "@/lib/category-icons"
 import type { CategoryDTO } from "@/features/categorias/types"
 
+// Paleta de gradientes — se asigna de forma determinística por slug
+const GRADIENT_PALETTE = [
+  "from-[#1C2870] to-[#151f5c]",
+  "from-blue-700 to-blue-900",
+  "from-indigo-700 to-[#1C2870]",
+  "from-slate-600 to-slate-800",
+  "from-cyan-700 to-blue-900",
+  "from-sky-700 to-indigo-900",
+  "from-slate-700 to-zinc-900",
+  "from-blue-800 to-indigo-950",
+]
+function autoGradient(slug: string): string {
+  let h = 0
+  for (const c of slug) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  return GRADIENT_PALETTE[h % GRADIENT_PALETTE.length]
+}
+
 function CategoryCard({ category, index }: { category: CategoryDTO; index: number }) {
   const Icon = getCategoryIcon(category.slug)
   const isFeatured = index === 0
@@ -15,7 +32,7 @@ function CategoryCard({ category, index }: { category: CategoryDTO; index: numbe
   return (
     <motion.div variants={scaleUp} className={`h-full w-full ${isFeatured ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
       <Link
-        href={`/catalogo?categoria=${encodeURIComponent(category.name)}`}
+        href={`/categoria/${category.slug}`}
         className="group relative block h-full w-full overflow-hidden rounded-3xl border border-slate-200/50 bg-white text-left transition-all duration-700 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#1C2870]/20"
       >
         <div className={`relative w-full overflow-hidden ${isFeatured ? 'h-[400px] lg:h-full' : 'h-[340px]'}`}>
@@ -25,12 +42,11 @@ function CategoryCard({ category, index }: { category: CategoryDTO; index: numbe
               src={category.image}
               alt={category.name}
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
-              crossOrigin="anonymous"
             />
           )}
           <div className={`absolute inset-0 bg-gradient-to-t from-[#07091E]/95 ${isFeatured ? 'via-[#07091E]/40' : 'via-[#07091E]/60'} to-transparent z-10`} />
           <div
-            className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-20 mix-blend-color z-10 transition-opacity duration-500 group-hover:opacity-40`}
+            className={`absolute inset-0 bg-gradient-to-br ${autoGradient(category.slug)} opacity-20 mix-blend-color z-10 transition-opacity duration-500 group-hover:opacity-40`}
           />
           <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
             <div className="mb-4 flex items-center gap-3">

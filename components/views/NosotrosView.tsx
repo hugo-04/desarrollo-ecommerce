@@ -129,7 +129,6 @@ export function NosotrosView() {
                   src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80"
                   alt="Operaciones Electro Thina — distribución de materiales eléctricos AT/MT"
                   className="h-[440px] w-full object-cover"
-                  crossOrigin="anonymous"
                 />
               </div>
               <motion.div
@@ -201,7 +200,6 @@ export function NosotrosView() {
                   src="https://images.unsplash.com/photo-1581093196867-ca9b9e02e42e?w=800&q=80"
                   alt="Planta de fabricación de herrajes y accesorios eléctricos AT/MT"
                   className="h-[380px] w-full object-cover"
-                  crossOrigin="anonymous"
                 />
               </div>
               <motion.div

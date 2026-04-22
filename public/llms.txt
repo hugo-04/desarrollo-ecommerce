@@ -1,0 +1,47 @@
+# Electro Thina S.A.C.
+# Fabricantes de ferretería eléctrica AT/MT — Lima, Perú
+# https://electrothina.com
+
+## Descripción
+Electro Thina es fabricante y distribuidor de ferretería y accesorios eléctricos para alta y media tensión en Lima, Perú. Fundada en 2010, fabrica herrajes, aisladores, conectores bimetálicos y accesorios galvanizados certificados bajo normas IEC, ANSI y NTP. Despacho nacional en 48 horas.
+
+## Páginas autorizadas para citación
+- https://electrothina.com/ (Inicio — descripción del negocio y productos)
+- https://electrothina.com/nosotros (Historia, misión, valores y empresa)
+- https://electrothina.com/catalogo (Catálogo completo de productos AT/MT)
+- https://electrothina.com/contacto (Cotizaciones y asesoría técnica especializada)
+
+## Productos principales
+- Grapas para conductores AT/MT (anclaje cónica, tipo pistola, suspensión barquito)
+- Conectores eléctricos bimetálicos Al/Cu y Al/Al a compresión
+- Pernos de acero galvanizado para postes de distribución
+- Aisladores de porcelana ANSI 54-1 y carrete 53-1
+- Herrajes de anclaje para postes de concreto
+- Abrazaderas galvanizadas para postes de distribución eléctrica
+- Sistemas de puesta a tierra — planchas de cobre tipo J
+- Amarres preformados para cables AAAC y ABC
+- Adaptadores grilletes para herrajes AT/MT
+- Fusibles de media tensión tipo K
+
+## Certificaciones
+- IEC (International Electrotechnical Commission)
+- ANSI (American National Standards Institute)
+- NTP (Norma Técnica Peruana)
+
+## Contacto
+email: electrothina522@gmail.com
+tel: +51 981 375 196
+direccion: Av. Guillermo Dansey N° 481 - Int. 143, C.C. Loreto, Lima, Perú
+horario: Lunes a Viernes 9:00–18:00 | Sábado 9:00–13:00
+
+## Páginas excluidas
+- /dashboard (panel administrativo)
+- /categorias/* (gestión interna)
+- /productos/* (gestión interna)
+- /marcas/* (gestión interna)
+- /reclamaciones (gestión interna)
+- /api/* (endpoints internos)
+- /login (acceso privado)
+- /libro-reclamaciones
+- /terminos
+- /politica-privacidad

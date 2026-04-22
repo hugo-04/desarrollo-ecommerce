@@ -51,11 +51,11 @@ export function ProductoView({ product }: ProductoViewProps) {
               </Link>
               <IconChevronRight className="h-3 w-3 shrink-0 text-slate-400" />
               <Link href="/catalogo" className="shrink-0 text-slate-500 hover:text-primary">
-                Catalogo
+                Catálogo
               </Link>
               <IconChevronRight className="h-3 w-3 shrink-0 text-slate-400" />
               <Link
-                href={`/catalogo?categoria=${encodeURIComponent(product.category)}`}
+                href={product.categorySlug ? `/categoria/${product.categorySlug}` : `/catalogo?categoria=${encodeURIComponent(product.category)}`}
                 className="shrink-0 text-slate-500 hover:text-primary"
               >
                 {product.category}

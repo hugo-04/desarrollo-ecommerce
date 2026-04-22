@@ -34,7 +34,6 @@ model Category {
   image         String    @default("")
   imageAlt      String?
   description   String    @default("")
-  color         String    @default("#1C2870")
   subcategories String[]
   count         Int       @default(0)
   featured      Boolean   @default(false)

@@ -60,7 +60,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                   return (
                     <Link
                       key={category.id}
-                      href={`/catalogo?categoria=${encodeURIComponent(category.name)}`}
+                      href={`/categoria/${category.slug}`}
                       onMouseEnter={() => setActiveCategory(category.id)}
                       onClick={(e) => {
                         if (activeCategory !== category.id) {
@@ -107,7 +107,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                         {activeCat.name}
                       </span>
                       <Link
-                        href={`/catalogo?categoria=${encodeURIComponent(activeCat.name)}`}
+                        href={`/categoria/${activeCat.slug}`}
                         onClick={() => setIsOpen(false)}
                         className="text-[10px] font-bold text-red-400 hover:text-red-300"
                       >
@@ -118,7 +118,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                       {activeCat.subcategories.map((sub, i) => (
                         <Link
                           key={i}
-                          href={`/catalogo?categoria=${encodeURIComponent(activeCat.name)}`}
+                          href={`/categoria/${activeCat.slug}`}
                           onClick={() => setIsOpen(false)}
                           className="flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] text-white/60 transition-colors hover:bg-white/10 hover:text-white active:bg-white/10 active:text-white"
                         >
@@ -149,7 +149,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                         </p>
                       </div>
                       <Link
-                        href={`/catalogo?categoria=${encodeURIComponent(activeCat.name)}`}
+                        href={`/categoria/${activeCat.slug}`}
                         onClick={() => setIsOpen(false)}
                         className="flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary/20"
                       >
@@ -161,7 +161,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                         {activeCat.subcategories.map((sub, index) => (
                           <Link
                             key={index}
-                            href={`/catalogo?categoria=${encodeURIComponent(activeCat.name)}`}
+                            href={`/categoria/${activeCat.slug}`}
                             onClick={() => setIsOpen(false)}
                             className="group flex items-center gap-2 rounded-lg border border-transparent px-3 py-2 transition-all hover:border-slate-200 hover:bg-slate-50"
                           >
@@ -219,7 +219,7 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
           return (
             <Link
               key={cat.id}
-              href={`/catalogo?categoria=${encodeURIComponent(cat.name)}`}
+              href={`/categoria/${cat.slug}`}
               onClick={onClose}
               className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/[0.06]"
             >

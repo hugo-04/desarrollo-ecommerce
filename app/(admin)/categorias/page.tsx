@@ -29,6 +29,23 @@ import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
 const PAGE_SIZE = 10
 const PAGE_SIZE_OPTIONS = [10, 25, 50]
 
+// Gradiente determinístico por slug — sin necesidad de campo en DB
+const GRADIENT_PALETTE = [
+  "from-[#1C2870] to-[#151f5c]",
+  "from-blue-700 to-blue-900",
+  "from-indigo-700 to-[#1C2870]",
+  "from-slate-600 to-slate-800",
+  "from-cyan-700 to-blue-900",
+  "from-sky-700 to-indigo-900",
+  "from-slate-700 to-zinc-900",
+  "from-blue-800 to-indigo-950",
+]
+function autoGradient(slug: string): string {
+  let h = 0
+  for (const c of slug) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  return GRADIENT_PALETTE[h % GRADIENT_PALETTE.length]
+}
+
 export default function AdminCategoriasPage() {
   const {
     items: paged,
@@ -105,7 +122,7 @@ export default function AdminCategoriasPage() {
                   {/* Franja de color derivada del campo color de la categoría */}
                   <TableCell className="w-2 p-0">
                     <div
-                      className={`h-full min-h-[60px] w-1.5 rounded-r-full bg-gradient-to-b ${cat.color || "from-slate-300 to-slate-400"}`}
+                    className={`h-full min-h-[60px] w-1.5 rounded-r-full bg-gradient-to-b ${autoGradient(cat.slug)}`}
                     />
                   </TableCell>
 

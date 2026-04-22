@@ -59,11 +59,17 @@ const defaultOG = {
 export const organizationSchema = {
   "@context":    "https://schema.org",
   "@type":       ["Organization", "LocalBusiness"],
+  "@id":         `${SITE_URL}/#organization`,
   name:          "Electro Thina S.A.C.",
   alternateName: ["Electro Thina", "ElectroThina"],
   description:   `Fabricantes y distribuidores de ${KW_CORE}. Aisladores, herrajes, conectores y ferretería galvanizada con certificaciones IEC, ANSI y NTP.`,
   url:           SITE_URL,
-  logo:          OG_IMAGE,
+  logo: {
+    "@type":  "ImageObject",
+    "@id":    `${SITE_URL}/#logo`,
+    url:      OG_IMAGE,
+    caption:  "Electro Thina S.A.C.",
+  },
   image:         OG_IMAGE,
   foundingDate:  "2010",
   areaServed:    "PE",
@@ -99,6 +105,8 @@ export const organizationSchema = {
   ],
   sameAs: [
     "https://www.facebook.com/electrothina",
+    // TODO: agregar URL de Google Business Profile cuando esté disponible
+    // Ejemplo: "https://maps.app.goo.gl/XXXXXXXXXXXXXXXX"
   ],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
@@ -112,6 +120,25 @@ export const organizationSchema = {
     "ferretería galvanizada para postes de concreto",
     "suministro eléctrico para proyectos AT/MT",
   ],
+} as const
+
+/**
+ * JSON-LD WebSite — habilita el Sitelinks Searchbox de Google.
+ * Incluir en el layout raíz junto al Organization schema.
+ */
+export const websiteSchema = {
+  "@context":  "https://schema.org",
+  "@type":     "WebSite",
+  "@id":       `${SITE_URL}/#website`,
+  name:        SITE_NAME,
+  url:         SITE_URL,
+  inLanguage:  "es-PE",
+  publisher:   { "@id": `${SITE_URL}/#organization` },
+  potentialAction: {
+    "@type":      "SearchAction",
+    target:       { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/catalogo?q={search_term_string}` },
+    "query-input": "required name=search_term_string",
+  },
 } as const
 
 // ─── Metadata por página ───────────────────────────────────────────────────────
@@ -248,12 +275,11 @@ export const SEO = {
 // ─── Metadata dinámica por categoría ──────────────────────────────────────────
 
 /**
- * URL canónica para una categoría.
- * Usa el nombre de la categoría porque así lo construye el frontend
- * (CategoriesGrid, Navigation, ProductoView).
+ * URL canónica para una categoría — ruta limpia con slug.
+ * Ejemplo: /categoria/aisladores
  */
-function categoryUrl(categoryName: string): string {
-  return `/catalogo?categoria=${encodeURIComponent(categoryName)}`
+export function categoryUrl(slug: string): string {
+  return `/categoria/${slug}`
 }
 
 /**
@@ -268,11 +294,13 @@ export function generateCategoryMeta(category: {
   name: string
   slug: string
   description?: string | null
+  image?: string | null
 }): Metadata {
   const title       = `${category.name} — Precio y Cotización | ${SITE_NAME}`
   const description = (category.description?.trim())
     || `${category.name} — ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Stock permanente en Lima, Perú. Cotización en 24 h.`
-  const url         = categoryUrl(category.name)
+  const url         = categoryUrl(category.slug)
+  const ogImage     = (category.image && category.image.startsWith("http")) ? category.image : OG_IMAGE
 
   return {
     title,
@@ -283,12 +311,13 @@ export function generateCategoryMeta(category: {
       url,
       title,
       description,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${category.name} — ${SITE_NAME}` }],
     },
     twitter: {
       card:        "summary_large_image",
       title,
       description,
-      images:      [OG_IMAGE],
+      images:      [ogImage],
     },
   }
 }
@@ -344,13 +373,17 @@ export function buildCategorySchema(
   category: { name: string; slug: string; description?: string | null },
   productNames: string[] = [],
 ) {
+  const catUrl = `${SITE_URL}${categoryUrl(category.slug)}`
+
   return {
     "@context":   "https://schema.org",
     "@type":      "CollectionPage",
+    "@id":        `${catUrl}#collection`,
     name:         category.name,
     description:  category.description ?? undefined,
-    url:          `${SITE_URL}${categoryUrl(category.name)}`,
-    provider:     { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    url:          catUrl,
+    inLanguage:   "es-PE",
+    provider:     { "@type": "Organization", "@id": `${SITE_URL}/#organization`, name: SITE_NAME, url: SITE_URL },
     ...(productNames.length > 0 && {
       mainEntity: {
         "@type":         "ItemList",
@@ -374,41 +407,50 @@ export function buildProductSchema(product: {
   sku: string
   name: string
   category: string
+  brand?: string
   description?: string | null
+  fullDescription?: string | null
   image?: string | null
   rating?: number
 }) {
+  const productUrl  = `${SITE_URL}/producto/${product.id}`
+  const productImage = (product.image && product.image.startsWith("http")) ? product.image : OG_IMAGE
+  // fullDescription puede contener HTML — extraemos texto plano como fallback
+  const fullDescText = product.fullDescription
+    ? product.fullDescription.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+    : ""
+  const descriptionText = product.description?.trim() || fullDescText || `${product.name} — ${KW_CORE}`
+
   return {
     "@context":   "https://schema.org",
     "@type":      "Product",
+    "@id":        productUrl,
     name:         product.name,
     sku:          product.sku,
-    description:  product.description ?? `${product.name} — ${KW_CORE}`,
-    image:        (product.image && product.image.startsWith("http")) ? product.image : OG_IMAGE,
-    url:          `${SITE_URL}/producto/${product.id}`,
+    mpn:          product.sku,
+    description:  descriptionText.slice(0, 500),
+    image:        productImage,
+    url:          productUrl,
+    inLanguage:   "es-PE",
     category:     product.category,
     brand: {
       "@type": "Brand",
-      name:    SITE_NAME,
+      name:    product.brand ?? SITE_NAME,
     },
     offers: {
-      "@type":       "Offer",
-      url:           `${SITE_URL}/producto/${product.id}`,
-      priceCurrency: "PEN",
-      availability:  "https://schema.org/InStock",
+      "@type":        "Offer",
+      url:            productUrl,
+      priceCurrency:  "PEN",
+      availability:   "https://schema.org/InStock",
+      priceSpecification: {
+        "@type":       "PriceSpecification",
+        description:   "Precio disponible bajo cotización",
+        priceCurrency: "PEN",
+      },
       seller: {
         "@type": "Organization",
         name:    "Electro Thina S.A.C.",
       },
     },
-    ...(product.rating && {
-      aggregateRating: {
-        "@type":       "AggregateRating",
-        ratingValue:   product.rating,
-        bestRating:    5,
-        worstRating:   1,
-        reviewCount:   1,
-      },
-    }),
   }
 }

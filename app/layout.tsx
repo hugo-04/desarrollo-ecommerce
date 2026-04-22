@@ -1,6 +1,6 @@
 import { Analytics } from "@vercel/analytics/next"
 import { Nunito_Sans, Rubik } from "next/font/google"
-import { SEO, organizationSchema } from "@/lib/seo"
+import { SEO, organizationSchema, websiteSchema } from "@/lib/seo"
 import "./globals.css"
 
 const nunito = Nunito_Sans({
@@ -33,6 +33,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         {children}
         <Analytics />

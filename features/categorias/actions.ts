@@ -38,6 +38,10 @@ export async function getCategoryByIdAction(id: number) {
   return getService().getById(id)
 }
 
+export async function getCategoryBySlugAction(slug: string) {
+  return getService().getBySlug(slug)
+}
+
 // ─── CRUD admin (requieren sesión activa) ─────────────────────────────────────
 
 export async function createCategoryAction(data: CreateCategoryDTO) {

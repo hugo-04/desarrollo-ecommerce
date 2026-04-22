@@ -51,6 +51,7 @@ export class DbProductRepository implements IProductRepository {
       bestSeller:     p.bestSeller,
       rating:         p.rating,
       category:       p.category?.name ?? "",
+      categorySlug:   p.category?.slug ?? undefined,
       brand:          p.brand?.name ?? "",
       technicalSpecs: (p.technicalSpecs as any) ?? [],
     }
@@ -142,13 +143,13 @@ export class DbProductRepository implements IProductRepository {
     return rows.map((p) => this.mapProduct(p))
   }
 
-  /** 4 relacionados de la misma categoría, excluyendo el producto actual */
+  /** Hasta 8 relacionados de la misma categoría, excluyendo el producto actual */
   async findRelated(productId: number, categoryName: string): Promise<Product[]> {
     const rows = await this.db.product.findMany({
       where:   { category: { name: categoryName }, id: { not: productId } },
       include: { category: true, brand: true },
       orderBy: { rating: "desc" },
-      take:    4,
+      take:    8,
     })
     return rows.map((p) => this.mapProduct(p))
   }

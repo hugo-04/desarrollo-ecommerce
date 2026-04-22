@@ -48,8 +48,8 @@ async function main() {
   for (const cat of CATEGORIES_DATA) {
     await prisma.category.upsert({
       where:  { slug: cat.slug },
-      update: { name: cat.name, description: cat.description, subcategories: cat.subcategories, color: cat.colorHex },
-      create: { name: cat.name, slug: cat.slug, image: "", description: cat.description, color: cat.colorHex, subcategories: cat.subcategories, count: 0 },
+      update: { name: cat.name, description: cat.description, subcategories: cat.subcategories },
+      create: { name: cat.name, slug: cat.slug, image: "", description: cat.description, subcategories: cat.subcategories, count: 0 },
     })
   }
   console.log(`Seeded ${CATEGORIES_DATA.length} categorías`)

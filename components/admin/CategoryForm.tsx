@@ -26,27 +26,6 @@ import { ImageUpload } from "@/components/ui/ImageUpload"
 import { categorySchema, type CatErrors } from "@/features/categorias/schemas"
 import type { CategoryDTO } from "@/features/categorias/types"
 
-// ── Paleta armónica ────────────────────────────────────────────────────────────
-// Tonalidades que coinciden con el diseño del sitio (navy + slate + acentos).
-// Se asigna automáticamente según el nombre — mismo nombre, mismo color siempre.
-const COLOR_PALETTE = [
-  "from-[#1C2870] to-[#151f5c]",
-  "from-blue-700 to-blue-900",
-  "from-indigo-700 to-[#1C2870]",
-  "from-slate-600 to-slate-800",
-  "from-cyan-700 to-blue-900",
-  "from-sky-700 to-indigo-900",
-  "from-slate-700 to-zinc-900",
-  "from-blue-800 to-indigo-950",
-]
-
-/** Asigna un color de la paleta de forma determinística según el nombre */
-function autoColor(name: string): string {
-  let hash = 0
-  for (const ch of name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0
-  return COLOR_PALETTE[hash % COLOR_PALETTE.length]
-}
-
 /** Convierte texto a slug SEO-friendly */
 function slugify(text: string): string {
   return text
@@ -142,7 +121,6 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
         description:   description.trim() || undefined,
         image:         finalImage,
         imageAlt:      imageAlt.trim() || undefined,
-        color:         initialData?.color || autoColor(name.trim()),
         subcategories: subcats,
         featured,
       })

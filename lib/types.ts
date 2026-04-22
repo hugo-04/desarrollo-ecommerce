@@ -28,6 +28,8 @@ export interface Product {
   brand: string
   /** Nombre de la categoría (referencia por nombre, no por ID) */
   category: string
+  /** Slug URL de la categoría — para construir /categoria/[slug] */
+  categorySlug?: string
   /** URL de la imagen principal */
   image: string
   /** Texto alternativo SEO de la imagen principal */
@@ -71,8 +73,6 @@ export interface Category {
   count: number
   /** Componente icono — solo válido en el cliente, resuelto con getCategoryIcon(slug) */
   icon?: React.ComponentType<{ className?: string }>
-  /** Clases Tailwind de gradiente (ej: "from-blue-700 to-blue-900") */
-  color: string
   /** Alt text SEO de la imagen */
   imageAlt?: string
   /** Si aparece en la grilla del home */

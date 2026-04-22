@@ -214,16 +214,18 @@ export function GrupoEmpresarialBand() {
 
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    {/* Mini logo en la banda compacta */}
-                    <div className="mb-2 flex h-7 items-center">
-                      <Image
-                        src={empresa.logo}
-                        alt={`Logo ${empresa.nombre}`}
-                        width={80}
-                        height={28}
-                        className={`h-6 w-auto object-contain ${empresa.actual ? "" : "brightness-0 invert opacity-60 group-hover:opacity-90 transition-opacity"}`}
-                        unoptimized
-                      />
+                    {/* Mini logo — contenedor blanco para neutralizar fondos no transparentes */}
+                    <div className="mb-2 flex h-8 items-center">
+                      <div className="inline-flex items-center rounded-md bg-white/95 px-2 py-0.5 shadow-sm">
+                        <Image
+                          src={empresa.logo}
+                          alt={`Logo ${empresa.nombre}`}
+                          width={80}
+                          height={24}
+                          className="h-5 w-auto object-contain"
+                          unoptimized
+                        />
+                      </div>
                     </div>
                     <p className={`truncate text-[11px] font-bold leading-tight ${empresa.actual ? "text-white" : "text-white/60 group-hover:text-white/90 transition-colors"}`}>
                       {empresa.nombre}

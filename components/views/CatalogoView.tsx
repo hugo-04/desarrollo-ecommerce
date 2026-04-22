@@ -7,7 +7,7 @@
  * No importa datos directamente — toda la lógica de filtrado/paginación queda en el servidor.
  */
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { SlidersHorizontal } from "lucide-react"
 import { ProductCard } from "@/components/product/ProductCard"
@@ -17,19 +17,15 @@ import { ActiveFilterChips } from "@/components/catalog/ActiveFilterChips"
 import { CatalogToolbar } from "@/components/catalog/CatalogToolbar"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useCatalogFilters } from "@/features/catalogo/hooks"
-import { useProducts } from "@/features/productos/hooks"
+import { useInfiniteProducts } from "@/features/productos/hooks"
 import {
   IconChevronRight, IconSearch,
   IconStar, IconEye,
 } from "@/components/icons"
-import {
-  Pagination, PaginationContent, PaginationItem,
-  PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis,
-} from "@/components/ui/pagination"
 import type { ProductFilters } from "@/features/productos/types"
 import type { CategoryDTO } from "@/features/categorias/types"
 
-const ITEMS_PER_PAGE = 6
+const ITEMS_PER_PAGE = 20
 
 interface CatalogoViewProps {
   initialCategory?: string
@@ -57,47 +53,42 @@ export function CatalogoView({
     setOnlyBestSellers,
     setSortBy,
     setViewMode,
-    setCurrentPage,
     activeFiltersCount,
   } = useCatalogFilters({ initialCategory, initialQuery, initialBestSellers })
 
-  const { selectedCategories, selectedBrands, onlyBestSellers, sortBy, viewMode, currentPage, searchQuery } =
+  const { selectedCategories, selectedBrands, onlyBestSellers, sortBy, viewMode, searchQuery } =
     filters
 
-  // Construir filtros para la API
-  const productFilters: ProductFilters = {
+  // Filtros para el hook — el hook gestiona la página internamente
+  const productFilters: Omit<ProductFilters, "page"> = {
     categories: selectedCategories,
     brands: selectedBrands,
     onlyBestSellers,
     sortBy,
-    page: currentPage,
     limit: ITEMS_PER_PAGE,
     query: searchQuery,
   }
 
-  // Productos desde API (paginado + filtrado dinámico)
-  // Categorías y marcas vienen del servidor — disponibles sin espera
-  const { products, total, totalPages, loading, fetching } = useProducts(productFilters)
+  const { products, total, hasMore, loading, loadingMore, loadMore } = useInfiniteProducts(productFilters)
   const categories      = initialCategories
   const availableBrands = initialBrands
+
+  // Sentinel para infinite scroll — dispara loadMore al entrar en viewport
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) loadMore() },
+      { rootMargin: "200px" }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [loadMore])
 
   const selectedCat = selectedCategories.length === 1
     ? categories.find((c) => c.name === selectedCategories[0]) ?? null
     : null
-
-  const getPageNumbers = () => {
-    const pages: (number | "ellipsis")[] = []
-    if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i)
-    } else if (currentPage <= 3) {
-      pages.push(1, 2, 3, 4, 5, "ellipsis", totalPages)
-    } else if (currentPage >= totalPages - 2) {
-      pages.push(1, "ellipsis", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
-    } else {
-      pages.push(1, "ellipsis", currentPage - 1, currentPage, currentPage + 1, "ellipsis", totalPages)
-    }
-    return pages
-  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -107,7 +98,7 @@ export function CatalogoView({
           <div className="flex items-center gap-1.5 text-xs">
             <Link href="/" className="text-slate-500 hover:text-primary">Inicio</Link>
             <IconChevronRight className="h-3 w-3 text-slate-400" />
-            <span className="font-medium text-slate-800">Catalogo</span>
+            <span className="font-medium text-slate-800">Catálogo</span>
             {selectedCategories.length === 1 && (
               <>
                 <IconChevronRight className="h-3 w-3 text-slate-400" />
@@ -227,17 +218,18 @@ export function CatalogoView({
               </div>
             )}
 
-            {/* Products Grid / List — se mantiene visible al cambiar filtros */}
+            {/* Grid de productos */}
             {!loading && viewMode === "grid" && (
-              <div className={`grid gap-4 sm:grid-cols-2 xl:grid-cols-3 transition-opacity duration-200 ${fetching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
             )}
 
+            {/* Lista de productos */}
             {!loading && viewMode === "list" && (
-              <div className={`space-y-3 transition-opacity duration-200 ${fetching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+              <div className="space-y-3">
                 {products.map((product) => (
                   <Link
                     key={product.id}
@@ -250,7 +242,6 @@ export function CatalogoView({
                           src={product.image}
                           alt={product.name}
                           className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
-                          crossOrigin="anonymous"
                         />
                       )}
                     </div>
@@ -316,51 +307,21 @@ export function CatalogoView({
               </div>
             )}
 
-            {/* Pagination */}
-            {!loading && totalPages > 1 && (
-              <Pagination className="mt-10 mb-8">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setCurrentPage(Math.max(1, currentPage - 1))
-                      }}
-                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                  {getPageNumbers().map((page, i) => (
-                    <PaginationItem key={i}>
-                      {page === "ellipsis" ? (
-                        <PaginationEllipsis />
-                      ) : (
-                        <PaginationLink
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            setCurrentPage(page as number)
-                          }}
-                          isActive={currentPage === page}
-                          className="cursor-pointer font-medium"
-                        >
-                          {page}
-                        </PaginationLink>
-                      )}
-                    </PaginationItem>
-                  ))}
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setCurrentPage(Math.min(totalPages, currentPage + 1))
-                      }}
-                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+            {/* Infinite scroll — sentinel + spinner + fin de lista */}
+            {!loading && (
+              <>
+                <div ref={sentinelRef} className="h-1" />
+                {loadingMore && (
+                  <div className="flex justify-center py-8">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-primary" />
+                  </div>
+                )}
+                {!hasMore && products.length > 0 && (
+                  <p className="py-8 text-center text-sm text-slate-400">
+                    {total} productos en total · fin del catálogo
+                  </p>
+                )}
+              </>
             )}
           </main>
         </div>
