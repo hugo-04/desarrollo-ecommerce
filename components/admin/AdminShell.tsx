@@ -15,7 +15,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-cyan-200">
+    <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-cyan-200 relative">
       {/* Dot pattern */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.4] mix-blend-multiply"
@@ -33,12 +33,11 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
       {/* Sidebar */}
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-30 flex w-[260px] shrink-0 flex-col",
+          "fixed inset-y-0 left-0 z-30 flex w-[260px] shrink-0 flex-col overflow-hidden",
           "border-r border-[#1C2870]/10 shadow-xl",
           "bg-gradient-to-b from-[#0a0f2c] via-[#0b143f] to-[#040614] text-slate-300",
           "transition-transform duration-300",
-          "md:relative md:translate-x-0",
-          open ? "translate-x-0" : "-translate-x-full",
+          open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         ].join(" ")}
       >
         {/* Glow top */}
@@ -48,7 +47,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
         <div className="relative z-10 px-4 py-4 border-b border-white/[0.05]">
           <div className="flex items-center gap-3">
             <img
-              src="/logotipo.png"
+              src="/logo/logotipo.png"
               alt="Electro Thina"
               className="h-8 w-auto object-contain"
               style={{ filter: "drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,1)) brightness(1.4) contrast(1.1)" }}
@@ -72,7 +71,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
         </div>
 
         {/* Navegación */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 no-scrollbar">
+        <div className="flex-1 overflow-hidden py-4 px-3">
           <AdminNav onNavigate={() => setOpen(false)} />
         </div>
 
@@ -112,7 +111,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
       </aside>
 
       {/* Contenido principal */}
-      <main className="flex-1 flex flex-col relative z-10 w-full min-w-0 min-h-screen overflow-hidden">
+      <main className="flex flex-col relative z-10 w-full min-w-0 min-h-screen overflow-hidden md:ml-[260px]">
         {/* Topbar mobile */}
         <div className="flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-3 md:hidden">
           <button
@@ -122,11 +121,11 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
           >
             <Menu size={16} />
           </button>
-          <img src="/logotipo.png" alt="Electro Thina" className="h-7 w-auto object-contain" />
+          <img src="/logo/logotipo.png" alt="Electro Thina" className="h-7 w-auto object-contain" />
           <span className="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Admin</span>
         </div>
 
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 mx-auto w-full max-w-7xl animate-in fade-in zoom-in-95 duration-500 overflow-y-auto custom-scrollbar">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8 w-full animate-in fade-in zoom-in-95 duration-500 overflow-y-auto custom-scrollbar">
           {children}
         </div>
       </main>

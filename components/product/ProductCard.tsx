@@ -48,13 +48,12 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
       <div className="flex flex-col p-6">
         <div className="mb-3 flex items-center gap-2">
           <span className="rounded-md bg-[#1C2870] px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-white shadow-sm">{product.brand}</span>
-          <span className="text-[10px] font-bold text-slate-400">SKU: {product.sku}</span>
         </div>
         <h3 className="mb-2 line-clamp-2 min-h-[44px] text-[15px] font-extrabold leading-snug text-[#121A47] transition-colors group-hover:text-[#cc1b1b]">{product.name}</h3>
         <p className="mb-4 line-clamp-2 text-xs leading-relaxed text-slate-500">{product.description}</p>
         
         <div className="mb-6 flex flex-wrap gap-1.5">
-          {product.specs.slice(0, 3).map((spec, index) => (
+          {product.medidas.slice(0, 3).map((spec, index) => (
             <span key={index} className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[10px] font-bold text-slate-600">{spec}</span>
           ))}
         </div>

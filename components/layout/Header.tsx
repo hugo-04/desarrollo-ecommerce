@@ -48,7 +48,7 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center transition-transform hover:scale-[1.02]">
             <img
-              src="/logotipo.png"
+              src="/logo/logotipo.png"
               alt="Electro Thina — Soluciones Eléctricas"
               className="h-9 w-auto object-contain drop-shadow-sm sm:h-10"
             />

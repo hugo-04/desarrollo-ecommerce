@@ -32,7 +32,7 @@ export function Footer() {
           {/* Col 1 — Marca (ancho completo en mobile, 1 col en desktop) */}
           <div className="col-span-2 sm:col-span-1">
             <img
-              src="/logotipo.png"
+              src="/logo/logotipo.png"
               alt="Electro Thina"
               className="mb-4 h-10 w-auto object-contain"
               style={{ filter: "drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,1)) brightness(1.4) contrast(1.1)" }}

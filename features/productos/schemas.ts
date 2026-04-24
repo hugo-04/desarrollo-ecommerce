@@ -20,7 +20,6 @@ import { z } from "zod"
  * Todos los campos aquí son los mínimos exigidos antes de persistir.
  */
 export const productSchema = z.object({
-  sku:         z.string().min(1, "SKU requerido"),
   name:        z.string().min(2, "Nombre del producto requerido"),
   brand:       z.string().min(1, "Seleccioná una marca"),
   category:    z.string().min(1, "Seleccioná una categoría"),

@@ -4,9 +4,9 @@
  * ProductForm — Formulario completo para crear y editar productos.
  *
  * Secciones (con pasos numerados para guiar al usuario):
- *   1. Identificación   → SKU, Nombre, Categoría, Marca, Rating, flags
+ *   1. Identificación   → Nombre, Categoría, Marca, Rating, flags
  *   2. Imagen principal → ImageUpload con SEO alt text
- *   3. Descripción      → corta (required) + completa (rich editor) + specs/etiquetas
+ *   3. Descripción      → corta (required) + completa (rich editor) + medidas/etiquetas
  *   4. Ficha técnica    → TechSpecsEditor + PDF descargable + Galería
  *
  * Barra de acciones sticky en la parte inferior — siempre visible sin hacer scroll.
@@ -98,14 +98,13 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const [quickCreate, setQuickCreate] = useState<QuickCreateState | null>(null)
 
   // Campos del formulario
-  const [sku,          setSku]          = useState(product?.sku          ?? "")
   const [name,         setName]         = useState(product?.name         ?? "")
   const [description,  setDesc]         = useState(product?.description  ?? "")
   const [image,        setImage]        = useState(product?.image        ?? "")
   const [imageAlt,     setImageAlt]     = useState(product?.imageAlt     ?? "")
   const [gallery,      setGallery]      = useState<string[]>(product?.gallery       ?? [])
   const [galleryAlts,  setGalleryAlts]  = useState<string[]>(product?.galleryAlts   ?? [])
-  const [specs,        setSpecs]        = useState<string[]>(product?.specs         ?? [])
+  const [medidas,      setMedidas]      = useState<string[]>(product?.medidas         ?? [])
   const [techSpecs,    setTechSpecs]    = useState<TechnicalSpec[]>(product?.technicalSpecs ?? [])
   const [fichaTecnica, setFichaTecnica] = useState(product?.fichaTecnica ?? "")
 
@@ -133,7 +132,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
   async function handleQuickCreateCategory(catName: string, slug: string) {
     const newCat = await createCategoryAction({
-      name: catName, slug, image: "", color: "#1C2870", subcategories: [], count: 0, featured: false,
+      name: catName, slug, image: "", subcategories: [], count: 0, featured: false,
     })
     setCategoryOptions((prev) => [...prev, { value: newCat.name, label: newCat.name }])
     setSelectedCategory(newCat.name)
@@ -167,7 +166,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     const fd = new FormData(e.currentTarget)
 
     const result = productSchema.safeParse({
-      sku, name, brand: selectedBrand, category: selectedCategory,
+      name, brand: selectedBrand, category: selectedCategory,
       description, image, imageAlt: imageAlt.trim(),
     })
 
@@ -221,7 +220,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     }
 
     const data = {
-      sku, name,
+      name,
       brand:           selectedBrand,
       category:        selectedCategory,
       description,
@@ -233,7 +232,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       imageAlt:        imageAlt.trim() || undefined,
       gallery:         finalGallery.filter(Boolean),
       galleryAlts:     galleryAlts.filter(Boolean).length > 0 ? galleryAlts : undefined,
-      specs,
+      medidas,
       technicalSpecs:  techSpecs.filter((s) => s.label && s.value),
       fichaTecnica:    finalFicha,
     }
@@ -273,7 +272,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             <div>
               <p className="text-sm font-semibold text-amber-800">Completá los campos requeridos:</p>
               <ul className="mt-1 list-disc pl-4 text-xs text-amber-700">
-                {errors.sku         && <li>SKU</li>}
                 {errors.name        && <li>Nombre del producto</li>}
                 {errors.description && <li>Descripción corta</li>}
                 {errors.image       && <li>Imagen principal</li>}
@@ -287,22 +285,9 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
         {/* ── Sección 1: Identificación ── */}
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <SectionStep n={1} icon={Package} title="Identificación" subtitle="SKU, nombre, categoría y marca" />
+          <SectionStep n={1} icon={Package} title="Identificación" subtitle="Nombre, categoría y marca" />
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {/* SKU */}
-            <div>
-              <Field
-                label="SKU"
-                name="sku"
-                value={sku}
-                onChange={(e) => setSku((e.target as HTMLInputElement).value)}
-                placeholder="ET-AIS-001"
-                required
-              />
-              {errors.sku && <p className="mt-1 text-xs text-red-500">{errors.sku}</p>}
-            </div>
-
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Nombre */}
             <div>
               <Field
@@ -435,7 +420,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
         {/* ── Sección 3: Descripción ── */}
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <SectionStep n={3} icon={AlignLeft} title="Descripción" subtitle="Texto corto (tarjeta) y descripción completa" />
+          <SectionStep n={3} icon={AlignLeft} title="Descripción" subtitle="Texto corto, medidas disponibles y descripción completa" />
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
             <div>
@@ -458,11 +443,11 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             </div>
 
             <TagsEditor
-              label="Etiquetas / especificaciones"
-              hint="Badges en la tarjeta — máx. 3 visibles en el catálogo"
-              values={specs}
-              onChange={setSpecs}
-              placeholder="Ej: 22kV, DN 50mm"
+              label="Medidas disponibles"
+              hint="Las diferentes medidas o tamaños que tiene el producto (ej: 22kV, DN 50mm, 120–180 mm). Se muestran como badges en la tarjeta y la página de detalle."
+              values={medidas}
+              onChange={setMedidas}
+              placeholder="Ej: 22kV, DN 50mm, 120–180 mm…"
             />
           </div>
 
@@ -532,10 +517,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             </span>
             <span className="text-xs font-semibold text-slate-400">
               ID <span className="text-slate-600">{product.id}</span>
-            </span>
-            <span className="h-4 w-px bg-slate-200" />
-            <span className="text-xs font-semibold text-slate-400">
-              SKU <span className="font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded-md">{product.sku}</span>
             </span>
           </div>
         )}

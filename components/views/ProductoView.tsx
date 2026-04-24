@@ -29,7 +29,7 @@ interface ProductoViewProps {
 export function ProductoView({ product }: ProductoViewProps) {
   const { ref, isVisible } = useFadeInOnScroll()
   const [selectedImage, setSelectedImage] = useState(0)
-  const [activeTab, setActiveTab] = useState<"desc" | "specs">("desc")
+  const [activeTab, setActiveTab] = useState<"desc" | "medidas">("desc")
   const [showQuoteModal, setShowQuoteModal] = useState(false)
   const c = PRODUCT_DETAIL_CONTENT
 

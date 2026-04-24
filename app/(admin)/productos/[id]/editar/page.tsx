@@ -35,13 +35,7 @@ export default async function EditarProductoPage({ params }: PageProps) {
         backHref="/productos"
         backLabel="Volver a Productos"
         title="Editar Producto"
-        subtitle={
-          <>
-            <span className="font-mono text-xs text-slate-400">SKU: {product.sku}</span>
-            {" · "}
-            <span className="font-semibold text-slate-600">{product.name}</span>
-          </>
-        }
+        subtitle={product.name}
         mode="editar"
       />
       <ProductForm product={product} categories={categories} brands={brands} />

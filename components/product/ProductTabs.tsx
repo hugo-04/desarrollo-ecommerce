@@ -5,8 +5,8 @@ import { PRODUCT_DETAIL_CONTENT } from "@/lib/data/mock/static-content.mock"
 
 interface ProductTabsProps {
   product: Product
-  activeTab: "desc" | "specs"
-  onTabChange: (tab: "desc" | "specs") => void
+  activeTab: "desc" | "medidas"
+  onTabChange: (tab: "desc" | "medidas") => void
 }
 
 export function ProductTabs({ product, activeTab, onTabChange }: ProductTabsProps) {
@@ -25,9 +25,9 @@ export function ProductTabs({ product, activeTab, onTabChange }: ProductTabsProp
           {c.tabDesc}
         </button>
         <button
-          onClick={() => onTabChange("specs")}
+          onClick={() => onTabChange("medidas")}
           className={`pb-4 text-sm font-semibold transition-colors ${
-            activeTab === "specs"
+            activeTab === "medidas"
               ? "border-b-2 border-primary text-primary"
               : "text-slate-500 hover:text-slate-800"
           }`}

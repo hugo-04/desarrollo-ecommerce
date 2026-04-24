@@ -109,8 +109,7 @@ model Reclamacion {
 // ──────────────────────────────────────────────────────────
 model Product {
   id              Int      @id @default(autoincrement())
-  sku             String   @unique          // @unique ya crea B-tree index
-  name            String
+  name            String   @unique
   description     String   @default("")
   fullDescription String   @default("")
 
@@ -119,7 +118,7 @@ model Product {
   gallery         String[]
   galleryAlts     String[]
 
-  specs           String[]
+  medidas         String[]
   fichaTecnica    String?
 
   featured        Boolean  @default(false)

@@ -13,7 +13,7 @@ export const SITE_URL  = "https://electrothina.com"
 export const SITE_NAME = "Electro Thina"
 
 /** Imagen OG por defecto — redes sociales y WhatsApp */
-const OG_IMAGE = `${SITE_URL}/logotipo.png`
+const OG_IMAGE = `${SITE_URL}/logo/logotipo.png`
 
 /**
  * Keyword principal del negocio — frase corta y real que la gente busca.
@@ -328,7 +328,6 @@ export function generateCategoryMeta(category: {
  */
 export function generateProductMeta(product: {
   id: number
-  sku: string
   name: string
   category: string
   description?: string | null
@@ -336,8 +335,8 @@ export function generateProductMeta(product: {
 }): Metadata {
   const title       = `${product.name} — Precio y Ficha Técnica | ${SITE_NAME}`
   const description = (product.description?.trim() && product.description.trim().length > 30)
-    ? `${product.description.trim().slice(0, 130)}. SKU ${product.sku}. Cotización en Lima, Perú en menos de 24 h.`
-    : `${product.name} — SKU ${product.sku}. Ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Cotización en Lima, Perú en 24 h.`
+    ? `${product.description.trim().slice(0, 160)}. Cotización en Lima, Perú en menos de 24 h.`
+    : `${product.name} — Ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Cotización en Lima, Perú en 24 h.`
 
   const url         = `/producto/${product.id}`
   const imageUrl    = (product.image && product.image.startsWith("http")) ? product.image : OG_IMAGE
@@ -404,7 +403,6 @@ export function buildCategorySchema(
  */
 export function buildProductSchema(product: {
   id: number
-  sku: string
   name: string
   category: string
   brand?: string
@@ -426,8 +424,6 @@ export function buildProductSchema(product: {
     "@type":      "Product",
     "@id":        productUrl,
     name:         product.name,
-    sku:          product.sku,
-    mpn:          product.sku,
     description:  descriptionText.slice(0, 500),
     image:        productImage,
     url:          productUrl,

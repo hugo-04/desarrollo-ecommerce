@@ -251,7 +251,6 @@ export function CatalogoView({
                           <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
                             {product.brand}
                           </span>
-                          <span className="text-[10px] text-slate-400">SKU: {product.sku}</span>
                           <div className="flex items-center gap-0.5">
                             <IconStar className="h-3 w-3 text-amber-500" />
                             <span className="text-[10px] font-medium text-slate-600">
@@ -266,12 +265,12 @@ export function CatalogoView({
                           {product.description}
                         </p>
                         <div className="flex flex-wrap gap-1">
-                          {product.specs.map((spec, index) => (
+                          {product.medidas.map((medida, index) => (
                             <span
                               key={index}
                               className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500"
                             >
-                              {spec}
+                              {medida}
                             </span>
                           ))}
                         </div>

@@ -394,7 +394,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
-              <img src="/logotipo.png" alt="Electro Thina" className="h-8 w-auto object-contain"
+              <img src="/logo/logotipo.png" alt="Electro Thina" className="h-8 w-auto object-contain"
                 style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.6)) brightness(1.3)" }} />
               <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white">
                 <X size={16} />

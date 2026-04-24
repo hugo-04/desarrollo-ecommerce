@@ -1,0 +1,224 @@
+"use client"
+
+/**
+ * AdminCategoriasView — Vista completa del listado de categorías (panel admin).
+ *
+ * Responsabilidad única (SRP): orquesta estado de paginación y renderiza la tabla.
+ * Animación de cambio de página idéntica a AdminProductosView:
+ *   - Wrapper: fade-out + sink cuando loading=true
+ *   - Filas: rowEnter escalonado cuando llegan datos nuevos
+ */
+
+import Link from "next/link"
+import { getCategoriesPagedAction, deleteCategoryAction } from "@/features/categorias/actions"
+import type { CategoryDTO } from "@/features/categorias/types"
+import { Button }          from "@/components/ui/button"
+import {
+  Table, TableHeader, TableBody,
+  TableHead, TableRow, TableCell,
+} from "@/components/ui/table"
+import { AdminListHeader }   from "@/components/admin/AdminListHeader"
+import { AdminPagination }   from "@/components/admin/AdminPagination"
+import { DeleteDialog }      from "@/components/admin/DeleteDialog"
+import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
+
+// ── Constantes ────────────────────────────────────────────────────────────────
+
+const PAGE_SIZE         = 10
+const PAGE_SIZE_OPTIONS = [10, 25, 50]
+const ROW_STAGGER_MS    = 35
+
+// ── Helper: gradiente determinístico por slug (sin campo en DB) ────────────────
+
+const GRADIENT_PALETTE = [
+  "from-[#1C2870] to-[#151f5c]",
+  "from-blue-700 to-blue-900",
+  "from-indigo-700 to-[#1C2870]",
+  "from-slate-600 to-slate-800",
+  "from-cyan-700 to-blue-900",
+  "from-sky-700 to-indigo-900",
+  "from-slate-700 to-zinc-900",
+  "from-blue-800 to-indigo-950",
+]
+
+/** Devuelve un gradiente consistente basado en el hash del slug */
+function autoGradient(slug: string): string {
+  let h = 0
+  for (const c of slug) h = (h * 31 + c.charCodeAt(0)) >>> 0
+  return GRADIENT_PALETTE[h % GRADIENT_PALETTE.length]
+}
+
+// ── Subcomponente: fila de categoría ─────────────────────────────────────────
+
+interface CategoryRowProps {
+  cat:        CategoryDTO
+  index:      number
+  removingId: number | null
+  onDelete:   () => void
+}
+
+/** Fila individual con animación de entrada escalonada y salida al eliminar */
+function CategoryRow({ cat, index, removingId, onDelete }: CategoryRowProps) {
+  const isRemoving = removingId === cat.id
+  return (
+    <TableRow
+      className="border-slate-100"
+      style={{
+        animation: `rowEnter 0.28s ease-out both`,
+        animationDelay: `${index * ROW_STAGGER_MS}ms`,
+        opacity:    isRemoving ? 0 : undefined,
+        transform:  isRemoving ? "translateX(12px) scale(0.98)" : undefined,
+        transition: isRemoving ? "all 0.3s ease" : undefined,
+      }}
+    >
+      {/* Franja de color derivada del slug */}
+      <TableCell className="w-2 p-0">
+        <div className={`h-full min-h-[60px] w-1.5 rounded-r-full bg-gradient-to-b ${autoGradient(cat.slug)}`} />
+      </TableCell>
+
+      {/* Nombre */}
+      <TableCell className="px-5 py-4 font-semibold text-slate-800">{cat.name}</TableCell>
+
+      {/* Slug — monospace */}
+      <TableCell className="px-5 py-4">
+        <span className="rounded-md bg-slate-100 px-2.5 py-1.5 font-mono text-xs text-slate-500">
+          {cat.slug}
+        </span>
+      </TableCell>
+
+      {/* Contador de productos */}
+      <TableCell className="px-5 py-4">
+        <span className="inline-flex h-7 min-w-[28px] items-center justify-center rounded-full bg-[#1C2870]/8 px-2.5 text-xs font-bold text-[#1C2870]">
+          {cat.count}
+        </span>
+      </TableCell>
+
+      {/* Subcategorías — chips (máx. 3 + overflow) */}
+      <TableCell className="px-5 py-4">
+        {cat.subcategories.length === 0 ? (
+          <span className="text-xs text-slate-300">—</span>
+        ) : (
+          <div className="flex flex-wrap gap-1.5">
+            {cat.subcategories.slice(0, 3).map((sub) => (
+              <span key={sub} className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600">
+                {sub}
+              </span>
+            ))}
+            {cat.subcategories.length > 3 && (
+              <span className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-400">
+                +{cat.subcategories.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+      </TableCell>
+
+      {/* Acciones */}
+      <TableCell className="px-5 py-4">
+        <div className="flex gap-2">
+          <Button asChild variant="outline" size="xs">
+            <Link href={`/categorias/${cat.id}/editar`}>Editar</Link>
+          </Button>
+          <DeleteDialog
+            trigger={
+              <Button
+                variant="outline" size="xs" disabled={isRemoving}
+                className="border-red-100 text-red-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+              >
+                Eliminar
+              </Button>
+            }
+            itemName={cat.name}
+            onConfirm={onDelete}
+          />
+        </div>
+      </TableCell>
+    </TableRow>
+  )
+}
+
+// ── Componente principal ──────────────────────────────────────────────────────
+
+/** Orquesta el estado de paginación y compone la tabla de categorías */
+export function AdminCategoriasView() {
+  const {
+    items: paged, total, loading, search,
+    pageSize, currentPage, totalPages, removingId,
+    handleSearch, setPage, setPageSize, handleDelete,
+  } = useAdminPagedList<CategoryDTO>({
+    pageSize: PAGE_SIZE,
+    loadFn: ({ page, query, limit }) => getCategoriesPagedAction({ page, query, limit }),
+  })
+
+  return (
+    <div>
+      <AdminListHeader
+        title="Categorías"
+        subtitle={loading ? "Cargando…" : `${total} categoría${total !== 1 ? "s" : ""}`}
+        newHref="/categorias/nueva"
+        newLabel="Nueva categoría"
+        searchValue={search}
+        searchPlaceholder="Buscar por nombre o slug…"
+        onSearch={handleSearch}
+      />
+
+      {/* Keyframes de entrada compartidos con el resto de vistas de lista */}
+      <style>{`
+        @keyframes rowEnter {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* Wrapper animado: se atenúa durante la carga, filas entran con stagger */}
+      <div
+        className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+        style={{
+          opacity:    loading ? 0.45 : 1,
+          transform:  loading ? "translateY(4px)" : "translateY(0)",
+          transition: "opacity 0.2s ease, transform 0.2s ease",
+        }}
+      >
+        <Table>
+          <TableHeader className="bg-slate-50">
+            <TableRow className="border-slate-100">
+              <TableHead className="w-8 px-0 py-4" />
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Nombre</TableHead>
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Slug</TableHead>
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Productos</TableHead>
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Subcategorías</TableHead>
+              <TableHead className="px-5 py-4 font-semibold text-slate-600">Acciones</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {!loading && paged.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="py-10 text-center text-slate-400">
+                  {search ? "Sin resultados para esa búsqueda." : "No hay categorías aún."}
+                </TableCell>
+              </TableRow>
+            )}
+
+            {/* key incluye currentPage para re-montar filas y disparar rowEnter */}
+            {paged.map((cat, i) => (
+              <CategoryRow
+                key={`${currentPage}-${cat.id}`}
+                cat={cat}
+                index={i}
+                removingId={removingId}
+                onDelete={() => handleDelete(cat.id, () => deleteCategoryAction(cat.id), cat.name)}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <AdminPagination
+        currentPage={currentPage} totalPages={totalPages} total={total}
+        onPage={setPage} pageSize={pageSize} pageSizeOptions={PAGE_SIZE_OPTIONS}
+        onPageSize={setPageSize}
+      />
+    </div>
+  )
+}

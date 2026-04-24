@@ -21,8 +21,6 @@ export interface TechnicalSpec {
  */
 export interface Product {
   id: number
-  /** Código único de identificación (ej: "ET-AIS-001") */
-  sku: string
   name: string
   /** Nombre de la marca (referencia por nombre, no por ID) */
   brand: string
@@ -35,7 +33,7 @@ export interface Product {
   /** Texto alternativo SEO de la imagen principal */
   imageAlt?: string
   /** Etiquetas técnicas cortas para mostrar como badges (ej: "22kV", "DN 50mm") */
-  specs: string[]
+  medidas: string[]
   /** Descripción corta — aparece en la tarjeta del catálogo */
   description: string
   /** Descripción completa en HTML (generada por el editor TipTap) */
