@@ -64,16 +64,19 @@ async function main() {
     }
     await prisma.product.create({
       data: {
-        name: p.name,
-        description: "",
-        image: "",
-        gallery: [],
-        medidas: [],
-        featured: false,
-        bestSeller: false,
-        rating: 4.5,
-        categoryId: category.id,
-        brandId: defaultBrand.id,
+        name:            p.name,
+        description:     p.description     ?? "",
+        fullDescription: p.fullDescription ?? "",
+        image:           "",
+        gallery:         [],
+        medidas:         p.medidas         ?? [],
+        technicalSpecs:  p.technicalSpecs  ?? undefined,
+        fichaTecnica:    p.fichaTecnica    ?? null,
+        featured:        false,
+        bestSeller:      false,
+        rating:          4.5,
+        categoryId:      category.id,
+        brandId:         defaultBrand.id,
       },
     })
     seeded++

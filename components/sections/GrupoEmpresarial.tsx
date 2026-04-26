@@ -8,7 +8,7 @@ import { fadeUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
 const EMPRESAS = [
   {
     nombre:   "Electro Thina S.A.C.",
-    ruc:      "20601523847",
+    ruc:      "20609410711",
     giro:     "Fabricación y distribución de ferretería eléctrica AT/MT",
     logo:     "/logo/logotipo.png",
     actual:   true,

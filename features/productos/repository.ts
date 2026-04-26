@@ -33,6 +33,15 @@ export interface IProductRepository {
 export class DbProductRepository implements IProductRepository {
   constructor(private db: PrismaClient) { }
 
+  /** Convierte technicalSpecs desde DB (Record o Array) → TechnicalSpec[] */
+  private parseSpecs(raw: unknown): { label: string; value: string }[] {
+    if (!raw) return []
+    if (Array.isArray(raw)) return raw as { label: string; value: string }[]
+    if (typeof raw === "object")
+      return Object.entries(raw as Record<string, string>).map(([label, value]) => ({ label, value }))
+    return []
+  }
+
   /** Mapea el modelo de DB (con relaciones incluidas) al DTO de la app */
   private mapProduct(p: any): Product {
     return {
@@ -52,7 +61,7 @@ export class DbProductRepository implements IProductRepository {
       category: p.category?.name ?? "",
       categorySlug: p.category?.slug ?? undefined,
       brand: p.brand?.name ?? "",
-      technicalSpecs: (p.technicalSpecs as any) ?? [],
+      technicalSpecs: this.parseSpecs(p.technicalSpecs),
     }
   }
 
