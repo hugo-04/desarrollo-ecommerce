@@ -31,15 +31,15 @@ export function FabricacionSection() {
           {/* Left — 7/12 */}
           <motion.div variants={fadeLeft} className="lg:col-span-7">
             <div className="mb-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-red-500" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">
+              <div className="h-px w-8 bg-slate-500" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">
                 {c.badge}
               </span>
             </div>
-            <h2 className="mb-5 text-3xl font-extrabold leading-tight tracking-tight text-[#121A47] lg:text-4xl">
+            <h2 className="mb-5 text-3xl font-extrabold leading-tight tracking-tight text-[#1e293b] lg:text-4xl">
               {c.title}
               <br />
-              <span className="bg-gradient-to-r from-primary to-red-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-slate-600 bg-clip-text text-transparent">
                 {c.titleHighlight}
               </span>
             </h2>
@@ -61,7 +61,7 @@ export function FabricacionSection() {
               >
                 <span className="relative z-10">{c.ctaLabel}</span>
                 <IconArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#cc1b1b] to-[#b01010] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#64748b] to-[#475569] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </Link>
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 bg-amber-50 px-4 py-2">
                 <IconCertificate className="h-4 w-4 text-amber-600" />

@@ -29,7 +29,7 @@ function analyzeSeoName(text: string): string | null {
   if (!text.trim()) return null
   const words = text.trim().split(/\s+/)
   if (words.length < 2)
-    return 'Tip SEO: usá 2 o más palabras descriptivas (ej: "Aisladores Poliméricos")'
+    return 'Tip SEO: usá 2 o más palabras descriptivas (ej: "Lorem Ipsum")'
   if (text.length > 45)
     return "Tip SEO: muy largo — máx. 45 caracteres para mejor indexación"
   if (GENERIC_WORDS.includes(text.trim().toLowerCase()))
@@ -87,7 +87,7 @@ export function TagsEditor({ label, hint, values, onChange, placeholder, seoHint
               ? "border-amber-300 focus:border-amber-400 focus:ring-amber-100"
               : seoOk
               ? "border-green-300 focus:border-green-400 focus:ring-green-100"
-              : "border-slate-200 focus:border-[#1C2870]/40 focus:ring-[#1C2870]/15"
+              : "border-slate-200 focus:border-[#334155]/40 focus:ring-[#334155]/15"
           }`}
         />
         <button

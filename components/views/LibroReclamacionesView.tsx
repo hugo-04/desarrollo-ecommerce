@@ -69,12 +69,12 @@ export function LibroReclamacionesView() {
           </div>
           <p className="text-xs text-slate-500 leading-relaxed">
             Conforme al Código de Protección y Defensa del Consumidor (Ley N° 29571),
-            Electro Thina S.A.C. atenderá tu {tipo === "RECLAMACION" ? "reclamación" : "queja"} en un plazo máximo de <strong>30 días hábiles</strong>.
+            Lorem Ipsum S.A.C. atenderá tu {tipo === "RECLAMACION" ? "reclamación" : "queja"} en un plazo máximo de <strong>30 días hábiles</strong>.
             Recibirás respuesta en el correo indicado.
           </p>
           <button
             onClick={() => window.location.href = "/"}
-            className="mt-8 rounded-xl bg-[#121A47] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#1C2870]"
+            className="mt-8 rounded-xl bg-[#1e293b] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#334155]"
           >
             Volver al inicio
           </button>
@@ -86,7 +86,7 @@ export function LibroReclamacionesView() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="bg-[#121A47] py-8 text-white">
+      <div className="bg-[#1e293b] py-8 text-white">
         <div className="mx-auto max-w-3xl px-4">
           <div className="mb-3 flex items-center gap-2 text-xs text-slate-400">
             <span>Inicio</span>
@@ -126,7 +126,7 @@ export function LibroReclamacionesView() {
       <form onSubmit={handleSubmit} className="mx-auto max-w-3xl px-4 py-6 sm:py-10 space-y-6 sm:space-y-8">
 
         {error && (
-          <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
             {error}
           </div>
@@ -134,8 +134,8 @@ export function LibroReclamacionesView() {
 
         {/* Sección 1: Datos del consumidor */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
-          <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#121A47]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#121A47] text-[11px] font-extrabold text-white">1</span>
+          <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#1e293b]">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1e293b] text-[11px] font-extrabold text-white">1</span>
             Datos del Consumidor
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -144,13 +144,13 @@ export function LibroReclamacionesView() {
 
             <div>
               <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-                Tipo de documento <span className="text-red-500">*</span>
+                Tipo de documento <span className="text-slate-500">*</span>
               </label>
               <select
                 name="tipoDoc"
                 required
                 defaultValue="DNI"
-                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-[#1C2870]/50 focus:bg-white focus:ring-2 focus:ring-[#1C2870]/15"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-[#334155]/50 focus:bg-white focus:ring-2 focus:ring-[#334155]/15"
               >
                 {TIPOS_DOC.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
@@ -166,8 +166,8 @@ export function LibroReclamacionesView() {
 
         {/* Sección 2: Tipo de reclamo */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
-          <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#121A47]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#121A47] text-[11px] font-extrabold text-white">2</span>
+          <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#1e293b]">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1e293b] text-[11px] font-extrabold text-white">2</span>
             Tipo de Reclamo
           </h2>
 
@@ -179,7 +179,7 @@ export function LibroReclamacionesView() {
                 onClick={() => setTipo(t)}
                 className={`rounded-xl border-2 p-4 text-left transition-all ${
                   tipo === t
-                    ? "border-[#1C2870] bg-[#1C2870]/5"
+                    ? "border-[#334155] bg-[#334155]/5"
                     : "border-slate-200 hover:border-slate-300"
                 }`}
               >
@@ -195,7 +195,7 @@ export function LibroReclamacionesView() {
             ))}
           </div>
 
-          <div className="mb-1 text-xs font-semibold text-slate-600">Bien contratado <span className="text-red-500">*</span></div>
+          <div className="mb-1 text-xs font-semibold text-slate-600">Bien contratado <span className="text-slate-500">*</span></div>
           <div className="flex gap-3">
             {(["PRODUCTO", "SERVICIO"] as const).map((b) => (
               <label key={b} className="flex cursor-pointer items-center gap-2">
@@ -205,7 +205,7 @@ export function LibroReclamacionesView() {
                   value={b}
                   checked={tipoBien === b}
                   onChange={() => setTipoBien(b)}
-                  className="accent-[#1C2870]"
+                  className="accent-[#334155]"
                 />
                 <span className="text-sm text-slate-700">{b === "PRODUCTO" ? "Producto" : "Servicio"}</span>
               </label>
@@ -215,33 +215,33 @@ export function LibroReclamacionesView() {
 
         {/* Sección 3: Detalle */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
-          <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#121A47]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#121A47] text-[11px] font-extrabold text-white">3</span>
+          <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#1e293b]">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1e293b] text-[11px] font-extrabold text-white">3</span>
             Detalle del Reclamo
           </h2>
           <div className="space-y-4">
             <div>
               <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-                Descripción del reclamo <span className="text-red-500">*</span>
+                Descripción del reclamo <span className="text-slate-500">*</span>
               </label>
               <textarea
                 name="descripcion"
                 required
                 rows={4}
                 placeholder="Describa con detalle lo ocurrido, indicando fechas y el bien o servicio involucrado..."
-                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-[#1C2870]/50 focus:bg-white focus:ring-2 focus:ring-[#1C2870]/15"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-[#334155]/50 focus:bg-white focus:ring-2 focus:ring-[#334155]/15"
               />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-                Pedido / Pretensión <span className="text-red-500">*</span>
+                Pedido / Pretensión <span className="text-slate-500">*</span>
               </label>
               <textarea
                 name="pedido"
                 required
                 rows={3}
                 placeholder="Indique qué solución o compensación solicita (cambio, devolución, reparación, etc.)..."
-                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-[#1C2870]/50 focus:bg-white focus:ring-2 focus:ring-[#1C2870]/15"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-[#334155]/50 focus:bg-white focus:ring-2 focus:ring-[#334155]/15"
               />
             </div>
           </div>
@@ -250,9 +250,9 @@ export function LibroReclamacionesView() {
         {/* Declaración */}
         <div className="rounded-xl border border-slate-200 bg-slate-50 px-5 py-4">
           <label className="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" required className="mt-0.5 accent-[#1C2870]" />
+            <input type="checkbox" required className="mt-0.5 accent-[#334155]" />
             <span className="text-xs text-slate-600 leading-relaxed">
-              Declaro que los datos proporcionados son verídicos y autorizo a Electro Thina S.A.C.
+              Declaro que los datos proporcionados son verídicos y autorizo a Lorem Ipsum S.A.C.
               a utilizarlos únicamente para la gestión de este reclamo, conforme a la Ley N° 29733
               de Protección de Datos Personales.
             </span>
@@ -262,13 +262,13 @@ export function LibroReclamacionesView() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-xl bg-gradient-to-r from-[#121A47] to-[#1C2870] py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.01] hover:shadow-xl disabled:opacity-60 disabled:hover:scale-100"
+          className="w-full rounded-xl bg-gradient-to-r from-[#1e293b] to-[#334155] py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.01] hover:shadow-xl disabled:opacity-60 disabled:hover:scale-100"
         >
           {saving ? "Registrando reclamo..." : "Enviar Reclamo"}
         </button>
 
         <p className="text-center text-[11px] text-slate-400">
-          Electro Thina S.A.C. · RUC: 20609410711 · Lima, Perú
+          Lorem Ipsum S.A.C. · RUC: 00000000000
         </p>
       </form>
     </div>
@@ -281,14 +281,14 @@ function Field({ label, name, type = "text", required, placeholder }: {
   return (
     <div>
       <label className="mb-1.5 block text-xs font-semibold text-slate-600">
-        {label} {required && <span className="text-red-500">*</span>}
+        {label} {required && <span className="text-slate-500">*</span>}
       </label>
       <input
         type={type}
         name={name}
         required={required}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 transition-all focus:border-[#1C2870]/50 focus:bg-white focus:ring-2 focus:ring-[#1C2870]/15"
+        className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 transition-all focus:border-[#334155]/50 focus:bg-white focus:ring-2 focus:ring-[#334155]/15"
       />
     </div>
   )

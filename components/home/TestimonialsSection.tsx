@@ -6,7 +6,7 @@ import { MOCK_TESTIMONIALS as testimonials } from "@/lib/data/mock/testimonials.
 import { IconQuote } from "@/components/icons"
 
 const ACCENT_COLORS = [
-  { border: "border-l-red-500", glow: "bg-red-500/5", badge: "bg-red-500/10 text-red-400 border-red-500/20", quote: "text-red-400/50" },
+  { border: "border-l-red-500", glow: "bg-slate-500/5", badge: "bg-slate-500/10 text-slate-400 border-slate-500/20", quote: "text-slate-400/50" },
   { border: "border-l-blue-500", glow: "bg-blue-500/5", badge: "bg-blue-500/10 text-blue-400 border-blue-500/20", quote: "text-blue-400/50" },
   { border: "border-l-amber-500", glow: "bg-amber-500/5", badge: "bg-amber-500/10 text-amber-400 border-amber-500/20", quote: "text-amber-400/50" },
 ]
@@ -30,15 +30,15 @@ export function TestimonialsSection() {
         }}
       />
       <div className="absolute -left-32 top-1/3 h-72 w-72 rounded-full bg-blue-500/5 blur-3xl" />
-      <div className="absolute -right-32 bottom-1/3 h-64 w-64 rounded-full bg-red-500/5 blur-3xl" />
+      <div className="absolute -right-32 bottom-1/3 h-64 w-64 rounded-full bg-slate-500/5 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-4">
         <motion.div variants={fadeUp} className="mb-14 text-center">
-          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-red-600">
-            <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-slate-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-slate-500" />
             Testimonios
           </span>
-          <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">
+          <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">
             Lo que dicen nuestros clientes
           </h2>
           <p className="mx-auto max-w-md text-sm text-slate-500">
@@ -82,7 +82,7 @@ export function TestimonialsSection() {
                       crossOrigin="anonymous"
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="truncate text-sm font-bold text-[#121A47]">
+                      <p className="truncate text-sm font-bold text-[#1e293b]">
                         {testimonial.author}
                       </p>
                       <p className="truncate text-xs text-slate-400">{testimonial.position}</p>

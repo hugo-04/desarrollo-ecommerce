@@ -20,7 +20,7 @@ export function FullWidthStats() {
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1920&q=80')] bg-cover bg-center bg-fixed" />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-[#07091E]/95 via-[#121A47]/90 to-[#07091E]/95 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#07091E]/95 via-[#1e293b]/90 to-[#07091E]/95 z-10" />
       <div
         className="absolute inset-0 opacity-100 z-10"
         style={{
@@ -52,7 +52,7 @@ function StatCounter({ stat }: { stat: Stat }) {
         <span className="neon-title text-4xl font-extrabold tracking-tight text-white lg:text-5xl power-on">
           {count}
         </span>
-        <span className="text-xl font-bold text-red-400">{stat.suffix}</span>
+        <span className="text-xl font-bold text-slate-400">{stat.suffix}</span>
       </div>
       <p className="whitespace-pre-line text-xs font-medium uppercase tracking-wider text-slate-400">
         {stat.label}

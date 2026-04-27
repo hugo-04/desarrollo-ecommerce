@@ -20,50 +20,50 @@ export function NosotrosView() {
   const valores = [
     {
       icon: IconShield,
-      title: "Calidad Certificada",
-      description: "Herrajes, aisladores y accesorios eléctricos para alta y media tensión con certificaciones IEC, ANSI y NTP en cada lote.",
+      title: "Lorem Ipsum A",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       icon: IconTruck,
-      title: "Disponibilidad",
-      description: "Stock permanente de más de 50 referencias AT/MT. Despacho en 48 horas a nivel nacional, sin depender de importaciones de largo plazo.",
+      title: "Lorem Ipsum B",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       icon: IconClock,
-      title: "Puntualidad",
-      description: "Entregas coordinadas con el cronograma de obra. Que el proveedor no sea el cuello de botella de tu proyecto.",
+      title: "Lorem Ipsum C",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
     {
       icon: IconHeadphones,
-      title: "Asesoría Técnica",
-      description: "Ingenieros especializados en materiales eléctricos AT/MT que te ayudan a seleccionar el accesorio correcto antes de que empiece la obra.",
+      title: "Lorem Ipsum D",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     },
   ]
 
   const stats = [
-    { value: `${yearsActive}+`, label: "Años en el sector AT/MT" },
-    { value: "350+",            label: "Proyectos ejecutados" },
-    { value: "50+",             label: "Productos en stock" },
-    { value: "98%",             label: "Clientes satisfechos" },
+    { value: `${yearsActive}+`, label: "Lorem ipsum sector" },
+    { value: "350+",            label: "Lorem ipsum ejecutados" },
+    { value: "50+",             label: "Lorem ipsum stock" },
+    { value: "98%",             label: "Lorem ipsum satisfechos" },
   ]
 
   const currentYear = new Date().getFullYear()
   const hitos = [
-    { year: "2010", title: "Fundación",         desc: "Electro Thina abre en Lima como distribuidor de materiales eléctricos AT/MT" },
-    { year: "2013", title: "Primeros contratos", desc: "Alianzas con concesionarias eléctricas del sector alta y media tensión" },
-    { year: "2016", title: "Planta propia",      desc: "Inauguramos fabricación propia de herrajes y accesorios eléctricos" },
-    { year: "2019", title: "Cobertura nacional", desc: "Suministro de ferretería eléctrica a todas las regiones del Perú" },
-    { year: String(currentYear), title: "Referente AT/MT", desc: "Proveedor de referencia en ferretería y accesorios eléctricos para alta y media tensión" },
+    { year: "2010", title: "Lorem Ipsum",         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
+    { year: "2013", title: "Lorem Ipsum",          desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod" },
+    { year: "2016", title: "Lorem Ipsum",          desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod" },
+    { year: "2019", title: "Lorem Ipsum",          desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod" },
+    { year: String(currentYear), title: "Lorem Ipsum", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
   ]
 
   return (
     <>
       {/* ===== HERO — DARK ===== */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#07091E] via-[#121A47] to-[#0B1035]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#07091E] via-[#1e293b] to-[#0f172a]" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1920&q=80')] bg-cover bg-center opacity-[0.07]" />
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h40v40H0z\' fill=\'none\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")' }} />
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-slate-500/50 to-transparent" />
 
         <motion.div
           initial="hidden"
@@ -71,16 +71,16 @@ export function NosotrosView() {
           variants={staggerContainer}
           className="relative mx-auto max-w-7xl px-4 py-24 text-center"
         >
-          <motion.div variants={fadeUp} className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-red-500/20 bg-red-500/[0.08] px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-red-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+          <motion.div variants={fadeUp} className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-slate-500/20 bg-slate-500/[0.08] px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-slate-500 animate-pulse" />
             Quiénes somos
           </motion.div>
           {/* H1 con keyword principal */}
           <motion.h1 variants={fadeUp} className="mb-5 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-            Electro Thina — Fabricantes de Accesorios Eléctricos AT/MT en Perú
+            Lorem Ipsum — Lorem Ipsum Dolor Sit Amet
           </motion.h1>
           <motion.p variants={fadeUp} className="mx-auto max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
-            Fabricantes y distribuidores de ferretería y accesorios eléctricos para alta y media tensión en Lima, Perú — desde el año 2010.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </motion.p>
         </motion.div>
 
@@ -99,19 +99,18 @@ export function NosotrosView() {
           >
             <motion.div variants={fadeLeft}>
               <div className="mb-4 flex items-center gap-3">
-                <div className="h-px w-8 bg-red-500" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Nuestra Historia</span>
+                <div className="h-px w-8 bg-slate-500" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">Nuestra Historia</span>
               </div>
               {/* H2 con keyword secundaria */}
-              <h2 className="mb-5 text-3xl font-extrabold leading-tight tracking-tight text-[#121A47] lg:text-4xl">
-                Más de {yearsActive} años<br />en el sector eléctrico AT/MT
+              <h2 className="mb-5 text-3xl font-extrabold leading-tight tracking-tight text-[#1e293b] lg:text-4xl">
+                Lorem ipsum {yearsActive} años<br />lorem ipsum dolor sit amet
               </h2>
-              {/* Primer párrafo — keyword natural + especificidad */}
               <p className="mb-4 text-sm leading-[1.85] text-slate-600">
-                Electro Thina nació en Lima con un objetivo concreto: garantizar suministro confiable de ferretería y accesorios eléctricos para alta y media tensión en el Perú. Aisladores, grapas, conectores y herrajes galvanizados que lleguen a tiempo y con la documentación técnica que exige el proyecto.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
               </p>
               <p className="mb-6 text-sm leading-[1.85] text-slate-600">
-                Con el tiempo armamos alianzas directas con fabricantes internacionales y desarrollamos nuestra propia línea de accesorios eléctricos certificados bajo normas IEC, ANSI y NTP. Eso nos da control sobre la calidad y los plazos, sin depender de intermediarios.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
               </p>
               <div className="grid grid-cols-2 gap-3">
                 {stats.map((stat, i) => (
@@ -127,7 +126,7 @@ export function NosotrosView() {
               <div className="overflow-hidden rounded-3xl shadow-2xl">
                 <img
                   src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80"
-                  alt="Operaciones Electro Thina — distribución de materiales eléctricos AT/MT"
+                  alt="Lorem ipsum dolor sit amet"
                   className="h-[440px] w-full object-cover"
                 />
               </div>
@@ -136,11 +135,11 @@ export function NosotrosView() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={viewportOnce}
                 transition={{ delay: 0.4 }}
-                className="absolute -bottom-6 -left-6 rounded-2xl border border-white/20 bg-[#121A47] p-5 shadow-2xl"
+                className="absolute -bottom-6 -left-6 rounded-2xl border border-white/20 bg-[#1e293b] p-5 shadow-2xl"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-500/20">
-                    <IconCertificate className="h-5 w-5 text-red-400" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-500/20">
+                    <IconCertificate className="h-5 w-5 text-slate-400" />
                   </div>
                   <div>
                     <p className="text-base font-extrabold text-white">ISO 9001</p>
@@ -170,7 +169,7 @@ export function NosotrosView() {
               >
                 {hitos.map((hito, i) => (
                   <motion.div key={i} variants={fadeUp} className="flex flex-col items-center text-center">
-                    <div className="relative mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[#121A47] shadow-lg ring-4 ring-white">
+                    <div className="relative mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[#1e293b] shadow-lg ring-4 ring-white">
                       <span className="text-[9px] font-extrabold text-white">{i + 1}</span>
                     </div>
                     <p className="mb-1 text-lg font-extrabold text-primary">{hito.year}</p>
@@ -198,7 +197,7 @@ export function NosotrosView() {
               <div className="overflow-hidden rounded-3xl shadow-xl">
                 <img
                   src="https://images.unsplash.com/photo-1581093196867-ca9b9e02e42e?w=800&q=80"
-                  alt="Planta de fabricación de herrajes y accesorios eléctricos AT/MT"
+                  alt="Lorem ipsum dolor sit amet consectetur"
                   className="h-[380px] w-full object-cover"
                 />
               </div>
@@ -215,7 +214,7 @@ export function NosotrosView() {
                   </div>
                   <div>
                     <p className="text-sm font-extrabold text-slate-800">Fabricante</p>
-                    <p className="text-[10px] font-semibold text-emerald-600">Certificado IEC</p>
+                    <p className="text-[10px] font-semibold text-emerald-600">Lorem Ipsum</p>
                   </div>
                 </div>
               </motion.div>
@@ -223,23 +222,23 @@ export function NosotrosView() {
 
             <motion.div variants={fadeLeft} className="order-1 lg:order-2">
               <div className="mb-4 flex items-center gap-3">
-                <div className="h-px w-8 bg-red-500" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Fabricación Propia</span>
+                <div className="h-px w-8 bg-slate-500" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">Lorem Ipsum Dolor</span>
               </div>
-              <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-[#121A47] lg:text-4xl">
-                Fabricamos herrajes<br />y accesorios eléctricos AT/MT
+              <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-[#1e293b] lg:text-4xl">
+                Lorem Ipsum Dolor<br />Sit Amet Consectetur
               </h2>
               <p className="mb-4 text-sm leading-[1.85] text-slate-600">
-                No solo distribuimos — fabricamos. Nuestra planta en Lima produce herrajes, aisladores y accesorios eléctricos para líneas de alta y media tensión con control de calidad propio en cada etapa del proceso.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
               </p>
               <p className="mb-6 text-sm leading-[1.85] text-slate-600">
-                Eso significa trazabilidad real por lote, capacidad de ajustar especificaciones técnicas según el proyecto, y garantía directa de fábrica. Sin intermediarios que diluyan esa responsabilidad.
+                Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.
               </p>
               <ul className="mb-6 space-y-3">
                 {[
-                  "Control de calidad propio en cada etapa del proceso",
-                  "Trazabilidad completa de materiales y lotes de producción",
-                  "Personalización técnica según especificaciones del proyecto",
+                  "Lorem ipsum dolor sit amet consectetur adipiscing",
+                  "Lorem ipsum dolor sit amet ut labore et dolore",
+                  "Lorem ipsum dolor adipiscing elit sed do eiusmod",
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-slate-700">
                     <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100">
@@ -251,7 +250,7 @@ export function NosotrosView() {
               </ul>
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 bg-amber-50 px-4 py-2">
                 <IconCertificate className="h-4 w-4 text-amber-600" />
-                <span className="text-xs font-bold text-amber-700">Marca Propia ET — Certificado IEC</span>
+                <span className="text-xs font-bold text-amber-700">Lorem Ipsum — Lorem Ipsum Dolor</span>
               </div>
             </motion.div>
           </motion.div>
@@ -260,9 +259,9 @@ export function NosotrosView() {
 
       {/* ===== MISIÓN & VISIÓN — DARK ===== */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0B1035] via-[#121A47] to-[#0B1035]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a]" />
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-500/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
         <motion.div
@@ -274,9 +273,9 @@ export function NosotrosView() {
         >
           <motion.div variants={fadeUp} className="mb-14 text-center">
             <div className="mb-4 flex items-center justify-center gap-3">
-              <div className="h-px w-8 bg-red-500" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-400">Propósito</span>
-              <div className="h-px w-8 bg-red-500" />
+              <div className="h-px w-8 bg-slate-500" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">Propósito</span>
+              <div className="h-px w-8 bg-slate-500" />
             </div>
             <h2 className="text-3xl font-extrabold tracking-tight text-white lg:text-4xl">Misión y Visión</h2>
           </motion.div>
@@ -285,25 +284,25 @@ export function NosotrosView() {
             {/* Misión */}
             <motion.div
               variants={fadeLeft}
-              className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.04] p-8 backdrop-blur-sm transition-all duration-500 hover:border-red-500/20 hover:bg-white/[0.07]"
+              className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.04] p-8 backdrop-blur-sm transition-all duration-500 hover:border-slate-500/20 hover:bg-white/[0.07]"
             >
-              <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-red-500/0 via-red-500/60 to-red-500/0 opacity-0 transition-opacity group-hover:opacity-100" />
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/10 ring-1 ring-red-500/20">
-                <IconBolt className="h-7 w-7 text-red-400" />
+              <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-slate-500/0 via-slate-500/60 to-slate-500/0 opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-500/20 to-slate-600/10 ring-1 ring-slate-500/20">
+                <IconBolt className="h-7 w-7 text-slate-400" />
               </div>
-              <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.25em] text-red-400">Misión</p>
-              <h3 className="mb-4 text-xl font-extrabold text-white">Suministro confiable para proyectos eléctricos en Perú</h3>
+              <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.25em] text-slate-400">Misión</p>
+              <h3 className="mb-4 text-xl font-extrabold text-white">Lorem Ipsum Dolor Sit Amet Consectetur</h3>
               <p className="text-sm leading-[1.85] text-slate-400">
-                Suministrar ferretería y accesorios eléctricos para alta y media tensión con stock permanente, asesoría de ingeniería real y despacho puntual. Que el proveedor no sea el cuello de botella de la obra.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco.
               </p>
               <ul className="mt-6 space-y-2">
                 {[
-                  "Accesorios certificados IEC, ANSI y NTP",
-                  "Asesoría de ingenieros especializados en AT/MT",
-                  "Más de 50 referencias en stock — despacho en 48 h",
+                  "Lorem ipsum dolor sit amet consectetur adipiscing",
+                  "Lorem ipsum dolor ut labore et dolore magna aliqua",
+                  "Lorem ipsum consectetur adipiscing elit sed eiusmod",
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs text-slate-400">
-                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-red-500/15 text-red-400">
+                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-500/15 text-slate-400">
                       <IconCheck className="h-2.5 w-2.5" />
                     </span>
                     {item}
@@ -322,15 +321,15 @@ export function NosotrosView() {
                 <IconZap className="h-7 w-7 text-blue-400" />
               </div>
               <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.25em] text-blue-400">Visión</p>
-              <h3 className="mb-4 text-xl font-extrabold text-white">El proveedor de referencia en ferretería eléctrica AT/MT</h3>
+              <h3 className="mb-4 text-xl font-extrabold text-white">Lorem Ipsum Dolor Sit Amet Adipiscing Elit</h3>
               <p className="text-sm leading-[1.85] text-slate-400">
-                Ser el proveedor de referencia para proyectos de alta y media tensión en el Perú. Con el tiempo, ampliar el catálogo de ferretería eléctrica, reforzar alianzas con fabricantes líderes y replicar el modelo en otros países de la región.
+                Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation laboris nisi aliquip.
               </p>
               <ul className="mt-6 space-y-2">
                 {[
-                  "Expansión regional en Latinoamérica",
-                  "Catálogo de más de 5,000 productos AT/MT",
-                  "Plataforma digital de cotización en tiempo real",
+                  "Lorem ipsum dolor sit amet adipiscing elit",
+                  "Lorem ipsum consectetur ut labore et dolore magna",
+                  "Lorem ipsum dolor incididunt ut labore dolore aliqua",
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-xs text-slate-400">
                     <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/15 text-blue-400">
@@ -356,12 +355,12 @@ export function NosotrosView() {
           >
             <motion.div variants={fadeUp} className="mb-14 text-center">
               <div className="mb-4 flex items-center justify-center gap-3">
-                <div className="h-px w-8 bg-red-500" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Valores</span>
-                <div className="h-px w-8 bg-red-500" />
+                <div className="h-px w-8 bg-slate-500" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">Valores</span>
+                <div className="h-px w-8 bg-slate-500" />
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">Lo que nos define</h2>
-              <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">Los principios detrás de cada suministro de ferretería y accesorios eléctricos AT/MT</p>
+              <h2 className="text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">Lo que nos define</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt</p>
             </motion.div>
 
             <motion.div
@@ -375,11 +374,11 @@ export function NosotrosView() {
                   whileHover={{ y: -6, transition: { duration: 0.25 } }}
                   className="group rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-500 hover:border-primary/30 hover:shadow-xl"
                 >
-                  <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl bg-gradient-to-r from-primary via-red-500 to-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                  <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl bg-gradient-to-r from-primary via-slate-500 to-primary opacity-0 transition-opacity group-hover:opacity-100" />
                   <div className="mb-5 flex h-13 w-13 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary transition-all group-hover:bg-primary group-hover:text-white group-hover:shadow-lg group-hover:shadow-primary/20">
                     <valor.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="mb-2 text-base font-bold text-[#121A47]">{valor.title}</h3>
+                  <h3 className="mb-2 text-base font-bold text-[#1e293b]">{valor.title}</h3>
                   <p className="text-sm leading-relaxed text-slate-500">{valor.description}</p>
                 </motion.div>
               ))}
@@ -399,12 +398,12 @@ export function NosotrosView() {
           >
             <motion.div variants={fadeUp} className="mb-14 text-center">
               <div className="mb-4 flex items-center justify-center gap-3">
-                <div className="h-px w-8 bg-red-500" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">Confían en nosotros</span>
-                <div className="h-px w-8 bg-red-500" />
+                <div className="h-px w-8 bg-slate-500" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">Confían en nosotros</span>
+                <div className="h-px w-8 bg-slate-500" />
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">Nuestros Clientes</h2>
-              <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">Empresas del sector eléctrico que nos eligen para sus proyectos de alta y media tensión</p>
+              <h2 className="text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">Nuestros Clientes</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor labore</p>
             </motion.div>
 
             <motion.div
@@ -427,7 +426,7 @@ export function NosotrosView() {
             <motion.div variants={fadeUp} className="mt-14 text-center">
               <Link
                 href="/contacto"
-                className="group inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-[#121A47] to-primary px-8 py-4 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
+                className="group inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-[#1e293b] to-primary px-8 py-4 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
               >
                 Trabajemos juntos
                 <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -437,13 +436,13 @@ export function NosotrosView() {
         </div>
       </section>
 
-      {/* ===== GRUPO EMPRESARIAL ===== */}
-      <GrupoEmpresarialSection />
+      {/* ===== GRUPO EMPRESARIAL (oculto) ===== */}
+      {/* <GrupoEmpresarialSection /> */}
 
       {/* ===== CTA FINAL — DARK ===== */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#07091E] via-[#121A47] to-[#07091E]" />
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#07091E] via-[#1e293b] to-[#07091E]" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-slate-500/60 to-transparent" />
         <div className="absolute -left-32 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-primary/8 blur-3xl" />
 
         <motion.div
@@ -453,21 +452,21 @@ export function NosotrosView() {
           variants={staggerContainer}
           className="relative mx-auto max-w-4xl px-4 py-20 text-center"
         >
-          <motion.p variants={fadeUp} className="mb-2 text-[11px] font-bold uppercase tracking-[0.3em] text-red-400">
+          <motion.p variants={fadeUp} className="mb-2 text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">
             ¿Ya nos conoces?
           </motion.p>
           <motion.h2 variants={fadeUp} className="mb-4 text-3xl font-extrabold tracking-tight text-white lg:text-4xl">
-            Revisa el catálogo de ferretería eléctrica AT/MT
+            Lorem Ipsum Dolor Sit Amet Consectetur
           </motion.h2>
           <motion.p variants={fadeUp} className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-slate-400">
-            Más de 50 accesorios eléctricos certificados para alta y media tensión. Cotización técnica en menos de 24 horas.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/catalogo"
-              className="group flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-red-600/25 transition-all hover:scale-[1.03] hover:shadow-red-600/40"
+              className="group flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-slate-600 to-slate-700 px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-slate-600/25 transition-all hover:scale-[1.03] hover:shadow-slate-600/40"
             >
-              Ver Catálogo AT/MT
+              Ver Catálogo
               <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <a

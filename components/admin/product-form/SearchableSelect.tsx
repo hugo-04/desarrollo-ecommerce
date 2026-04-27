@@ -89,7 +89,7 @@ export function SearchableSelect({
             error
               ? "border-red-300 bg-red-50 text-red-700"
               : open
-              ? "border-[#1C2870]/40 bg-white ring-2 ring-[#1C2870]/15"
+              ? "border-[#334155]/40 bg-white ring-2 ring-[#334155]/15"
               : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
           }`}
         >
@@ -146,9 +146,9 @@ export function SearchableSelect({
                 <button
                   type="button"
                   onClick={handleCreateNew}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-[#1C2870] transition-colors hover:bg-[#1C2870]/5"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-[#334155] transition-colors hover:bg-[#334155]/5"
                 >
-                  <div className="flex h-5 w-5 items-center justify-center rounded border border-[#1C2870]/20 bg-[#1C2870]/5">
+                  <div className="flex h-5 w-5 items-center justify-center rounded border border-[#334155]/20 bg-[#334155]/5">
                     <Plus className="h-3 w-3" />
                   </div>
                   {search

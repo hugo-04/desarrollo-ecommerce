@@ -34,7 +34,7 @@ export function SectionHeader({
   dark = false,
   className = "",
 }: SectionHeaderProps) {
-  const textColor = dark ? "text-white" : "text-[#121A47]"
+  const textColor = dark ? "text-white" : "text-[#1e293b]"
   const subtitleColor = dark ? "text-slate-400" : "text-slate-500"
   const align = center ? "text-center" : "text-left"
 
@@ -42,11 +42,11 @@ export function SectionHeader({
     <motion.div variants={fadeUp} className={`${align} ${className}`}>
       {/* Badge: línea — LABEL — línea */}
       <div className={`mb-4 flex items-center gap-3 ${center ? "justify-center" : ""}`}>
-        <div className="h-px w-8 bg-red-500" />
-        <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">
+        <div className="h-px w-8 bg-slate-500" />
+        <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">
           {label}
         </span>
-        <div className="h-px w-8 bg-red-500" />
+        <div className="h-px w-8 bg-slate-500" />
       </div>
 
       {/* Título */}
@@ -55,7 +55,7 @@ export function SectionHeader({
         {titleHighlight && (
           <>
             <br />
-            <span className="bg-gradient-to-r from-primary to-red-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary to-slate-600 bg-clip-text text-transparent">
               {titleHighlight}
             </span>
           </>

@@ -34,8 +34,8 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
       <aside
         className={[
           "fixed inset-y-0 left-0 z-30 flex w-[260px] shrink-0 flex-col overflow-hidden",
-          "border-r border-[#1C2870]/10 shadow-xl",
-          "bg-gradient-to-b from-[#0a0f2c] via-[#0b143f] to-[#040614] text-slate-300",
+          "border-r border-[#334155]/10 shadow-xl",
+          "bg-gradient-to-b from-[#0f172a] via-[#0b143f] to-[#040614] text-slate-300",
           "transition-transform duration-300",
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         ].join(" ")}
@@ -48,7 +48,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
           <div className="flex items-center gap-3">
             <img
               src="/logo/logotipo.png"
-              alt="Electro Thina"
+              alt="Logo"
               className="h-8 w-auto object-contain"
               style={{ filter: "drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,1)) brightness(1.4) contrast(1.1)" }}
             />
@@ -79,7 +79,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
         <div className="relative z-10 p-4 border-t border-white/[0.05]">
           <div className="rounded-2xl bg-white/[0.02] border border-white/[0.05] p-2 shadow-inner">
             <div className="px-3 py-2 flex items-center gap-3">
-              <div className="bg-[#1C2870]/40 p-1.5 rounded-lg">
+              <div className="bg-[#334155]/40 p-1.5 rounded-lg">
                 <ShieldAlert className="w-4 h-4 text-cyan-400" />
               </div>
               <div className="overflow-hidden">
@@ -121,7 +121,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
           >
             <Menu size={16} />
           </button>
-          <img src="/logo/logotipo.png" alt="Electro Thina" className="h-7 w-auto object-contain" />
+          <img src="/logo/logotipo.png" alt="Logo" className="h-7 w-auto object-contain" />
           <span className="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Admin</span>
         </div>
 

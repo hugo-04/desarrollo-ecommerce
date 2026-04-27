@@ -7,7 +7,7 @@ const aboutPageSchema = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   name: `Sobre Nosotros — ${SITE_NAME}`,
-  description: "Fabricantes y distribuidores de ferretería eléctrica AT/MT en Lima desde 2010. Certificaciones IEC, ANSI y NTP.",
+  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   url: `${SITE_URL}/nosotros`,
   breadcrumb: {
     "@type": "BreadcrumbList",

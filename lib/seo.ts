@@ -9,8 +9,8 @@ import type { Metadata } from "next"
 
 // ─── Configuración base ────────────────────────────────────────────────────────
 
-export const SITE_URL  = "https://electrothina.com"
-export const SITE_NAME = "Electro Thina"
+export const SITE_URL  = "https://lorem-ipsum.com"
+export const SITE_NAME = "Lorem Ipsum"
 
 /** Imagen OG por defecto — redes sociales y WhatsApp */
 const OG_IMAGE = `${SITE_URL}/logo/logotipo.png`
@@ -19,25 +19,21 @@ const OG_IMAGE = `${SITE_URL}/logo/logotipo.png`
  * Keyword principal del negocio — frase corta y real que la gente busca.
  * Aparece en todas las descripciones y schema.
  */
-const KW_CORE = "ferretería eléctrica AT/MT Lima Perú"
+const KW_CORE = "Lorem ipsum dolor sit amet"
 
-/**
- * Keywords secundarias — cubren intenciones de búsqueda reales.
- * Incluyen variantes de producto, material, uso y ubicación.
- */
 const KW_SECONDARY = [
-  "herrajes para líneas eléctricas alta tensión",
-  "aisladores eléctricos para postes Lima",
-  "conectores eléctricos para conductores AT/MT",
-  "materiales eléctricos para distribución",
-  "pernos y abrazaderas galvanizadas para postes eléctricos",
-  "distribuidores ferretería eléctrica Lima",
-  "accesorios para postes de concreto distribución eléctrica",
-  "ferretería galvanizada para líneas eléctricas Perú",
-  "grapas y empalmes para conductores eléctricos",
-  "certificaciones IEC ANSI NTP herrajes eléctricos",
-  "Electro Thina SAC Lima",
-  "cotización ferretería eléctrica Peru",
+  "lorem ipsum dolor sit amet consectetur",
+  "lorem ipsum adipiscing elit sed do",
+  "lorem ipsum eiusmod tempor incididunt",
+  "lorem ipsum labore et dolore magna",
+  "lorem ipsum aliqua ut enim ad",
+  "lorem ipsum minim veniam quis nostrud",
+  "lorem ipsum exercitation ullamco laboris",
+  "lorem ipsum nisi ut aliquip commodo",
+  "lorem ipsum consequat duis aute irure",
+  "lorem ipsum reprehenderit voluptate velit",
+  "Lorem Ipsum SAC",
+  "lorem ipsum cotización",
 ]
 
 const defaultOG = {
@@ -60,34 +56,34 @@ export const organizationSchema = {
   "@context":    "https://schema.org",
   "@type":       ["Organization", "LocalBusiness"],
   "@id":         `${SITE_URL}/#organization`,
-  name:          "Electro Thina S.A.C.",
-  alternateName: ["Electro Thina", "ElectroThina"],
-  description:   `Fabricantes y distribuidores de ${KW_CORE}. Aisladores, herrajes, conectores y ferretería galvanizada con certificaciones IEC, ANSI y NTP.`,
+  name:          "Lorem Ipsum S.A.C.",
+  alternateName: ["Lorem Ipsum", "LoremIpsum"],
+  description:   `Lorem ipsum dolor sit amet, consectetur adipiscing elit. ${KW_CORE}.`,
   url:           SITE_URL,
   logo: {
     "@type":  "ImageObject",
     "@id":    `${SITE_URL}/#logo`,
     url:      OG_IMAGE,
-    caption:  "Electro Thina S.A.C.",
+    caption:  "Lorem Ipsum S.A.C.",
   },
   image:         OG_IMAGE,
   foundingDate:  "2010",
   areaServed:    "PE",
   priceRange:    "$$",
-  telephone:     "+51981375196",
-  email:         "electrothina522@gmail.com",
+  telephone:     "+00000000000",
+  email:         "lorem@ipsum.com",
   address: {
     "@type":         "PostalAddress",
-    streetAddress:   "Av. Guillermo Dansey N° 481 - Int. 143 - C.C. Loreto",
-    addressLocality: "Lima",
-    addressRegion:   "Lima",
+    streetAddress:   "Lorem Ipsum N° 000 - Int. 000",
+    addressLocality: "Lorem",
+    addressRegion:   "Ipsum",
     addressCountry:  "PE",
-    postalCode:      "15001",
+    postalCode:      "00000",
   },
   geo: {
     "@type":    "GeoCoordinates",
-    latitude:   "-12.0522",
-    longitude:  "-77.0313",
+    latitude:   "0.0000",
+    longitude:  "0.0000",
   },
   openingHoursSpecification: [
     {
@@ -103,22 +99,18 @@ export const organizationSchema = {
       closes:    "13:00",
     },
   ],
-  sameAs: [
-    "https://www.facebook.com/electrothina",
-    // TODO: agregar URL de Google Business Profile cuando esté disponible
-    // Ejemplo: "https://maps.app.goo.gl/XXXXXXXXXXXXXXXX"
-  ],
+  sameAs: [],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name:    "Catálogo de Ferretería Eléctrica AT/MT",
+    name:    "Lorem Ipsum Catálogo",
   },
   knowsAbout: [
-    "ferretería eléctrica alta tensión",
-    "herrajes para líneas de distribución eléctrica",
-    "aisladores eléctricos ANSI IEC",
-    "conectores bimetálicos para conductores",
-    "ferretería galvanizada para postes de concreto",
-    "suministro eléctrico para proyectos AT/MT",
+    "lorem ipsum dolor sit amet",
+    "lorem ipsum consectetur adipiscing",
+    "lorem ipsum sed do eiusmod",
+    "lorem ipsum tempor incididunt",
+    "lorem ipsum labore et dolore",
+    "lorem ipsum magna aliqua",
   ],
 } as const
 
@@ -149,24 +141,23 @@ export const SEO = {
   root: {
     metadataBase: new URL(SITE_URL),
     title: {
-      default:  `${SITE_NAME} | Ferretería Eléctrica para Alta y Media Tensión`,
+      default:  `${SITE_NAME} | Lorem Ipsum Dolor Sit Amet`,
       template: `%s | ${SITE_NAME}`,
     },
-    description:
-      `Fabricantes de ferretería eléctrica AT/MT en Lima, Perú. Aisladores, herrajes, conectores y accesorios certificados IEC, ANSI y NTP. Despacho en 48 h.`,
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.`,
     keywords: [KW_CORE, ...KW_SECONDARY],
-    authors:  [{ name: "Electro Thina S.A.C." }],
-    creator:  "Electro Thina S.A.C.",
+    authors:  [{ name: "Lorem Ipsum S.A.C." }],
+    creator:  "Lorem Ipsum S.A.C.",
     openGraph: {
       ...defaultOG,
       url:         SITE_URL,
-      title:       `${SITE_NAME} | Ferretería Eléctrica para Alta y Media Tensión`,
-      description: `Fabricantes de ferretería eléctrica AT/MT en Lima, Perú. Aisladores, herrajes y conectores certificados IEC, ANSI y NTP. Despacho en 48 h.`,
+      title:       `${SITE_NAME} | Lorem Ipsum Dolor Sit Amet`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
     },
     twitter: {
       card:        "summary_large_image" as const,
-      title:       `${SITE_NAME} | Ferretería Eléctrica para Alta y Media Tensión`,
-      description: `Fabricantes de ferretería eléctrica AT/MT en Lima. Certificaciones IEC, ANSI y NTP. Despacho en 48 h.`,
+      title:       `${SITE_NAME} | Lorem Ipsum Dolor Sit Amet`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.`,
       images:      [OG_IMAGE],
     },
     robots: {
@@ -178,33 +169,33 @@ export const SEO = {
 
   /** / — Página principal */
   home: {
-    title:       { absolute: `${SITE_NAME} — Ferretería Eléctrica AT/MT | Lima, Perú` },
-    description: `Ferretería y accesorios eléctricos AT/MT en Lima, Perú. Stock permanente de aisladores, herrajes y conectores certificados IEC, ANSI y NTP. Despacho 48 h.`,
+    title:       { absolute: `${SITE_NAME} — Lorem Ipsum Dolor Sit Amet` },
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.`,
     alternates:  { canonical: "/" },
     openGraph: {
       ...defaultOG,
       url:         SITE_URL,
-      title:       `${SITE_NAME} — Ferretería Eléctrica AT/MT | Lima, Perú`,
-      description: `Fabricantes de ferretería eléctrica AT/MT. Aisladores, herrajes y conectores certificados. Stock permanente en Lima. Despacho en 48 h.`,
+      title:       `${SITE_NAME} — Lorem Ipsum Dolor Sit Amet`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.`,
     },
     twitter: {
       card:        "summary_large_image" as const,
-      title:       `${SITE_NAME} — Ferretería Eléctrica AT/MT | Lima, Perú`,
-      description: `Ferretería eléctrica AT/MT en Lima. Certificaciones IEC, ANSI y NTP. Despacho en 48 h.`,
+      title:       `${SITE_NAME} — Lorem Ipsum Dolor Sit Amet`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.`,
       images:      [OG_IMAGE],
     },
   } satisfies Metadata,
 
   /** /nosotros */
   nosotros: {
-    title:       "Sobre Nosotros — Fabricantes de Ferretería Eléctrica en Perú",
-    description: `Electro Thina: fabricantes y distribuidores de ferretería eléctrica AT/MT en Lima desde 2010. Certificaciones IEC y ANSI, planta propia e ingenieros especializados.`,
+    title:       "Lorem Ipsum — Sobre Nosotros",
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.`,
     alternates:  { canonical: "/nosotros" },
     openGraph: {
       ...defaultOG,
       url:         "/nosotros",
-      title:       `Sobre Nosotros — Fabricantes AT/MT | ${SITE_NAME}`,
-      description: `Más de 15 años fabricando ferretería eléctrica AT/MT en Perú. Herrajes, aisladores y conectores certificados IEC y ANSI.`,
+      title:       `Lorem Ipsum Nosotros | ${SITE_NAME}`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.`,
     },
     twitter: {
       card:   "summary_large_image" as const,
@@ -214,14 +205,14 @@ export const SEO = {
 
   /** /contacto */
   contacto: {
-    title:       "Cotizaciones y Asesoría Técnica — Ferretería Eléctrica AT/MT",
-    description: `Solicita cotización de ferretería eléctrica AT/MT en Lima. Ingenieros especializados disponibles. Respondemos en menos de 24 h.`,
+    title:       "Lorem Ipsum — Cotizaciones y Asesoría",
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.`,
     alternates:  { canonical: "/contacto" },
     openGraph: {
       ...defaultOG,
       url:         "/contacto",
-      title:       `Cotizaciones AT/MT | ${SITE_NAME}`,
-      description: `Cotizaciones y asesoría técnica para ferretería eléctrica AT/MT en Lima. Ingenieros especializados. Respuesta en menos de 24 h.`,
+      title:       `Lorem Ipsum Cotizaciones | ${SITE_NAME}`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.`,
     },
     twitter: {
       card:   "summary_large_image" as const,
@@ -231,14 +222,14 @@ export const SEO = {
 
   /** /catalogo */
   catalogo: {
-    title:       "Catálogo de Ferretería Eléctrica AT/MT — Herrajes, Aisladores y Conectores",
-    description: `Catálogo de ferretería eléctrica AT/MT: herrajes, aisladores, conectores y accesorios certificados IEC, ANSI y NTP. Stock permanente en Lima. Cotización en 24 h.`,
+    title:       "Lorem Ipsum — Catálogo de Productos",
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.`,
     alternates:  { canonical: "/catalogo" },
     openGraph: {
       ...defaultOG,
       url:         "/catalogo",
-      title:       `Catálogo Ferretería Eléctrica AT/MT | ${SITE_NAME}`,
-      description: `Herrajes, aisladores, conectores y accesorios eléctricos AT/MT. Certificaciones IEC, ANSI y NTP. Stock permanente en Lima, Perú.`,
+      title:       `Lorem Ipsum Catálogo | ${SITE_NAME}`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.`,
     },
     twitter: {
       card:   "summary_large_image" as const,
@@ -249,7 +240,7 @@ export const SEO = {
   /** /terminos — noindex: no aporta SEO y consume crawl budget */
   terminos: {
     title:       "Términos y Condiciones",
-    description: `Términos y condiciones de uso del sitio web y servicios comerciales de Electro Thina S.A.C., fabricante y distribuidor de ferretería eléctrica AT/MT en Lima, Perú.`,
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
     alternates:  { canonical: "/terminos" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -257,7 +248,7 @@ export const SEO = {
   /** /politica-privacidad — noindex */
   politicaPrivacidad: {
     title:       "Política de Privacidad",
-    description: `Política de privacidad y tratamiento de datos personales de Electro Thina S.A.C. conforme a la Ley N° 29733 — Ley de Protección de Datos Personales del Perú.`,
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
     alternates:  { canonical: "/politica-privacidad" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -265,7 +256,7 @@ export const SEO = {
   /** /libro-reclamaciones — noindex */
   libroReclamaciones: {
     title:       "Libro de Reclamaciones",
-    description: `Libro de Reclamaciones Virtual de Electro Thina S.A.C. conforme a la Ley N° 29571 — Código de Protección y Defensa del Consumidor (INDECOPI). Lima, Perú.`,
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
     alternates:  { canonical: "/libro-reclamaciones" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -298,7 +289,7 @@ export function generateCategoryMeta(category: {
 }): Metadata {
   const title       = `${category.name} — Precio y Cotización | ${SITE_NAME}`
   const description = (category.description?.trim())
-    || `${category.name} — ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Stock permanente en Lima, Perú. Cotización en 24 h.`
+    || `${category.name} — Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.`
   const url         = categoryUrl(category.slug)
   const ogImage     = (category.image && category.image.startsWith("http")) ? category.image : OG_IMAGE
 
@@ -335,8 +326,8 @@ export function generateProductMeta(product: {
 }): Metadata {
   const title       = `${product.name} — Precio y Ficha Técnica | ${SITE_NAME}`
   const description = (product.description?.trim() && product.description.trim().length > 30)
-    ? `${product.description.trim().slice(0, 160)}. Cotización en Lima, Perú en menos de 24 h.`
-    : `${product.name} — Ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Cotización en Lima, Perú en 24 h.`
+    ? `${product.description.trim().slice(0, 160)}. Lorem ipsum dolor sit amet.`
+    : `${product.name} — Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.`
 
   const url         = `/producto/${product.id}`
   const imageUrl    = (product.image && product.image.startsWith("http")) ? product.image : OG_IMAGE
@@ -445,7 +436,7 @@ export function buildProductSchema(product: {
       },
       seller: {
         "@type": "Organization",
-        name:    "Electro Thina S.A.C.",
+        name:    "Lorem Ipsum S.A.C.",
       },
     },
   }

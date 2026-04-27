@@ -6,45 +6,44 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Electro Thina — Paleta del logo original respetada */
-  /* Azul marino #1C2870 · Rojo diamante #CC1B1B · Rojo acento #B01010 */
+  /* Lorem Ipsum — Paleta base del template */
   --background: #f8fafc;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #1C2870;
+  --primary: #334155;
   --primary-foreground: #ffffff;
-  --secondary: #CC1B1B;
+  --secondary: #64748b;
   --secondary-foreground: #ffffff;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
-  --accent: #B01010;
+  --accent: #475569;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #e2e8f0;
   --input: #e2e8f0;
-  --ring: #1C2870;
+  --ring: #334155;
   --radius: 0.75rem;
-  
-  --chart-1: #1C2870;
-  --chart-2: #CC1B1B;
+
+  --chart-1: #334155;
+  --chart-2: #64748b;
   --chart-3: #f59e0b;
   --chart-4: #0284c7;
   --chart-5: #0d9488;
   --electric: #f59e0b;
   --electric-blue: #3b82f6;
-  
+
   --sidebar: #ffffff;
   --sidebar-foreground: #0f172a;
-  --sidebar-primary: #1C2870;
+  --sidebar-primary: #334155;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f1f5f9;
-  --sidebar-accent-foreground: #1C2870;
+  --sidebar-accent-foreground: #334155;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: #1C2870;
+  --sidebar-ring: #334155;
 }
 
 .dark {
@@ -142,8 +141,8 @@
     letter-spacing: -0.02em;
   }
   ::selection {
-    background: rgb(0 51 160 / 0.15);
-    color: #0a1a3a;
+    background: rgb(51 65 85 / 0.15);
+    color: #1e293b;
   }
   img {
     image-rendering: auto;
@@ -195,7 +194,7 @@
 }
 
 .tiptap blockquote {
-  border-left: 3px solid #1C2870;
+  border-left: 3px solid #334155;
   padding-left: 1em;
   margin: 0.5em 0;
   color: #475569;
@@ -226,7 +225,7 @@
   border-radius: 0.25rem;
   padding: 0.15em 0.35em;
   font-size: 0.85em;
-  color: #1C2870;
+  color: #334155;
 }
 
 .tiptap pre code {

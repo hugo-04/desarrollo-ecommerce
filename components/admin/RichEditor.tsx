@@ -59,7 +59,7 @@ export function RichEditor({
   const value = html === "<p></p>" ? "" : html
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 transition-all focus-within:border-[#1C2870]/40 focus-within:ring-2 focus-within:ring-[#1C2870]/15">
+    <div className="overflow-hidden rounded-xl border border-slate-200 transition-all focus-within:border-[#334155]/40 focus-within:ring-2 focus-within:ring-[#334155]/15">
       {/* Hidden input for form submission */}
       <input type="hidden" name={name} value={value} />
 
@@ -233,7 +233,7 @@ function ToolbarButton({
       title={title}
       className={`flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition-all
         ${active
-          ? "bg-[#1C2870]/10 text-[#1C2870] shadow-sm"
+          ? "bg-[#334155]/10 text-[#334155] shadow-sm"
           : "hover:bg-white hover:text-slate-700 hover:shadow-sm"
         }
         ${disabled ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}

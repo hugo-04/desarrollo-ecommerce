@@ -10,7 +10,7 @@ const homeSchema = {
   "@type": "WebSite",
   name: SITE_NAME,
   url: SITE_URL,
-  description: "Fabricantes de ferretería eléctrica AT/MT en Lima, Perú. Aisladores, herrajes, conectores y accesorios certificados IEC, ANSI y NTP.",
+  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   potentialAction: {
     "@type": "SearchAction",
     target: {

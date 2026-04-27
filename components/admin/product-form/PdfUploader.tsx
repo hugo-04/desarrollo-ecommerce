@@ -142,7 +142,7 @@ export function PdfUploader({ label, value, onChange, onTempKey, onSeoNameChange
             type="text"
             value={seoName}
             onChange={(e) => { setSeoName(e.target.value); onSeoNameChange?.(e.target.value) }}
-            placeholder='Ej: "ficha-tecnica-aislador-polimerico-22kv"'
+            placeholder='Ej: "lorem-ipsum-ficha-tecnica"'
             className="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
           <button

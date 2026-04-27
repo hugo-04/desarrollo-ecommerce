@@ -6,8 +6,8 @@ export const metadata = SEO.contacto
 const contactPageSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
-  name: `Cotizaciones y Asesoría Técnica AT/MT — ${SITE_NAME}`,
-  description: "Solicita cotización de ferretería eléctrica AT/MT en Lima. Ingenieros especializados disponibles. Respondemos en menos de 24 h.",
+  name: `Contacto — ${SITE_NAME}`,
+  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   url: `${SITE_URL}/contacto`,
   breadcrumb: {
     "@type": "BreadcrumbList",
@@ -18,14 +18,14 @@ const contactPageSchema = {
   },
   mainEntity: {
     "@type": "Organization",
-    name: "Electro Thina S.A.C.",
-    telephone: "+51981375196",
-    email: "electrothina522@gmail.com",
+    name: "Lorem Ipsum S.A.C.",
+    telephone: "+00000000000",
+    email: "lorem@ipsum.com",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Av. Guillermo Dansey N° 481 - Int. 143 - C.C. Loreto",
-      addressLocality: "Lima",
-      addressRegion: "Lima",
+      streetAddress: "Lorem Ipsum N° 000 - Int. 000",
+      addressLocality: "Lorem",
+      addressRegion: "Ipsum",
       addressCountry: "PE",
     },
     openingHoursSpecification: [

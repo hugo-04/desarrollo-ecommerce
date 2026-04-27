@@ -41,13 +41,13 @@ export function BestSellersCarousel() {
       <div className="relative mx-auto max-w-[1400px] px-6">
         <motion.div variants={fadeUp} className="mb-14 text-center">
           <div className="mb-4 flex items-center justify-center gap-3">
-            <div className="h-px w-8 bg-red-500" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">
+            <div className="h-px w-8 bg-slate-500" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">
               {BEST_SELLERS_CONTENT.badge}
             </span>
-            <div className="h-px w-8 bg-red-500" />
+            <div className="h-px w-8 bg-slate-500" />
           </div>
-          <h2 className="text-2xl font-extrabold tracking-tight text-[#121A47] lg:text-3xl">
+          <h2 className="text-2xl font-extrabold tracking-tight text-[#1e293b] lg:text-3xl">
             {BEST_SELLERS_CONTENT.title}
           </h2>
           <p className="mt-2 text-sm text-slate-500">{BEST_SELLERS_CONTENT.subtitle}</p>
@@ -68,7 +68,7 @@ export function BestSellersCarousel() {
         <div className="mt-14 flex items-center justify-center gap-6">
           <button
             onClick={prevSlide}
-            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:-translate-x-1 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-xl"
+            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:-translate-x-1 hover:border-[#334155] hover:bg-[#334155] hover:text-white hover:shadow-xl"
           >
             <IconChevronLeft className="h-6 w-6 transition-transform group-hover:-translate-x-1" />
           </button>
@@ -78,7 +78,7 @@ export function BestSellersCarousel() {
                 key={i}
                 onClick={() => setCurrentIndex(i)}
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  currentIndex === i ? "w-8 bg-red-600" : "w-2 bg-slate-300 hover:bg-slate-400"
+                  currentIndex === i ? "w-8 bg-slate-600" : "w-2 bg-slate-300 hover:bg-slate-400"
                 }`}
                 aria-label={`Ir a la diapositiva ${i + 1}`}
               />
@@ -86,7 +86,7 @@ export function BestSellersCarousel() {
           </div>
           <button
             onClick={nextSlide}
-            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:translate-x-1 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-xl"
+            className="group flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:translate-x-1 hover:border-[#334155] hover:bg-[#334155] hover:text-white hover:shadow-xl"
           >
             <IconChevronRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
           </button>

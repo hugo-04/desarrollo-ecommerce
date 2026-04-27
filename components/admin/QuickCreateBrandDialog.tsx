@@ -102,7 +102,7 @@ export function QuickCreateBrandDialog({
               type="submit"
               size="sm"
               disabled={saving || !name.trim()}
-              className="bg-[#1C2870] hover:bg-[#1C2870]/90"
+              className="bg-[#334155] hover:bg-[#334155]/90"
             >
               {saving ? "Creando…" : "Crear marca"}
             </Button>

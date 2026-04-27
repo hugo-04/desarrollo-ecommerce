@@ -18,20 +18,20 @@ function StatCard({ value, label, icon: Icon, suffix, index, wide }: {
         hidden: { opacity: 0, scale: 0.85, y: 30 },
         visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 80, damping: 15, delay: index * 0.15 } }
       }}
-      className={`group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0b122e]/60 p-6 backdrop-blur-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(204,27,27,0.2)] hover:border-red-500/40 hover:bg-[#121A47]/80 ${wide ? 'col-span-2 sm:col-span-2' : ''}`}
+      className={`group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0b122e]/60 p-6 backdrop-blur-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(204,27,27,0.2)] hover:border-slate-500/40 hover:bg-[#1e293b]/80 ${wide ? 'col-span-2 sm:col-span-2' : ''}`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-500/10 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
       
       {/* Decorative tech blur */}
-      <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-blue-500/10 blur-[30px] transition-all duration-700 group-hover:bg-red-500/20 group-hover:blur-[40px]" />
+      <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-blue-500/10 blur-[30px] transition-all duration-700 group-hover:bg-slate-500/20 group-hover:blur-[40px]" />
       
       <div className="relative flex flex-col h-full justify-between">
-        <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-500/20 to-red-500/5 ring-1 ring-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${wide ? 'group-hover:translate-x-3' : ''}`}>
-          <Icon className="h-6 w-6 text-red-500" />
+        <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-slate-500/20 to-slate-500/5 ring-1 ring-slate-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${wide ? 'group-hover:translate-x-3' : ''}`}>
+          <Icon className="h-6 w-6 text-slate-500" />
         </div>
         <div>
           <p className="text-3xl font-black tracking-tight text-white lg:text-[2.25rem]">{count}{suffix}</p>
-          <p className="mt-1 text-[11px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-red-200 transition-colors">{label}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-slate-200 transition-colors">{label}</p>
         </div>
       </div>
     </motion.div>
@@ -40,10 +40,10 @@ function StatCard({ value, label, icon: Icon, suffix, index, wide }: {
 
 export function HeroSection() {
   const stats = [
-    { value: 1162, label: "Productos AT/MT", icon: IconBox, suffix: "", wide: false },
-    { value: 350, label: "Proyectos Realizados", icon: IconBuilding, suffix: "+", wide: false },
-    { value: 12, label: "Marcas Certificadas", icon: IconCertificate, suffix: "+", wide: false },
-    { value: 48, label: "Horas: Despacho Garantizado a Nivel Nacional", icon: IconTruck, suffix: "h", wide: true },
+    { value: 1162, label: "Lorem Ipsum Dolor", icon: IconBox, suffix: "", wide: false },
+    { value: 350, label: "Lorem Ipsum Amet", icon: IconBuilding, suffix: "+", wide: false },
+    { value: 12, label: "Lorem Ipsum Sit", icon: IconCertificate, suffix: "+", wide: false },
+    { value: 48, label: "Lorem Ipsum Consectetur Adipiscing Elit Lorem Ipsum", icon: IconTruck, suffix: "", wide: true },
   ]
 
   // No more scroll-driven parallax hooks here
@@ -55,7 +55,7 @@ export function HeroSection() {
       <div className="absolute inset-0">
         <Image
           src="/banner.jpg"
-          alt="Torres eléctricas de alta tensión"
+          alt="Lorem ipsum dolor sit amet"
           fill
           priority
           sizes="100vw"
@@ -70,7 +70,7 @@ export function HeroSection() {
       <div className="absolute inset-0 opacity-[0.05] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'60\' height=\'60\' fill=\'none\'/%3E%3Cpath d=\'M0 30h25M35 30h25M30 0v25M30 35v25\' stroke=\'%23f8fafc\' stroke-width=\'.8\'/%3E%3Crect x=\'26\' y=\'26\' width=\'8\' height=\'8\' fill=\'none\' stroke=\'%23f8fafc\' stroke-width=\'.8\'/%3E%3Ccircle cx=\'0\' cy=\'0\' r=\'2\' fill=\'%23ef4444\'/%3E%3C/svg%3E")' }} />
 
       {/* Top red accent line */}
-      <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-[#CC1B1B] to-transparent shadow-[0_0_15px_rgba(204,27,27,0.8)]" />
+      <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-[#64748b] to-transparent shadow-[0_0_15px_rgba(204,27,27,0.8)]" />
 
       {/* Decorative bolt SVG — identidad eléctrica */}
       <div className="absolute right-[6%] top-[10%] hidden lg:block electric-pulse" style={{ borderRadius: '50%' }}>
@@ -90,45 +90,44 @@ export function HeroSection() {
             animate="visible"
             variants={staggerContainer}
           >
-            <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-red-500/30 bg-red-500/10 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#f8fafc] backdrop-blur-md">
-              <span className="flex h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-              Especialistas en Alta y Media Tensión
+            <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-slate-500/30 bg-slate-500/10 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#f8fafc] backdrop-blur-md">
+              <span className="flex h-2 w-2 rounded-full bg-slate-500 animate-pulse" />
+              Lorem Ipsum Dolor Sit Amet
             </motion.div>
 
-            {/* Voltage range badge */}
             <motion.div variants={fadeUp} className="mb-8 flex items-center gap-2.5">
               <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-4 py-1.5 text-[11px] font-bold tracking-widest backdrop-blur-md" style={{ color: 'var(--electric)' }}>
                 <span className="electric-pulse h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--electric)', display: 'inline-block' }} />
-                25 kV
+                Lorem A
               </span>
               <span className="text-white/20 text-xs font-light">—</span>
               <span className="inline-flex items-center gap-2 rounded-full border border-sky-400/20 bg-sky-400/[0.06] px-4 py-1.5 text-[11px] font-bold tracking-widest text-sky-400 backdrop-blur-md">
-                500 kV
+                Lorem B
               </span>
-              <span className="text-white/30 text-[10px] font-medium tracking-wider">AT / MT</span>
+              <span className="text-white/30 text-[10px] font-medium tracking-wider">Lorem C</span>
             </motion.div>
 
             <motion.h1 variants={fadeUp} className="mb-8 text-balance text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[3.5rem]">
-              Ferretería y Accesorios Eléctricos
+              Lorem Ipsum Dolor Sit Amet
               <span
-                className="mt-2 block bg-gradient-to-r from-red-400 via-red-500 to-[#CC1B1B] bg-clip-text text-transparent"
+                className="mt-2 block bg-gradient-to-r from-slate-400 via-slate-500 to-[#64748b] bg-clip-text text-transparent"
               >
-                para Alta y Media Tensión
+                Consectetur Adipiscing Elit
               </span>
             </motion.h1>
 
             <motion.p variants={fadeUp} className="mb-12 max-w-xl text-base leading-[1.8] text-white/90 sm:text-[1.05rem]">
-              Aisladores, herrajes, conectores y cables para líneas de alta y media tensión. Fabricantes y distribuidores con certificaciones IEC, ANSI y NTP — despacho en 48 h a nivel nacional.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5">
-              <Link href="/catalogo" className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#CC1B1B] to-[#B01010] px-9 py-4 text-sm font-bold text-white shadow-2xl shadow-red-600/30 transition-all duration-300 hover:shadow-red-600/50 hover:scale-[1.03]">
+              <Link href="/catalogo" className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#64748b] to-[#475569] px-9 py-4 text-sm font-bold text-white shadow-2xl shadow-slate-600/30 transition-all duration-300 hover:shadow-slate-600/50 hover:scale-[1.03]">
                 <span className="relative z-10">Ver Catálogo</span>
                 <IconArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#B01010] to-[#990a0a] opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#475569] to-[#334155] opacity-0 transition-opacity group-hover:opacity-100" />
               </Link>
-              <Link href="/contacto" className="group inline-flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] px-9 py-4 text-sm font-semibold text-white/90 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:border-red-500/30 hover:text-white">
-                <IconPhone className="h-4 w-4 text-red-500 transition-colors group-hover:text-red-400" />
+              <Link href="/contacto" className="group inline-flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] px-9 py-4 text-sm font-semibold text-white/90 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:border-slate-500/30 hover:text-white">
+                <IconPhone className="h-4 w-4 text-slate-500 transition-colors group-hover:text-slate-400" />
                 Contáctanos
               </Link>
             </motion.div>

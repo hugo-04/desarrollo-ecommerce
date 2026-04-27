@@ -137,7 +137,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
   }
 
   const inputClass =
-    "w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-[#1C2870]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C2870]/15"
+    "w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-[#334155]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#334155]/15"
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -152,8 +152,8 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
       {/* ── Fila 1: Nombre + Slug (lado a lado) ─────────────────────────── */}
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-5 flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
-            <Layers className="h-3.5 w-3.5 text-[#1C2870]" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#334155]/8">
+            <Layers className="h-3.5 w-3.5 text-[#334155]" />
           </div>
           <h2 className="text-sm font-semibold text-slate-700">Información de la categoría</h2>
         </div>
@@ -168,7 +168,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
             <input
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="Ej: Aisladores AT/MT"
+              placeholder="Ej: Lorem Ipsum Categoría"
               required
               className={inputClass}
             />
@@ -204,7 +204,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
                   setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))
                   if (errors.slug) setErrors((p) => ({ ...p, slug: undefined }))
                 }}
-                placeholder="aisladores-at-mt"
+                placeholder="lorem-ipsum-categoria"
                 required
                 className={`${inputClass} font-mono text-xs`}
               />
@@ -214,7 +214,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
             ) : slug && slug.split("-").filter(Boolean).length < 2 ? (
               <p className="mt-1 flex items-center gap-1 text-[11px] text-amber-600">
                 <Info className="h-3 w-3 shrink-0" />
-                Tip SEO: 2+ palabras (ej: <code>aisladores-at</code>)
+                Tip SEO: 2+ palabras (ej: <code>lorem-ipsum</code>)
               </p>
             ) : slug ? (
               <p className="mt-1 flex items-center gap-1 text-[11px] text-emerald-600">
@@ -247,7 +247,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
               setDescription(e.target.value)
               if (errors.description) setErrors((p) => ({ ...p, description: undefined }))
             }}
-            placeholder="Ej: Grapas de anclaje tipo pistola, suspensión y preformadas para conductores AAAC y cable ABC en líneas de alta y media tensión."
+            placeholder="Ej: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore."
             rows={3}
             maxLength={200}
             className={`${inputClass} resize-none ${errors.description ? "border-red-300 focus:border-red-400 focus:ring-red-100" : ""}`}
@@ -284,8 +284,8 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
       {/* ── Fila 2: Imagen (opcional) ────────────────────────────────── */}
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
-            <Star className="h-3.5 w-3.5 text-[#1C2870]" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#334155]/8">
+            <Star className="h-3.5 w-3.5 text-[#334155]" />
           </div>
           <div>
             <h2 className="text-sm font-semibold text-slate-700">Imagen de la categoría</h2>
@@ -311,7 +311,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
           hint="Escribí el nombre y presioná Enter. Cada subcategoría es un chip independiente."
           values={subcats}
           onChange={setSubcats}
-          placeholder="Ej: Aisladores Poliméricos"
+          placeholder="Ej: Lorem Ipsum"
           seoHint
         />
       </div>
@@ -326,7 +326,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
               onChange={(e) => setFeatured(e.target.checked)}
               className="peer sr-only"
             />
-            <div className="h-5 w-5 rounded border-2 border-slate-300 bg-white transition-colors peer-checked:border-[#1C2870] peer-checked:bg-[#1C2870] flex items-center justify-center">
+            <div className="h-5 w-5 rounded border-2 border-slate-300 bg-white transition-colors peer-checked:border-[#334155] peer-checked:bg-[#334155] flex items-center justify-center">
               {featured && (
                 <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 12 12">
                   <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -350,7 +350,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
           <Button
             type="submit"
             disabled={saving || deleting}
-            className="bg-[#1C2870] px-6 hover:bg-[#1C2870]/90"
+            className="bg-[#334155] px-6 hover:bg-[#334155]/90"
           >
             {saving
               ? isEditing ? "Guardando…" : "Creando…"

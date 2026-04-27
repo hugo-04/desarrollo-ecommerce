@@ -42,7 +42,7 @@ export function CatalogFilters({
         {activeFiltersCount > 0 && (
           <button
             onClick={clearFilters}
-            className="flex items-center gap-1 rounded-md bg-red-50 px-2 py-1 text-[10px] font-semibold text-red-600 transition-colors hover:bg-red-100"
+            className="flex items-center gap-1 rounded-md bg-slate-50 px-2 py-1 text-[10px] font-semibold text-slate-600 transition-colors hover:bg-slate-100"
           >
             <IconX className="h-2.5 w-2.5" /> Limpiar ({activeFiltersCount})
           </button>
@@ -54,7 +54,7 @@ export function CatalogFilters({
         onClick={() => setOnlyBestSellers(!onlyBestSellers)}
         className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2.5 text-xs font-semibold transition-all ${
           onlyBestSellers
-            ? "border-red-200 bg-red-50 text-red-600"
+            ? "border-slate-200 bg-slate-50 text-slate-600"
             : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
         }`}
       >
@@ -62,7 +62,7 @@ export function CatalogFilters({
         <span className="flex-1 text-left">Solo Mas Vendidos</span>
         <span
           className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-all ${
-            onlyBestSellers ? "border-red-500 bg-red-500" : "border-slate-300"
+            onlyBestSellers ? "border-slate-500 bg-slate-500" : "border-slate-300"
           }`}
         >
           {onlyBestSellers && <IconCheck className="h-2.5 w-2.5 text-white" />}

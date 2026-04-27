@@ -17,20 +17,20 @@ export function MarqueeBrands() {
       variants={staggerContainer}
       className="relative overflow-hidden py-20"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0B1035] via-[#121A47] to-[#0B1035]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a]" />
       <StarsBackground
         starColor="#4d7cc7"
         className="absolute inset-0 z-0 bg-transparent opacity-40"
       />
-      <div className="absolute left-0 top-0 h-[2px] w-full bg-gradient-to-r from-transparent via-red-600/50 to-transparent z-10" />
+      <div className="absolute left-0 top-0 h-[2px] w-full bg-gradient-to-r from-transparent via-slate-600/50 to-transparent z-10" />
       <div className="absolute bottom-0 left-0 h-[2px] w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent z-10" />
-      <div className="absolute inset-y-0 left-0 z-20 w-32 bg-gradient-to-r from-[#0B1035] to-transparent pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 z-20 w-32 bg-gradient-to-l from-[#0B1035] to-transparent pointer-events-none" />
+      <div className="absolute inset-y-0 left-0 z-20 w-32 bg-gradient-to-r from-[#0f172a] to-transparent pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 z-20 w-32 bg-gradient-to-l from-[#0f172a] to-transparent pointer-events-none" />
 
       <div className="relative z-30 mx-auto max-w-7xl px-4">
         <motion.div variants={fadeUp} className="mb-12 flex flex-col items-center text-center">
-          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/[0.07] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-red-400">
-            <span className="h-1.5 w-1.5 rounded-full shadow-[0_0_8px_#ef4444] bg-red-500" />
+          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-500/20 bg-slate-500/[0.07] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
+            <span className="h-1.5 w-1.5 rounded-full shadow-[0_0_8px_#ef4444] bg-slate-500" />
             {MARQUEE_BRANDS_CONTENT.badge}
           </span>
           <h3 className="mb-1.5 text-2xl font-extrabold tracking-tight text-white neon-title">

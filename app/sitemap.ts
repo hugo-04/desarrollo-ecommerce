@@ -3,7 +3,7 @@ import { db } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
 
-const BASE_URL = "https://electrothina.com"
+const BASE_URL = "https://lorem-ipsum.com"
 
 // Fecha fija para páginas cuyo contenido no cambia con cada request.
 // Actualizar manualmente cuando se edite el contenido de esas páginas.

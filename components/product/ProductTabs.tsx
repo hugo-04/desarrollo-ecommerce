@@ -38,7 +38,7 @@ export function ProductTabs({ product, activeTab, onTabChange }: ProductTabsProp
 
       {activeTab === "desc" ? (
         <div className="max-w-4xl space-y-6">
-          <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight border-b text-[#121A47]">
+          <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight border-b text-[#1e293b]">
             Acerca de {product.name}
           </h2>
           <div className="leading-7 text-slate-700 text-base">
@@ -59,7 +59,7 @@ export function ProductTabs({ product, activeTab, onTabChange }: ProductTabsProp
               }`}
             >
               <span className="font-medium text-slate-600">{spec.label}</span>
-              <span className="font-bold text-[#121A47]">{spec.value}</span>
+              <span className="font-bold text-[#1e293b]">{spec.value}</span>
             </div>
           ))}
         </div>

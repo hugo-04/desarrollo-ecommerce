@@ -129,7 +129,7 @@ export function ProductoView({ product }: ProductoViewProps) {
           {relatedProducts.length > 0 && (
             <div className="mt-16">
               <div className="mb-6">
-                <h2 className="text-xl font-extrabold text-[#121A47]">{c.relatedTitle}</h2>
+                <h2 className="text-xl font-extrabold text-[#1e293b]">{c.relatedTitle}</h2>
                 <p className="mt-1 text-sm text-slate-500">{c.relatedSubtitle}</p>
               </div>
 

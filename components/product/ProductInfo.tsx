@@ -73,7 +73,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Name */}
-      <h1 className="mb-3 text-xl font-extrabold text-[#121A47] lg:text-2xl">{product.name}</h1>
+      <h1 className="mb-3 text-xl font-extrabold text-[#1e293b] lg:text-2xl">{product.name}</h1>
 
       {/* Stock badge */}
       <div className="mb-4 flex items-center gap-2">

@@ -30,7 +30,7 @@ export default function EditarCategoriaPage() {
   if (!category) {
     return (
       <div className="flex items-center gap-2 py-12 text-sm text-slate-400">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#1C2870] border-t-transparent" />
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#334155] border-t-transparent" />
         Cargando categoría…
       </div>
     )

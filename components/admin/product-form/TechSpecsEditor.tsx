@@ -41,14 +41,14 @@ export function TechSpecsEditor({ values, onChange }: TechSpecsEditorProps) {
             <input
               value={spec.label}
               onChange={(e) => update(i, "label", e.target.value)}
-              placeholder="Parámetro (ej: Tensión nominal)"
-              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none transition focus:border-[#1C2870]/40 focus:ring-2 focus:ring-[#1C2870]/15"
+              placeholder="Lorem ipsum (ej: Lorem Ipsum)"
+              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none transition focus:border-[#334155]/40 focus:ring-2 focus:ring-[#334155]/15"
             />
             <input
               value={spec.value}
               onChange={(e) => update(i, "value", e.target.value)}
-              placeholder="Valor (ej: 22 kV)"
-              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none transition focus:border-[#1C2870]/40 focus:ring-2 focus:ring-[#1C2870]/15"
+              placeholder="Lorem (ej: Lorem ipsum)"
+              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none transition focus:border-[#334155]/40 focus:ring-2 focus:ring-[#334155]/15"
             />
             <button
               type="button"
@@ -64,7 +64,7 @@ export function TechSpecsEditor({ values, onChange }: TechSpecsEditorProps) {
       <button
         type="button"
         onClick={() => onChange([...values, { label: "", value: "" }])}
-        className="mt-3 flex items-center gap-1 text-xs font-semibold text-[#1C2870] transition hover:opacity-70"
+        className="mt-3 flex items-center gap-1 text-xs font-semibold text-[#334155] transition hover:opacity-70"
       >
         <Plus className="h-3.5 w-3.5" /> Agregar parámetro
       </button>

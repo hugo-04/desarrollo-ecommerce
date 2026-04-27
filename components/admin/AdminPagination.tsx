@@ -59,7 +59,7 @@ export function AdminPagination({
             <select
               value={pageSize}
               onChange={(e) => onPageSize(Number(e.target.value))}
-              className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1C2870]/20"
+              className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#334155]/20"
             >
               {pageSizeOptions.map((opt) => (
                 <option key={opt} value={opt}>{opt} por página</option>
@@ -89,7 +89,7 @@ export function AdminPagination({
               variant={p === currentPage ? "default" : "ghost"}
               onClick={() => onPage(p)}
               aria-current={p === currentPage ? "page" : undefined}
-              className={p === currentPage ? "bg-[#1C2870] hover:bg-[#1C2870]/90" : ""}
+              className={p === currentPage ? "bg-[#334155] hover:bg-[#334155]/90" : ""}
             >
               {p}
             </Button>

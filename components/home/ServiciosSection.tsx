@@ -33,13 +33,13 @@ export function ServiciosSection() {
       <div className="relative mx-auto max-w-7xl px-4">
         <motion.div variants={fadeUp} className="mb-16 text-center">
           <div className="mb-3 flex items-center justify-center gap-3">
-            <div className="h-px w-8 bg-red-500" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">
+            <div className="h-px w-8 bg-slate-500" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">
               {SERVICIOS_CONTENT.badge}
             </span>
-            <div className="h-px w-8 bg-red-500" />
+            <div className="h-px w-8 bg-slate-500" />
           </div>
-          <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">
+          <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">
             {SERVICIOS_CONTENT.title}
           </h2>
           <p className="mx-auto max-w-xl text-sm text-slate-500">{SERVICIOS_CONTENT.subtitle}</p>
@@ -59,13 +59,13 @@ export function ServiciosSection() {
                 className="group relative rounded-2xl bg-white p-7 shadow-sm shadow-black/[0.04] ring-1 ring-slate-200/80 transition-all duration-500 hover:shadow-xl hover:ring-primary/30"
               >
                 <motion.div
-                  className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#121A47] to-primary text-white shadow-lg shadow-primary/20"
+                  className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#1e293b] to-primary text-white shadow-lg shadow-primary/20"
                   whileHover={{ scale: 1.15, rotate: -5 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   {Icon && <Icon className="h-5 w-5" />}
                 </motion.div>
-                <h3 className="mb-2 text-base font-bold text-[#121A47]">{servicio.title}</h3>
+                <h3 className="mb-2 text-base font-bold text-[#1e293b]">{servicio.title}</h3>
                 <p className="text-sm leading-relaxed text-slate-500">{servicio.desc}</p>
               </motion.div>
             )

@@ -25,10 +25,10 @@ export function ContactoView() {
   return (
     <>
       {/* Hero Contacto */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#121A47] via-primary to-[#0B1035] py-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e293b] via-primary to-[#0f172a] py-20">
         <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h40v40H0z\' fill=\'none\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")' }} />
         <div className="relative mx-auto max-w-7xl px-4 text-center">
-          <span className="mb-2 inline-block text-xs font-bold uppercase tracking-widest text-red-400">Contacto</span>
+          <span className="mb-2 inline-block text-xs font-bold uppercase tracking-widest text-slate-400">Contacto</span>
           <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">Cotizaciones y Asesoría Técnica AT/MT</h1>
           <p className="mx-auto max-w-2xl text-base text-slate-400 sm:text-lg">
             Cuéntanos tu proyecto. Nuestros ingenieros te ayudan a seleccionar los materiales eléctricos correctos antes de que arranque la obra.
@@ -135,7 +135,7 @@ export function ContactoView() {
               <div className="text-center">
                 <IconMapPin className="mx-auto mb-3 h-12 w-12 text-primary" />
                 <p className="text-sm font-semibold text-slate-700">{CONTACT.address}</p>
-                <p className="text-xs text-slate-500">C.C. Loreto, Lima</p>
+                <p className="text-xs text-slate-500">Lorem Ipsum, Lorem Ipsum</p>
               </div>
             </div>
           </div>

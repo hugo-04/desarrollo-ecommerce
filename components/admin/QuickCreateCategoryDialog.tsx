@@ -108,7 +108,7 @@ export function QuickCreateCategoryDialog({
               id="quick-cat-name"
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="Ej: Aisladores AT/MT"
+              placeholder="Ej: Lorem Ipsum Categoría"
               autoFocus
               required
             />
@@ -124,7 +124,7 @@ export function QuickCreateCategoryDialog({
                 id="quick-cat-slug"
                 value={slug}
                 onChange={(e) => handleSlugChange(e.target.value)}
-                placeholder="aisladores-at-mt"
+                placeholder="lorem-ipsum-categoria"
                 className="flex-1 bg-transparent py-2 pr-3 text-sm outline-none"
               />
             </div>
@@ -146,7 +146,7 @@ export function QuickCreateCategoryDialog({
               type="submit"
               size="sm"
               disabled={saving || !name.trim() || !slug.trim()}
-              className="bg-[#1C2870] hover:bg-[#1C2870]/90"
+              className="bg-[#334155] hover:bg-[#334155]/90"
             >
               {saving ? "Creando…" : "Crear categoría"}
             </Button>

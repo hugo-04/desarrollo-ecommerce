@@ -20,8 +20,8 @@ export function HomeView({ categories }: HomeViewProps) {
       {/* DARK — Hero principal */}
       <HeroSection />
 
-      {/* NAVY — Grupo empresarial (identidad temprana, antes de productos) */}
-      <GrupoEmpresarialBand />
+      {/* NAVY — Grupo empresarial (oculto) */}
+      {/* <GrupoEmpresarialBand /> */}
 
       {/* LIGHT — Productos: lo que vendemos */}
       <CategoriesGrid categories={categories} />

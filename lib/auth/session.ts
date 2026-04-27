@@ -4,7 +4,7 @@ import { cookies } from "next/headers"
 import { db } from "@/lib/db"
 
 const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET ?? "electro-thina-dev-secret-2024"
+  process.env.AUTH_SECRET ?? "lorem-ipsum-dev-secret"
 )
 const COOKIE_NAME    = "et_admin_session"
 const COOKIE_MAX_AGE = 60 * 60 * 8 // 8 horas

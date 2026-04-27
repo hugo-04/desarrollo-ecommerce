@@ -91,7 +91,7 @@ export function GalleryEditor({ values, onChange, alts = [], onAltsChange, folde
                 value={alts[i] ?? ""}
                 onChange={(e) => setAlt(i, e.target.value)}
                 placeholder={`Imagen ${i + 1} del producto…`}
-                className="w-full rounded border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-700 outline-none transition focus:border-[#1C2870]/40 focus:ring-1 focus:ring-[#1C2870]/15"
+                className="w-full rounded border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-700 outline-none transition focus:border-[#334155]/40 focus:ring-1 focus:ring-[#334155]/15"
               />
             </div>
           </div>

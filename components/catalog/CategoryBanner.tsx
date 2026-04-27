@@ -5,14 +5,14 @@ import type { CategoryDTO } from "@/features/categorias/types"
 
 // Paleta de gradientes basada en los colores de la página
 const GRADIENTS = [
-  "linear-gradient(to right, #1C2870, #2d3fa8)", // azul marino principal
-  "linear-gradient(to right, #CC1B1B, #e83a3a)", // rojo diamante
-  "linear-gradient(to right, #1C2870, #0d1a5e)", // azul marino oscuro
-  "linear-gradient(to right, #B01010, #CC1B1B)", // rojo acento
-  "linear-gradient(to right, #1a3a7c, #1C2870)", // azul marino medio
-  "linear-gradient(to right, #0d1a5e, #1C2870)", // azul profundo
-  "linear-gradient(to right, #CC1B1B, #B01010)", // rojo intenso
-  "linear-gradient(to right, #1C2870, #162060)", // azul navy puro
+  "linear-gradient(to right, #334155, #2d3fa8)", // azul marino principal
+  "linear-gradient(to right, #64748b, #e83a3a)", // rojo diamante
+  "linear-gradient(to right, #334155, #0d1a5e)", // azul marino oscuro
+  "linear-gradient(to right, #475569, #64748b)", // rojo acento
+  "linear-gradient(to right, #1a3a7c, #334155)", // azul marino medio
+  "linear-gradient(to right, #0d1a5e, #334155)", // azul profundo
+  "linear-gradient(to right, #64748b, #475569)", // rojo intenso
+  "linear-gradient(to right, #334155, #162060)", // azul navy puro
 ]
 
 function getCategoryGradient(slug: string): string {

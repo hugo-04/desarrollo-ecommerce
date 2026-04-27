@@ -230,7 +230,7 @@ function Pagination({ page, totalPages }: { page: number; totalPages: number }) 
           className={cn(
             "flex h-9 w-9 items-center justify-center rounded-xl text-sm font-bold transition-all",
             p === page
-              ? "bg-[#1C2870] text-white shadow-md shadow-[#1C2870]/20"
+              ? "bg-[#334155] text-white shadow-md shadow-[#334155]/20"
               : "border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800"
           )}
         >

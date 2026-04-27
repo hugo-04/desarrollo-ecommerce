@@ -23,7 +23,7 @@ export function FilterSection({ title, children, badge, onClear }: FilterSection
           {badge && onClear ? (
             <button
               onClick={onClear}
-              className="flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500"
+              className="flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-500"
               title={`Limpiar ${title}`}
             >
               <IconX className="h-2.5 w-2.5" /> limpiar

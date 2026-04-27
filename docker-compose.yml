@@ -8,13 +8,13 @@ services:
     environment:
       POSTGRES_USER:     postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB:       electrothina
+      POSTGRES_DB:       postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d electrothina"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -28,7 +28,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgresql://postgres:password@db:5432/electrothina?schema=public
+      DATABASE_URL: postgresql://postgres:password@db:5432/postgres?schema=public
       AUTH_SECRET:  ${AUTH_SECRET}
       # Cloudflare R2
       AWS_REGION:            ${AWS_REGION}

@@ -31,7 +31,7 @@ export function AdminListHeader({
           <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
           <p className="text-sm text-slate-500">{subtitle}</p>
         </div>
-        <Button asChild className="bg-[#1C2870] hover:bg-[#1C2870]/90">
+        <Button asChild className="bg-[#334155] hover:bg-[#334155]/90">
           <Link href={newHref}>
             <Plus className="h-4 w-4" />
             {newLabel}

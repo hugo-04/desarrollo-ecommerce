@@ -125,8 +125,8 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
           {/* Switch carrusel */}
           <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
-                <Tv2 className="h-3.5 w-3.5 text-[#1C2870]" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#334155]/8">
+                <Tv2 className="h-3.5 w-3.5 text-[#334155]" />
               </div>
               <h2 className="text-sm font-semibold text-slate-700">Carrusel del home</h2>
             </div>
@@ -163,8 +163,8 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
           {/* Logo */}
           <div className="flex-1 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
-                <ImageIcon className="h-3.5 w-3.5 text-[#1C2870]" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#334155]/8">
+                <ImageIcon className="h-3.5 w-3.5 text-[#334155]" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-slate-700">
@@ -198,8 +198,8 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
         {/* ── Columna derecha: Información ── */}
         <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-5 flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1C2870]/8">
-              <Tag className="h-3.5 w-3.5 text-[#1C2870]" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#334155]/8">
+              <Tag className="h-3.5 w-3.5 text-[#334155]" />
             </div>
             <h2 className="text-sm font-semibold text-slate-700">Información de la marca</h2>
           </div>
@@ -214,7 +214,7 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
               onChange={(e) => { setName(e.target.value); if (nameError) setNameError("") }}
               placeholder="Ej: ABB, Schneider Electric, Siemens…"
               required
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-[#1C2870]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C2870]/15"
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-[#334155]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#334155]/15"
             />
             {nameError && <p className="mt-1.5 text-xs text-red-500">{nameError}</p>}
           </div>
@@ -236,7 +236,7 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
           <Button
             type="submit"
             disabled={saving || deleting}
-            className="bg-[#1C2870] px-6 hover:bg-[#1C2870]/90"
+            className="bg-[#334155] px-6 hover:bg-[#334155]/90"
           >
             {saving
               ? isEditing ? "Guardando…" : "Creando…"

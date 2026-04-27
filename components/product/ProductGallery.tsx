@@ -33,7 +33,7 @@ export function ProductGallery({
           crossOrigin="anonymous"
         />
         {bestSeller && (
-          <span className="absolute left-4 top-4 rounded-lg bg-red-600 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
+          <span className="absolute left-4 top-4 rounded-lg bg-slate-600 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
             Top Ventas
           </span>
         )}
@@ -41,7 +41,7 @@ export function ProductGallery({
           <button
             type="button"
             onClick={() => window.open(fichaTecnica, "_blank", "noopener,noreferrer")}
-            className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-2 text-[10px] font-bold text-[#cc1b1b] shadow-lg ring-1 ring-slate-200/50 backdrop-blur-md transition-all duration-300 hover:bg-[#cc1b1b] hover:text-white"
+            className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-2 text-[10px] font-bold text-[#64748b] shadow-lg ring-1 ring-slate-200/50 backdrop-blur-md transition-all duration-300 hover:bg-[#64748b] hover:text-white"
             title="Descargar Ficha Técnica (PDF)"
           >
             <IconPDF className="h-4 w-4" /> FICHA PDF

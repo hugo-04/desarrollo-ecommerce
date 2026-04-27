@@ -5,7 +5,7 @@ import { CONTACT } from "@/lib/contact"
 
 export function TopBar() {
   return (
-    <div className="bg-[#121A47] text-white">
+    <div className="bg-[#1e293b] text-white">
       <div className="mx-auto max-w-7xl px-4 py-2">
 
         {/* Mobile: scrollable con todos los datos */}

@@ -295,7 +295,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 name="name"
                 value={name}
                 onChange={(e) => setName((e.target as HTMLInputElement).value)}
-                placeholder="Aislador Polimérico 22kV"
+                placeholder="Lorem Ipsum Producto"
                 required
               />
               {errors.name ? (
@@ -436,7 +436,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 required
                 value={description}
                 onChange={(e) => setDesc(e.target.value)}
-                placeholder="Ej: Aislador polimérico para líneas de distribución de media tensión"
+                placeholder="Ej: Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                 className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder-slate-300 focus:border-primary/40 focus:ring-2 focus:ring-primary/15"
               />
               {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description}</p>}
@@ -444,10 +444,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
             <TagsEditor
               label="Medidas disponibles"
-              hint="Las diferentes medidas o tamaños que tiene el producto (ej: 22kV, DN 50mm, 120–180 mm). Se muestran como badges en la tarjeta y la página de detalle."
+              hint="Las diferentes medidas o tamaños que tiene el producto (ej: Lorem A, Lorem B, Lorem C). Se muestran como badges en la tarjeta y la página de detalle."
               values={medidas}
               onChange={setMedidas}
-              placeholder="Ej: 22kV, DN 50mm, 120–180 mm…"
+              placeholder="Ej: Lorem A, Lorem B, Lorem C…"
             />
           </div>
 
@@ -493,7 +493,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
           <button
             type="submit"
             disabled={saving}
-            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#1C2870] to-[#0ea5e9] px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#1C2870]/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-cyan-500/30 disabled:opacity-50 disabled:hover:scale-100"
+            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#334155] to-[#0ea5e9] px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#334155]/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-cyan-500/30 disabled:opacity-50 disabled:hover:scale-100"
           >
             <div className="absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0" />
             <Package className="relative z-10 h-4 w-4" />

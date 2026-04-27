@@ -31,9 +31,9 @@ const ROW_STAGGER_MS    = 35
 // ── Helper: gradiente determinístico por slug (sin campo en DB) ────────────────
 
 const GRADIENT_PALETTE = [
-  "from-[#1C2870] to-[#151f5c]",
+  "from-[#334155] to-[#151f5c]",
   "from-blue-700 to-blue-900",
-  "from-indigo-700 to-[#1C2870]",
+  "from-indigo-700 to-[#334155]",
   "from-slate-600 to-slate-800",
   "from-cyan-700 to-blue-900",
   "from-sky-700 to-indigo-900",
@@ -88,7 +88,7 @@ function CategoryRow({ cat, index, removingId, onDelete }: CategoryRowProps) {
 
       {/* Contador de productos */}
       <TableCell className="px-5 py-4">
-        <span className="inline-flex h-7 min-w-[28px] items-center justify-center rounded-full bg-[#1C2870]/8 px-2.5 text-xs font-bold text-[#1C2870]">
+        <span className="inline-flex h-7 min-w-[28px] items-center justify-center rounded-full bg-[#334155]/8 px-2.5 text-xs font-bold text-[#334155]">
           {cat.count}
         </span>
       </TableCell>

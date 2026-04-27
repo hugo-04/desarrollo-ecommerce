@@ -13,12 +13,12 @@ async function main() {
   console.log("Starting seed...")
 
   // ── 1. Admin User ─────────────────────────────────────────────────────────
-  await prisma.adminUser.deleteMany({ where: { email: "admin@electrothina.com" } })
-  const passwordHash = await bcrypt.hash("ElectroThina26", 12)
+  await prisma.adminUser.deleteMany({ where: { email: "admin@admin.com" } })
+  const passwordHash = await bcrypt.hash("Hugovega123", 12)
   const adminUser = await prisma.adminUser.upsert({
-    where: { email: "electrothina123@gmail.com" },
+    where: { email: "admin@admin.com" },
     update: { passwordHash, isActive: true },
-    create: { email: "electrothina123@gmail.com", passwordHash, isActive: true },
+    create: { email: "admin@admin.com", passwordHash, isActive: true },
   })
   console.log(`Admin user: ${adminUser.email}`)
 
@@ -38,9 +38,9 @@ async function main() {
   }
   // Marca por defecto para productos sin marca asignada
   const defaultBrand = await prisma.brand.upsert({
-    where: { name: "Electro Thina" },
+    where: { name: "Lorem Ipsum" },
     update: {},
-    create: { name: "Electro Thina", logo: "/logo/logotipo.png", showInCarousel: false },
+    create: { name: "Lorem Ipsum", logo: "", showInCarousel: false },
   })
   console.log(`Seeded ${BRANDS_DATA.length + 1} brands`)
 

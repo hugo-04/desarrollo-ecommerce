@@ -65,7 +65,7 @@ export function Field({
         step={step}
         min={min}
         max={max}
-        className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 outline-none transition placeholder-slate-300 focus:border-[#1C2870]/40 focus:ring-2 focus:ring-[#1C2870]/15"
+        className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 outline-none transition placeholder-slate-300 focus:border-[#334155]/40 focus:ring-2 focus:ring-[#334155]/15"
       />
     </div>
   )

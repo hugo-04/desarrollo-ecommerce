@@ -68,23 +68,23 @@ export default async function CategoriaPage({ params }: PageProps) {
         name: `¿Qué tipos de ${category.name} tienen disponibles?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `En Electro Thina S.A.C. distribuimos: ${category.subcategories.join(", ")}. Todos con certificaciones IEC, ANSI y NTP. Stock permanente en Lima, Perú.`,
+          text: `Lorem ipsum dolor sit amet: ${category.subcategories.join(", ")}. Lorem ipsum consectetur adipiscing elit sed do eiusmod tempor.`,
         },
       },
       {
         "@type": "Question",
-        name: `¿Los ${category.name} cuentan con certificación IEC y ANSI?`,
+        name: `¿Lorem ipsum ${category.name} dolor sit amet consectetur?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Sí. Todos los ${category.name} que distribuimos cumplen las normas IEC, ANSI y NTP vigentes para instalaciones eléctricas de alta y media tensión en Perú.`,
+          text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ${category.name}.`,
         },
       },
       {
         "@type": "Question",
-        name: `¿Hacen despacho de ${category.name} a provincias?`,
+        name: `¿Lorem ipsum dolor ${category.name} sit amet adipiscing?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Sí. Realizamos despachos en Lima en 24 a 48 horas. También coordinamos envíos a provincias de todo el Perú. Solicite cotización vía web o WhatsApp al +51 981 375 196.`,
+          text: `Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum quis nostrud exercitation.`,
         },
       },
     ],

@@ -15,9 +15,9 @@ export function LoginView() {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0a0f2c] font-sans">
-      <div className="pointer-events-none absolute left-[-10%] top-[-10%] h-[500px] w-[500px] animate-pulse rounded-full bg-[#1C2870]/40 blur-[120px] mix-blend-screen" />
-      <div className="pointer-events-none absolute bottom-[-10%] right-[-10%] h-[500px] w-[500px] rounded-full bg-[#CC1B1B]/15 blur-[120px] mix-blend-screen" />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0f172a] font-sans">
+      <div className="pointer-events-none absolute left-[-10%] top-[-10%] h-[500px] w-[500px] animate-pulse rounded-full bg-[#334155]/40 blur-[120px] mix-blend-screen" />
+      <div className="pointer-events-none absolute bottom-[-10%] right-[-10%] h-[500px] w-[500px] rounded-full bg-[#64748b]/15 blur-[120px] mix-blend-screen" />
       <div className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 30h25M35 30h25M30 0v25M30 35v25\' stroke=\'%23a5f3fc\' stroke-width=\'.6\'/%3E%3C/svg%3E")' }} />
 
       <div className="relative z-10 w-full max-w-sm animate-in fade-in zoom-in-95 duration-500">
@@ -25,7 +25,7 @@ export function LoginView() {
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="relative mb-5 flex flex-col items-center">
             <div className="pointer-events-none absolute inset-0 scale-150 rounded-full bg-white/10 blur-2xl" />
-            <img src="/logo/logotipo.png" alt="Electro Thina" className="relative h-14 w-auto object-contain"
+            <img src="/logo/logotipo.png" alt="Logo" className="relative h-14 w-auto object-contain"
               style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.6)) brightness(1.15)" }} />
           </div>
           <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cyan-400 drop-shadow-sm">Panel de Administración</p>
@@ -33,14 +33,14 @@ export function LoginView() {
 
         {/* Formulario */}
         <form action={action} className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0f172a]/60 px-8 py-10 shadow-2xl shadow-black/60 backdrop-blur-xl">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#1C2870] to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#334155] to-transparent" />
           <h2 className="mb-6 flex items-center justify-between text-xl font-bold tracking-tight text-white">
             <span>Iniciar Sesión</span>
             <ShieldCheck className="h-5 w-5 text-emerald-400 opacity-80" />
           </h2>
 
           {state?.error && (
-            <div className="mb-6 animate-in slide-in-from-top-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            <div className="mb-6 animate-in slide-in-from-top-2 rounded-xl border border-slate-500/30 bg-slate-500/10 px-4 py-3 text-sm text-slate-200">
               {state.error}
             </div>
           )}
@@ -48,7 +48,7 @@ export function LoginView() {
           <div className="space-y-5">
             <div>
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">Correo electrónico</label>
-              <input name="email" type="email" autoComplete="email" required placeholder="admin@electrothina.com"
+              <input name="email" type="email" autoComplete="email" required placeholder="admin@lorem-ipsum.com"
                 className="w-full rounded-xl border border-slate-700/50 bg-slate-950/50 px-4 py-3.5 text-sm text-white placeholder-slate-500 outline-none transition-all duration-300 focus:border-cyan-500/50 focus:bg-slate-900/80 focus:ring-4 focus:ring-cyan-500/10" />
             </div>
             <div>
@@ -66,9 +66,9 @@ export function LoginView() {
           </div>
 
           <button type="submit" disabled={pending}
-            className="group relative mt-8 w-full overflow-hidden rounded-xl bg-gradient-to-r from-[#1C2870] to-[#0ea5e9] p-[1px] shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100">
+            className="group relative mt-8 w-full overflow-hidden rounded-xl bg-gradient-to-r from-[#334155] to-[#0ea5e9] p-[1px] shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100">
             <div className="absolute inset-0 translate-y-full bg-white/20 transition-transform duration-300 ease-out group-hover:translate-y-0" />
-            <div className="relative rounded-xl bg-[#1C2870]/10 py-3.5 text-center text-sm font-bold text-white backdrop-blur-sm transition-colors group-hover:bg-transparent">
+            <div className="relative rounded-xl bg-[#334155]/10 py-3.5 text-center text-sm font-bold text-white backdrop-blur-sm transition-colors group-hover:bg-transparent">
               <span className="relative z-10">{pending ? "Autenticando..." : "Ingresar de forma segura"}</span>
             </div>
           </button>

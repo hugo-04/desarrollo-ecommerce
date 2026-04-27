@@ -10,9 +10,9 @@ import type { CategoryDTO } from "@/features/categorias/types"
 
 // Paleta de gradientes — se asigna de forma determinística por slug
 const GRADIENT_PALETTE = [
-  "from-[#1C2870] to-[#151f5c]",
+  "from-[#334155] to-[#151f5c]",
   "from-blue-700 to-blue-900",
-  "from-indigo-700 to-[#1C2870]",
+  "from-indigo-700 to-[#334155]",
   "from-slate-600 to-slate-800",
   "from-cyan-700 to-blue-900",
   "from-sky-700 to-indigo-900",
@@ -33,7 +33,7 @@ function CategoryCard({ category, index }: { category: CategoryDTO; index: numbe
     <motion.div variants={scaleUp} className={`h-full w-full ${isFeatured ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
       <Link
         href={`/categoria/${category.slug}`}
-        className="group relative block h-full w-full overflow-hidden rounded-3xl border border-slate-200/50 bg-white text-left transition-all duration-700 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#1C2870]/20"
+        className="group relative block h-full w-full overflow-hidden rounded-3xl border border-slate-200/50 bg-white text-left transition-all duration-700 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#334155]/20"
       >
         <div className={`relative w-full overflow-hidden ${isFeatured ? 'h-[400px] lg:h-full' : 'h-[340px]'}`}>
           <div className="absolute inset-0 bg-slate-900/10 z-10 transition-opacity duration-500 group-hover:opacity-0" />
@@ -50,7 +50,7 @@ function CategoryCard({ category, index }: { category: CategoryDTO; index: numbe
           />
           <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md ring-1 ring-white/30 transition-all duration-500 group-hover:bg-[#CC1B1B] group-hover:ring-[#CC1B1B] group-hover:shadow-[0_0_20px_rgba(204,27,27,0.4)]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md ring-1 ring-white/30 transition-all duration-500 group-hover:bg-[#64748b] group-hover:ring-[#64748b] group-hover:shadow-[0_0_20px_rgba(204,27,27,0.4)]">
                 <Icon className="h-5 w-5 text-white" />
               </div>
               <div className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[10px] font-bold text-white backdrop-blur-md">
@@ -61,7 +61,7 @@ function CategoryCard({ category, index }: { category: CategoryDTO; index: numbe
             <p className={`text-white/70 ${isFeatured ? 'mb-6 max-w-sm text-sm' : 'mb-4 text-xs'}`}>
               {(category.subcategories ?? []).slice(0, 3).join(" · ")}
             </p>
-            <div className="flex items-center gap-2 text-xs font-semibold text-red-400 transition-all group-hover:gap-3">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 transition-all group-hover:gap-3">
               <span>Ver productos</span>
               <IconArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
             </div>
@@ -99,13 +99,13 @@ export function CategoriesGrid({ categories }: CategoriesGridProps) {
       <div className="relative mx-auto max-w-7xl px-4">
         <motion.div variants={fadeUp} className="mb-16 text-center">
           <div className="mb-4 flex items-center justify-center gap-3">
-            <div className="h-px w-8 bg-red-500" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">
+            <div className="h-px w-8 bg-slate-500" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">
               {CATEGORIES_GRID_CONTENT.badge}
             </span>
-            <div className="h-px w-8 bg-red-500" />
+            <div className="h-px w-8 bg-slate-500" />
           </div>
-          <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">
+          <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">
             {CATEGORIES_GRID_CONTENT.title}
           </h2>
           <p className="mx-auto max-w-lg text-sm leading-relaxed text-slate-500">

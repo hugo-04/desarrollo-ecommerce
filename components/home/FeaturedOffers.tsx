@@ -25,7 +25,7 @@ export function FeaturedOffers() {
       <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/[0.02] to-transparent" />
       <div className="relative mx-auto max-w-7xl px-4">
         <motion.div variants={fadeUp} className="mb-14 text-center">
-          <span className="mb-2 inline-block text-xs font-bold uppercase tracking-[0.2em] text-red-600">
+          <span className="mb-2 inline-block text-xs font-bold uppercase tracking-[0.2em] text-slate-600">
             {FEATURED_OFFERS_CONTENT.badge}
           </span>
           <h2 className="mb-3 text-2xl font-extrabold tracking-tight text-slate-900 lg:text-3xl">

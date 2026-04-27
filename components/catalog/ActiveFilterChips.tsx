@@ -53,9 +53,9 @@ export function ActiveFilterChips({
         </span>
       ))}
       {onlyBestSellers && (
-        <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-[11px] font-medium text-red-600">
+        <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600">
           Mas Vendidos
-          <button onClick={onRemoveBestSellers} className="ml-0.5 rounded-full hover:text-red-400">
+          <button onClick={onRemoveBestSellers} className="ml-0.5 rounded-full hover:text-slate-400">
             <IconX className="h-3 w-3" />
           </button>
         </span>
