@@ -19,6 +19,13 @@ export interface ReclamacionInput {
 }
 
 export async function createReclamacionAction(data: ReclamacionInput) {
+  const required: (keyof ReclamacionInput)[] = ["nombres", "apellidos", "tipoDoc", "nroDoc", "domicilio", "email", "telefono", "descripcion", "pedido"]
+  for (const field of required) {
+    if (!String(data[field] ?? "").trim()) throw new Error(`El campo ${field} es requerido`)
+  }
+  if (!["RECLAMACION", "QUEJA"].includes(data.tipo)) throw new Error("Tipo inválido")
+  if (!["PRODUCTO", "SERVICIO"].includes(data.tipoBien)) throw new Error("Tipo de bien inválido")
+
   await db.reclamacion.create({
     data: { ...data, estado: "PENDIENTE" },
   })
@@ -27,6 +34,9 @@ export async function createReclamacionAction(data: ReclamacionInput) {
 const PAGE_SIZE = 10
 
 export async function getReclamacionesAction(page = 1) {
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
+
   const skip = (page - 1) * PAGE_SIZE
 
   const [items, total] = await Promise.all([

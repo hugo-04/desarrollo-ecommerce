@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { IconFire, IconStar, IconPDF, IconEye } from "@/components/icons"
 import type { Product } from "@/lib/types"
 
@@ -18,7 +19,13 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
       <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100 p-8">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(28,40,112,0.03)_0,transparent_70%)] opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
         {product.image && (
-          <img src={product.image} alt={product.name} className="relative z-10 h-full w-full object-contain drop-shadow-xl transition-transform duration-700 group-hover:scale-110" />
+          <Image
+            src={product.image}
+            alt={product.imageAlt ?? product.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            className="relative z-10 object-contain drop-shadow-xl transition-transform duration-700 group-hover:scale-110"
+          />
         )}
         {showBadge && (
           <span className="absolute left-4 top-4 z-20 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-slate-600 to-slate-500 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-slate-600/30 ring-1 ring-white/20">

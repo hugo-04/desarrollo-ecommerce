@@ -106,6 +106,7 @@ export function ProductoView({ product }: ProductoViewProps) {
           <div className="grid gap-10 lg:grid-cols-2">
             <ProductGallery
               gallery={product.gallery}
+              galleryAlts={product.galleryAlts}
               productName={product.name}
               bestSeller={product.bestSeller}
               selectedImage={selectedImage}

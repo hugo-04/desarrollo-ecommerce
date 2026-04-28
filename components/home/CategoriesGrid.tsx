@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { fadeUp, scaleUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
 import { CATEGORIES_GRID_CONTENT } from "@/lib/data/mock/static-content.mock"
@@ -38,10 +39,12 @@ function CategoryCard({ category, index }: { category: CategoryDTO; index: numbe
         <div className={`relative w-full overflow-hidden ${isFeatured ? 'h-[400px] lg:h-full' : 'h-[340px]'}`}>
           <div className="absolute inset-0 bg-slate-900/10 z-10 transition-opacity duration-500 group-hover:opacity-0" />
           {category.image && (
-            <img
+            <Image
               src={category.image}
-              alt={category.name}
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              alt={category.imageAlt ?? category.name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition-transform duration-1000 group-hover:scale-110"
             />
           )}
           <div className={`absolute inset-0 bg-gradient-to-t from-[#07091E]/95 ${isFeatured ? 'via-[#07091E]/40' : 'via-[#07091E]/60'} to-transparent z-10`} />

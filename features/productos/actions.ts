@@ -51,6 +51,7 @@ export async function createProductAction(data: CreateProductDTO) {
   const result = await getService().createProduct(data)
   revalidatePath("/catalogo")
   revalidatePath("/producto/[id]", "page")
+  revalidatePath("/categoria/[slug]", "page")
   revalidatePath("/")
   return result
 }
@@ -61,6 +62,7 @@ export async function updateProductAction(id: number, data: UpdateProductDTO) {
   const result = await getService().updateProduct(id, data)
   revalidatePath("/catalogo")
   revalidatePath("/producto/[id]", "page")
+  revalidatePath("/categoria/[slug]", "page")
   revalidatePath("/")
   return result
 }
@@ -71,6 +73,7 @@ export async function deleteProductAction(id: number) {
   const result = await getService().deleteProduct(id)
   revalidatePath("/catalogo")
   revalidatePath("/producto/[id]", "page")
+  revalidatePath("/categoria/[slug]", "page")
   revalidatePath("/")
   return result
 }

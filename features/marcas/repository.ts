@@ -10,7 +10,7 @@
 
 import type { Brand } from "@/lib/types"
 import type { CreateBrandDTO, UpdateBrandDTO, BrandFilters, BrandPaginatedResult } from "./types"
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, Prisma } from "@prisma/client"
 
 // ─── Interface ─────────────────────────────────────────────────────────────────
 
@@ -90,6 +90,13 @@ export class DbBrandRepository implements IBrandRepository {
   }
 
   async delete(id: number): Promise<void> {
-    await this.db.brand.delete({ where: { id } })
+    try {
+      await this.db.brand.delete({ where: { id } })
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2003") {
+        throw new Error("No se puede eliminar: la marca tiene productos asociados")
+      }
+      throw e
+    }
   }
 }

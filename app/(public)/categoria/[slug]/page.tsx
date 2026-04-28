@@ -68,23 +68,23 @@ export default async function CategoriaPage({ params }: PageProps) {
         name: `¿Qué tipos de ${category.name} tienen disponibles?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Lorem ipsum dolor sit amet: ${category.subcategories.join(", ")}. Lorem ipsum consectetur adipiscing elit sed do eiusmod tempor.`,
+          text: `Contamos con: ${category.subcategories.join(", ")}. Consulte nuestro catálogo para ver disponibilidad y especificaciones técnicas de cada variante.`,
         },
       },
       {
         "@type": "Question",
-        name: `¿Lorem ipsum ${category.name} dolor sit amet consectetur?`,
+        name: `¿Cómo puedo solicitar una cotización de ${category.name}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ${category.name}.`,
+          text: `Puede solicitar una cotización de ${category.name} a través de nuestro formulario de contacto o por WhatsApp. Nuestro equipo le responderá con precios y disponibilidad a la brevedad.`,
         },
       },
       {
         "@type": "Question",
-        name: `¿Lorem ipsum dolor ${category.name} sit amet adipiscing?`,
+        name: `¿Los productos de ${category.name} cuentan con garantía?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum quis nostrud exercitation.`,
+          text: `Sí, todos nuestros productos de ${category.name} cuentan con garantía del fabricante. Puede consultar los detalles en la ficha técnica descargable de cada producto.`,
         },
       },
     ],

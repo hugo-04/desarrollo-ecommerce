@@ -131,15 +131,15 @@ export function CategoriaView({ category, products }: CategoriaViewProps) {
                 </p>
               </div>
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="mb-2 text-sm font-bold text-slate-800">¿Lorem ipsum dolor sit amet consectetur?</h3>
+                <h3 className="mb-2 text-sm font-bold text-slate-800">¿Cómo puedo solicitar una cotización de {category.name}?</h3>
                 <p className="text-xs leading-relaxed text-slate-600">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Puede solicitar una cotización a través de nuestro formulario de contacto o por WhatsApp. Nuestro equipo le responderá con precios y disponibilidad a la brevedad.
                 </p>
               </div>
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="mb-2 text-sm font-bold text-slate-800">¿Lorem ipsum adipiscing elit sed eiusmod?</h3>
+                <h3 className="mb-2 text-sm font-bold text-slate-800">¿Los productos de {category.name} cuentan con garantía?</h3>
                 <p className="text-xs leading-relaxed text-slate-600">
-                  Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor. Lorem ipsum quis nostrud exercitation ullamco laboris.
+                  Sí, todos nuestros productos de {category.name} cuentan con garantía del fabricante. Puede consultar los detalles en la ficha técnica de cada producto.
                 </p>
               </div>
             </div>

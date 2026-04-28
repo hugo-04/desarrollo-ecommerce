@@ -26,6 +26,7 @@ export const productSchema = z.object({
   description: z.string().min(10, "Descripción requerida (mín. 10 caracteres)"),
   image:       z.string().min(1, "Imagen principal requerida"),
   imageAlt:    z.string().min(3, "Nombre SEO de la imagen requerido"),
+  galleryAlts: z.array(z.string().min(3, "Nombre SEO de imagen de galería muy corto")).optional(),
 })
 
 // ---------------------------------------------------------------------------
