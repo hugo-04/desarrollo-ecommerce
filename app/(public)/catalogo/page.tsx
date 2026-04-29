@@ -2,12 +2,12 @@ import { Suspense } from "react"
 import type { Metadata } from "next"
 import { SEO, SITE_URL, SITE_NAME, generateCategoryMeta, buildCategorySchema } from "@/lib/seo"
 import { CatalogoView } from "@/components/views/CatalogoView"
+import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 import { cache } from "react"
-import { getCategoriesAction } from "@/features/categorias/actions"
-import { getBrandNamesAction } from "@/features/marcas/actions"
+import { getActiveFilterOptionsAction } from "@/features/categorias/actions"
 
 // cache() deduplica llamadas idénticas dentro del mismo request (generateMetadata + component)
-const getCategories = cache(getCategoriesAction)
+const getFilterOptions = cache(getActiveFilterOptionsAction)
 
 export const dynamic = "force-dynamic"
 
@@ -19,18 +19,15 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const { categoria } = await searchParams
   if (!categoria) return SEO.catalogo
 
-  const cats = await getCategories()
-  const cat  = cats.find((c) => c.name === categoria)
+  const { categories } = await getFilterOptions()
+  const cat = categories.find((c) => c.name === categoria)
   return cat ? generateCategoryMeta(cat) : SEO.catalogo
 }
 
 export default async function CatalogoPage({ searchParams }: PageProps) {
   const params = await searchParams
 
-  const [categories, brandNames] = await Promise.all([
-    getCategories(),
-    getBrandNamesAction(),
-  ])
+  const { categories, brandNames } = await getFilterOptions()
 
   // Schema dinámico: si hay categoría activa → CollectionPage, si no → BreadcrumbList del catálogo
   const selectedCat = params.categoria
@@ -60,6 +57,7 @@ export default async function CatalogoPage({ searchParams }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
       />
+      <PageViewTracker path="/catalogo" />
       <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
         <CatalogoView
           initialCategory={params.categoria}

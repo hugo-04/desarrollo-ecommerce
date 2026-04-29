@@ -17,7 +17,10 @@ export const categorySchema = z.object({
       "Muy corta para SEO — mínimo 100 caracteres o dejá vacío"
     )
     .optional(),
+  imageAlt: z
+    .string()
+    .max(125, "Máximo 125 caracteres para el alt text")
+    .optional(),
 })
 
-/** Mapa de errores por campo — todos opcionales porque pueden no existir */
-export type CatErrors = Partial<Record<"name" | "slug" | "description", string>>
+export type CatErrors = Partial<Record<"name" | "slug" | "description" | "imageAlt", string>>

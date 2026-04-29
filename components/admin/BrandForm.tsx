@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button"
 import { ImageIcon, Tag, Tv2 } from "lucide-react"
 import { brandSchema } from "@/features/marcas/schemas"
 import type { Brand } from "@/lib/types"
+import { toast } from "sonner"
 
 interface BrandFormProps {
   initialData?: Brand
@@ -55,11 +56,12 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
     setNameError("")
     setLogoError("")
 
-    const result = brandSchema.safeParse({ name: name.trim(), logo, showInCarousel })
+    const result = brandSchema.safeParse({ name: name.trim(), logo, logoAlt: logoAlt.trim() || undefined, showInCarousel })
     if (!result.success) {
       for (const issue of result.error.issues) {
         if (issue.path[0] === "name") setNameError(issue.message)
         if (issue.path[0] === "logo") setLogoError(issue.message)
+        if (issue.path[0] === "logoAlt") setLogoError(issue.message)
       }
       setSaving(false)
       return
@@ -89,7 +91,9 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
     try {
       await onSave({ name: name.trim(), logo: finalLogo, logoAlt: logoAlt.trim() || undefined, showInCarousel })
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Error al guardar")
+      const msg = err instanceof Error ? err.message : "Error al guardar"
+      setError(msg)
+      toast.error(msg)
       setSaving(false)
     }
   }
@@ -97,9 +101,13 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
   async function handleDelete() {
     if (!onDelete) return
     setDeleting(true)
+    setError("")
     try {
       await onDelete()
-    } catch {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error al eliminar la marca"
+      setError(msg)
+      toast.error(msg)
       setDeleting(false)
     }
   }

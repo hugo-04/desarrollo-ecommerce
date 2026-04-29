@@ -1,6 +1,7 @@
 import { SEO, SITE_URL, SITE_NAME } from "@/lib/seo"
 import { HomeView } from "@/components/views/HomeView"
 import { getFeaturedCategoriesAction } from "@/features/categorias/actions"
+import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 
 export const dynamic = "force-dynamic"
 export const metadata = SEO.home
@@ -29,6 +30,7 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
       />
+      <PageViewTracker path="/" />
       <HomeView categories={categories} />
     </>
   )

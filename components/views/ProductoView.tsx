@@ -20,6 +20,7 @@ import { PRODUCT_DETAIL_CONTENT } from "@/lib/data/mock/static-content.mock"
 import { useRelatedProducts } from "@/features/productos/hooks"
 import { useFadeInOnScroll } from "@/hooks/useAnimations"
 import { IconChevronRight, IconChevronLeft, IconWhatsApp } from "@/components/icons"
+import { WA } from "@/lib/contact"
 import type { Product } from "@/lib/types"
 
 interface ProductoViewProps {
@@ -106,6 +107,7 @@ export function ProductoView({ product }: ProductoViewProps) {
           <div className="grid gap-10 lg:grid-cols-2">
             <ProductGallery
               gallery={product.gallery}
+              galleryAlts={product.galleryAlts}
               productName={product.name}
               bestSeller={product.bestSeller}
               selectedImage={selectedImage}
@@ -170,10 +172,10 @@ export function ProductoView({ product }: ProductoViewProps) {
       <div className="fixed bottom-0 inset-x-0 z-50 sm:hidden">
         <button
           onClick={() => setShowQuoteModal(true)}
-          className="flex w-full items-center justify-center gap-3 bg-green-600 py-4 text-sm font-bold text-white shadow-2xl shadow-green-600/40 active:bg-green-700"
+          className="flex w-full items-center justify-center gap-3 bg-[#25D366] py-4 text-sm font-bold text-white shadow-[0_-4px_20px_-10px_rgba(37,211,102,0.5)] active:bg-[#1DA851]"
         >
           <IconWhatsApp className="h-5 w-5" />
-          Cotizar este producto via WhatsApp
+          Cotizar este producto
         </button>
       </div>
       <div className="h-14 sm:hidden" />

@@ -3,6 +3,7 @@
 import { useRef, useCallback, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { X } from "lucide-react"
 import { IconSearch, IconWhatsApp } from "@/components/icons"
 import { WA } from "@/lib/contact"
@@ -47,10 +48,13 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
 
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center transition-transform hover:scale-[1.02]">
-            <img
+            <Image
               src="/logo/logotipo.png"
-              alt="Electro Thina — Soluciones Eléctricas"
+              alt="Electro Thina — Soluciones Eléctricas AT/MT"
+              width={160}
+              height={40}
               className="h-9 w-auto object-contain drop-shadow-sm sm:h-10"
+              priority
             />
           </Link>
 
@@ -59,7 +63,7 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
             <IconSearch className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Buscar productos, SKU, marca..."
+              placeholder="Buscar por producto, marca o categoría…"
               value={searchQuery}
               onChange={(e) => handleChange(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -105,7 +109,7 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
               <input
                 autoFocus
                 type="text"
-                placeholder="Buscar productos..."
+                placeholder="Buscar producto, marca o categoría…"
                 value={searchQuery}
                 onChange={(e) => handleChange(e.target.value)}
                 onKeyDown={handleKeyDown}

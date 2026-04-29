@@ -12,7 +12,6 @@ import type { CreateBrandDTO, UpdateBrandDTO, BrandFilters } from "./types"
 import { db } from "@/lib/db"
 import { getSession } from "@/lib/auth/session"
 
-// Singleton: una sola instancia compartida entre todas las llamadas del proceso.
 const _service = new BrandService(new DbBrandRepository(db))
 
 function getService() { return _service }
@@ -23,13 +22,10 @@ export async function getBrandsAction() {
   return getService().getAll()
 }
 
-/** Solo las marcas con showInCarousel=true — para el carrusel/marquee del home */
 export async function getBrandsForCarouselAction() {
   return getService().getCarousel()
 }
 
-/** Versión paginada — solo devuelve la página solicitada.
- *  Usar en el listado admin para no cargar todas las marcas de una vez. */
 export async function getBrandsPagedAction(filters: BrandFilters) {
   return getService().getPaged(filters)
 }
@@ -49,6 +45,7 @@ export async function createBrandAction(data: CreateBrandDTO) {
   if (!session) throw new Error("No autorizado")
   const result = await getService().create(data)
   revalidatePath("/catalogo")
+  revalidatePath("/marcas")
   revalidatePath("/")
   return result
 }
@@ -58,6 +55,8 @@ export async function updateBrandAction(id: number, data: UpdateBrandDTO) {
   if (!session) throw new Error("No autorizado")
   const result = await getService().update(id, data)
   revalidatePath("/catalogo")
+  revalidatePath("/marcas")
+  revalidatePath("/producto/[id]", "page")
   revalidatePath("/")
   return result
 }
@@ -67,6 +66,7 @@ export async function deleteBrandAction(id: number) {
   if (!session) throw new Error("No autorizado")
   const result = await getService().delete(id)
   revalidatePath("/catalogo")
+  revalidatePath("/marcas")
   revalidatePath("/")
   return result
 }

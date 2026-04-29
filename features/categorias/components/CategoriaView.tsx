@@ -1,23 +1,132 @@
+"use client"
+
+import { useState, useEffect, useRef, useCallback } from "react"
 import Link from "next/link"
-import { ProductCard }                    from "@/components/product/ProductCard"
-import { IconChevronRight, IconArrowRight } from "@/components/icons"
-import type { CategoryDTO }               from "@/features/categorias/types"
-import type { Product }                   from "@/lib/types"
+import { ProductCard } from "@/components/product/ProductCard"
+import { IconChevronRight } from "@/components/icons"
+import { getCatalogAction } from "@/features/productos/actions"
+import type { CategoryDTO } from "@/features/categorias/types"
+import type { Product } from "@/lib/types"
 
 /**
- * CategoriaView — Vista completa de la página de categoría pública.
+ * CategoriaView — Vista de categoría con Infinite Scroll.
  *
- * Server Component: recibe `category` y `products` ya obtenidos por page.tsx.
- * El page conserva generateMetadata y los schemas JSON-LD (responsabilidad SEO).
- * Esta vista solo se ocupa del renderizado visual (SRP).
+ * Client Component: recibe el primer lote de productos desde SSR (rápido + SEO),
+ * luego acumula más automáticamente usando IntersectionObserver al hacer scroll.
+ * Las cards nuevas entran con animación fade-in + slide-up.
  */
+
+const LIMIT = 12
 
 interface CategoriaViewProps {
   category: CategoryDTO
-  products: Product[]
+  initialProducts: Product[]
+  initialTotal: number
+  initialTotalPages: number
 }
 
-export function CategoriaView({ category, products }: CategoriaViewProps) {
+// ── Card con animación de entrada ─────────────────────────────────────────────
+
+function AnimatedCard({ product, index, animate }: {
+  product: Product
+  index: number
+  animate: boolean
+}) {
+  const [visible, setVisible] = useState(!animate)
+
+  useEffect(() => {
+    if (!animate) return
+    const t = setTimeout(() => setVisible(true), index * 60)
+    return () => clearTimeout(t)
+  }, [animate, index])
+
+  return (
+    <div
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(24px)",
+        transition: visible ? "opacity 0.4s ease, transform 0.4s ease" : "none",
+      }}
+    >
+      <ProductCard product={product} />
+    </div>
+  )
+}
+
+// ── Spinner de carga ──────────────────────────────────────────────────────────
+
+function LoadingSpinner() {
+  return (
+    <div className="flex flex-col items-center justify-center py-10 gap-3">
+      <div className="relative h-10 w-10">
+        <div className="absolute inset-0 rounded-full border-4 border-slate-200" />
+        <div className="absolute inset-0 rounded-full border-4 border-t-[#121A47] animate-spin" />
+      </div>
+      <p className="text-xs font-medium text-slate-400 tracking-wide">Cargando más productos…</p>
+    </div>
+  )
+}
+
+// ── Vista principal ───────────────────────────────────────────────────────────
+
+export function CategoriaView({
+  category,
+  initialProducts,
+  initialTotal,
+  initialTotalPages,
+}: CategoriaViewProps) {
+  // Estado del catálogo acumulado
+  const [products, setProducts]       = useState<Product[]>(initialProducts)
+  const [total]                       = useState(initialTotal)
+  const [page, setPage]               = useState(1)
+  const [totalPages]                  = useState(initialTotalPages)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore]         = useState(initialTotalPages > 1)
+  // Marca qué índices son "nuevos" (para animar)
+  const [newBatchStart, setNewBatchStart] = useState<number | null>(null)
+
+  const sentinelRef   = useRef<HTMLDivElement>(null)
+  const isFetchingRef = useRef(false)
+
+  // Carga siguiente página
+  const loadMore = useCallback(async () => {
+    if (isFetchingRef.current || !hasMore) return
+    isFetchingRef.current = true
+    setLoadingMore(true)
+
+    try {
+      const nextPage = page + 1
+      const result = await getCatalogAction({
+        categories: [category.name],
+        page: nextPage,
+        limit: LIMIT,
+      })
+      setProducts((prev) => {
+        setNewBatchStart(prev.length)
+        return [...prev, ...result.data]
+      })
+      setPage(nextPage)
+      setHasMore(nextPage < totalPages)
+    } catch {
+      // silencio — no romper UX
+    } finally {
+      setLoadingMore(false)
+      isFetchingRef.current = false
+    }
+  }, [page, hasMore, totalPages, category.name])
+
+  // IntersectionObserver — dispara loadMore cuando el sentinel entra al viewport
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) loadMore() },
+      { rootMargin: "300px" }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [loadMore])
+
   return (
     <>
       {/* Breadcrumb */}
@@ -38,7 +147,7 @@ export function CategoriaView({ category, products }: CategoriaViewProps) {
         <div className="mx-auto max-w-7xl px-4">
           <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-red-400">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
-            Categoría — {category.count} productos
+            Categoría — {total} productos
           </div>
           <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
             {category.name}
@@ -67,46 +176,61 @@ export function CategoriaView({ category, products }: CategoriaViewProps) {
         </div>
       </section>
 
-      {/* Grid de productos — server-rendered para Googlebot */}
+      {/* Grid de productos con infinite scroll */}
       <section className="bg-slate-50 py-12">
         <div className="mx-auto max-w-7xl px-4">
           {products.length > 0 ? (
             <>
-              <div className="mb-8 flex items-center justify-between">
+              {/* Encabezado */}
+              <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
                 <div>
-                  <h2 className="text-xl font-extrabold text-[#121A47]">Productos de {category.name}</h2>
-                  <p className="mt-1 text-sm text-slate-500">Mostrando {products.length} de {category.count} productos</p>
+                  <h2 className="text-xl font-extrabold text-[#121A47]">
+                    Productos de {category.name}
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Mostrando {products.length} de {total} productos
+                  </p>
                 </div>
                 <Link
                   href={`/catalogo?categoria=${encodeURIComponent(category.name)}`}
                   className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-[#121A47] transition-all hover:border-primary/30 hover:text-primary sm:flex"
                 >
-                  Ver todos <IconArrowRight className="h-4 w-4" />
+                  Ver en catálogo con filtros →
                 </Link>
               </div>
 
+              {/* Grid con animación por lote */}
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                {products.map((product, idx) => (
+                  <AnimatedCard
+                    key={product.id}
+                    product={product}
+                    index={newBatchStart !== null ? idx - newBatchStart : idx}
+                    animate={newBatchStart !== null && idx >= newBatchStart}
+                  />
                 ))}
               </div>
 
-              {/* CTA si hay más productos que los mostrados */}
-              {category.count > 12 && (
-                <div className="mt-10 text-center">
-                  <Link
-                    href={`/catalogo?categoria=${encodeURIComponent(category.name)}`}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#121A47] to-primary px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/30"
-                  >
-                    Ver los {category.count} productos de {category.name}
-                    <IconArrowRight className="h-4 w-4" />
-                  </Link>
+              {/* Sentinel + estados del scroll infinito */}
+              <div ref={sentinelRef} className="h-1 mt-4" />
+
+              {loadingMore && <LoadingSpinner />}
+
+              {!hasMore && products.length > 0 && (
+                <div className="mt-10 flex flex-col items-center gap-3 text-center">
+                  <div className="h-px w-24 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+                  <p className="text-sm text-slate-400 font-medium">
+                    {total} productos · fin de la categoría
+                  </p>
+                  <div className="h-px w-24 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
                 </div>
               )}
             </>
           ) : (
             <div className="py-20 text-center text-slate-500">
-              <p className="text-lg font-semibold">No hay productos disponibles en esta categoría aún.</p>
+              <p className="text-lg font-semibold">
+                No hay productos disponibles en esta categoría aún.
+              </p>
               <Link href="/catalogo" className="mt-4 inline-block text-primary hover:underline">
                 Ver catálogo completo →
               </Link>
@@ -115,7 +239,7 @@ export function CategoriaView({ category, products }: CategoriaViewProps) {
         </div>
       </section>
 
-      {/* FAQ — rich snippet para Google */}
+      {/* FAQ */}
       {category.subcategories.length >= 2 && (
         <section className="border-t border-slate-100 bg-white py-12">
           <div className="mx-auto max-w-7xl px-4">
@@ -147,7 +271,7 @@ export function CategoriaView({ category, products }: CategoriaViewProps) {
         </section>
       )}
 
-      {/* Internal linking — otras categorías */}
+      {/* Internal linking */}
       <section className="border-t border-slate-200 bg-white py-10">
         <div className="mx-auto max-w-7xl px-4">
           <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">

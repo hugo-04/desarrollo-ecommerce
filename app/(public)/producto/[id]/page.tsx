@@ -13,6 +13,7 @@ import type { Metadata } from "next"
 import { ProductoView } from "@/components/views/ProductoView"
 import { getProductAction } from "@/features/productos/actions"
 import { generateProductMeta, buildProductSchema, SITE_URL } from "@/lib/seo"
+import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 
 export const dynamic = "force-dynamic"
 
@@ -64,6 +65,7 @@ export default async function ProductoPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+      <PageViewTracker path={`/producto/${product.id}`} />
       <ProductoView product={product} />
     </>
   )

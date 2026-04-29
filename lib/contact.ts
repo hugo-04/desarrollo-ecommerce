@@ -47,9 +47,9 @@ export const WA = {
   /** Hablar con un ingeniero (nosotros) */
   ingeniero: `${base}?text=${encodeURIComponent("Hola, quisiera hablar con un ingeniero sobre mi proyecto AT/MT.")}`,
 
-  /** Cotización de un producto específico — recibe nombre, SKU y marca */
-  producto: (nombre: string, sku: string, marca: string) =>
+  /** Cotización de un producto específico — recibe nombre y marca */
+  producto: (nombre: string, marca: string) =>
     `${base}?text=${encodeURIComponent(
-      `Hola, me gustaría solicitar cotización del producto:\n*${nombre}*\nSKU: ${sku}\nMarca: ${marca}`
+      `Hola, me gustaría solicitar cotización del producto:\n*${nombre}*\nMarca: ${marca}`
     )}`,
 } as const

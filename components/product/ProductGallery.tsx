@@ -1,9 +1,11 @@
 "use client"
 
+import Image from "next/image"
 import { IconChevronLeft, IconChevronRight, IconPDF } from "@/components/icons"
 
 interface ProductGalleryProps {
   gallery: string[]
+  galleryAlts?: string[]
   productName: string
   bestSeller: boolean
   selectedImage: number
@@ -12,31 +14,50 @@ interface ProductGalleryProps {
 }
 
 export function ProductGallery({
-  gallery,
+  gallery: galleryRaw,
+  galleryAlts: galleryAltsRaw,
   productName,
   bestSeller,
   selectedImage,
   onSelectImage,
   fichaTecnica,
 }: ProductGalleryProps) {
-  const prev = () => onSelectImage(selectedImage > 0 ? selectedImage - 1 : gallery.length - 1)
-  const next = () => onSelectImage(selectedImage < gallery.length - 1 ? selectedImage + 1 : 0)
+  // Filtra strings vacíos para evitar errores de Next.js Image con src=""
+  const gallery = galleryRaw.filter(Boolean)
+  const galleryAlts = galleryAltsRaw?.filter((_, i) => Boolean(galleryRaw[i]))
+
+  const idx  = Math.min(selectedImage, Math.max(gallery.length - 1, 0))
+  const prev = () => onSelectImage(idx > 0 ? idx - 1 : gallery.length - 1)
+  const next = () => onSelectImage(idx < gallery.length - 1 ? idx + 1 : 0)
 
   return (
     <div>
-      {/* Main image */}
+      {/* Imagen principal */}
       <div className="relative mb-4 aspect-square overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100/50">
-        <img
-          src={gallery[selectedImage]}
-          alt={productName}
-          className="h-full w-full object-contain p-8 transition-transform duration-500 hover:scale-105"
-          crossOrigin="anonymous"
-        />
+
+        {gallery.length === 0 ? (
+          <div className="flex h-full w-full items-center justify-center text-slate-300">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        ) : (
+          <Image
+            src={gallery[idx]}
+            alt={galleryAlts?.[idx] ?? productName}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-contain !p-8 transition-transform duration-500 hover:scale-105"
+            priority={idx === 0}
+          />
+        )}
+
         {bestSeller && (
           <span className="absolute left-4 top-4 rounded-lg bg-red-600 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
             Top Ventas
           </span>
         )}
+
         {fichaTecnica && (
           <button
             type="button"
@@ -47,6 +68,7 @@ export function ProductGallery({
             <IconPDF className="h-4 w-4" /> FICHA PDF
           </button>
         )}
+
         {gallery.length > 1 && (
           <>
             <button
@@ -65,24 +87,25 @@ export function ProductGallery({
         )}
       </div>
 
-      {/* Thumbnails */}
+      {/* Miniaturas */}
       {gallery.length > 1 && (
         <div className="flex gap-2">
           {gallery.map((img, index) => (
             <button
               key={index}
               onClick={() => onSelectImage(index)}
-              className={`h-16 w-16 overflow-hidden rounded-lg border-2 transition-all ${
-                selectedImage === index
+              className={`relative h-16 w-16 overflow-hidden rounded-lg border-2 transition-all ${
+                idx === index
                   ? "border-primary"
                   : "border-slate-200 hover:border-slate-300"
               }`}
             >
-              <img
+              <Image
                 src={img}
-                alt=""
-                className="h-full w-full object-contain p-1"
-                crossOrigin="anonymous"
+                alt={galleryAlts?.[index] ?? `${productName} vista ${index + 1}`}
+                fill
+                sizes="64px"
+                className="object-contain !p-1"
               />
             </button>
           ))}

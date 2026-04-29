@@ -5,8 +5,9 @@
  */
 
 import Link from "next/link"
-import { Package, Tag, Layers, ArrowRight, Plus, ExternalLink, Activity, Sparkles, TrendingUp } from "lucide-react"
+import { Package, Tag, Layers, ArrowRight, Plus, ExternalLink, Sparkles, TrendingUp } from "lucide-react"
 import { AdminTableThumb } from "@/components/admin/AdminTableThumb"
+import { VisitsChart } from "@/features/analytics/components/VisitsChart"
 import type { Product } from "@/lib/types"
 import type { CategoryDTO } from "@/features/categorias/types"
 import type { Brand } from "@/lib/types"
@@ -99,6 +100,11 @@ export function AdminDashboardView({ recentProducts, totalProducts, categories, 
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Sección de visitas */}
+      <div className="animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: "250ms", animationFillMode: "both" }}>
+        <VisitsChart />
       </div>
 
       {/* Fila inferior */}

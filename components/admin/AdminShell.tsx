@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
+import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { Menu, X, ExternalLink, LogOut, ShieldAlert } from "lucide-react"
 import { AdminNav } from "@/components/admin/AdminNav"
@@ -13,6 +14,13 @@ interface AdminShellProps {
 
 export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  // Sube al inicio del área de contenido al cambiar de ruta
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "instant" })
+  }, [pathname])
 
   return (
     <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-cyan-200 relative">
@@ -125,7 +133,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
           <span className="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Admin</span>
         </div>
 
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 w-full animate-in fade-in zoom-in-95 duration-500 overflow-y-auto custom-scrollbar">
+        <div ref={scrollRef} className="flex-1 p-4 sm:p-6 lg:p-8 w-full animate-in fade-in zoom-in-95 duration-500 overflow-y-auto custom-scrollbar">
           {children}
         </div>
       </main>

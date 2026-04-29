@@ -5,7 +5,7 @@ import { IconCheck } from "@/components/icons"
 interface FilterCheckboxProps {
   checked: boolean
   label: string
-  count: number
+  count?: number
   onChange: () => void
 }
 
@@ -27,7 +27,9 @@ export function FilterCheckbox({ checked, label, count, onChange }: FilterCheckb
       <span className={`flex-1 truncate font-medium ${checked ? "text-primary" : ""}`}>
         {label}
       </span>
-      <span className="shrink-0 text-[10px] text-slate-400">{count}</span>
+      {count !== undefined && count > 0 && (
+        <span className="shrink-0 text-[10px] text-slate-400">{count}</span>
+      )}
     </button>
   )
 }

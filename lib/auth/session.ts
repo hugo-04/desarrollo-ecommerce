@@ -3,8 +3,14 @@ import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
 import { db } from "@/lib/db"
 
+// En producción AUTH_SECRET DEBE estar definido en las variables de entorno.
+// Si no lo está, el servidor no debe arrancar — nunca usar un secreto público.
+if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET) {
+  throw new Error("AUTH_SECRET no definido. Configura la variable de entorno antes de desplegar.")
+}
+
 const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET ?? "electro-thina-dev-secret-2024"
+  process.env.AUTH_SECRET ?? "et-local-dev-only-not-for-production"
 )
 const COOKIE_NAME    = "et_admin_session"
 const COOKIE_MAX_AGE = 60 * 60 * 8 // 8 horas

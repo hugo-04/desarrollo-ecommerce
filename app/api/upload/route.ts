@@ -12,6 +12,7 @@
  */
 
 import { writeFile, mkdir } from "fs/promises"
+import { log } from "@/lib/logger"
 import { join } from "path"
 import { NextRequest, NextResponse } from "next/server"
 import { getSession } from "@/lib/auth/session"
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: `/uploads/${uniqueName}` })
 
   } catch (error) {
-    console.error("[POST /api/upload]", error)
+    log.error("[POST /api/upload]", error)
     return NextResponse.json({ error: "Error al subir el archivo" }, { status: 500 })
   }
 }

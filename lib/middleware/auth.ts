@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { jwtVerify } from "jose"
 
 const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET ?? "electro-thina-dev-secret-2024"
+  process.env.AUTH_SECRET ?? "et-local-dev-only-not-for-production"
 )
 const COOKIE_NAME = "et_admin_session"
 

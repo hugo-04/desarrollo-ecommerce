@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { fadeUp, blurIn, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
 import { useBrandsCarousel } from "@/features/marcas/hooks"
@@ -80,13 +81,13 @@ export function MarqueeBrands() {
                     >
                       <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08] transition-colors group-hover:bg-white/[0.1]">
                         {brand.logo && (
-                          <img
+                          <Image
                             src={brand.logo}
-                            alt={brand.logoAlt ?? brand.name}
-                            className="max-h-[22px] max-w-[22px] object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100"
-                            onError={(e) => {
-                              ;(e.target as HTMLImageElement).style.display = "none"
-                            }}
+                            alt={brand.logoAlt ?? `Logo ${brand.name}`}
+                            width={22}
+                            height={22}
+                            unoptimized
+                            className="object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100"
                           />
                         )}
                       </div>

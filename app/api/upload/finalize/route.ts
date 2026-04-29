@@ -11,6 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server"
+import { log } from "@/lib/logger"
 import { z } from "zod"
 import { getSession } from "@/lib/auth/session"
 import { moveS3Object, isS3Configured, UPLOAD_FOLDERS } from "@/lib/storage/s3"
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
     if (code === "NoSuchKey" || code === "NotFound") {
       return NextResponse.json({ error: "already_finalized" }, { status: 409 })
     }
-    console.error("[POST /api/upload/finalize]", error)
+    log.error("[POST /api/upload/finalize]", error)
     return NextResponse.json({ error: "Error al finalizar subida" }, { status: 500 })
   }
 }

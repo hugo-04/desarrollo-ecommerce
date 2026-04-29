@@ -6,13 +6,13 @@
  * `useBrandNames` — devuelve solo los nombres (para filtros del catálogo).
  * `useBrands`     — devuelve objetos Brand completos (para selects del admin).
  *
- * Ambos loguean errores en consola para facilitar el diagnóstico
- * sin interrumpir la UI con errores no controlados.
+ * Los errores se loguean solo en desarrollo (log.error silencia en producción).
  */
 
 import { useState, useEffect } from "react"
 import { getBrandNamesAction, getBrandsAction, getBrandsForCarouselAction } from "./actions"
 import type { Brand } from "@/lib/types"
+import { log } from "@/lib/logger"
 
 // ─── useBrandNames ─────────────────────────────────────────────────────────────
 
@@ -26,7 +26,7 @@ export function useBrandNames(): string[] {
   useEffect(() => {
     getBrandNamesAction()
       .then(setBrands)
-      .catch((err: unknown) => console.error("[useBrandNames]", err))
+      .catch((err: unknown) => log.error("[useBrandNames]", err))
   }, [])
 
   return brands
@@ -54,7 +54,7 @@ export function useBrands(): UseBrandsReturn {
     getBrandsAction()
       .then((b) => { setBrands(b); setLoading(false) })
       .catch((err: unknown) => {
-        console.error("[useBrands]", err)
+        log.error("[useBrands]", err)
         setError("No se pudieron cargar las marcas")
         setLoading(false)
       })
@@ -75,7 +75,7 @@ export function useBrandsCarousel(): Brand[] {
   useEffect(() => {
     getBrandsForCarouselAction()
       .then(setBrands)
-      .catch((err: unknown) => console.error("[useBrandsCarousel]", err))
+      .catch((err: unknown) => log.error("[useBrandsCarousel]", err))
   }, [])
 
   return brands

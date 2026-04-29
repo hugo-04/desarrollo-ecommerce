@@ -10,6 +10,7 @@
  */
 
 import { NextResponse } from "next/server"
+import { log } from "@/lib/logger"
 import { getBrandNamesAction } from "@/features/marcas/actions"
 
 export async function GET() {
@@ -17,7 +18,7 @@ export async function GET() {
     const brands = await getBrandNamesAction()
     return NextResponse.json(brands)
   } catch (error) {
-    console.error("[GET /api/marcas]", error)
+    log.error("[GET /api/marcas]", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

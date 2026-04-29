@@ -27,6 +27,9 @@ export async function createReclamacionAction(data: ReclamacionInput) {
 const PAGE_SIZE = 10
 
 export async function getReclamacionesAction(page = 1) {
+  const session = await getSession()
+  if (!session) throw new Error("No autorizado")
+
   const skip = (page - 1) * PAGE_SIZE
 
   const [items, total] = await Promise.all([

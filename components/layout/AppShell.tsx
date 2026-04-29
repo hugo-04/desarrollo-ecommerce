@@ -10,6 +10,7 @@ import { Footer } from "./Footer"
 import { IconWhatsApp } from "@/components/icons"
 import { globalAnimationsCSS } from "@/styles/animations"
 import { WA } from "@/lib/contact"
+import { ScrollToTop } from "@/components/ScrollToTop"
 
 /**
  * AppShell wraps all pages with the shared layout.
@@ -63,6 +64,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <ScrollToTop />
       <style dangerouslySetInnerHTML={{ __html: globalAnimationsCSS }} />
       <div className="min-h-screen bg-white font-sans antialiased">
 

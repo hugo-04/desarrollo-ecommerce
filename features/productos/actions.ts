@@ -4,7 +4,6 @@
  * PRODUCT SERVER ACTIONS
  *
  * Punto de entrada para todo acceso a productos desde el cliente o Server Components.
- * No hay fetch(), no hay HTTP manual.
  */
 
 import { revalidatePath } from "next/cache"
@@ -14,7 +13,6 @@ import type { ProductFilters, CreateProductDTO, UpdateProductDTO } from "./types
 import { db } from "@/lib/db"
 import { getSession } from "@/lib/auth/session"
 
-// Singleton: una sola instancia compartida entre todas las llamadas del proceso.
 const _service = new ProductService(new DbProductRepository(db))
 
 function getService() { return _service }
@@ -25,8 +23,6 @@ export async function getCatalogAction(filters: ProductFilters) {
   return getService().getCatalog(filters)
 }
 
-/** Versión paginada simplificada para el listado admin.
- *  Acepta { page, query, limit } y delega a getCatalog. */
 export async function getProductsPagedAction(params: { page: number; query: string; limit: number }) {
   return getService().getCatalog(params)
 }
@@ -51,6 +47,8 @@ export async function createProductAction(data: CreateProductDTO) {
   const result = await getService().createProduct(data)
   revalidatePath("/catalogo")
   revalidatePath("/producto/[id]", "page")
+  revalidatePath("/categoria/[slug]", "page")
+  revalidatePath("/productos")
   revalidatePath("/")
   return result
 }
@@ -61,6 +59,8 @@ export async function updateProductAction(id: number, data: UpdateProductDTO) {
   const result = await getService().updateProduct(id, data)
   revalidatePath("/catalogo")
   revalidatePath("/producto/[id]", "page")
+  revalidatePath("/categoria/[slug]", "page")
+  revalidatePath("/productos")
   revalidatePath("/")
   return result
 }
@@ -71,6 +71,8 @@ export async function deleteProductAction(id: number) {
   const result = await getService().deleteProduct(id)
   revalidatePath("/catalogo")
   revalidatePath("/producto/[id]", "page")
+  revalidatePath("/categoria/[slug]", "page")
+  revalidatePath("/productos")
   revalidatePath("/")
   return result
 }

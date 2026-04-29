@@ -18,6 +18,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server"
+import { log } from "@/lib/logger"
 import { getCatalogAction } from "@/features/productos/actions"
 import type { ProductFilters } from "@/features/productos/types"
 
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
     const result = await getCatalogAction(filters)
     return NextResponse.json(result)
   } catch (error) {
-    console.error("[GET /api/productos]", error)
+    log.error("[GET /api/productos]", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
