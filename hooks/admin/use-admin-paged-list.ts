@@ -41,25 +41,55 @@ export function useAdminPagedList<T extends { id: number }>({
   const queryClient  = useQueryClient()
   const stableKey    = useRef(getStableKey(loadFn)).current
 
-  // Inicializar desde URL
-  const [search, setSearchState]           = useState(() => searchParams.get("q")    ?? "")
-  const [currentPage, setPageState]        = useState(() => Math.max(1, Number(searchParams.get("page") ?? 1)))
-  const [pageSize, setPageSizeState]       = useState(initialPageSize)
-  const [removingId, setRemovingId]        = useState<number | null>(null)
+  // inputValue: valor inmediato del input controlado
+  // query:      valor debounced que realmente dispara el fetch y actualiza la URL
+  const [inputValue, setInputValue]  = useState(() => searchParams.get("q")    ?? "")
+  const [query, setQuery]            = useState(() => searchParams.get("q")    ?? "")
+  const [currentPage, setPageState]  = useState(() => Math.max(1, Number(searchParams.get("page") ?? 1)))
+  const [pageSize, setPageSizeState] = useState(initialPageSize)
+  const [removingId, setRemovingId]  = useState<number | null>(null)
+
+  // Flags para el efecto de debounce
+  const isFirstRender    = useRef(true)
+  const skipNextDebounce = useRef(false)
+
+  // Actualiza la URL sin recargar la página
+  const pushParams = useCallback((q: string, page: number) => {
+    const params = new URLSearchParams()
+    if (q)        params.set("q",    q)
+    if (page > 1) params.set("page", String(page))
+    const qs = params.toString()
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+  }, [router, pathname])
 
   // Sincronizar estado cuando la URL cambia externamente (ej: botón atrás)
   useEffect(() => {
     const q    = searchParams.get("q")    ?? ""
     const page = Math.max(1, Number(searchParams.get("page") ?? 1))
-    setSearchState(q)
+    skipNextDebounce.current = true  // evitar que el efecto debounce sobreescriba la página
+    setInputValue(q)
+    setQuery(q)
     setPageState(page)
   }, [searchParams])
 
-  const queryKey = [stableKey, currentPage, search, pageSize] as const
+  // Debounce: confirma inputValue → query + URL después de 400 ms sin tipear
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return }
+    if (skipNextDebounce.current) { skipNextDebounce.current = false; return }
+    const t = setTimeout(() => {
+      setQuery(inputValue)
+      setPageState(1)
+      pushParams(inputValue, 1)
+    }, 400)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputValue])
+
+  const queryKey = [stableKey, currentPage, query, pageSize] as const
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey,
-    queryFn:         () => loadFn({ page: currentPage, query: search, limit: pageSize }),
+    queryFn:         () => loadFn({ page: currentPage, query, limit: pageSize }),
     placeholderData: keepPreviousData,
   })
 
@@ -67,30 +97,19 @@ export function useAdminPagedList<T extends { id: number }>({
   const total      = data?.total      ?? 0
   const totalPages = data?.totalPages ?? 1
 
-  // Actualiza la URL sin recargar la página
-  const pushParams = useCallback((q: string, page: number) => {
-    const params = new URLSearchParams()
-    if (q)    params.set("q",    q)
-    if (page > 1) params.set("page", String(page))
-    const qs = params.toString()
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
-  }, [router, pathname])
-
   function handleSearch(q: string) {
-    setSearchState(q)
-    setPageState(1)
-    pushParams(q, 1)
+    setInputValue(q)  // inmediato — el debounce confirma contra la DB
   }
 
   function handlePage(p: number) {
     setPageState(p)
-    pushParams(search, p)
+    pushParams(query, p)
   }
 
   function handlePageSize(size: number) {
     setPageSizeState(size)
     setPageState(1)
-    pushParams(search, 1)
+    pushParams(query, 1)
   }
 
   async function handleDelete(
@@ -126,7 +145,7 @@ export function useAdminPagedList<T extends { id: number }>({
     total,
     loading:     isLoading,
     fetching:    isFetching && !isLoading,
-    search,
+    search:      inputValue,  // valor inmediato para el input controlado
     pageSize,
     currentPage,
     totalPages,
