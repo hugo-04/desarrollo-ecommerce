@@ -16,7 +16,7 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
       href={`/producto/${product.id}`}
       className="group block cursor-pointer overflow-hidden rounded-[24px] border border-slate-200/50 bg-white transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(28,40,112,0.12)] hover:border-red-500/40"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100">
+      <div className="relative aspect-square overflow-hidden bg-gradient-to-b from-slate-50 to-slate-100">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(28,40,112,0.03)_0,transparent_70%)] opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
         {product.image && (
           <Image
