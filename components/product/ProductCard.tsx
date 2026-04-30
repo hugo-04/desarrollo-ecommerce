@@ -24,7 +24,7 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
             alt={product.imageAlt ?? product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="relative z-10 object-contain drop-shadow-xl transition-transform duration-700 group-hover:scale-110 !p-4"
+            className="relative z-10 object-contain drop-shadow-xl transition-transform duration-700 group-hover:scale-110"
           />
         )}
         {showBadge && (
