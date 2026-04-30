@@ -251,16 +251,16 @@ export function CatalogoView({
 
             {/* Skeleton — solo primera carga */}
             {loading && (
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {Array.from({ length: ITEMS_PER_PAGE }).map((_, i) => (
-                  <div key={i} className="h-72 animate-pulse rounded-xl bg-slate-200" />
+                  <div key={i} className="h-52 animate-pulse rounded-xl bg-slate-200 sm:h-72" />
                 ))}
               </div>
             )}
 
             {/* Grid de productos */}
             {!loading && viewMode === "grid" && (
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {products.map((product, idx) => (
                   <AnimatedCard
                     key={product.id}

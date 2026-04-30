@@ -52,22 +52,22 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
           <span className="text-[10px] font-bold text-slate-800">{product.rating}</span>
         </div>
       </div>
-      <div className="flex flex-col p-6">
-        <div className="mb-3 flex items-center gap-2">
-          <span className="rounded-md bg-[#1C2870] px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-white shadow-sm">{product.brand}</span>
+      <div className="flex flex-col p-3 sm:p-6">
+        <div className="mb-1.5 flex items-center gap-2 sm:mb-3">
+          <span className="rounded-md bg-[#1C2870] px-2 py-0.5 text-[8px] font-black uppercase tracking-wider text-white shadow-sm sm:px-2.5 sm:py-1 sm:text-[9px]">{product.brand}</span>
         </div>
-        <h3 className="mb-2 line-clamp-2 min-h-[44px] text-[15px] font-extrabold leading-snug text-[#121A47] transition-colors group-hover:text-[#cc1b1b]">{product.name}</h3>
-        <p className="mb-4 line-clamp-2 text-xs leading-relaxed text-slate-500">{product.description}</p>
-        
-        <div className="mb-6 flex flex-wrap gap-1.5">
-          {product.medidas.slice(0, 3).map((spec, index) => (
-            <span key={index} className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[10px] font-bold text-slate-600">{spec}</span>
+        <h3 className="mb-1 line-clamp-2 min-h-[32px] text-[11px] font-extrabold leading-snug text-[#121A47] transition-colors group-hover:text-[#cc1b1b] sm:mb-2 sm:min-h-[44px] sm:text-[15px]">{product.name}</h3>
+        <p className="mb-2 line-clamp-2 text-[10px] leading-relaxed text-slate-500 sm:mb-4 sm:text-xs">{product.description}</p>
+
+        <div className="mb-2 flex flex-wrap gap-1 sm:mb-6 sm:gap-1.5">
+          {product.medidas.slice(0, 2).map((spec, index) => (
+            <span key={index} className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[9px] font-bold text-slate-600 sm:rounded-md sm:px-2 sm:py-1 sm:text-[10px]">{spec}</span>
           ))}
         </div>
-        
+
         <div className="mt-auto">
-          <span className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 py-3 text-xs font-bold text-[#1C2870] transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[#1C2870] group-hover:to-[#121A47] group-hover:text-white group-hover:shadow-lg group-hover:shadow-[#1C2870]/25">
-            <IconEye className="h-4 w-4 transition-transform group-hover:scale-110" /> Ver Detalles
+          <span className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-slate-100 py-2 text-[10px] font-bold text-[#1C2870] transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[#1C2870] group-hover:to-[#121A47] group-hover:text-white group-hover:shadow-lg group-hover:shadow-[#1C2870]/25 sm:gap-2 sm:rounded-xl sm:py-3 sm:text-xs">
+            <IconEye className="h-3 w-3 transition-transform group-hover:scale-110 sm:h-4 sm:w-4" /> Ver Detalles
           </span>
         </div>
       </div>
