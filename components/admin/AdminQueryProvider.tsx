@@ -11,7 +11,7 @@ export function AdminQueryProvider({ children }: { children: React.ReactNode }) 
           queries: {
             staleTime:           2 * 60_000, // datos frescos por 2 min
             gcTime:              5 * 60_000, // caché en memoria por 5 min
-            refetchOnWindowFocus: true,
+            refetchOnWindowFocus: false,
             retry:               1,
           },
         },
