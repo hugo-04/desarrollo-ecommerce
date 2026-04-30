@@ -174,6 +174,9 @@ export const SEO = {
       follow:    true,
       googleBot: { index: true, follow: true },
     },
+    verification: {
+      google: "TQPQo2oWum6WSo5GuM0eOmYGLiKHmHLbVKRWJSeOq94",
+    },
   } satisfies Metadata,
 
   /** / — Página principal */
