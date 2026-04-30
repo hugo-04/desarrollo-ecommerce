@@ -1,18 +1,10 @@
 "use client"
 
-/**
- * useAdminPagedList — Hook para listados con paginación SERVER-SIDE.
- *
- * Soporta cambio dinámico de tamaño de página mediante `setPageSize`.
- * Todos los valores mutables se guardan en refs para evitar closures obsoletas.
- *
- * @template T - Cualquier entidad que tenga un campo `id: number`.
- */
+import { useRef, useState }                            from "react"
+import { useQuery, useQueryClient, keepPreviousData }  from "@tanstack/react-query"
+import { toast }                                       from "sonner"
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import { toast } from "sonner"
-
-// ─── Tipos ─────────────────────────────────────────────────────────────────────
+// ─── Tipos públicos ────────────────────────────────────────────────────────────
 
 export interface PagedResult<T> {
   data:       T[]
@@ -23,7 +15,19 @@ export interface PagedResult<T> {
 
 export interface UseAdminPagedListOptions<T extends { id: number }> {
   pageSize: number
-  loadFn: (params: { page: number; query: string; limit: number }) => Promise<PagedResult<T>>
+  loadFn:   (params: { page: number; query: string; limit: number }) => Promise<PagedResult<T>>
+}
+
+// ─── Caché de claves por función (implementación interna) ─────────────────────
+// Las Server Actions son referencias estables a nivel de módulo.
+// El WeakMap asigna una clave única a cada acción sin exponer nada al exterior.
+
+const fnKeys = new WeakMap<Function, string>()
+let   keyIdx = 0
+
+function getStableKey(fn: Function): string {
+  if (!fnKeys.has(fn)) fnKeys.set(fn, `ql-${++keyIdx}`)
+  return fnKeys.get(fn)!
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
@@ -32,88 +36,67 @@ export function useAdminPagedList<T extends { id: number }>({
   pageSize: initialPageSize,
   loadFn,
 }: UseAdminPagedListOptions<T>) {
-  const [items, setItems]             = useState<T[]>([])
-  const [total, setTotal]             = useState(0)
-  const [totalPages, setTotalPages]   = useState(1)
-  const [currentPage, setCurrentPage] = useState(1)
+  const queryClient = useQueryClient()
+
+  // Clave estable derivada de la función — el view no necesita saber nada de esto
+  const stableKey = useRef(getStableKey(loadFn)).current
+
   const [search, setSearch]           = useState("")
-  const [loading, setLoading]         = useState(true)
-  const [removingId, setRemovingId]   = useState<number | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSizeState]  = useState(initialPageSize)
+  const [removingId, setRemovingId]   = useState<number | null>(null)
 
-  // Refs para evitar closures obsoletas en el handler de focus y llamadas manuales
-  const loadFnRef   = useRef(loadFn)
-  const searchRef   = useRef("")
-  const pageRef     = useRef(1)
-  const pageSizeRef = useRef(initialPageSize)
+  const queryKey = [stableKey, currentPage, search, pageSize] as const
 
-  useEffect(() => { loadFnRef.current = loadFn })
+  const { data, isLoading } = useQuery({
+    queryKey,
+    queryFn:         () => loadFn({ page: currentPage, query: search, limit: pageSize }),
+    placeholderData: keepPreviousData,
+  })
 
-  /** Carga una página sin depender de estado — recibe todo por argumento */
-  const load = useCallback(async (page: number, query: string, limit: number) => {
-    setLoading(true)
-    try {
-      const result = await loadFnRef.current({ page, query, limit })
-      pageRef.current = result.page
-      setItems(result.data)
-      setTotal(result.total)
-      setTotalPages(result.totalPages)
-      setCurrentPage(result.page)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  // Carga inicial al montar
-  useEffect(() => { load(1, "", pageSizeRef.current) }, [load])
-
-  // Recarga al volver a la pestaña (útil después de crear/editar en otra ruta)
-  useEffect(() => {
-    function onFocus() { load(pageRef.current, searchRef.current, pageSizeRef.current) }
-    window.addEventListener("focus", onFocus)
-    return () => window.removeEventListener("focus", onFocus)
-  }, [load])
+  const items      = data?.data       ?? []
+  const total      = data?.total      ?? 0
+  const totalPages = data?.totalPages ?? 1
 
   function handleSearch(q: string) {
-    searchRef.current = q
     setSearch(q)
-    load(1, q, pageSizeRef.current)
+    setCurrentPage(1)
   }
 
   function handlePage(p: number) {
-    pageRef.current = p
     setCurrentPage(p)
-    load(p, searchRef.current, pageSizeRef.current)
   }
 
-  /** Cambia el tamaño de página y recarga desde la primera página */
   function handlePageSize(size: number) {
-    pageSizeRef.current = size
     setPageSizeState(size)
-    load(1, searchRef.current, size)
+    setCurrentPage(1)
   }
 
-  /**
-   * Elimina un ítem con animación de salida (280 ms) y toast de feedback.
-   * Actualiza el total y retira el ítem del estado local sin re-fetchear.
-   */
   async function handleDelete(
     id: number,
     deleteFn: () => Promise<void>,
     itemName = "ítem",
   ) {
     setRemovingId(id)
-    let timeout: ReturnType<typeof setTimeout> | null = null
     try {
       await deleteFn()
-      timeout = setTimeout(() => {
-        setItems((prev) => prev.filter((i) => i.id !== id))
-        setTotal((t) => Math.max(0, t - 1))
-        setRemovingId(null)
-      }, 280)
+
+      // Optimistic update: elimina del caché actual sin esperar el refetch
+      queryClient.setQueryData(queryKey, (old: PagedResult<T> | undefined) => {
+        if (!old) return old
+        return {
+          ...old,
+          data:  old.data.filter((i) => i.id !== id),
+          total: Math.max(0, old.total - 1),
+        }
+      })
+
+      // Invalida todas las páginas de este listado para consistencia
+      await queryClient.invalidateQueries({ queryKey: [stableKey] })
+
+      setTimeout(() => setRemovingId(null), 280)
       toast.success(`"${itemName}" eliminado correctamente`)
     } catch {
-      if (timeout) clearTimeout(timeout)
       setRemovingId(null)
       toast.error(`No se pudo eliminar "${itemName}"`)
     }
@@ -122,7 +105,7 @@ export function useAdminPagedList<T extends { id: number }>({
   return {
     items,
     total,
-    loading,
+    loading:     isLoading,
     search,
     pageSize,
     currentPage,

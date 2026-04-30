@@ -123,7 +123,7 @@ export function AdminProductosView() {
     handleSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<Product>({
     pageSize: PAGE_SIZE,
-    loadFn: ({ page, query, limit }) => getProductsPagedAction({ page, query, limit }),
+    loadFn:   getProductsPagedAction,
   })
 
   return (

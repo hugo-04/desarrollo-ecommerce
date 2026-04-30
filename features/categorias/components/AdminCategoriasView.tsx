@@ -134,7 +134,7 @@ export function AdminCategoriasView() {
     handleSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<CategoryDTO>({
     pageSize: PAGE_SIZE,
-    loadFn: ({ page, query, limit }) => getCategoriesPagedAction({ page, query, limit }),
+    loadFn:   getCategoriesPagedAction,
   })
 
   return (

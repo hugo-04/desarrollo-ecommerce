@@ -112,7 +112,7 @@ export function AdminMarcasView() {
     handleSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<Brand>({
     pageSize: PAGE_SIZE,
-    loadFn: ({ page, query, limit }) => getBrandsPagedAction({ page, query, limit }),
+    loadFn:   getBrandsPagedAction,
   })
 
   return (
