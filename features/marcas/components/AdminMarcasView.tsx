@@ -133,7 +133,7 @@ export function AdminMarcasView() {
     <div>
       <AdminListHeader
         title="Marcas"
-        subtitle={loading ? "Cargando…" : `${total} marca${total !== 1 ? "s" : ""}`}
+        subtitle={loading || fetching ? "Cargando…" : `${total} marca${total !== 1 ? "s" : ""}`}
         newHref="/marcas/nueva"
         newLabel="Nueva marca"
         searchValue={search}
@@ -168,9 +168,9 @@ export function AdminMarcasView() {
             </TableHeader>
 
             <TableBody>
-              {loading && Array.from({ length: PAGE_SIZE }).map((_, i) => <BrandSkeletonRow key={i} />)}
+              {(loading || fetching) && Array.from({ length: PAGE_SIZE }).map((_, i) => <BrandSkeletonRow key={i} />)}
 
-              {!loading && items.length === 0 && (
+              {!loading && !fetching && items.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} className="py-10 text-center text-slate-400">
                     {search ? "Sin resultados para la búsqueda." : "No hay marcas aún."}
@@ -178,7 +178,7 @@ export function AdminMarcasView() {
                 </TableRow>
               )}
 
-              {!loading && items.map((brand, i) => (
+              {!loading && !fetching && items.map((brand, i) => (
                 <BrandRow
                   key={`${currentPage}-${brand.id}`}
                   brand={brand}

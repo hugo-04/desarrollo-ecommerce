@@ -147,7 +147,7 @@ export function AdminProductosView() {
     <div>
       <AdminListHeader
         title="Productos"
-        subtitle={loading ? "Cargando…" : `${total} producto${total !== 1 ? "s" : ""}`}
+        subtitle={loading || fetching ? "Cargando…" : `${total} producto${total !== 1 ? "s" : ""}`}
         newHref="/productos/nuevo"
         newLabel="Nuevo producto"
         searchValue={search}
@@ -185,9 +185,9 @@ export function AdminProductosView() {
             </TableHeader>
 
             <TableBody>
-              {loading && Array.from({ length: PAGE_SIZE }).map((_, i) => <ProductSkeletonRow key={i} />)}
+              {(loading || fetching) && Array.from({ length: PAGE_SIZE }).map((_, i) => <ProductSkeletonRow key={i} />)}
 
-              {!loading && paged.length === 0 && (
+              {!loading && !fetching && paged.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={9} className="py-10 text-center text-slate-400">
                     {search ? "Sin resultados para esa búsqueda." : "No hay productos aún."}
@@ -195,7 +195,7 @@ export function AdminProductosView() {
                 </TableRow>
               )}
 
-              {!loading && paged.map((product, i) => (
+              {!loading && !fetching && paged.map((product, i) => (
                 <ProductRow
                   key={`${currentPage}-${product.id}`}
                   product={product}

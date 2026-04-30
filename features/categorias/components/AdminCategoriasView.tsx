@@ -157,7 +157,7 @@ export function AdminCategoriasView() {
     <div>
       <AdminListHeader
         title="Categorías"
-        subtitle={loading ? "Cargando…" : `${total} categoría${total !== 1 ? "s" : ""}`}
+        subtitle={loading || fetching ? "Cargando…" : `${total} categoría${total !== 1 ? "s" : ""}`}
         newHref="/categorias/nueva"
         newLabel="Nueva categoría"
         searchValue={search}
@@ -194,9 +194,9 @@ export function AdminCategoriasView() {
             </TableHeader>
 
             <TableBody>
-              {loading && Array.from({ length: PAGE_SIZE }).map((_, i) => <CategorySkeletonRow key={i} />)}
+              {(loading || fetching) && Array.from({ length: PAGE_SIZE }).map((_, i) => <CategorySkeletonRow key={i} />)}
 
-              {!loading && paged.length === 0 && (
+              {!loading && !fetching && paged.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={8} className="py-10 text-center text-slate-400">
                     {search ? "Sin resultados para esa búsqueda." : "No hay categorías aún."}
@@ -204,7 +204,7 @@ export function AdminCategoriasView() {
                 </TableRow>
               )}
 
-              {!loading && paged.map((cat, i) => (
+              {!loading && !fetching && paged.map((cat, i) => (
                 <CategoryRow
                   key={`${currentPage}-${cat.id}`}
                   cat={cat}
