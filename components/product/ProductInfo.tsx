@@ -88,10 +88,17 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <p className="mb-4 text-sm leading-relaxed text-slate-500">{product.description}</p>
       )}
 
-      {/* Descripción completa (markdown) */}
+      {/* Descripción completa */}
       {product.fullDescription && (
         <div className="mb-5">
-          <MarkdownText text={product.fullDescription} />
+          {/<[a-z][\s\S]*>/i.test(product.fullDescription) ? (
+            <div
+              className="prose prose-sm prose-slate max-w-none text-slate-500"
+              dangerouslySetInnerHTML={{ __html: product.fullDescription }}
+            />
+          ) : (
+            <MarkdownText text={product.fullDescription} />
+          )}
         </div>
       )}
 

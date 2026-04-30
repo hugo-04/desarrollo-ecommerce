@@ -106,8 +106,8 @@ export function ProductoView({ product }: ProductoViewProps) {
         <div className="mx-auto max-w-7xl px-4 py-8">
           <div className="grid gap-10 lg:grid-cols-2">
             <ProductGallery
-              gallery={product.gallery}
-              galleryAlts={product.galleryAlts}
+              gallery={product.gallery.length > 0 ? product.gallery : product.image ? [product.image] : []}
+              galleryAlts={product.gallery.length > 0 ? product.galleryAlts : product.image ? [product.imageAlt ?? product.name] : []}
               productName={product.name}
               bestSeller={product.bestSeller}
               selectedImage={selectedImage}
