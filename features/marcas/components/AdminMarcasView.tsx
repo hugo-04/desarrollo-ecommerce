@@ -13,6 +13,7 @@ import { AdminListHeader }   from "@/components/admin/AdminListHeader"
 import { AdminPagination }   from "@/components/admin/AdminPagination"
 import { DeleteDialog }      from "@/components/admin/DeleteDialog"
 import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
+import { Skeleton }          from "@/components/ui/skeleton"
 
 function fmtDate(d?: string): string {
   if (!d) return "—"
@@ -105,9 +106,22 @@ function BrandRow({ brand, index, removingId, onDelete }: BrandRowProps) {
   )
 }
 
+function BrandSkeletonRow() {
+  return (
+    <TableRow className="border-slate-100">
+      <TableCell className="px-4 py-2"><Skeleton className="h-11 w-11 rounded-xl" /></TableCell>
+      <TableCell className="px-4 py-3"><Skeleton className="h-4 w-32" /></TableCell>
+      <TableCell className="px-4 py-3"><Skeleton className="h-6 w-16 rounded-md" /></TableCell>
+      <TableCell className="px-4 py-3"><Skeleton className="h-4 w-20" /></TableCell>
+      <TableCell className="px-4 py-3"><Skeleton className="h-4 w-20" /></TableCell>
+      <TableCell className="px-4 py-3"><div className="flex gap-2"><Skeleton className="h-7 w-14 rounded-md" /><Skeleton className="h-7 w-16 rounded-md" /></div></TableCell>
+    </TableRow>
+  )
+}
+
 export function AdminMarcasView() {
   const {
-    items, total, loading, search,
+    items, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
     handleSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<Brand>({
@@ -134,46 +148,48 @@ export function AdminMarcasView() {
         }
       `}</style>
 
-      <div
-        className="overflow-x-auto overflow-y-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
-        style={{
-          opacity:    loading ? 0.45 : 1,
-          transform:  loading ? "translateY(4px)" : "translateY(0)",
-          transition: "opacity 0.2s ease, transform 0.2s ease",
-        }}
-      >
-        <Table>
-          <TableHeader className="bg-slate-50">
-            <TableRow className="border-slate-100">
-              <TableHead className="w-14 px-4 py-3 font-semibold text-slate-600">Logo</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Nombre</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Carrusel</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Creado</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Actualizado</TableHead>
-              <TableHead className="px-4 py-3 font-semibold text-slate-600">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {!loading && items.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={6} className="py-10 text-center text-slate-400">
-                  {search ? "Sin resultados para la búsqueda." : "No hay marcas aún."}
-                </TableCell>
+      <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        {fetching && (
+          <div className="absolute inset-x-0 top-0 h-0.5 overflow-hidden rounded-t-xl bg-slate-100">
+            <div className="h-full w-1/2 animate-[fetchBar_1.2s_ease-in-out_infinite] bg-[#1C2870]/50" />
+          </div>
+        )}
+        <div className="overflow-x-auto overflow-y-hidden">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow className="border-slate-100">
+                <TableHead className="w-14 px-4 py-3 font-semibold text-slate-600">Logo</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-600">Nombre</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-600">Carrusel</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-600">Creado</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-600">Actualizado</TableHead>
+                <TableHead className="px-4 py-3 font-semibold text-slate-600">Acciones</TableHead>
               </TableRow>
-            )}
+            </TableHeader>
 
-            {items.map((brand, i) => (
-              <BrandRow
-                key={`${currentPage}-${brand.id}`}
-                brand={brand}
-                index={i}
-                removingId={removingId}
-                onDelete={() => handleDelete(brand.id, () => deleteBrandAction(brand.id), brand.name)}
-              />
-            ))}
-          </TableBody>
-        </Table>
+            <TableBody>
+              {loading && Array.from({ length: PAGE_SIZE }).map((_, i) => <BrandSkeletonRow key={i} />)}
+
+              {!loading && items.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} className="py-10 text-center text-slate-400">
+                    {search ? "Sin resultados para la búsqueda." : "No hay marcas aún."}
+                  </TableCell>
+                </TableRow>
+              )}
+
+              {!loading && items.map((brand, i) => (
+                <BrandRow
+                  key={`${currentPage}-${brand.id}`}
+                  brand={brand}
+                  index={i}
+                  removingId={removingId}
+                  onDelete={() => handleDelete(brand.id, () => deleteBrandAction(brand.id), brand.name)}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <AdminPagination

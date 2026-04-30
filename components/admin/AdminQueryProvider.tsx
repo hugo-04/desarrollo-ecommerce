@@ -9,9 +9,9 @@ export function AdminQueryProvider({ children }: { children: React.ReactNode }) 
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime:           30_000, // datos frescos por 30 s
-            gcTime:              60_000, // caché en memoria por 60 s
-            refetchOnWindowFocus: true,  // refresca al volver al tab
+            staleTime:           2 * 60_000, // datos frescos por 2 min
+            gcTime:              5 * 60_000, // caché en memoria por 5 min
+            refetchOnWindowFocus: true,
             retry:               1,
           },
         },

@@ -48,7 +48,7 @@ export function useAdminPagedList<T extends { id: number }>({
 
   const queryKey = [stableKey, currentPage, search, pageSize] as const
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey,
     queryFn:         () => loadFn({ page: currentPage, query: search, limit: pageSize }),
     placeholderData: keepPreviousData,
@@ -106,6 +106,7 @@ export function useAdminPagedList<T extends { id: number }>({
     items,
     total,
     loading:     isLoading,
+    fetching:    isFetching && !isLoading, // refresco en fondo (ya hay datos visibles)
     search,
     pageSize,
     currentPage,

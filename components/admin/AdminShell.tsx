@@ -144,6 +144,11 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        @keyframes fetchBar {
+          0%   { transform: translateX(-100%); }
+          50%  { transform: translateX(100%); }
+          100% { transform: translateX(300%); }
+        }
       `}} />
     </div>
   )
