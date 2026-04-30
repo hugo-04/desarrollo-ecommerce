@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { usePathname } from "next/navigation"
+
 import { motion, useScroll, useMotionValueEvent } from "framer-motion"
 import { TopBar } from "./TopBar"
 import { Header } from "./Header"
@@ -24,6 +25,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isProductDetail = pathname?.startsWith("/producto/")
   const [searchQuery, setSearchQuery] = useState("")
+
+  // Sincroniza el input de búsqueda con el param ?q= de la URL del catálogo
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setSearchQuery(pathname === "/catalogo" ? (params.get("q") ?? "") : "")
+  }, [pathname])
   const [hidden, setHidden] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const nearTop = useRef(true)

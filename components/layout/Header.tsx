@@ -24,7 +24,10 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
     if (pathname === "/catalogo") {
       if (debounce.current) clearTimeout(debounce.current)
       debounce.current = setTimeout(() => {
-        router.replace(`/catalogo?q=${encodeURIComponent(value)}`)
+        router.replace(
+          value.trim() ? `/catalogo?q=${encodeURIComponent(value.trim())}` : "/catalogo",
+          { scroll: false },
+        )
       }, 300)
     }
   }, [pathname, router, setSearchQuery])

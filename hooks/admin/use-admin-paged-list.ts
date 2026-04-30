@@ -1,6 +1,7 @@
 "use client"
 
-import { useRef, useState }                            from "react"
+import { useRef, useState, useEffect, useCallback } from "react"
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { useQuery, useQueryClient, keepPreviousData }  from "@tanstack/react-query"
 import { toast }                                       from "sonner"
 
@@ -19,8 +20,6 @@ export interface UseAdminPagedListOptions<T extends { id: number }> {
 }
 
 // ─── Caché de claves por función (implementación interna) ─────────────────────
-// Las Server Actions son referencias estables a nivel de módulo.
-// El WeakMap asigna una clave única a cada acción sin exponer nada al exterior.
 
 const fnKeys = new WeakMap<Function, string>()
 let   keyIdx = 0
@@ -36,15 +35,25 @@ export function useAdminPagedList<T extends { id: number }>({
   pageSize: initialPageSize,
   loadFn,
 }: UseAdminPagedListOptions<T>) {
-  const queryClient = useQueryClient()
+  const router       = useRouter()
+  const pathname     = usePathname()
+  const searchParams = useSearchParams()
+  const queryClient  = useQueryClient()
+  const stableKey    = useRef(getStableKey(loadFn)).current
 
-  // Clave estable derivada de la función — el view no necesita saber nada de esto
-  const stableKey = useRef(getStableKey(loadFn)).current
+  // Inicializar desde URL
+  const [search, setSearchState]           = useState(() => searchParams.get("q")    ?? "")
+  const [currentPage, setPageState]        = useState(() => Math.max(1, Number(searchParams.get("page") ?? 1)))
+  const [pageSize, setPageSizeState]       = useState(initialPageSize)
+  const [removingId, setRemovingId]        = useState<number | null>(null)
 
-  const [search, setSearch]           = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSizeState]  = useState(initialPageSize)
-  const [removingId, setRemovingId]   = useState<number | null>(null)
+  // Sincronizar estado cuando la URL cambia externamente (ej: botón atrás)
+  useEffect(() => {
+    const q    = searchParams.get("q")    ?? ""
+    const page = Math.max(1, Number(searchParams.get("page") ?? 1))
+    setSearchState(q)
+    setPageState(page)
+  }, [searchParams])
 
   const queryKey = [stableKey, currentPage, search, pageSize] as const
 
@@ -58,18 +67,30 @@ export function useAdminPagedList<T extends { id: number }>({
   const total      = data?.total      ?? 0
   const totalPages = data?.totalPages ?? 1
 
+  // Actualiza la URL sin recargar la página
+  const pushParams = useCallback((q: string, page: number) => {
+    const params = new URLSearchParams()
+    if (q)    params.set("q",    q)
+    if (page > 1) params.set("page", String(page))
+    const qs = params.toString()
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+  }, [router, pathname])
+
   function handleSearch(q: string) {
-    setSearch(q)
-    setCurrentPage(1)
+    setSearchState(q)
+    setPageState(1)
+    pushParams(q, 1)
   }
 
   function handlePage(p: number) {
-    setCurrentPage(p)
+    setPageState(p)
+    pushParams(search, p)
   }
 
   function handlePageSize(size: number) {
     setPageSizeState(size)
-    setCurrentPage(1)
+    setPageState(1)
+    pushParams(search, 1)
   }
 
   async function handleDelete(
@@ -81,7 +102,6 @@ export function useAdminPagedList<T extends { id: number }>({
     try {
       await deleteFn()
 
-      // Optimistic update: elimina del caché actual sin esperar el refetch
       queryClient.setQueryData(queryKey, (old: PagedResult<T> | undefined) => {
         if (!old) return old
         return {
@@ -91,7 +111,6 @@ export function useAdminPagedList<T extends { id: number }>({
         }
       })
 
-      // Invalida todas las páginas de este listado para consistencia
       await queryClient.invalidateQueries({ queryKey: [stableKey] })
 
       setTimeout(() => setRemovingId(null), 280)
@@ -106,7 +125,7 @@ export function useAdminPagedList<T extends { id: number }>({
     items,
     total,
     loading:     isLoading,
-    fetching:    isFetching && !isLoading, // refresco en fondo (ya hay datos visibles)
+    fetching:    isFetching && !isLoading,
     search,
     pageSize,
     currentPage,
