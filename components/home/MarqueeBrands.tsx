@@ -11,7 +11,7 @@ interface MarqueeBrandsProps {
   brands: Brand[]
 }
 
-export function MarqueeBrands({ brands: rawBrands }: MarqueeBrandsProps) {
+export function MarqueeBrands({ brands: rawBrands = [] }: MarqueeBrandsProps) {
   const brands = rawBrands.map((b) => ({
     ...b,
     logo: b.logo && (b.logo.startsWith("https://") || b.logo.startsWith("/")) ? b.logo : undefined,

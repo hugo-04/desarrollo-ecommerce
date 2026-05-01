@@ -64,7 +64,7 @@ export async function updateProductAction(id: number, data: UpdateProductDTO) {
     if (data.image !== undefined && old.image !== data.image) toDelete.push(old.image)
     if (data.fichaTecnica !== undefined && old.fichaTecnica && old.fichaTecnica !== data.fichaTecnica)
       toDelete.push(old.fichaTecnica)
-    if (data.gallery !== undefined) {
+    if (data.gallery !== undefined && old.gallery?.length) {
       const newSet = new Set(data.gallery)
       old.gallery.forEach((url) => { if (!newSet.has(url)) toDelete.push(url) })
     }
