@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/next"
 import { Nunito_Sans, Rubik } from "next/font/google"
 import { SEO, organizationSchema, websiteSchema } from "@/lib/seo"
 import "./globals.css"
@@ -39,7 +38,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         {children}
-        <Analytics />
       </body>
     </html>
   )

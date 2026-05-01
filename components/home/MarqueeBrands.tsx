@@ -8,7 +8,11 @@ import { MARQUEE_BRANDS_CONTENT } from "@/lib/data/mock/static-content.mock"
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars"
 
 export function MarqueeBrands() {
-  const brands = useBrandsCarousel()
+  const rawBrands = useBrandsCarousel()
+  const brands = rawBrands.map((b) => ({
+    ...b,
+    logo: b.logo && (b.logo.startsWith("https://") || b.logo.startsWith("/")) ? b.logo : undefined,
+  }))
 
   return (
     <motion.section

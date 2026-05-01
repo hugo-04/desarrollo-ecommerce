@@ -25,6 +25,7 @@ export const UPLOAD_FOLDERS = [
   "productos/imagenes",
   "productos/galeria",
   "productos/fichas",
+  "categorias/imagenes",
 ] as const
 
 export type UploadFolder = (typeof UPLOAD_FOLDERS)[number]

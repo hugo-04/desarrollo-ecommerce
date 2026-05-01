@@ -17,11 +17,4 @@ export const brandSchema = z.object({
       path:    ["logo"],
     })
   }
-  if (data.logo?.trim() && !data.logoAlt?.trim()) {
-    ctx.addIssue({
-      code:    z.ZodIssueCode.custom,
-      message: "Agregá un texto alternativo SEO para el logo",
-      path:    ["logoAlt"],
-    })
-  }
 })

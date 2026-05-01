@@ -37,7 +37,7 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
   const [name,           setName]     = useState(initialData?.name           ?? "")
   const [logo,           setLogo]     = useState(initialData?.logo           ?? "")
   const [logoAlt,        setLogoAlt]  = useState(initialData?.logoAlt        ?? "")
-  const [showInCarousel, setCarousel] = useState(initialData?.showInCarousel ?? false)
+  const [showInCarousel, setCarousel] = useState(initialData?.showInCarousel ?? true)
   const [logoTempKey,    setLogoTempKey] = useState<string | null>(null)
 
   // ── Estado de UI ─────────────────────────────────────────────────────────
@@ -181,6 +181,8 @@ export function BrandForm({ initialData, onSave, onDelete }: BrandFormProps) {
                 </h2>
                 <p className="text-[11px] text-slate-400">
                   {showInCarousel ? "Requerido — PNG o WebP con fondo transparente" : "Opcional — PNG, JPG o WebP"}
+                  {" · "}
+                  <span className="text-slate-400">Alt text opcional</span>
                 </p>
               </div>
               {!showInCarousel && (
