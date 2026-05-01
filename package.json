@@ -8,6 +8,12 @@
     "start": "next start",
     "lint": "eslint ."
   },
+  "browserslist": [
+    "chrome >= 87",
+    "edge >= 88",
+    "firefox >= 78",
+    "safari >= 14"
+  ],
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1014.0",
     "@hookform/resolvers": "^3.9.1",
