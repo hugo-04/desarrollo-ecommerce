@@ -68,9 +68,6 @@ export function ProductoView({ product, initialRelatedProducts = [] }: ProductoV
 
             {/* Prev / Next */}
             <div className="flex shrink-0 items-center gap-1.5">
-              <span className="hidden text-[10px] text-slate-400 sm:inline">
-                {categoryProducts.length} en esta categoría
-              </span>
               <Link
                 href={prevProduct ? `/producto/${prevProduct.id}` : "#"}
                 title={prevProduct?.name}
