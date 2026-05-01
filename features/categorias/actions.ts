@@ -12,6 +12,7 @@ import type { CreateCategoryDTO, UpdateCategoryDTO, CategoryFilters } from "./ty
 import type { SubcategoryItem } from "@/lib/types"
 import { db } from "@/lib/db"
 import { getSession } from "@/lib/auth/session"
+import { deleteFromS3 } from "@/lib/storage/s3"
 
 const _service = new CategoryService(new DbCategoryRepository(db))
 
@@ -147,7 +148,9 @@ export async function updateCategoryAction(id: number, data: UpdateCategoryDTO) 
 export async function deleteCategoryAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
+  const category = await getService().getById(id)
   const result = await getService().delete(id)
+  if (category?.image) await deleteFromS3(category.image)
   revalidatePath("/catalogo")
   revalidatePath("/categoria/[slug]", "page")
   revalidatePath("/categorias")

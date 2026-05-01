@@ -12,6 +12,7 @@ import { ProductService } from "./service"
 import type { ProductFilters, CreateProductDTO, UpdateProductDTO } from "./types"
 import { db } from "@/lib/db"
 import { getSession } from "@/lib/auth/session"
+import { deleteFromS3 } from "@/lib/storage/s3"
 
 const _service = new ProductService(new DbProductRepository(db))
 
@@ -68,7 +69,12 @@ export async function updateProductAction(id: number, data: UpdateProductDTO) {
 export async function deleteProductAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
+  const product = await getService().getProductById(id)
   const result = await getService().deleteProduct(id)
+  if (product) {
+    const files = [product.image, ...(product.gallery ?? []), product.fichaTecnica].filter(Boolean) as string[]
+    await Promise.all(files.map((url) => deleteFromS3(url)))
+  }
   revalidatePath("/catalogo")
   revalidatePath("/producto/[id]", "page")
   revalidatePath("/categoria/[slug]", "page")
