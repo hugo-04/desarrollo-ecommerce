@@ -119,8 +119,8 @@ export function GrupoEmpresarialSection() {
                     alt={`Logo ${empresa.nombre}`}
                     width={120}
                     height={56}
+                    sizes="120px"
                     className="h-12 w-auto object-contain"
-                    unoptimized
                   />
                 </div>
 
@@ -222,8 +222,8 @@ export function GrupoEmpresarialBand() {
                           alt={`Logo ${empresa.nombre}`}
                           width={80}
                           height={24}
+                          sizes="80px"
                           className="h-5 w-auto object-contain"
-                          unoptimized
                         />
                       </div>
                     </div>

@@ -68,6 +68,7 @@ export function BestSellersCarousel() {
         <div className="mt-8 flex items-center justify-center gap-4 sm:mt-14 sm:gap-6">
           <button
             onClick={prevSlide}
+            aria-label="Anterior"
             className="group flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:-translate-x-1 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-xl sm:h-14 sm:w-14 sm:rounded-2xl"
           >
             <IconChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1 sm:h-6 sm:w-6" />
@@ -86,6 +87,7 @@ export function BestSellersCarousel() {
           </div>
           <button
             onClick={nextSlide}
+            aria-label="Siguiente"
             className="group flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:translate-x-1 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-xl sm:h-14 sm:w-14 sm:rounded-2xl"
           >
             <IconChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-1 sm:h-6 sm:w-6" />

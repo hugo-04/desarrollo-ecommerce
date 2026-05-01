@@ -28,6 +28,9 @@ export const metadata = SEO.root
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${nunito.variable} ${rubik.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://media.electrothina.com" />
+      </head>
       <body className="font-sans antialiased">
         <script
           type="application/ld+json"

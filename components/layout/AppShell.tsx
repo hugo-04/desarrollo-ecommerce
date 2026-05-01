@@ -91,7 +91,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Contenido desplazado exactamente el alto del nav fijo */}
         <div style={{ paddingTop: navHeight }}>
-          {children}
+          <main>{children}</main>
           <Footer />
         </div>
 

@@ -428,6 +428,7 @@ export function Navigation() {
               </Link>
               <Link
                 href="/catalogo?bestSellers=true"
+                aria-label="Más Vendidos"
                 className="flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-700 sm:gap-2 sm:px-4"
               >
                 <IconFire className="h-4 w-4" />
