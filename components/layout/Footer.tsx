@@ -37,17 +37,18 @@ export function Footer() {
               alt="Electro Thina — Soluciones Eléctricas AT/MT"
               width={160}
               height={40}
+              sizes="160px"
               className="mb-4 h-10 w-auto object-contain"
               style={{ filter: "drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,1)) brightness(1.4) contrast(1.1)" }}
             />
-            <p className="mb-6 text-[12px] leading-relaxed text-slate-500">
+            <p className="mb-6 text-[12px] leading-relaxed text-slate-400">
               Fabricantes y distribuidores de ferretería y accesorios eléctricos para alta y media tensión en Lima, Perú.
             </p>
           </div>
 
           {/* Col 2 — Navegación */}
           <div>
-            <h4 className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-white/40">
+            <h4 className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-white/60">
               <span className="h-px w-3 bg-red-500/60" />
               Navegación
             </h4>
@@ -65,7 +66,7 @@ export function Footer() {
 
           {/* Col 3 — Legal */}
           <div>
-            <h4 className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-white/40">
+            <h4 className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-white/60">
               <span className="h-px w-3 bg-red-500/60" />
               Legal
             </h4>
@@ -87,7 +88,7 @@ export function Footer() {
 
           {/* Col 4 — Contacto (ancho completo en mobile, 1 col en desktop) */}
           <div className="col-span-2 sm:col-span-1">
-            <h4 className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-white/40">
+            <h4 className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-white/60">
               <span className="h-px w-3 bg-red-500/60" />
               Contacto
             </h4>
@@ -117,7 +118,7 @@ export function Footer() {
         </div>
 
         {/* ── Copyright + RUC ── */}
-        <div className="mt-10 border-t border-white/[0.05] pt-5 text-center text-[11px] text-slate-600">
+        <div className="mt-10 border-t border-white/[0.05] pt-5 text-center text-[11px] text-slate-400">
           © {new Date().getFullYear()} Electro Thina S.A.C.
           <span className="mx-2 opacity-40">·</span>
           <span title="Registro Único de Contribuyentes">RUC: {CONTACT.ruc}</span>
