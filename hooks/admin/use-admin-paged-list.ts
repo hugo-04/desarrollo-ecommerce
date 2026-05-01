@@ -134,9 +134,10 @@ export function useAdminPagedList<T extends { id: number }>({
 
       setTimeout(() => setRemovingId(null), 280)
       toast.success(`"${itemName}" eliminado correctamente`)
-    } catch {
+    } catch (e) {
       setRemovingId(null)
-      toast.error(`No se pudo eliminar "${itemName}"`)
+      const msg = e instanceof Error ? e.message : `No se pudo eliminar "${itemName}"`
+      toast.error(msg)
     }
   }
 
