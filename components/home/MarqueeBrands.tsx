@@ -58,9 +58,12 @@ export function MarqueeBrands({ brands: rawBrands = [] }: MarqueeBrandsProps) {
                   >
                     <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-sm ring-1 ring-white/20">
                       {brand.logo && (
-                        <img
+                        <Image
                           src={brand.logo}
                           alt={brand.logoAlt ?? brand.name}
+                          width={30}
+                          height={30}
+                          sizes="30px"
                           className="max-h-full max-w-full object-contain"
                           onError={(e) => {
                             ;(e.target as HTMLImageElement).style.display = "none"
@@ -93,7 +96,7 @@ export function MarqueeBrands({ brands: rawBrands = [] }: MarqueeBrandsProps) {
                             alt={brand.logoAlt ?? `Logo ${brand.name}`}
                             width={30}
                             height={30}
-                            unoptimized
+                            sizes="30px"
                             className="object-contain"
                           />
                         )}

@@ -58,6 +58,7 @@ export function HeroSection() {
           alt="Torres eléctricas de alta tensión"
           fill
           priority
+          fetchPriority="high"
           sizes="100vw"
           className="object-cover"
         />
