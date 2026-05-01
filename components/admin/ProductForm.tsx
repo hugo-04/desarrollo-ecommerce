@@ -249,6 +249,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         await createProductAction(data as Parameters<typeof createProductAction>[0])
         toast.success("Producto creado correctamente")
       }
+      router.refresh()
       router.push("/productos")
     } catch (e: unknown) {
       setServerError(e instanceof Error ? e.message : "Error al guardar")

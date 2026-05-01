@@ -17,6 +17,7 @@ export default function NuevaCategoriaPage() {
   async function handleSave(data: CategorySaveData) {
     await createCategoryAction({ ...data, count: 0 })
     toast.success("Categoría creada correctamente")
+    router.refresh()
     router.push("/categorias")
   }
 
