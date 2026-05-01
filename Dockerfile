@@ -34,7 +34,11 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build de producción (output: standalone en next.config.mjs)
-RUN npm run build
+# DATABASE_URL se inyecta como build secret para el pre-render de ISR
+# (nunca queda grabado en capas de imagen)
+RUN --mount=type=secret,id=database_url,required=false \
+    DATABASE_URL=$(cat /run/secrets/database_url 2>/dev/null || echo "postgresql://x:x@localhost/x") \
+    npm run build
 
 # Compila el seed a JS puro para que corra en el runner sin tsx
 RUN npx esbuild prisma/seed.ts \
