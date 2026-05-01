@@ -49,3 +49,7 @@ jobs:
           # Caché de capas en GitHub Actions — acelera builds siguientes 60-80%
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Trigger Dokploy redeploy
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}"
