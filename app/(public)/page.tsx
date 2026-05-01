@@ -1,6 +1,7 @@
 import { SEO, SITE_URL, SITE_NAME } from "@/lib/seo"
 import { HomeView } from "@/components/views/HomeView"
 import { getFeaturedCategoriesAction } from "@/features/categorias/actions"
+import { getBrandsForCarouselAction } from "@/features/marcas/actions"
 import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 
 export const dynamic = "force-dynamic"
@@ -23,7 +24,10 @@ const homeSchema = {
 }
 
 export default async function HomePage() {
-  const categories = await getFeaturedCategoriesAction()
+  const [categories, brands] = await Promise.all([
+    getFeaturedCategoriesAction(),
+    getBrandsForCarouselAction(),
+  ])
   return (
     <>
       <script
@@ -31,7 +35,7 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
       />
       <PageViewTracker path="/" />
-      <HomeView categories={categories} />
+      <HomeView categories={categories} brands={brands} />
     </>
   )
 }

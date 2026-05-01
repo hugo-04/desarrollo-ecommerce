@@ -8,13 +8,14 @@ import {
 } from "@/components/home"
 import { GrupoEmpresarialBand } from "@/components/sections/GrupoEmpresarial"
 import type { CategoryDTO } from "@/features/categorias/types"
+import type { Brand } from "@/lib/types"
 
 interface HomeViewProps {
-  /** Categorías cargadas server-side en page.tsx para evitar llamada al mock */
   categories: CategoryDTO[]
+  brands: Brand[]
 }
 
-export function HomeView({ categories }: HomeViewProps) {
+export function HomeView({ categories, brands }: HomeViewProps) {
   return (
     <>
       {/* DARK — Hero principal */}
@@ -28,7 +29,7 @@ export function HomeView({ categories }: HomeViewProps) {
       <BestSellersCarousel />
 
       {/* DARK — Marcas */}
-      <MarqueeBrands />
+      <MarqueeBrands brands={brands} />
 
       {/* LIGHT — Cómo funciona el proceso */}
       <ProcesoSection />

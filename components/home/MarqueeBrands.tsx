@@ -3,12 +3,15 @@
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { fadeUp, blurIn, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
-import { useBrandsCarousel } from "@/features/marcas/hooks"
 import { MARQUEE_BRANDS_CONTENT } from "@/lib/data/mock/static-content.mock"
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars"
+import type { Brand } from "@/lib/types"
 
-export function MarqueeBrands() {
-  const rawBrands = useBrandsCarousel()
+interface MarqueeBrandsProps {
+  brands: Brand[]
+}
+
+export function MarqueeBrands({ brands: rawBrands }: MarqueeBrandsProps) {
   const brands = rawBrands.map((b) => ({
     ...b,
     logo: b.logo && (b.logo.startsWith("https://") || b.logo.startsWith("/")) ? b.logo : undefined,
