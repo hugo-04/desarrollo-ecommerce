@@ -54,7 +54,10 @@ export async function createBrandAction(data: CreateBrandDTO) {
 export async function updateBrandAction(id: number, data: UpdateBrandDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
+  const old = await getService().getById(id)
   const result = await getService().update(id, data)
+  if (old?.logo && data.logo !== undefined && old.logo !== data.logo)
+    await deleteFromS3(old.logo)
   revalidatePath("/catalogo")
   revalidatePath("/marcas")
   revalidatePath("/producto/[id]", "page")

@@ -57,7 +57,19 @@ export async function createProductAction(data: CreateProductDTO) {
 export async function updateProductAction(id: number, data: UpdateProductDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
+  const old = await getService().getProductById(id)
   const result = await getService().updateProduct(id, data)
+  if (old) {
+    const toDelete: string[] = []
+    if (data.image !== undefined && old.image !== data.image) toDelete.push(old.image)
+    if (data.fichaTecnica !== undefined && old.fichaTecnica && old.fichaTecnica !== data.fichaTecnica)
+      toDelete.push(old.fichaTecnica)
+    if (data.gallery !== undefined) {
+      const newSet = new Set(data.gallery)
+      old.gallery.forEach((url) => { if (!newSet.has(url)) toDelete.push(url) })
+    }
+    await Promise.all(toDelete.map((url) => deleteFromS3(url)))
+  }
   revalidatePath("/catalogo")
   revalidatePath("/producto/[id]", "page")
   revalidatePath("/categoria/[slug]", "page")

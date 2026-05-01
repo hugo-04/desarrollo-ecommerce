@@ -137,7 +137,10 @@ export async function createCategoryAction(data: CreateCategoryDTO) {
 export async function updateCategoryAction(id: number, data: UpdateCategoryDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
+  const old = await getService().getById(id)
   const result = await getService().update(id, data)
+  if (old?.image && data.image !== undefined && old.image !== data.image)
+    await deleteFromS3(old.image)
   revalidatePath("/catalogo")
   revalidatePath("/categoria/[slug]", "page")
   revalidatePath("/categorias")
