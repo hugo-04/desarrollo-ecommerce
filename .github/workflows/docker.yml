@@ -46,9 +46,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # DATABASE_URL se pasa como build secret (no queda en capas ni en docker history)
-          secrets: |
-            database_url=${{ secrets.DATABASE_URL }}
-          # Caché de capas en GitHub Actions — acelera builds siguientes un 60-80%
+          # Caché de capas en GitHub Actions — acelera builds siguientes 60-80%
           cache-from: type=gha
           cache-to: type=gha,mode=max

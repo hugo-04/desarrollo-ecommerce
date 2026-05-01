@@ -22,8 +22,9 @@ COPY prisma ./prisma
 RUN npm ci --frozen-lockfile --no-audit --no-fund
 
 # Genera el cliente Prisma cacheado junto con node_modules:
-# solo se re-ejecuta si package.json o schema.prisma cambian
-RUN npx prisma generate
+# solo se re-ejecuta si package.json o schema.prisma cambian.
+# DATABASE_URL dummy: generate no conecta a la BD, solo lee el schema.
+RUN DATABASE_URL="postgresql://x:x@localhost/x" npx prisma generate
 
 # ── Etapa 2: Build ───────────────────────────────────────────
 FROM node:22-alpine AS builder
