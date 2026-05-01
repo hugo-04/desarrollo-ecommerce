@@ -58,6 +58,22 @@ export default async function CatalogoPage({ searchParams }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
       />
       <PageViewTracker path="/catalogo" />
+
+      {/* Intro editorial — renderizado en servidor para indexación por Google */}
+      {!params.categoria && !params.q && !params.bestSellers && (
+        <div className="border-b border-slate-100 bg-white">
+          <div className="mx-auto max-w-7xl px-4 py-5">
+            <p className="max-w-3xl text-sm leading-relaxed text-slate-500">
+              Catálogo completo de ferretería eléctrica para alta y media tensión (AT/MT) en Lima, Perú.
+              Distribuimos <strong className="font-semibold text-slate-700">herrajes, aisladores eléctricos, conectores bimetálicos, pernos galvanizados, grapas y abrazaderas</strong> para
+              postes de concreto y madera, certificados bajo normas IEC, ANSI y NTP.
+              Stock permanente para concesionarias eléctricas, contratistas y proyectos de distribución eléctrica.
+              Despacho en Lima en 24–48 h; envíos a todo el Perú.
+            </p>
+          </div>
+        </div>
+      )}
+
       <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
         <CatalogoView
           initialCategory={params.categoria}

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ProductCard } from "@/components/product/ProductCard"
 import { IconChevronRight } from "@/components/icons"
 import { getCatalogAction } from "@/features/productos/actions"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import type { CategoryDTO } from "@/features/categorias/types"
 import type { Product } from "@/lib/types"
 
@@ -158,21 +159,6 @@ export function CategoriaView({
             </p>
           )}
 
-          {/* Subcategorías — visibles para Google */}
-          {category.subcategories.length > 0 && (
-            <div className="mt-6">
-              <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500">
-                Tipos de productos
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {category.subcategories.map((sub, i) => (
-                  <span key={i} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-300">
-                    {sub}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
@@ -200,7 +186,7 @@ export function CategoriaView({
               </div>
 
               {/* Grid con animación por lote */}
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4">
                 {products.map((product, idx) => (
                   <AnimatedCard
                     key={product.id}
@@ -241,32 +227,72 @@ export function CategoriaView({
 
       {/* FAQ */}
       {category.subcategories.length >= 2 && (
-        <section className="border-t border-slate-100 bg-white py-12">
-          <div className="mx-auto max-w-7xl px-4">
-            <h2 className="mb-6 text-lg font-extrabold text-[#121A47]">
-              Preguntas frecuentes sobre {category.name}
+        <section className="border-t border-slate-100 bg-white py-14">
+          <div className="mx-auto max-w-3xl px-4 text-center">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em] text-red-500">Preguntas frecuentes</p>
+            <h2 className="mb-2 text-2xl font-extrabold text-[#121A47] sm:text-3xl">
+              Todo sobre {category.name}
             </h2>
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="mb-2 text-sm font-bold text-slate-800">¿Qué tipos de {category.name} tienen?</h3>
-                <p className="text-xs leading-relaxed text-slate-600">
-                  Distribuimos: {category.subcategories.slice(0, 4).join(", ")}
-                  {category.subcategories.length > 4 && ` y ${category.subcategories.length - 4} variantes más`}.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="mb-2 text-sm font-bold text-slate-800">¿Cuentan con certificación IEC y ANSI?</h3>
-                <p className="text-xs leading-relaxed text-slate-600">
-                  Sí. Todos los {category.name} cumplen las normas IEC, ANSI y NTP para instalaciones AT/MT en Perú.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="mb-2 text-sm font-bold text-slate-800">¿Despachan a provincias?</h3>
-                <p className="text-xs leading-relaxed text-slate-600">
-                  Sí. Despacho en Lima en 24–48 h. Enviamos a provincias de todo el Perú. Cotice por web o WhatsApp.
-                </p>
-              </div>
-            </div>
+            <p className="mb-10 text-sm text-slate-500">
+              Resolvemos las dudas más comunes de nuestros clientes sobre este producto.
+            </p>
+
+            <Accordion type="single" collapsible className="rounded-xl border border-slate-200 overflow-hidden text-left">
+              <AccordionItem value="tipos" className="px-6 border-slate-100">
+                <AccordionTrigger className="text-sm font-semibold text-slate-800 hover:no-underline hover:text-[#121A47] py-5">
+                  ¿Qué tipos de {category.name} tienen disponibles?
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-relaxed text-slate-600 pb-5">
+                  En Electro Thina contamos con {category.subcategories.length} variantes
+                  de {category.name}: <strong className="text-slate-700">{category.subcategories.slice(0, 4).join(", ")}</strong>
+                  {category.subcategories.length > 4 && ` y ${category.subcategories.length - 4} modelos adicionales`}.
+                  Todos están disponibles en stock permanente en nuestra sede de Lima. Si necesita
+                  una referencia específica o un volumen mayor, contáctenos para coordinar disponibilidad
+                  y tiempos de entrega personalizados.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="certificacion" className="px-6 border-slate-100">
+                <AccordionTrigger className="text-sm font-semibold text-slate-800 hover:no-underline hover:text-[#121A47] py-5">
+                  ¿Los {category.name} cuentan con certificación IEC y ANSI?
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-relaxed text-slate-600 pb-5">
+                  Sí. Todos los {category.name} que distribuimos cumplen con las normas
+                  <strong className="text-slate-700"> IEC, ANSI C135 y NTP</strong> vigentes para
+                  instalaciones eléctricas de alta y media tensión en Perú. Esto garantiza compatibilidad
+                  con las especificaciones técnicas de concesionarias como Enel, Luz del Sur, Electrocentro
+                  y demás distribuidoras reguladas por Osinergmin. Podemos entregar certificados de calidad
+                  y fichas técnicas con cada pedido.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="cotizacion" className="px-6 border-slate-100">
+                <AccordionTrigger className="text-sm font-semibold text-slate-800 hover:no-underline hover:text-[#121A47] py-5">
+                  ¿Cómo solicito una cotización?
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-relaxed text-slate-600 pb-5">
+                  Puede solicitar su cotización de tres formas: (1) haciendo clic en el botón
+                  <strong className="text-slate-700"> "Cotizar ahora"</strong> de cada producto para
+                  enviarnos un mensaje directo por WhatsApp, (2) completando el formulario en nuestra
+                  página de <strong className="text-slate-700">Contacto</strong>, o (3) llamándonos al
+                  <strong className="text-slate-700"> +51 981 375 196</strong>. Respondemos todas las
+                  consultas en menos de 24 horas hábiles con precios, disponibilidad y condiciones de entrega.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="provincias" className="px-6 border-slate-100">
+                <AccordionTrigger className="text-sm font-semibold text-slate-800 hover:no-underline hover:text-[#121A47] py-5">
+                  ¿Realizan despachos a provincias?
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-relaxed text-slate-600 pb-5">
+                  Sí. Realizamos despachos en Lima en <strong className="text-slate-700">24 a 48 horas</strong> desde
+                  la confirmación del pedido. Para envíos a provincias coordinamos el transporte a través de
+                  empresas de encomiendas de alcance nacional. El costo y plazo de envío se calculan según
+                  el volumen y destino; nuestro equipo le brinda esta información al momento de la cotización.
+                  Para pedidos de gran volumen, evaluamos condiciones especiales de flete.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </section>
       )}

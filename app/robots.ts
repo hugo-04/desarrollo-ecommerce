@@ -16,6 +16,13 @@ export default function robots(): MetadataRoute.Robots {
           "/login",
         ],
       },
+      // Crawlers de IA — permitidos para recuperación y citación (no entrenamiento)
+      { userAgent: "GPTBot",            allow: "/" },
+      { userAgent: "ClaudeBot",         allow: "/" },
+      { userAgent: "Google-Extended",   allow: "/" },
+      { userAgent: "PerplexityBot",     allow: "/" },
+      { userAgent: "Applebot-Extended", allow: "/" },
+      { userAgent: "Bytespider",        allow: "/" },
     ],
     sitemap: "https://electrothina.com/sitemap.xml",
   }

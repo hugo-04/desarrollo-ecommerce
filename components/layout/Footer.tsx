@@ -116,9 +116,13 @@ export function Footer() {
           </div>
         </div>
 
-        {/* ── Copyright centrado ── */}
+        {/* ── Copyright + RUC ── */}
         <div className="mt-10 border-t border-white/[0.05] pt-5 text-center text-[11px] text-slate-600">
-          © {new Date().getFullYear()} Electro Thina S.A.C. · Todos los derechos reservados.
+          © {new Date().getFullYear()} Electro Thina S.A.C.
+          <span className="mx-2 opacity-40">·</span>
+          <span title="Registro Único de Contribuyentes">RUC: {CONTACT.ruc}</span>
+          <span className="mx-2 opacity-40">·</span>
+          Todos los derechos reservados.
         </div>
 
       </div>

@@ -62,14 +62,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                       key={category.id}
                       href={`/categoria/${category.slug}`}
                       onMouseEnter={() => setActiveCategory(category.id)}
-                      onClick={(e) => {
-                        if (activeCategory !== category.id) {
-                          e.preventDefault()
-                          setActiveCategory(category.id)
-                        } else {
-                          setIsOpen(false)
-                        }
-                      }}
+                      onClick={() => setIsOpen(false)}
                       className={`group relative flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition-all duration-150 ${
                         isActive ? "bg-white/15 text-white" : "text-white/75 hover:bg-white/10 hover:text-white active:bg-white/15 active:text-white"
                       }`}
@@ -89,47 +82,6 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                 })}
               </div>
 
-              {/* Subcategorías inline — solo mobile táctil */}
-              {activeCategory && (() => {
-                const activeCat = categories.find((c) => c.id === activeCategory)
-                if (!activeCat || !activeCat.subcategories.length) return null
-                return (
-                  <motion.div
-                    key={`sub-${activeCategory}`}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="sm:hidden mt-3 border-t border-white/[0.08] pt-3"
-                  >
-                    <div className="flex items-center justify-between mb-2 px-1">
-                      <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">
-                        {activeCat.name}
-                      </span>
-                      <Link
-                        href={`/categoria/${activeCat.slug}`}
-                        onClick={() => setIsOpen(false)}
-                        className="text-[10px] font-bold text-red-400 hover:text-red-300"
-                      >
-                        Ver todo →
-                      </Link>
-                    </div>
-                    <div className="grid grid-cols-1 gap-0.5">
-                      {activeCat.subcategories.map((sub, i) => (
-                        <Link
-                          key={i}
-                          href={`/categoria/${activeCat.slug}`}
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] text-white/60 transition-colors hover:bg-white/10 hover:text-white active:bg-white/10 active:text-white"
-                        >
-                          <IconChevronRight className="h-2.5 w-2.5 shrink-0 text-red-500/50" />
-                          {sub}
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )
-              })()}
             </div>
 
             <div className="w-px bg-white/[0.06] shrink-0 hidden sm:block" />

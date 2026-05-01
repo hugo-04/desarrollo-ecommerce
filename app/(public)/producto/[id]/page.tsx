@@ -11,11 +11,11 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { ProductoView } from "@/components/views/ProductoView"
-import { getProductAction } from "@/features/productos/actions"
+import { getProductAction, getRelatedProductsAction } from "@/features/productos/actions"
 import { generateProductMeta, buildProductSchema, SITE_URL } from "@/lib/seo"
 import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -42,6 +42,9 @@ export default async function ProductoPage({ params }: PageProps) {
   const product = await getProductAction(numId)
   if (!product) notFound()
 
+  // Fetch en servidor para que Google vea los links en el HTML inicial
+  const initialRelated = await getRelatedProductsAction(numId, product.category)
+
   const productSchema = buildProductSchema(product)
 
   const breadcrumbSchema = {
@@ -66,7 +69,7 @@ export default async function ProductoPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <PageViewTracker path={`/producto/${product.id}`} />
-      <ProductoView product={product} />
+      <ProductoView product={product} initialRelatedProducts={initialRelated} />
     </>
   )
 }

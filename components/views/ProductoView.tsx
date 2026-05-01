@@ -17,28 +17,25 @@ import { QuoteModal } from "@/components/product/QuoteModal"
 import { ProductCard } from "@/components/product/ProductCard"
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel"
 import { PRODUCT_DETAIL_CONTENT } from "@/lib/data/mock/static-content.mock"
-import { useRelatedProducts } from "@/features/productos/hooks"
-import { useFadeInOnScroll } from "@/hooks/useAnimations"
 import { IconChevronRight, IconChevronLeft, IconWhatsApp } from "@/components/icons"
 import { WA } from "@/lib/contact"
 import type { Product } from "@/lib/types"
 
 interface ProductoViewProps {
   product: Product
+  initialRelatedProducts?: Product[]
 }
 
-export function ProductoView({ product }: ProductoViewProps) {
-  const { ref, isVisible } = useFadeInOnScroll()
+export function ProductoView({ product, initialRelatedProducts = [] }: ProductoViewProps) {
   const [selectedImage, setSelectedImage] = useState(0)
   const [activeTab, setActiveTab] = useState<"desc" | "medidas">("desc")
   const [showQuoteModal, setShowQuoteModal] = useState(false)
   const c = PRODUCT_DETAIL_CONTENT
 
-  // Navigation within category — via API route interna
-  const categoryProducts = useRelatedProducts(product.id, product.category)
-  const prevProduct = categoryProducts[0] ?? null
-  const nextProduct = categoryProducts[1] ?? null
-  const relatedProducts = categoryProducts
+  // Productos relacionados — vienen del servidor (SSR) para que Google los vea en el HTML inicial
+  const relatedProducts = initialRelatedProducts
+  const prevProduct = relatedProducts[0] ?? null
+  const nextProduct = relatedProducts[1] ?? null
 
   return (
     <>
@@ -102,7 +99,7 @@ export function ProductoView({ product }: ProductoViewProps) {
       </div>
 
       {/* Main content */}
-      <div ref={ref} className={`bg-white ${isVisible ? "animate-reveal" : "opacity-0"}`}>
+      <div className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8">
           <div className="grid gap-10 lg:grid-cols-2">
             <ProductGallery

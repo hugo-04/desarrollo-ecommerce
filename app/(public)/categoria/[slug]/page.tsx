@@ -16,7 +16,7 @@ import { generateCategoryMeta, buildCategorySchema, SITE_URL } from "@/lib/seo"
 import { CategoriaView }         from "@/features/categorias/components/CategoriaView"
 import { PageViewTracker }       from "@/components/analytics/PageViewTracker"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 
 const LIMIT = 12
 
@@ -103,6 +103,18 @@ export default async function CategoriaPage({ params }: PageProps) {
       )}
 
       <PageViewTracker path={`/categoria/${category.slug}`} />
+
+      {/* Intro editorial — renderizada en servidor para indexación por Google */}
+      {category.description && (
+        <div className="border-b border-slate-100 bg-white">
+          <div className="mx-auto max-w-7xl px-4 py-5">
+            <p className="max-w-3xl text-sm leading-relaxed text-slate-500">
+              {category.description}
+            </p>
+          </div>
+        </div>
+      )}
+
       <CategoriaView
         category={category}
         initialProducts={initialProducts}

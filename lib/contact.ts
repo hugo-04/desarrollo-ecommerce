@@ -17,6 +17,9 @@ export const CONTACT = {
   /** Número primario en formato tel: */
   phoneTel: "tel:+51981375196",
 
+  /** RUC — Registro Único de Contribuyentes (Perú) */
+  ruc: "20609410711",
+
   /** Correo electrónico principal */
   email: "electrothina522@gmail.com",
 

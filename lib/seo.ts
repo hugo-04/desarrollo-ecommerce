@@ -62,17 +62,34 @@ export const organizationSchema = {
   "@id":         `${SITE_URL}/#organization`,
   name:          "Electro Thina S.A.C.",
   alternateName: ["Electro Thina", "ElectroThina"],
-  description:   `Fabricantes y distribuidores de ${KW_CORE}. Aisladores, herrajes, conectores y ferretería galvanizada con certificaciones IEC, ANSI y NTP.`,
+  description:   "Fabricante y distribuidor de ferretería eléctrica para alta y media tensión (AT/MT) en Lima, Perú. Fundada en 2010, ofrece herrajes, aisladores de porcelana, conectores bimetálicos, pernos galvanizados, abrazaderas y sistemas de puesta a tierra certificados bajo normas IEC, ANSI C135, ANSI C29 y NTP. Atiende concesionarias eléctricas, contratistas y proyectos de distribución en todo el Perú con despacho en 24 a 48 horas.",
+  slogan:        "Ferretería Eléctrica AT/MT certificada — Lima, Perú",
   url:           SITE_URL,
   logo: {
-    "@type":  "ImageObject",
-    "@id":    `${SITE_URL}/#logo`,
-    url:      OG_IMAGE,
-    caption:  "Electro Thina S.A.C.",
+    "@type":      "ImageObject",
+    "@id":        `${SITE_URL}/#logo`,
+    url:          OG_IMAGE,
+    caption:      "Electro Thina S.A.C. — Ferretería Eléctrica AT/MT",
+    width:        "400",
+    height:       "100",
   },
   image:         OG_IMAGE,
   foundingDate:  "2010",
-  areaServed:    "PE",
+  foundingLocation: {
+    "@type":        "Place",
+    name:           "Lima, Perú",
+    address: {
+      "@type":         "PostalAddress",
+      addressLocality: "Lima",
+      addressCountry:  "PE",
+    },
+  },
+  taxID:         "20609410711",
+  legalName:     "Electro Thina S.A.C.",
+  areaServed:    [
+    { "@type": "Country", name: "Perú" },
+    { "@type": "City",    name: "Lima" },
+  ],
   priceRange:    "$$",
   telephone:     "+51981375196",
   email:         "electrothina522@gmail.com",
@@ -100,25 +117,43 @@ export const organizationSchema = {
       "@type":    "OpeningHoursSpecification",
       dayOfWeek: ["Saturday"],
       opens:     "09:00",
-      closes:    "13:00",
+      closes:    "15:00",
     },
   ],
   sameAs: [
     "https://www.facebook.com/electrothina",
-    // TODO: agregar URL de Google Business Profile cuando esté disponible
-    // Ejemplo: "https://maps.app.goo.gl/XXXXXXXXXXXXXXXX"
+  ],
+  hasCredential: [
+    { "@type": "EducationalOccupationalCredential", name: "Certificación ISO 9001 — Sistema de Gestión de Calidad" },
+    { "@type": "EducationalOccupationalCredential", name: "Cumplimiento IEC 61284 — Herrajes para líneas aéreas" },
+    { "@type": "EducationalOccupationalCredential", name: "Cumplimiento ANSI C135 — Herrajes de acero galvanizado" },
+    { "@type": "EducationalOccupationalCredential", name: "Cumplimiento NTP 370.043 — Ferretería eléctrica Perú" },
   ],
   hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name:    "Catálogo de Ferretería Eléctrica AT/MT",
+    "@type":       "OfferCatalog",
+    name:          "Catálogo de Ferretería Eléctrica AT/MT",
+    numberOfItems: 50,
+    itemListElement: [
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Grapas para conductores AT/MT" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Conectores eléctricos bimetálicos Al/Cu y Al/Al" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Pernos de acero galvanizado A°G° para postes" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Aisladores de porcelana ANSI 54-1 y 56-1" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Abrazaderas galvanizadas para postes de distribución" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Herrajes de anclaje para postes de concreto" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Sistemas de puesta a tierra — planchas de cobre tipo J" } },
+    ],
   },
   knowsAbout: [
-    "ferretería eléctrica alta tensión",
-    "herrajes para líneas de distribución eléctrica",
-    "aisladores eléctricos ANSI IEC",
-    "conectores bimetálicos para conductores",
-    "ferretería galvanizada para postes de concreto",
-    "suministro eléctrico para proyectos AT/MT",
+    "ferretería eléctrica para alta tensión AT/MT",
+    "herrajes galvanizados para líneas de distribución eléctrica",
+    "aisladores de porcelana ANSI C29 e IEC 60305",
+    "conectores bimetálicos aluminio cobre a compresión IEC 61238",
+    "pernos galvanizados ASTM A153 para postes de concreto",
+    "abrazaderas para postes de distribución eléctrica",
+    "sistemas de puesta a tierra para instalaciones AT/MT",
+    "normas IEC ANSI NTP para distribución eléctrica en Perú",
+    "suministro eléctrico para concesionarias eléctricas peruanas",
+    "proyectos SEIN Sistema Eléctrico Interconectado Nacional Perú",
   ],
 } as const
 
@@ -176,6 +211,11 @@ export const SEO = {
     },
     verification: {
       google: "TQPQo2oWum6WSo5GuM0eOmYGLiKHmHLbVKRWJSeOq94",
+    },
+    icons: {
+      icon:     [{ url: "/icon.png", type: "image/png" }],
+      shortcut: "/icon.png",
+      apple:    [{ url: "/icon.png", type: "image/png", sizes: "180x180" }],
     },
   } satisfies Metadata,
 
@@ -336,13 +376,14 @@ export function generateProductMeta(product: {
   description?: string | null
   image?: string | null
 }): Metadata {
-  const title       = `${product.name} — Precio y Ficha Técnica | ${SITE_NAME}`
+  // Sin el sufijo "| Electro Thina" — el template del root layout lo agrega automáticamente
+  const title       = `${product.name} — Precio y Ficha Técnica`
   const description = (product.description?.trim() && product.description.trim().length > 30)
-    ? `${product.description.trim().slice(0, 160)}. Cotización en Lima, Perú en menos de 24 h.`
-    : `${product.name} — Ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Cotización en Lima, Perú en 24 h.`
+    ? `${product.description.trim().slice(0, 120)}. Cotización en Lima en 24 h.`
+    : `${product.name} — Ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Stock en Lima, Perú. Cotización en 24 h.`
 
-  const url         = `/producto/${product.id}`
-  const imageUrl    = (product.image && product.image.startsWith("http")) ? product.image : OG_IMAGE
+  const url      = `/producto/${product.id}`
+  const imageUrl = (product.image && product.image.startsWith("http")) ? product.image : OG_IMAGE
 
   return {
     title,
@@ -353,13 +394,13 @@ export function generateProductMeta(product: {
       locale:   "es_PE",
       type:     "website",
       url,
-      title,
+      title:       `${title} | ${SITE_NAME}`,
       description,
       images: [{ url: imageUrl, width: 800, height: 800, alt: product.name }],
     },
     twitter: {
       card:        "summary_large_image",
-      title,
+      title:       `${title} | ${SITE_NAME}`,
       description,
       images:      [imageUrl],
     },
@@ -415,7 +456,7 @@ export function buildProductSchema(product: {
   rating?: number
 }) {
   const productUrl  = `${SITE_URL}/producto/${product.id}`
-  const productImage = (product.image && product.image.startsWith("http")) ? product.image : OG_IMAGE
+  const productImage = (product.image && product.image.startsWith("http")) ? product.image : null
   // fullDescription puede contener HTML — extraemos texto plano como fallback
   const fullDescText = product.fullDescription
     ? product.fullDescription.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
@@ -428,7 +469,7 @@ export function buildProductSchema(product: {
     "@id":        productUrl,
     name:         product.name,
     description:  descriptionText.slice(0, 500),
-    image:        productImage,
+    ...(productImage && { image: productImage }),
     url:          productUrl,
     inLanguage:   "es-PE",
     category:     product.category,
