@@ -106,37 +106,45 @@ async function main() {
   allBrands.forEach(b => brandMap.set(b.name, b.id))
 
   // ── 6. Nuevos productos ────────────────────────────────────────────────────
-  let seeded = 0
-  for (const p of PRODUCTS_DATA) {
-    const category = await prisma.category.findUnique({ where: { slug: p.catSlug } })
-    if (!category) {
+  // Resolver categoría y marcas de cada producto antes de la transacción
+  const allCategories = await prisma.category.findMany({ select: { id: true, slug: true } })
+  const catMap = new Map(allCategories.map(c => [c.slug, c.id]))
+
+  const productData = PRODUCTS_DATA.flatMap(p => {
+    const categoryId = catMap.get(p.catSlug)
+    if (!categoryId) {
       console.warn(`Categoría no encontrada para slug "${p.catSlug}", saltando "${p.name}"`)
-      continue
+      return []
     }
     const pBrands = p.brands && p.brands.length > 0 ? p.brands : ["Lorem Ipsum"]
     const brandIds = pBrands.map(bName => brandMap.get(bName) ?? defaultBrand.id)
+    return [{ p, categoryId, brandIds }]
+  })
 
-    await prisma.product.create({
-      data: {
-        name: p.name,
-        description: p.description ?? "",
-        fullDescription: p.fullDescription ?? "",
-        image: "",
-        gallery: [],
-        medidas: p.medidas ?? [],
-        technicalSpecs: p.technicalSpecs ?? undefined,
-        fichaTecnica: p.fichaTecnica ?? null,
-        modelo: p.modelo ?? null,
-        keywords: p.keywords ?? [],
-        featured: false,
-        bestSeller: false,
-        rating: 4.5,
-        category: { connect: { id: category.id } },
-        brands: { connect: brandIds.map(id => ({ id })) },
-      },
-    })
-    seeded++
-  }
+  await prisma.$transaction(
+    productData.map(({ p, categoryId, brandIds }) =>
+      prisma.product.create({
+        data: {
+          name: p.name,
+          description: p.description ?? "",
+          fullDescription: p.fullDescription ?? "",
+          image: "",
+          gallery: [],
+          medidas: p.medidas ?? [],
+          technicalSpecs: p.technicalSpecs ?? undefined,
+          fichaTecnica: p.fichaTecnica ?? null,
+          modelo: p.modelo ?? null,
+          keywords: p.keywords ?? [],
+          featured: false,
+          bestSeller: false,
+          rating: 4.5,
+          category: { connect: { id: categoryId } },
+          brands: { connect: brandIds.map(id => ({ id })) },
+        },
+      })
+    )
+  )
+  const seeded = productData.length
   // Actualizar count real en cada categoría
   for (const cat of CATEGORIES_DATA) {
     const count = await prisma.product.count({ where: { category: { slug: cat.slug } } })
