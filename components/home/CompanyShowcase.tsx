@@ -58,7 +58,7 @@ export function CompanyShowcase() {
                     <div className={`mb-2 flex h-10 w-10 items-center justify-center rounded-lg ${item.colorClass}`}>
                       {Icon && <Icon className="h-5 w-5" />}
                     </div>
-                    <h4 className="mb-1 text-sm font-bold text-[#121A47]">{item.title}</h4>
+                    <p className="mb-1 text-sm font-bold text-[#121A47]">{item.title}</p>
                     <p className="text-xs text-slate-500">{item.desc}</p>
                   </motion.div>
                 )
