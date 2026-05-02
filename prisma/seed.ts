@@ -1,6 +1,12 @@
 import "dotenv/config"
-import { db as prisma } from "../lib/db"
+import { PrismaClient } from "@prisma/client"
+import { PrismaPg } from "@prisma/adapter-pg"
 import bcrypt from "bcryptjs"
+
+// Cliente dedicado al seed con pool de 1 conexión para no competir con Next.js
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL!, max: 1 })
+// @ts-expect-error — Prisma 7 runtime
+const prisma = new PrismaClient({ adapter })
 import { BRANDS_DATA } from "../lib/data/brands.data"
 import { CATEGORIES_DATA } from "../lib/data/categories.data"
 import { PRODUCTS_DATA } from "../lib/data/products.data"
