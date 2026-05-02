@@ -37,7 +37,7 @@ export function Footer() {
               alt="Electro Thina — Soluciones Eléctricas AT/MT"
               width={160}
               height={40}
-              sizes="(min-width: 640px) 160px, 72px"
+              sizes="72px"
               className="mb-4 h-10 w-auto object-contain"
               style={{ filter: "drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,1)) brightness(1.4) contrast(1.1)" }}
             />
