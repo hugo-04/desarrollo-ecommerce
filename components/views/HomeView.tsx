@@ -1,12 +1,27 @@
 "use client"
 
-import {
-  HeroSection, BestSellersCarousel, CategoriesGrid, MarqueeBrands, BenefitsSection,
-  TestimonialsSection, FeaturedOffers, SectoresSection, FullWidthStats,
-  CompanyShowcase, ServiciosSection, ProcesoSection, CertificacionesStrip, CtaBand,
-  TrustBar, FabricacionSection,
-} from "@/components/home"
+import dynamic from "next/dynamic"
+
+// Sobre el fold — importación estática (JS crítico)
+import { HeroSection } from "@/components/home/HeroSection"
+import { CategoriesGrid } from "@/components/home/CategoriesGrid"
 import { GrupoEmpresarialBand } from "@/components/sections/GrupoEmpresarial"
+
+// Bajo el fold — importación dinámica (JS diferido, HTML igual vía SSR)
+const BestSellersCarousel = dynamic(() => import("@/components/home/BestSellersCarousel").then(m => ({ default: m.BestSellersCarousel })))
+const MarqueeBrands       = dynamic(() => import("@/components/home/MarqueeBrands").then(m => ({ default: m.MarqueeBrands })))
+const ProcesoSection      = dynamic(() => import("@/components/home/ProcesoSection").then(m => ({ default: m.ProcesoSection })))
+const SectoresSection     = dynamic(() => import("@/components/home/SectoresSection").then(m => ({ default: m.SectoresSection })))
+const FullWidthStats      = dynamic(() => import("@/components/home/FullWidthStats").then(m => ({ default: m.FullWidthStats })))
+const FeaturedOffers      = dynamic(() => import("@/components/home/FeaturedOffers").then(m => ({ default: m.FeaturedOffers })))
+const CertificacionesStrip = dynamic(() => import("@/components/home/CertificacionesStrip").then(m => ({ default: m.CertificacionesStrip })))
+const CompanyShowcase     = dynamic(() => import("@/components/home/CompanyShowcase").then(m => ({ default: m.CompanyShowcase })))
+const FabricacionSection  = dynamic(() => import("@/components/home/FabricacionSection").then(m => ({ default: m.FabricacionSection })))
+const BenefitsSection     = dynamic(() => import("@/components/home/BenefitsSection").then(m => ({ default: m.BenefitsSection })))
+const ServiciosSection    = dynamic(() => import("@/components/home/ServiciosSection").then(m => ({ default: m.ServiciosSection })))
+const TestimonialsSection = dynamic(() => import("@/components/home/TestimonialsSection").then(m => ({ default: m.TestimonialsSection })))
+const CtaBand             = dynamic(() => import("@/components/home/CtaBand").then(m => ({ default: m.CtaBand })))
+
 import type { CategoryDTO } from "@/features/categorias/types"
 import type { Brand } from "@/lib/types"
 
