@@ -1,13 +1,14 @@
 "use client"
 
+import { useState, useEffect, useRef } from "react"
 import { FilterCheckbox } from "./FilterCheckbox"
 import { FilterSection } from "./FilterSection"
 import { IconFire, IconCheck, IconX } from "@/components/icons"
-import type { CategoryDTO } from "@/features/categorias/types"
+import { Search, Loader2 } from "lucide-react"
+import { useInfiniteBrands } from "@/features/marcas/hooks"
+import { useInfiniteCategories } from "@/features/categorias/hooks"
 
 interface CatalogFiltersProps {
-  categories: CategoryDTO[]
-  availableBrands: string[]
   selectedCategories: string[]
   selectedBrands: string[]
   onlyBestSellers: boolean
@@ -21,8 +22,6 @@ interface CatalogFiltersProps {
 }
 
 export function CatalogFilters({
-  categories,
-  availableBrands,
   selectedCategories,
   selectedBrands,
   onlyBestSellers,
@@ -69,39 +68,140 @@ export function CatalogFilters({
         </span>
       </button>
 
-      {/* Categories */}
-      <FilterSection
-        title="Categorias"
-        badge={selectedCategories.length || undefined}
-        onClear={clearCategories}
-      >
-        {categories.map((category) => (
-          <FilterCheckbox
-            key={category.id}
-            checked={selectedCategories.includes(category.name)}
-            label={category.name}
-            count={category.count}
-            onChange={() => toggleCategory(category.name)}
+      {/* 
+          Contenedor único con scroll para ambas secciones (Categorías y Marcas).
+          Esto evita que aparezcan múltiples barras de scroll internas.
+      */}
+      <div className="max-h-[calc(100vh-250px)] overflow-y-auto pr-2 custom-scrollbar space-y-6">
+        
+        {/* Categories Section */}
+        <FilterSection
+          title="Categorias"
+          badge={selectedCategories.length || undefined}
+          onClear={clearCategories}
+        >
+          <InfiniteFilterList
+            type="category"
+            selectedItems={selectedCategories}
+            onToggle={toggleCategory}
+            placeholder="Buscar categoría..."
           />
-        ))}
-      </FilterSection>
+        </FilterSection>
 
-      {/* Brands */}
-      <FilterSection
-        title="Marcas"
-        badge={selectedBrands.length || undefined}
-        onClear={clearBrands}
-      >
-        {availableBrands.map((brand) => (
-          <FilterCheckbox
-            key={brand}
-            checked={selectedBrands.includes(brand)}
-            label={brand}
-            count={0}
-            onChange={() => toggleBrand(brand)}
+        {/* Brands Section */}
+        <FilterSection
+          title="Marcas"
+          badge={selectedBrands.length || undefined}
+          onClear={clearBrands}
+        >
+          <InfiniteFilterList
+            type="brand"
+            selectedItems={selectedBrands}
+            onToggle={toggleBrand}
+            placeholder="Buscar marca..."
           />
-        ))}
-      </FilterSection>
+        </FilterSection>
+
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Componente genérico para lista con scroll infinito y búsqueda.
+ */
+function InfiniteFilterList({
+  type,
+  selectedItems,
+  onToggle,
+  placeholder
+}: {
+  type: "category" | "brand"
+  selectedItems: string[]
+  onToggle: (val: string) => void
+  placeholder: string
+}) {
+  const [search, setSearch] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
+
+  // Debounce simple para evitar demasiadas peticiones
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 400)
+    return () => clearTimeout(timer)
+  }, [search])
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status
+  } = type === "category" 
+    ? useInfiniteCategories(debouncedSearch) 
+    : useInfiniteBrands(debouncedSearch)
+
+  const observerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) fetchNextPage()
+      },
+      { threshold: 0.1 }
+    )
+
+    if (observerRef.current) observer.observe(observerRef.current)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  const allItems = data?.pages.flatMap(page => page.data) ?? []
+
+  return (
+    <div className="space-y-3">
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
+          <Search className="h-3 w-3 text-slate-400" />
+        </div>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={placeholder}
+          className="w-full rounded-md border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-2 text-[11px] outline-none transition-all focus:border-primary/30 focus:bg-white focus:ring-2 focus:ring-primary/10"
+        />
+      </div>
+
+      <div className="space-y-0.5">
+        {status === "pending" ? (
+          <div className="flex justify-center py-4">
+            <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+          </div>
+        ) : allItems.length === 0 ? (
+          <p className="py-2 text-[11px] text-slate-400 text-center italic">No hay resultados</p>
+        ) : (
+          <>
+            {allItems.map((item) => (
+              <FilterCheckbox
+                key={item.id}
+                checked={selectedItems.includes(item.name)}
+                label={item.name}
+                count={item.productCount ?? (item as any).count}
+                onChange={() => onToggle(item.name)}
+              />
+            ))}
+            {/* Trigger para el scroll infinito */}
+            <div ref={observerRef} className="h-4 w-full">
+               {isFetchingNextPage && (
+                 <div className="flex justify-center py-1">
+                   <Loader2 className="h-3 w-3 animate-spin text-slate-400" />
+                 </div>
+               )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }

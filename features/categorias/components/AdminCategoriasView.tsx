@@ -13,6 +13,7 @@ import { AdminPagination }   from "@/components/admin/AdminPagination"
 import { DeleteDialog }      from "@/components/admin/DeleteDialog"
 import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
 import { Skeleton }          from "@/components/ui/skeleton"
+import { categoryKeys }      from "@/features/categorias/hooks"
 
 function fmtDate(d?: string): string {
   if (!d) return "—"
@@ -151,6 +152,7 @@ export function AdminCategoriasView() {
   } = useAdminPagedList<CategoryDTO>({
     pageSize: PAGE_SIZE,
     loadFn:   getCategoriesPagedAction,
+    queryKey: categoryKeys.lists(),
   })
 
   return (

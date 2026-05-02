@@ -1,25 +1,36 @@
-"use client"
+"use client";
 
-import { useRef } from "react"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { fadeUp, fadeLeft, fadeRight, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
-import { COMPANY_SHOWCASE_CONTENT } from "@/lib/data/mock/static-content.mock"
+import { useRef } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import {
-  IconShield, IconTruck, IconHeadphones, IconClock,
-  IconArrowRight, IconPhone, IconCertificate,
-} from "@/components/icons"
+  fadeUp,
+  fadeLeft,
+  fadeRight,
+  staggerContainer,
+  viewportOnce,
+} from "@/hooks/useAnimations";
+import { COMPANY_SHOWCASE_CONTENT } from "@/lib/data/mock/static-content.mock";
+import {
+  IconShield,
+  IconTruck,
+  IconHeadphones,
+  IconClock,
+  IconArrowRight,
+  IconPhone,
+  IconCertificate,
+} from "@/components/icons";
 
 const iconMap = {
   shield: IconShield,
   truck: IconTruck,
   headphones: IconHeadphones,
   clock: IconClock,
-}
+};
 
 export function CompanyShowcase() {
-  const ref = useRef<HTMLElement>(null)
-  const c = COMPANY_SHOWCASE_CONTENT
+  const ref = useRef<HTMLElement>(null);
+  const c = COMPANY_SHOWCASE_CONTENT;
 
   return (
     <motion.section
@@ -44,10 +55,12 @@ export function CompanyShowcase() {
               <br />
               <span className="text-primary">{c.titleHighlight}</span>
             </h2>
-            <p className="mb-6 text-sm leading-relaxed text-slate-600">{c.description}</p>
+            <p className="mb-6 text-sm leading-relaxed text-slate-600">
+              {c.description}
+            </p>
             <div className="mb-8 grid grid-cols-2 gap-4">
               {c.features.map((item, i) => {
-                const Icon = iconMap[item.iconName as keyof typeof iconMap]
+                const Icon = iconMap[item.iconName as keyof typeof iconMap];
                 return (
                   <motion.div
                     key={i}
@@ -55,13 +68,17 @@ export function CompanyShowcase() {
                     whileHover={{ scale: 1.04 }}
                     className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4"
                   >
-                    <div className={`mb-2 flex h-10 w-10 items-center justify-center rounded-lg ${item.colorClass}`}>
+                    <div
+                      className={`mb-2 flex h-10 w-10 items-center justify-center rounded-lg ${item.colorClass}`}
+                    >
                       {Icon && <Icon className="h-5 w-5" />}
                     </div>
-                    <p className="mb-1 text-sm font-bold text-[#121A47]">{item.title}</p>
+                    <p className="mb-1 text-sm font-bold text-[#121A47]">
+                      {item.title}
+                    </p>
                     <p className="text-xs text-slate-500">{item.desc}</p>
                   </motion.div>
-                )
+                );
               })}
             </div>
             <div className="flex gap-4">
@@ -74,7 +91,7 @@ export function CompanyShowcase() {
               </Link>
               <Link
                 href="/contacto"
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-[#121A47] px-6 py-3 text-sm font-bold text-[#121A47] transition-all hover:bg-[#121A47] hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-[#121A47] px-6 py-3 text-sm font-bold text-[#121A47] transition-all hover:-[#002a5c] hover:text-white"
               >
                 <IconPhone className="h-4 w-4" />
                 {c.ctaContacto}
@@ -94,29 +111,10 @@ export function CompanyShowcase() {
                   crossOrigin="anonymous"
                 />
               </div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={viewportOnce}
-                transition={{ delay: 0.4, duration: 0.6, type: "spring" }}
-                className="absolute -bottom-6 -left-6 rounded-2xl border border-white/20 bg-[#121A47] p-5 shadow-[0_20px_40px_rgba(0,0,0,0.3)] backdrop-blur-md"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20">
-                    <IconCertificate className="h-6 w-6 text-red-400" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-extrabold text-white">ISO 9001</p>
-                    <p className="text-xs text-slate-400">Gestion de Calidad</p>
-                  </div>
-                </div>
-              </motion.div>
-              <div className="absolute -right-4 -top-4 h-24 w-24 rounded-2xl border-2 border-primary/20 -rotate-12" />
-              <div className="absolute -right-8 -top-8 h-24 w-24 rounded-2xl border-2 border-red-500/10" />
             </div>
           </motion.div>
         </div>
       </div>
     </motion.section>
-  )
+  );
 }

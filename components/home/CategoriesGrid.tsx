@@ -1,86 +1,160 @@
 "use client"
 
+import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion } from "framer-motion"
-import { fadeUp, scaleUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
+import { motion, AnimatePresence } from "framer-motion"
+import { fadeUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
 import { CATEGORIES_GRID_CONTENT } from "@/lib/data/mock/static-content.mock"
-import { IconArrowRight } from "@/components/icons"
+import { IconArrowRight, IconChevronLeft, IconChevronRight } from "@/components/icons"
 import { getCategoryIcon } from "@/lib/category-icons"
 import type { CategoryDTO } from "@/features/categorias/types"
 
-// Paleta de gradientes — se asigna de forma determinística por slug
+// ─── Paleta de gradientes de acento — asignada determinísticamente por slug ────
 const GRADIENT_PALETTE = [
-  "from-[#1C2870] to-[#151f5c]",
-  "from-blue-700 to-blue-900",
-  "from-indigo-700 to-[#1C2870]",
-  "from-slate-600 to-slate-800",
-  "from-cyan-700 to-blue-900",
-  "from-sky-700 to-indigo-900",
-  "from-slate-700 to-zinc-900",
-  "from-blue-800 to-indigo-950",
+  "from-[#1C2870] via-[#1C2870]/60 to-transparent",
+  "from-blue-900 via-blue-800/60 to-transparent",
+  "from-indigo-900 via-indigo-800/60 to-transparent",
+  "from-slate-900 via-slate-700/60 to-transparent",
+  "from-cyan-900 via-cyan-700/60 to-transparent",
+  "from-sky-900 via-sky-700/60 to-transparent",
+  "from-zinc-900 via-zinc-700/60 to-transparent",
+  "-[#001530] via-[#1C2870]/60 to-transparent",
 ]
+
 function autoGradient(slug: string): string {
   let h = 0
   for (const c of slug) h = (h * 31 + c.charCodeAt(0)) >>> 0
   return GRADIENT_PALETTE[h % GRADIENT_PALETTE.length]
 }
 
-function CategoryCard({ category, index }: { category: CategoryDTO; index: number }) {
-  const Icon = getCategoryIcon(category.slug)
-  const isFeatured = index === 0
+// ─── Cuántas tarjetas se muestran según breakpoint ─────────────────────────────
+function useItemsPerView() {
+  const [items, setItems] = useState(3)
+  useEffect(() => {
+    function update() {
+      if (window.innerWidth < 640)       setItems(1)
+      else if (window.innerWidth < 1024) setItems(2)
+      else                               setItems(3)
+    }
+    update()
+    window.addEventListener("resize", update)
+    return () => window.removeEventListener("resize", update)
+  }, [])
+  return items
+}
+
+// ─── Tarjeta individual con imagen de fondo ────────────────────────────────────
+function CategoryCard({ category }: { category: CategoryDTO }) {
+  const Icon     = getCategoryIcon(category.slug)
+  const gradient = autoGradient(category.slug)
+  const subs     = (category.subcategories ?? []).slice(0, 3)
 
   return (
-    <motion.div variants={scaleUp} className={`h-full w-full ${isFeatured ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
-      <Link
-        href={`/categoria/${category.slug}`}
-        className="group relative block h-full w-full overflow-hidden rounded-3xl border border-slate-200/50 bg-white text-left transition-all duration-700 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#1C2870]/20"
-      >
-        <div className={`relative w-full overflow-hidden ${isFeatured ? 'h-[220px] sm:h-[320px] lg:h-full' : 'h-[180px] sm:h-[260px] lg:h-[340px]'}`}>
-          <div className="absolute inset-0 bg-slate-900/10 z-10 transition-opacity duration-500 group-hover:opacity-0" />
-          {category.image && (
-            <Image
-              src={category.image}
-              alt={category.imageAlt ?? category.name}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="object-cover transition-transform duration-1000 group-hover:scale-110"
-            />
-          )}
-          <div className={`absolute inset-0 bg-gradient-to-t from-[#07091E]/95 ${isFeatured ? 'via-[#07091E]/40' : 'via-[#07091E]/60'} to-transparent z-10`} />
-          <div
-            className={`absolute inset-0 bg-gradient-to-br ${autoGradient(category.slug)} opacity-20 mix-blend-color z-10 transition-opacity duration-500 group-hover:opacity-40`}
+    <Link
+      href={`/categoria/${category.slug}`}
+      className="group relative block h-full w-full overflow-hidden rounded-2xl border border-white/10 shadow-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#1C2870]/30"
+      aria-label={`Ver categoría ${category.name}`}
+    >
+      {/* ── Imagen de fondo ── */}
+      <div className="absolute inset-0">
+        {category.image ? (
+          <Image
+            src={category.image}
+            alt={category.imageAlt ?? category.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          <div className="absolute inset-0 flex flex-col justify-end p-4 z-20 sm:p-6 lg:p-8">
-            <div className="mb-2 flex items-center gap-2 sm:mb-4 sm:gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md ring-1 ring-white/30 transition-all duration-500 group-hover:bg-[#CC1B1B] group-hover:ring-[#CC1B1B] group-hover:shadow-[0_0_20px_rgba(204,27,27,0.4)] sm:h-12 sm:w-12 sm:rounded-2xl">
-                <Icon className="h-4 w-4 text-white sm:h-5 sm:w-5" />
-              </div>
-              <div className="rounded-full border border-white/20 bg-white/5 px-2 py-0.5 text-[9px] font-bold text-white backdrop-blur-md sm:px-3 sm:py-1 sm:text-[10px]">
-                {category.count} PRODUCTOS
-              </div>
-            </div>
-            <h3 className={`mb-1 font-black text-white sm:mb-2 ${isFeatured ? 'text-lg sm:text-2xl lg:text-4xl' : 'text-sm sm:text-lg lg:text-xl'}`}>{category.name}</h3>
-            <p className={`text-white/70 ${isFeatured ? 'mb-3 max-w-sm text-[10px] sm:mb-6 sm:text-sm' : 'mb-2 text-[10px] sm:mb-4 sm:text-xs'}`}>
-              {(category.subcategories ?? []).slice(0, 2).join(" · ")}
-            </p>
-            <div className="flex items-center gap-1.5 text-[10px] font-semibold text-red-400 transition-all group-hover:gap-3 sm:text-xs">
-              <span>Ver productos</span>
-              <IconArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1 sm:h-3.5 sm:w-3.5" />
-            </div>
+        ) : (
+          /* Fallback si no hay imagen — gradiente sólido */
+          <div className={`absolute inset-0 bg-gradient-to-br ${autoGradient(category.slug).replace("to-transparent", "-[#001530]")}`} />
+        )}
+      </div>
+
+      {/* ── Overlay degradado oscuro ── */}
+      <div className={`absolute inset-0 bg-gradient-to-t ${gradient} opacity-90 transition-opacity duration-500 group-hover:opacity-95`} />
+
+      {/* ── Overlay de acento al hover ── */}
+      <div className="absolute inset-0 bg-[#CC1B1B]/0 transition-colors duration-500 group-hover:bg-[#CC1B1B]/5" />
+
+      {/* ── Contenido ── */}
+      <div className="relative flex h-full flex-col justify-end p-6 lg:p-7">
+        {/* Badge de productos */}
+        <div className="mb-4 flex items-center gap-3">
+          {/* Icono */}
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/30 backdrop-blur-md transition-all duration-500 group-hover:bg-[#CC1B1B] group-hover:ring-[#CC1B1B] group-hover:shadow-[0_0_20px_rgba(204,27,27,0.5)]">
+            <Icon className="h-5 w-5 text-white" />
           </div>
+          <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+            {category.count} productos
+          </span>
         </div>
-      </Link>
-    </motion.div>
+
+        {/* Nombre */}
+        <h3 className="mb-2 text-xl font-black leading-tight text-white lg:text-2xl">
+          {category.name}
+        </h3>
+
+        {/* Subcategorías como chips */}
+        {subs.length > 0 && (
+          <div className="mb-4 flex flex-wrap gap-1.5">
+            {subs.map((sub) => (
+              <span
+                key={sub}
+                className="rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[10px] font-medium text-white/80 backdrop-blur-sm"
+              >
+                {sub}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* CTA */}
+        <div className="flex items-center gap-2 text-sm font-semibold text-red-400 transition-all duration-300 group-hover:gap-3 group-hover:text-red-300">
+          <span>Ver productos</span>
+          <IconArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+        </div>
+      </div>
+    </Link>
   )
 }
 
+// ─── Props ─────────────────────────────────────────────────────────────────────
 interface CategoriesGridProps {
-  /** Categorías cargadas por el Server Component padre (de la DB) */
   categories: CategoryDTO[]
 }
 
+// ─── Componente principal — Carrusel ───────────────────────────────────────────
 export function CategoriesGrid({ categories }: CategoriesGridProps) {
+  const itemsPerView  = useItemsPerView()
+  const maxIndex      = Math.max(0, categories.length - itemsPerView)
+  const [current, setCurrent] = useState(0)
+  const paused = useRef(false)
+
+  const next = useCallback(() => {
+    setCurrent((prev) => (prev >= maxIndex ? 0 : prev + 1))
+  }, [maxIndex])
+
+  const prev = () => {
+    setCurrent((prev) => (prev <= 0 ? maxIndex : prev - 1))
+  }
+
+  // Autoplay cada 4s — pausa al hacer hover
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (!paused.current) next()
+    }, 4000)
+    return () => clearInterval(id)
+  }, [next])
+
+  // Ajustar índice si cambia el breakpoint
+  useEffect(() => {
+    setCurrent((c) => Math.min(c, maxIndex))
+  }, [maxIndex])
+
+  // Solo mostrar flechas si hay más items que los visibles
+  const showControls = categories.length > itemsPerView
 
   return (
     <motion.section
@@ -88,8 +162,9 @@ export function CategoriesGrid({ categories }: CategoriesGridProps) {
       whileInView="visible"
       viewport={viewportOnce}
       variants={staggerContainer}
-      className="relative overflow-hidden py-12 sm:py-20 lg:py-24"
+      className="relative overflow-hidden py-14 sm:py-20 lg:py-28"
     >
+      {/* Fondo de sección */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#F0F0F5] via-[#E7E7EF] to-[#F0F0F5]" />
       <div
         className="absolute inset-0 opacity-30"
@@ -99,9 +174,12 @@ export function CategoriesGrid({ categories }: CategoriesGridProps) {
           backgroundSize: "40px 40px",
         }}
       />
-      <div className="relative mx-auto max-w-7xl px-4">
-        <motion.div variants={fadeUp} className="mb-8 text-center sm:mb-16">
-          <div className="mb-3 flex items-center justify-center gap-3 sm:mb-4">
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        {/* ── Encabezado ── */}
+        <motion.div variants={fadeUp} className="mb-10 text-center sm:mb-14">
+          <div className="mb-3 flex items-center justify-center gap-3">
             <div className="h-px w-8 bg-red-500" />
             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">
               {CATEGORIES_GRID_CONTENT.badge}
@@ -115,16 +193,84 @@ export function CategoriesGrid({ categories }: CategoriesGridProps) {
             {CATEGORIES_GRID_CONTENT.subtitle}
           </p>
         </motion.div>
-      </div>
-      <div className="relative mx-auto max-w-7xl px-4">
+
+        {/* ── Carrusel ── */}
         <motion.div
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
-            className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2 lg:gap-6 auto-rows-fr"
+          variants={fadeUp}
+          className="overflow-hidden"
+          onMouseEnter={() => { paused.current = true }}
+          onMouseLeave={() => { paused.current = false }}
+        >
+          <motion.div
+            className="flex"
+            animate={{ x: `-${current * (100 / itemsPerView)}%` }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            {categories.map((category, index) => (
-              <CategoryCard key={category.id} category={category} index={index} />
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                className="shrink-0 px-2"
+                style={{ width: `${100 / itemsPerView}%` }}
+              >
+                {/* Altura fija para el carrusel */}
+                <div className="h-[380px] sm:h-[420px] lg:h-[460px]">
+                  <CategoryCard category={category} />
+                </div>
+              </div>
             ))}
+          </motion.div>
         </motion.div>
+
+        {/* ── Controles de navegación ── */}
+        {showControls && (
+          <div className="mt-8 flex items-center justify-center gap-5 sm:mt-10">
+            {/* Flecha anterior */}
+            <button
+              onClick={prev}
+              aria-label="Categoría anterior"
+              className="group flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-lg sm:h-12 sm:w-12 sm:rounded-2xl"
+            >
+              <IconChevronLeft className="h-5 w-5" />
+            </button>
+
+            {/* Dots indicadores */}
+            <div className="flex items-center gap-2">
+              {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  aria-label={`Ir a categoría ${i + 1}`}
+                  className={`rounded-full transition-all duration-300 ${
+                    current === i
+                      ? "w-7 bg-[#1C2870] h-2"
+                      : "w-2 h-2 bg-slate-300 hover:bg-slate-400"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Flecha siguiente */}
+            <button
+              onClick={next}
+              aria-label="Categoría siguiente"
+              className="group flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-500 shadow-sm transition-all duration-300 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-lg sm:h-12 sm:w-12 sm:rounded-2xl"
+            >
+              <IconChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+        )}
+
+        {/* ── CTA ver catálogo ── */}
+        <motion.div variants={fadeUp} className="mt-10 flex justify-center">
+          <Link
+            href="/catalogo"
+            className="group inline-flex items-center gap-2 rounded-full border border-[#1C2870]/30 bg-white px-6 py-2.5 text-sm font-semibold text-[#1C2870] shadow-sm transition-all duration-300 hover:border-[#1C2870] hover:bg-[#1C2870] hover:text-white hover:shadow-lg"
+          >
+            Ver todo el catálogo
+            <IconArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
+
       </div>
     </motion.section>
   )

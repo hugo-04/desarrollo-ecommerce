@@ -5,29 +5,27 @@
  * Carga la categoría por ID y delega el formulario a CategoryForm.
  */
 
-import { useEffect, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
-import { getCategoryByIdAction, updateCategoryAction, deleteCategoryAction } from "@/features/categorias/actions"
+import { useCategory, useUpdateCategory, useDeleteCategory } from "@/features/categorias/hooks"
 import { CategoryForm, type CategorySaveData } from "@/components/admin/CategoryForm"
 import { AdminFormHeader } from "@/components/admin/AdminFormHeader"
-import type { CategoryDTO } from "@/features/categorias/types"
 import { toast } from "sonner"
 
 export default function EditarCategoriaPage() {
   const router = useRouter()
   const { id } = useParams<{ id: string }>()
-  const [category, setCategory] = useState<CategoryDTO | null>(null)
+  const numId = parseInt(id, 10)
 
-  useEffect(() => {
-    const numId = parseInt(id, 10)
-    if (isNaN(numId) || numId < 1) { router.replace("/categorias"); return }
-    getCategoryByIdAction(numId).then((c) => {
-      if (!c) router.replace("/categorias")
-      else setCategory(c)
-    })
-  }, [id, router])
+  const { data: category, isLoading } = useCategory(numId)
+  const updateCategory = useUpdateCategory()
+  const deleteCategory = useDeleteCategory()
 
-  if (!category) {
+  if (isNaN(numId)) {
+    router.replace("/categorias")
+    return null
+  }
+
+  if (isLoading) {
     return (
       <div className="flex items-center gap-2 py-12 text-sm text-slate-400">
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#334155] border-t-transparent" />
@@ -36,17 +34,20 @@ export default function EditarCategoriaPage() {
     )
   }
 
+  if (!category) {
+    router.replace("/categorias")
+    return null
+  }
+
   async function handleSave(data: CategorySaveData) {
-    await updateCategoryAction(category!.id, data)
+    await updateCategory.mutateAsync({ id: numId, data })
     toast.success("Categoría actualizada correctamente")
-    router.refresh()
     router.push("/categorias")
   }
 
   async function handleDelete() {
-    await deleteCategoryAction(category!.id)
+    await deleteCategory.mutateAsync(numId)
     toast.success(`"${category!.name}" eliminada correctamente`)
-    router.refresh()
     router.push("/categorias")
   }
 

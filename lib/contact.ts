@@ -5,26 +5,26 @@
 
 export const CONTACT = {
   /** Número WhatsApp principal (sin "+" ni espacios, con código de país Perú: 51) */
-  whatsappNumber: "51981375196",
+  whatsappNumber: "xxxxxxxxxxxxxxxxxx",
 
   /** Número secundario de contacto */
-  phone2: "995318976",
+  phone2: "xxxxxxxxxxxxxxxx",
 
   /** Números para mostrar en pantalla */
-  phoneDisplay: "981 375 196",
-  phone2Display: "995 318 976",
+  phoneDisplay: "xxxxxxxxxxxxxxxx",
+  phone2Display: "xxxxxxxxxxxxxxxx",
 
   /** Número primario en formato tel: */
-  phoneTel: "tel:+51981375196",
+  phoneTel: "xxxxxxxxxxxxxxxx",
 
   /** RUC — Registro Único de Contribuyentes (Perú) */
-  ruc: "20609410711",
+  ruc: "xxxxxxxxxxxxxxxx",
 
   /** Correo electrónico principal */
-  email: "electrothina522@gmail.com",
+  email: "contacto@empresa.com",
 
   /** Dirección física */
-  address: "Av. Guillermo Dansey N° 481 - Int. 143 - C.C. Loreto, Lima",
+  address: "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 
   /** Horario de atención — fuente única; usado en TopBar, Footer y Contacto */
   hours: "L-V: 9am-6pm | Sáb: 9am-3pm",
@@ -50,9 +50,9 @@ export const WA = {
   /** Hablar con un ingeniero (nosotros) */
   ingeniero: `${base}?text=${encodeURIComponent("Hola, quisiera hablar con un ingeniero sobre mi proyecto AT/MT.")}`,
 
-  /** Cotización de un producto específico — recibe nombre y marca */
-  producto: (nombre: string, marca: string) =>
+  /** Cotización de un producto específico — recibe nombre, marca y modelo */
+  producto: (nombre: string, marca: string, modelo?: string) =>
     `${base}?text=${encodeURIComponent(
-      `Hola, me gustaría solicitar cotización del producto:\n*${nombre}*\nMarca: ${marca}`
+      `Hola, me gustaría solicitar cotización del producto:\n*${nombre}*\nMarca: ${marca}${modelo ? `\nModelo: ${modelo}` : ""}`
     )}`,
 } as const

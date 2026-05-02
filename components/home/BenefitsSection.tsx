@@ -21,7 +21,7 @@ export function BenefitsSection() {
       variants={staggerContainer}
       className="relative overflow-hidden py-24"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-[#07091E] via-[#1e293b] to-[#0f172a]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#002a52] via-[#003D73] to-[#002a52]" />
       <div
         className="absolute inset-0 opacity-[0.04]"
         style={{
@@ -86,7 +86,7 @@ export function BenefitsSection() {
                   className="group flex items-start gap-6 border-b border-white/[0.06] py-7 last:border-0 transition-all duration-300 hover:border-white/[0.12]"
                 >
                   <motion.div
-                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-500/20 to-slate-600/10 text-slate-400 transition-all duration-500 group-hover:from-amber-400/20 group-hover:to-amber-600/10 group-hover:text-amber-300 group-hover:[box-shadow:0_0_0_6px_rgba(245,158,11,0.10),0_0_20px_4px_rgba(245,158,11,0.08)]"
+                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-500/20 to-slate-600/10 text-slate-400 transition-all duration-500 group-hover:from-[#FF6B35]/20 group-hover:to-[#FF6B35]/10 group-hover:text-[#FF6B35] group-hover:[box-shadow:0_0_0_6px_rgba(255,107,53,0.10),0_0_20px_4px_rgba(255,107,53,0.08)]"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >

@@ -1,82 +1,101 @@
 "use client"
 
-/**
- * Hooks de React para marcas — para uso en Client Components.
- *
- * `useBrandNames` — devuelve solo los nombres (para filtros del catálogo).
- * `useBrands`     — devuelve objetos Brand completos (para selects del admin).
- *
- * Los errores se loguean solo en desarrollo (log.error silencia en producción).
- */
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { 
+  getBrandNamesAction, 
+  getBrandsAction, 
+  getBrandsForCarouselAction, 
+  getBrandsPagedAction,
+  getBrandByIdAction,
+  createBrandAction,
+  updateBrandAction,
+  deleteBrandAction
+} from "./actions"
 
-import { useState, useEffect } from "react"
-import { getBrandNamesAction, getBrandsAction, getBrandsForCarouselAction } from "./actions"
-import type { Brand } from "@/lib/types"
-import { log } from "@/lib/logger"
+// ─── Query Keys ──────────────────────────────────────────────────────────────
+export const brandKeys = {
+  all: ["brands"] as const,
+  names: () => [...brandKeys.all, "names"] as const,
+  lists: () => [...brandKeys.all, "list"] as const,
+  details: () => [...brandKeys.all, "detail"] as const,
+  detail: (id: number) => [...brandKeys.details(), id] as const,
+  carousel: () => [...brandKeys.all, "carousel"] as const,
+  infinite: (query: string) => [...brandKeys.all, "infinite", query] as const,
+}
 
 // ─── useBrandNames ─────────────────────────────────────────────────────────────
-
-/**
- * Carga los nombres de marca al montar.
- * Ideal para filtros del catálogo donde no se necesita el logo ni el ID.
- */
-export function useBrandNames(): string[] {
-  const [brands, setBrands] = useState<string[]>([])
-
-  useEffect(() => {
-    getBrandNamesAction()
-      .then(setBrands)
-      .catch((err: unknown) => log.error("[useBrandNames]", err))
-  }, [])
-
-  return brands
+export function useBrandNames() {
+  return useQuery({
+    queryKey: brandKeys.names(),
+    queryFn: getBrandNamesAction,
+  })
 }
 
 // ─── useBrands ─────────────────────────────────────────────────────────────────
-
-interface UseBrandsReturn {
-  brands: Brand[]
-  loading: boolean
-  /** Mensaje de error si la carga falló, o null si no hubo problema */
-  error: string | null
+export function useBrands() {
+  return useQuery({
+    queryKey: brandKeys.lists(),
+    queryFn: getBrandsAction,
+  })
 }
 
-/**
- * Carga los objetos Brand completos al montar.
- * Usar cuando se necesite el logo o el ID (panel admin, selects de producto).
- */
-export function useBrands(): UseBrandsReturn {
-  const [brands, setBrands]   = useState<Brand[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState<string | null>(null)
-
-  useEffect(() => {
-    getBrandsAction()
-      .then((b) => { setBrands(b); setLoading(false) })
-      .catch((err: unknown) => {
-        log.error("[useBrands]", err)
-        setError("No se pudieron cargar las marcas")
-        setLoading(false)
-      })
-  }, [])
-
-  return { brands, loading, error }
+// ─── useBrand ──────────────────────────────────────────────────────────────────
+export function useBrand(id: number) {
+  return useQuery({
+    queryKey: brandKeys.detail(id),
+    queryFn: () => getBrandByIdAction(id),
+    enabled: !!id && !isNaN(id),
+  })
 }
 
 // ─── useBrandsCarousel ─────────────────────────────────────────────────────────
-
-/**
- * Carga solo las marcas con showInCarousel=true desde el backend.
- * Usado por el componente MarqueeBrands en el home.
- */
-export function useBrandsCarousel(): Brand[] {
-  const [brands, setBrands] = useState<Brand[]>([])
-
-  useEffect(() => {
-    getBrandsForCarouselAction()
-      .then(setBrands)
-      .catch((err: unknown) => log.error("[useBrandsCarousel]", err))
-  }, [])
-
-  return brands
+export function useBrandsCarousel() {
+  return useQuery({
+    queryKey: brandKeys.carousel(),
+    queryFn: getBrandsForCarouselAction,
+  })
 }
+
+// ─── useInfiniteBrands ────────────────────────────────────────────────────────
+export function useInfiniteBrands(query: string = "") {
+  return useInfiniteQuery({
+    queryKey: brandKeys.infinite(query),
+    queryFn: ({ pageParam = 1 }) => getBrandsPagedAction({ query, page: pageParam as number, limit: 15 }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => (lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined),
+  })
+}
+
+// ─── Mutaciones ───────────────────────────────────────────────────────────────
+
+export function useCreateBrand() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createBrandAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: brandKeys.all })
+    },
+  })
+}
+
+export function useUpdateBrand() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => updateBrandAction(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: brandKeys.all })
+      queryClient.invalidateQueries({ queryKey: brandKeys.detail(id) })
+    },
+  })
+}
+
+export function useDeleteBrand() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => deleteBrandAction(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: brandKeys.all })
+    },
+  })
+}
+

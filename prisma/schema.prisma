@@ -46,6 +46,7 @@ model Subcategory {
   name String @unique
 
   categories Category[]
+  products   Product[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -148,6 +149,7 @@ model Product {
   gallery     String[]
   galleryAlts String[]
 
+  modelo       String?
   medidas      String[]
   keywords     String[]
   fichaTecnica String?
@@ -159,17 +161,21 @@ model Product {
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   categoryId Int
 
-  brand   Brand @relation(fields: [brandId], references: [id], onDelete: Restrict)
-  brandId Int
+  brands Brand[]
+
+  subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id], onDelete: SetNull)
+  subcategoryId Int?
 
   technicalSpecs Json?
+  search_vector  Unsupported("tsvector")?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // ── Índices de relación (JOIN rápido) ─────────────────
   @@index([categoryId])
-  @@index([brandId])
+
+  @@index([subcategoryId])
   // ── Índices de filtros booleanos ──────────────────────
   @@index([featured])
   @@index([bestSeller])

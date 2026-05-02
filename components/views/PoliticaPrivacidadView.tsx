@@ -25,7 +25,7 @@ export function PoliticaPrivacidadView() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e293b] via-primary to-[#0f172a] py-16">
+      <section className="relative overflow-hidden bg-gradient-to-br -[#003D73] via-primary bg-[#00244f] py-16">
         <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h40v40H0z\' fill=\'none\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")' }} />
         <div className="relative mx-auto max-w-4xl px-4 text-center">
           <span className="mb-2 inline-block text-xs font-bold uppercase tracking-widest text-slate-400">Legal</span>

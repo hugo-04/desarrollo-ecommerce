@@ -9,7 +9,8 @@ import { ProductCard } from "@/components/product/ProductCard"
 import { IconChevronLeft, IconChevronRight } from "@/components/icons"
 
 export function BestSellersCarousel() {
-  const { products: bestSellers, loading } = useBestSellers()
+  const { data: bestSellersData, isLoading: loading } = useBestSellers()
+  const bestSellers = bestSellersData ?? []
   const [currentIndex, setCurrentIndex] = useState(0)
   const itemsPerView = 4
   const maxIndex = Math.max(0, bestSellers.length - itemsPerView)

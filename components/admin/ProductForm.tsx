@@ -19,15 +19,16 @@ import { useRouter } from "next/navigation"
 import { AlertCircle, CheckCircle2, Package, Image as ImageIcon, AlignLeft, Wrench } from "lucide-react"
 import { toast } from "sonner"
 
-import { createProductAction, updateProductAction } from "@/features/productos/actions"
-import { createBrandAction } from "@/features/marcas/actions"
-import { createCategoryAction } from "@/features/categorias/actions"
+import { useCreateProduct, useUpdateProduct } from "@/features/productos/hooks"
+import { useCreateBrand } from "@/features/marcas/hooks"
+import { useCreateCategory } from "@/features/categorias/hooks"
 import { RichEditor } from "@/components/admin/RichEditor"
 import { ImageUpload } from "@/components/ui/ImageUpload"
 import { QuickCreateBrandDialog } from "@/components/admin/QuickCreateBrandDialog"
 import { QuickCreateCategoryDialog } from "@/components/admin/QuickCreateCategoryDialog"
 
 import { SearchableSelect } from "./product-form/SearchableSelect"
+import { SearchableMultiSelect } from "./product-form/SearchableMultiSelect"
 import { PdfUploader } from "./product-form/PdfUploader"
 import { TagsEditor } from "./product-form/TagsEditor"
 import { TechSpecsEditor } from "./product-form/TechSpecsEditor"
@@ -91,14 +92,26 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   )
 
   // Selects
-  const [selectedCategory, setSelectedCategory] = useState(product?.category ?? "")
-  const [selectedBrand,    setSelectedBrand]     = useState(product?.brand    ?? "")
+  const [selectedCategory,    setSelectedCategory]    = useState(product?.category      ?? "")
+  const [selectedBrands,      setSelectedBrands]      = useState<string[]>(product?.brands ?? [])
+  const [selectedSubcatId,    setSelectedSubcatId]    = useState<number | null>(product?.subcategoryId ?? null)
+
+  // Subcategorías disponibles según la categoría seleccionada
+  const subcategoryOptions = categories
+    .find((c) => c.name === selectedCategory)
+    ?.subcategoryItems ?? []
+
+  const subcategorySelectOptions = [
+    { value: "", label: "— Sin subcategoría —" },
+    ...subcategoryOptions.map((s) => ({ value: String(s.id), label: s.name })),
+  ]
 
   // Creación rápida
   const [quickCreate, setQuickCreate] = useState<QuickCreateState | null>(null)
 
   // Campos del formulario
   const [name,         setName]         = useState(product?.name         ?? "")
+  const [modelo,       setModelo]       = useState(product?.modelo       ?? "")
   const [description,  setDesc]         = useState(product?.description  ?? "")
   const [image,        setImage]        = useState(product?.image        ?? "")
   const [imageAlt,     setImageAlt]     = useState(product?.imageAlt     ?? "")
@@ -116,30 +129,42 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const [pdfTempKey,     setPdfTempKey]     = useState<string | null>(null)
   const [pdfSeoName,     setPdfSeoName]     = useState("")
 
-  const [saving,       setSaving]       = useState(false)
+  const createProduct  = useCreateProduct()
+  const updateProduct  = useUpdateProduct()
+  const createBrand    = useCreateBrand()
+  const createCategory = useCreateCategory()
+
   const [serverError,  setServerError]  = useState("")
   const [errors,       setErrors]       = useState<ProductErrors>({})
 
   // ── Creación rápida de marca ───────────────────────────────────────────────
 
   async function handleQuickCreateBrand(brandName: string) {
-    const newBrand = await createBrandAction({ name: brandName, logo: "" })
-    setBrandOptions((prev) => [...prev, { value: newBrand.name, label: newBrand.name }])
-    setSelectedBrand(newBrand.name)
-    setErrors((e) => ({ ...e, brand: undefined }))
-    toast.success(`Marca "${brandName}" creada`)
+    try {
+      const newBrand = await createBrand.mutateAsync({ name: brandName, logo: "" })
+      setBrandOptions((prev) => [...prev, { value: newBrand.name, label: newBrand.name }])
+      setSelectedBrands((prev) => [...prev, newBrand.name])
+      setErrors((e) => ({ ...e, brands: undefined }))
+      toast.success(`Marca "${brandName}" creada`)
+    } catch (err) {
+      toast.error("Error al crear marca")
+    }
   }
 
   // ── Creación rápida de categoría ──────────────────────────────────────────
 
   async function handleQuickCreateCategory(catName: string, slug: string) {
-    const newCat = await createCategoryAction({
-      name: catName, slug, image: "", subcategories: [], count: 0, featured: false,
-    })
-    setCategoryOptions((prev) => [...prev, { value: newCat.name, label: newCat.name }])
-    setSelectedCategory(newCat.name)
-    setErrors((e) => ({ ...e, category: undefined }))
-    toast.success(`Categoría "${catName}" creada`)
+    try {
+      const newCat = await createCategory.mutateAsync({
+        name: catName, slug, image: "", subcategories: [], count: 0, featured: false,
+      })
+      setCategoryOptions((prev) => [...prev, { value: newCat.name, label: newCat.name }])
+      setSelectedCategory(newCat.name)
+      setErrors((e) => ({ ...e, category: undefined }))
+      toast.success(`Categoría "${catName}" creada`)
+    } catch (err) {
+      toast.error("Error al crear categoría")
+    }
   }
 
   // ── Finalizar uploads temporales con el nombre SEO correcto ──────────────
@@ -162,13 +187,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
-    setSaving(true)
-    setServerError("")
-
     const fd = new FormData(e.currentTarget)
 
     const result = productSchema.safeParse({
-      name, brand: selectedBrand, category: selectedCategory,
+      name, brands: selectedBrands, category: selectedCategory,
       description, image, imageAlt: imageAlt.trim(),
     })
 
@@ -179,7 +201,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         if (!fieldErrors[key]) fieldErrors[key] = issue.message
       }
       setErrors(fieldErrors)
-      setSaving(false)
       window.scrollTo({ top: 0, behavior: "smooth" })
       return
     }
@@ -217,14 +238,15 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       }
     } catch (e: unknown) {
       setServerError(e instanceof Error ? e.message : "Error al finalizar subida de archivos")
-      setSaving(false)
       return
     }
 
     const data = {
       name,
-      brand:           selectedBrand,
+      modelo:          modelo.trim() || undefined,
+      brands:          selectedBrands,
       category:        selectedCategory,
+      subcategoryId:   selectedSubcatId ?? undefined,
       description,
       fullDescription: (fd.get("fullDescription") as string)?.trim(),
       rating:          Number(fd.get("rating"))  || 4.5,
@@ -243,10 +265,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
     try {
       if (isEdit && product) {
-        await updateProductAction(product.id, data)
+        await updateProduct.mutateAsync({ id: product.id, data })
         toast.success("Producto actualizado correctamente")
       } else {
-        await createProductAction(data as Parameters<typeof createProductAction>[0])
+        await createProduct.mutateAsync(data as any)
         toast.success("Producto creado correctamente")
       }
       router.refresh()
@@ -254,7 +276,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     } catch (e: unknown) {
       setServerError(e instanceof Error ? e.message : "Error al guardar")
       toast.error("No se pudo guardar el producto")
-      setSaving(false)
     }
   }
 
@@ -282,7 +303,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 {errors.image       && <li>Imagen principal</li>}
                 {errors.imageAlt    && <li>Nombre SEO de la imagen</li>}
                 {errors.category    && <li>Categoría</li>}
-                {errors.brand       && <li>Marca</li>}
+                {errors.brands      && <li>Al menos una marca</li>}
               </ul>
             </div>
           </div>
@@ -324,7 +345,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               label="Categoría"
               options={categoryOptions}
               value={selectedCategory}
-              onChange={(v) => { setSelectedCategory(v); if (v) setErrors((e) => ({ ...e, category: undefined })) }}
+              onChange={(v) => { setSelectedCategory(v); setSelectedSubcatId(null); if (v) setErrors((e) => ({ ...e, category: undefined })) }}
               required
               error={errors.category}
               placeholder="Seleccionar…"
@@ -332,19 +353,46 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               onCreateNew={(n) => setQuickCreate({ type: "category", defaultName: n })}
             />
 
-            {/* Marca */}
-            <SearchableSelect
-              name="brand"
-              label="Marca"
+            {/* Marcas (Múltiples) */}
+            <SearchableMultiSelect
+              name="brands"
+              label="Marcas"
               options={brandOptions}
-              value={selectedBrand}
-              onChange={(v) => { setSelectedBrand(v); if (v) setErrors((e) => ({ ...e, brand: undefined })) }}
+              value={selectedBrands}
+              onChange={(v) => { setSelectedBrands(v); if (v.length > 0) setErrors((e) => ({ ...e, brands: undefined })) }}
               required
-              error={errors.brand}
-              placeholder="Seleccionar…"
+              error={errors.brands}
+              placeholder="Seleccionar marcas…"
               createNewLabel="marca"
               onCreateNew={(n) => setQuickCreate({ type: "brand", defaultName: n })}
             />
+
+            {/* Subcategoría — visible solo si la categoría tiene subs */}
+            {subcategoryOptions.length > 0 && (
+              <SearchableSelect
+                name="subcategoryId"
+                label="Subcategoría"
+                options={subcategorySelectOptions}
+                value={selectedSubcatId ? String(selectedSubcatId) : ""}
+                onChange={(v) => setSelectedSubcatId(v ? Number(v) : null)}
+                placeholder="— Sin subcategoría —"
+              />
+            )}
+
+            {/* Modelo */}
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+                Modelo
+                <span className="ml-1.5 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-normal text-slate-500">Opcional</span>
+              </label>
+              <input
+                type="text"
+                value={modelo}
+                onChange={(e) => setModelo(e.target.value)}
+                placeholder="Ej: ANSI C135.1, Serie 6000"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
           </div>
 
           {/* Rating + flags */}
@@ -557,12 +605,16 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         <div className="flex items-center gap-4">
           <button
             type="submit"
-            disabled={saving}
+            disabled={createProduct.isPending || updateProduct.isPending}
             className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#1C2870] to-[#0ea5e9] px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#1C2870]/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-cyan-500/30 disabled:opacity-50 disabled:hover:scale-100"
           >
             <div className="absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0" />
             <Package className="relative z-10 h-4 w-4" />
-            <span className="relative z-10">{saving ? "Guardando cambios..." : isEdit ? "Actualizar producto" : "Publicar producto"}</span>
+            <span className="relative z-10">
+              {(createProduct.isPending || updateProduct.isPending) 
+                ? "Guardando cambios..." 
+                : isEdit ? "Actualizar producto" : "Publicar producto"}
+            </span>
           </button>
           
           <button

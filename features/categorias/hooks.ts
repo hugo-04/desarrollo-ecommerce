@@ -1,39 +1,81 @@
 "use client"
 
-/**
- * Hooks de React para categorías — para uso en Client Components.
- *
- * `useCategories` — carga todas las categorías al montar.
- * Expone `loading` y `error` para que el componente pueda mostrar
- * estados intermedios o mensajes de error sin conocer la fuente de datos.
- */
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { 
+  getCategoriesAction, 
+  getCategoriesPagedAction, 
+  createCategoryAction,
+  getCategoryByIdAction,
+  updateCategoryAction,
+  deleteCategoryAction
+} from "./actions"
 
-import { useState, useEffect } from "react"
-import { getCategoriesAction } from "./actions"
-import type { CategoryDTO } from "./types"
-import { log } from "@/lib/logger"
-
-interface UseCategoriesReturn {
-  categories: CategoryDTO[]
-  loading: boolean
-  /** Mensaje de error si la carga falló, o null si no hubo problema */
-  error: string | null
+// ─── Query Keys ──────────────────────────────────────────────────────────────
+export const categoryKeys = {
+  all: ["categories"] as const,
+  lists: () => [...categoryKeys.all, "list"] as const,
+  details: () => [...categoryKeys.all, "detail"] as const,
+  detail: (id: number) => [...categoryKeys.details(), id] as const,
+  infinite: (query: string) => [...categoryKeys.all, "infinite", query] as const,
 }
 
-export function useCategories(): UseCategoriesReturn {
-  const [categories, setCategories] = useState<CategoryDTO[]>([])
-  const [loading, setLoading]       = useState(true)
-  const [error, setError]           = useState<string | null>(null)
-
-  useEffect(() => {
-    getCategoriesAction()
-      .then((c) => { setCategories(c); setLoading(false) })
-      .catch((err: unknown) => {
-        log.error("[useCategories]", err)
-        setError("No se pudieron cargar las categorías")
-        setLoading(false)
-      })
-  }, [])
-
-  return { categories, loading, error }
+// ─── useCategories ─────────────────────────────────────────────────────────────
+export function useCategories() {
+  return useQuery({
+    queryKey: categoryKeys.lists(),
+    queryFn: getCategoriesAction,
+  })
 }
+
+// ─── useCategory ───────────────────────────────────────────────────────────────
+export function useCategory(id: number) {
+  return useQuery({
+    queryKey: categoryKeys.detail(id),
+    queryFn: () => getCategoryByIdAction(id),
+    enabled: !!id && !isNaN(id),
+  })
+}
+
+// ─── useInfiniteCategories ───────────────────────────────────────────────────
+export function useInfiniteCategories(query: string = "") {
+  return useInfiniteQuery({
+    queryKey: categoryKeys.infinite(query),
+    queryFn: ({ pageParam = 1 }) => getCategoriesPagedAction({ query, page: pageParam as number, limit: 15 }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => (lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined),
+  })
+}
+
+// ─── Mutaciones ───────────────────────────────────────────────────────────────
+
+export function useCreateCategory() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createCategoryAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: categoryKeys.all })
+    },
+  })
+}
+
+export function useUpdateCategory() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => updateCategoryAction(id, data),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: categoryKeys.all })
+      queryClient.invalidateQueries({ queryKey: categoryKeys.detail(id) })
+    },
+  })
+}
+
+export function useDeleteCategory() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => deleteCategoryAction(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: categoryKeys.all })
+    },
+  })
+}
+

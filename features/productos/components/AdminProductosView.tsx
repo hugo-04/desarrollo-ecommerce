@@ -14,6 +14,7 @@ import { DeleteDialog }      from "@/components/admin/DeleteDialog"
 import { AdminTableThumb }   from "@/components/admin/AdminTableThumb"
 import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
 import { Skeleton }          from "@/components/ui/skeleton"
+import { productKeys }       from "@/features/productos/hooks"
 
 function fmtDate(d?: string): string {
   if (!d) return "—"
@@ -60,11 +61,21 @@ function ProductRow({ product, index, removingId, onDelete }: ProductRowProps) {
         </span>
       </TableCell>
 
-      {/* Marca */}
+      {/* Marcas */}
       <TableCell className="px-4 py-3">
-        <span className="w-fit rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
-          {product.brand}
-        </span>
+        <div className="flex flex-wrap gap-1 max-w-[150px]">
+          {product.brands.slice(0, 2).map((b, i) => (
+            <span key={i} className="w-fit rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 truncate max-w-[100px]" title={b}>
+              {b}
+            </span>
+          ))}
+          {product.brands.length > 2 && (
+            <span className="w-fit rounded-md bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-600">
+              +{product.brands.length - 2}
+            </span>
+          )}
+          {product.brands.length === 0 && <span className="text-xs text-slate-300">—</span>}
+        </div>
       </TableCell>
 
       {/* Rating */}
@@ -141,6 +152,7 @@ export function AdminProductosView() {
   } = useAdminPagedList<Product>({
     pageSize: PAGE_SIZE,
     loadFn:   getProductsPagedAction,
+    queryKey: productKeys.lists(),
   })
 
   return (

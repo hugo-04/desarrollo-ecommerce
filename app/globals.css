@@ -6,44 +6,51 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Lorem Ipsum — Paleta base del template */
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
+  /* Electro Thina — Paleta corporativa */
+  --background: #F5F7FA;      /* Gris Claro — fondo general de página */
+  --foreground: #4A5568;      /* Gris Medio — texto principal */
+  --card: #ffffff;            /* Blanco — tarjetas de producto */
+  --card-foreground: #4A5568;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #334155;
+  --popover-foreground: #4A5568;
+  --primary: #0066B3;         /* Azul Confianza — nav, links, iconos */
   --primary-foreground: #ffffff;
-  --secondary: #64748b;
+  --secondary: #003D73;       /* Azul Profundo — header, footer */
   --secondary-foreground: #ffffff;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #475569;
+  --muted: #F5F7FA;
+  --muted-foreground: #4A5568;
+  --accent: #FF6B35;          /* Naranja Activo — CTAs, badges, ofertas */
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #334155;
+  --border: #dce3ed;
+  --input: #F5F7FA;
+  --ring: #0066B3;
   --radius: 0.75rem;
 
-  --chart-1: #334155;
-  --chart-2: #64748b;
-  --chart-3: #f59e0b;
-  --chart-4: #0284c7;
+  --chart-1: #0066B3;
+  --chart-2: #003D73;
+  --chart-3: #FF6B35;
+  --chart-4: #4A5568;
   --chart-5: #0d9488;
-  --electric: #f59e0b;
-  --electric-blue: #3b82f6;
+  --electric: #FF6B35;
+  --electric-blue: #0066B3;
+
+  /* Tokens de marca — uso directo con var() en componentes */
+  --brand-deep: #003D73;
+  --brand-trust: #0066B3;
+  --brand-orange: #FF6B35;
+  --brand-gray-light: #F5F7FA;
+  --brand-gray-mid: #4A5568;
 
   --sidebar: #ffffff;
-  --sidebar-foreground: #0f172a;
-  --sidebar-primary: #334155;
+  --sidebar-foreground: #4A5568;
+  --sidebar-primary: #0066B3;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1f5f9;
-  --sidebar-accent-foreground: #334155;
-  --sidebar-border: #e2e8f0;
-  --sidebar-ring: #334155;
+  --sidebar-accent: #F5F7FA;
+  --sidebar-accent-foreground: #003D73;
+  --sidebar-border: #dce3ed;
+  --sidebar-ring: #0066B3;
 }
 
 .dark {

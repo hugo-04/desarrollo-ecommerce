@@ -16,6 +16,8 @@ const rubik = Rubik({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 })
 
+import QueryProvider from "@/providers/QueryProvider"
+
 export const metadata = SEO.root
 
 /**
@@ -29,9 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${nunito.variable} ${rubik.variable}`}>
       <head>
-        <link rel="dns-prefetch" href="https://media.electrothina.com" />
+        <link rel="dns-prefetch" href="xxxxxxxxxxxxxxx" />
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -40,7 +42,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {children}
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   )

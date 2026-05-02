@@ -14,6 +14,7 @@ import { AdminPagination }   from "@/components/admin/AdminPagination"
 import { DeleteDialog }      from "@/components/admin/DeleteDialog"
 import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
 import { Skeleton }          from "@/components/ui/skeleton"
+import { brandKeys }         from "@/features/marcas/hooks"
 
 function fmtDate(d?: string): string {
   if (!d) return "—"
@@ -127,6 +128,7 @@ export function AdminMarcasView() {
   } = useAdminPagedList<Brand>({
     pageSize: PAGE_SIZE,
     loadFn:   getBrandsPagedAction,
+    queryKey: brandKeys.lists(),
   })
 
   return (

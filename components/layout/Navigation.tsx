@@ -9,9 +9,29 @@ import { IconChevronDown, IconChevronRight, IconFire } from "@/components/icons"
 import { useCategories } from "@/features/categorias/hooks"
 import { getCategoryIcon } from "@/lib/category-icons"
 
+import { useInfiniteCategories } from "@/features/categorias/hooks"
+import { Search, Loader2 } from "lucide-react"
+
 // ========== MEGA MENU (botón izquierdo) ==========
 function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boolean) => void }) {
-  const { categories } = useCategories()
+  const [search, setSearch] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300)
+    return () => clearTimeout(timer)
+  }, [search])
+
+  const { 
+    data, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    status 
+  } = useInfiniteCategories(debouncedSearch)
+
+  const categories = data?.pages.flatMap(page => page.data) ?? []
+  
   const [activeCategory, setActiveCategory] = useState<number | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -21,6 +41,17 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
   }, [isOpen, activeCategory, categories])
 
   useEffect(() => () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }, [])
+
+  // Ref para el scroll infinito
+  const observerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) fetchNextPage()
+    }, { threshold: 0.1 })
+    if (observerRef.current) observer.observe(observerRef.current)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   return (
     <div
@@ -51,37 +82,63 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
             style={{ border: "1px solid rgba(255,255,255,0.08)" }}
           >
             {/* Left Column */}
-            <div className="w-full sm:w-56 lg:w-64 shrink-0 bg-[#0B1035] p-3 max-h-[55vh] overflow-y-auto overscroll-contain">
+            <div className="w-full sm:w-56 lg:w-64 shrink-0 bg-[#003D73] p-3 max-h-[55vh] overflow-y-auto overscroll-contain custom-scrollbar">
               <h3 className="mb-3 px-3 text-[9px] font-bold uppercase tracking-[0.25em] text-slate-500">Nuestro Catálogo</h3>
-              <div className="space-y-0.5">
-                {categories.map((category) => {
-                  const Icon = getCategoryIcon(category.slug)
-                  const isActive = activeCategory === category.id
-                  return (
-                    <Link
-                      key={category.id}
-                      href={`/categoria/${category.slug}`}
-                      onMouseEnter={() => setActiveCategory(category.id)}
-                      onClick={() => setIsOpen(false)}
-                      className={`group relative flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition-all duration-150 ${
-                        isActive ? "bg-white/15 text-white" : "text-white/75 hover:bg-white/10 hover:text-white active:bg-white/15 active:text-white"
-                      }`}
-                    >
-                      {isActive && <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-red-500" />}
-                      <div className="flex items-center gap-3 pl-1">
-                        <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                          isActive ? "bg-red-500/20 text-red-400" : "bg-white/[0.05] text-white/40 group-hover:bg-white/15 group-hover:text-white group-active:bg-white/15 group-active:text-white"
-                        }`}>
-                          <Icon className="h-3.5 w-3.5" />
-                        </div>
-                        <span className="text-[12px] font-semibold">{category.name}</span>
-                      </div>
-                      <IconChevronRight className={`h-3 w-3 transition-all ${isActive ? "text-red-400 opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
-                    </Link>
-                  )
-                })}
+              
+              {/* Buscador interno del menú */}
+              <div className="px-1 mb-4">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-white/30" />
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar..."
+                    className="w-full rounded-lg bg-white/5 py-1.5 pl-8 pr-2 text-[11px] text-white outline-none ring-1 ring-white/10 transition-all focus:bg-white/10 focus:ring-[#FF6B35]/40"
+                  />
+                </div>
               </div>
 
+              <div className="space-y-0.5">
+                {status === "pending" ? (
+                  <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-white/20" /></div>
+                ) : categories.length === 0 ? (
+                  <p className="py-4 text-center text-[11px] text-white/40 italic">No hay resultados</p>
+                ) : (
+                  <>
+                    {categories.map((category) => {
+                      const Icon = getCategoryIcon(category.slug)
+                      const isActive = activeCategory === category.id
+                      return (
+                        <Link
+                          key={category.id}
+                          href={`/categoria/${category.slug}`}
+                          onMouseEnter={() => setActiveCategory(category.id)}
+                          onClick={() => setIsOpen(false)}
+                          className={`group relative flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition-all duration-150 ${
+                            isActive ? "bg-white/15 text-white" : "text-white/75 hover:bg-white/10 hover:text-white active:bg-white/15 active:text-white"
+                          }`}
+                        >
+                          {isActive && <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-[#FF6B35]" />}
+                          <div className="flex items-center gap-3 pl-1">
+                            <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                              isActive ? "bg-[#FF6B35]/20 text-[#FF6B35]" : "bg-white/5 text-white/40 group-hover:bg-white/15 group-hover:text-white group-active:bg-white/15 group-active:text-white"
+                            }`}>
+                              <Icon className="h-3.5 w-3.5" />
+                            </div>
+                            <span className="text-[12px] font-semibold">{category.name}</span>
+                          </div>
+                          <IconChevronRight className={`h-3 w-3 transition-all ${isActive ? "text-[#FF6B35] opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
+                        </Link>
+                      )
+                    })}
+                    {/* Infinite Scroll Trigger */}
+                    <div ref={observerRef} className="h-4 w-full">
+                      {isFetchingNextPage && <div className="flex justify-center py-2"><Loader2 className="h-3 w-3 animate-spin text-white/20" /></div>}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
 
             <div className="w-px bg-white/[0.06] shrink-0 hidden sm:block" />
@@ -93,35 +150,30 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                 if (!activeCat) return null
                 return (
                   <div className="animate-in fade-in slide-in-from-left-2 duration-200">
-                    <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 sm:px-6 sm:py-4">
-                      <div>
-                        <h2 className="text-base font-extrabold text-[#121A47] sm:text-lg">{activeCat.name}</h2>
-                        <p className="mt-0.5 text-xs text-slate-500">
-                          Más de <span className="font-bold text-primary">{activeCat.count}</span> productos
-                        </p>
-                      </div>
-                      <Link
-                        href={`/categoria/${activeCat.slug}`}
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary/20"
-                      >
-                        Ver Todo <IconChevronRight className="h-3 w-3" />
-                      </Link>
+                    <div className="border-b border-slate-100 px-4 py-3 sm:px-6 sm:py-4">
+                      <h2 className="text-base font-extrabold text-[#003D73] sm:text-lg">{activeCat.name}</h2>
+                      <p className="mt-0.5 text-xs text-slate-500">
+                        Más de <span className="font-bold text-primary">{activeCat.count}</span> productos
+                      </p>
                     </div>
                     <div className="p-3 sm:p-5">
-                      <div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
-                        {activeCat.subcategories.map((sub, index) => (
-                          <Link
-                            key={index}
-                            href={`/categoria/${activeCat.slug}`}
-                            onClick={() => setIsOpen(false)}
-                            className="group flex items-center gap-2 rounded-lg border border-transparent px-3 py-2 transition-all hover:border-slate-200 hover:bg-slate-50"
-                          >
-                            <IconChevronRight className="h-3 w-3 shrink-0 text-slate-300 transition-colors group-hover:text-primary" />
-                            <span className="text-[12px] font-medium text-slate-600 transition-colors group-hover:text-primary">{sub}</span>
-                          </Link>
-                        ))}
-                      </div>
+                      {activeCat.subcategories && activeCat.subcategories.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
+                          {activeCat.subcategories.map((sub, index) => (
+                            <Link
+                              key={index}
+                              href={`/categoria/${activeCat.slug}`}
+                              onClick={() => setIsOpen(false)}
+                              className="group flex items-center gap-2 rounded-lg border border-transparent px-3 py-2 transition-all hover:border-slate-200 hover:bg-slate-50"
+                            >
+                              <IconChevronRight className="h-3 w-3 shrink-0 text-slate-300 transition-colors group-hover:text-primary" />
+                              <span className="text-[12px] font-medium text-slate-600 transition-colors group-hover:text-primary">{sub}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-slate-400 italic">No hay subcategorías registradas</p>
+                      )}
                     </div>
                   </div>
                 )
@@ -136,7 +188,34 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
 
 // ========== CATEGORIES DROPDOWN (en tab Catálogo del FluidNav) ==========
 function CatalogDropdown({ onClose }: { onClose: () => void }) {
-  const { categories } = useCategories()
+  const [search, setSearch] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300)
+    return () => clearTimeout(timer)
+  }, [search])
+
+  const { 
+    data, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    status 
+  } = useInfiniteCategories(debouncedSearch)
+
+  const categories = data?.pages.flatMap(page => page.data) ?? []
+
+  // Ref para el scroll infinito
+  const observerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) fetchNextPage()
+    }, { threshold: 0.1 })
+    if (observerRef.current) observer.observe(observerRef.current)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   return (
     <motion.div
@@ -144,16 +223,26 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 6, scale: 0.97 }}
       transition={{ duration: 0.15 }}
-      className="absolute top-full left-1/2 z-50 mt-2 w-72 -translate-x-1/2 overflow-hidden rounded-2xl bg-[#0d1440] shadow-2xl"
+      className="absolute top-full left-1/2 z-50 mt-2 w-72 -translate-x-1/2 overflow-hidden rounded-2xl bg-[#002a5c] shadow-2xl"
       style={{ border: "1px solid rgba(255,255,255,0.07)" }}
     >
-      {/* Header */}
-      <div className="border-b border-white/[0.06] px-4 py-3">
+      {/* Header + Search */}
+      <div className="border-b border-white/[0.06] px-4 py-3 space-y-3">
         <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-500">Categorías</p>
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-white/30" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar..."
+            className="w-full rounded-md bg-white/5 py-1.5 pl-7 pr-2 text-[10px] text-white outline-none transition-all focus:bg-white/10"
+          />
+        </div>
       </div>
 
       {/* Lista de categorías */}
-      <div className="max-h-[60vh] overflow-y-auto py-2">
+      <div className="max-h-[60vh] overflow-y-auto py-2 custom-scrollbar">
         {/* Opción — Ver todo el catálogo */}
         <Link
           href="/catalogo"
@@ -161,30 +250,41 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
           className="group flex items-center justify-between px-4 py-2.5 text-sm transition-colors hover:bg-white/[0.06]"
         >
           <span className="font-semibold text-white/90">Ver todo el catálogo</span>
-          <span className="rounded-md bg-red-500/15 px-2 py-0.5 text-[10px] font-bold text-red-400">Todo</span>
+          <span className="rounded-md bg-[#FF6B35]/15 px-2 py-0.5 text-[10px] font-bold text-[#FF6B35]">Todo</span>
         </Link>
 
         <div className="mx-4 my-1.5 h-px bg-white/[0.05]" />
 
-        {categories.map((cat) => {
-          const Icon = getCategoryIcon(cat.slug)
-          return (
-            <Link
-              key={cat.id}
-              href={`/categoria/${cat.slug}`}
-              onClick={onClose}
-              className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/[0.06]"
-            >
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.05] text-white/40 transition-colors group-hover:bg-red-500/20 group-hover:text-red-400">
-                <Icon className="h-3.5 w-3.5" />
-              </div>
-              <span className="flex-1 truncate text-[13px] font-medium text-white/60 transition-colors group-hover:text-white">
-                {cat.name}
-              </span>
-              <span className="text-[10px] text-white/20 group-hover:text-white/40">{cat.count}</span>
-            </Link>
-          )
-        })}
+        {status === "pending" ? (
+          <div className="flex justify-center py-4"><Loader2 className="h-4 w-4 animate-spin text-white/20" /></div>
+        ) : categories.length === 0 ? (
+          <p className="py-4 text-center text-[11px] text-white/40 italic">No hay resultados</p>
+        ) : (
+          <>
+            {categories.map((cat) => {
+              const Icon = getCategoryIcon(cat.slug)
+              return (
+                <Link
+                  key={cat.id}
+                  href={`/categoria/${cat.slug}`}
+                  onClick={onClose}
+                  className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/[0.06]"
+                >
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/40 transition-colors group-hover:bg-[#FF6B35]/20 group-hover:text-[#FF6B35]">
+                    <Icon className="h-3.5 w-3.5" />
+                  </div>
+                  <span className="flex-1 truncate text-[13px] font-medium text-white/60 transition-colors group-hover:text-white">
+                    {cat.name}
+                  </span>
+                  <span className="text-[10px] text-white/20 group-hover:text-white/40">{cat.count}</span>
+                </Link>
+              )
+            })}
+            <div ref={observerRef} className="h-4 w-full">
+               {isFetchingNextPage && <div className="flex justify-center py-2"><Loader2 className="h-3 w-3 animate-spin text-white/20" /></div>}
+            </div>
+          </>
+        )}
       </div>
     </motion.div>
   )
@@ -211,11 +311,9 @@ function FluidNav() {
   const activeIndex = (() => {
     const i = tabs.findIndex(t => pathname === t.id || (t.id !== "/" && pathname.startsWith(t.id)))
     if (i !== -1) return i
-    if (pathname.startsWith("/producto")) return tabs.findIndex(t => t.id === "/catalogo")
+    if (pathname.startsWith("/producto") || pathname.startsWith("/categoria")) return tabs.findIndex(t => t.id === "/catalogo")
     return 0
   })()
-  const hoveredIndex = tabs.findIndex(t => t.id === hoveredTab)
-
   // Cierra el dropdown al hacer click fuera
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -228,26 +326,16 @@ function FluidNav() {
   }, [catalogOpen])
 
   return (
-    <div className="hidden lg:block shrink-0 rounded-full bg-black/15 p-1 shadow-inner backdrop-blur-sm">
+    <div className="hidden lg:flex items-center shrink-0">
       <div className="relative flex items-center" style={{ width: TAB_W * tabs.length }}>
-        {/* Active pill */}
+
+        {/* Línea inferior animada — indicador de tab activo */}
         <motion.div
-          className="absolute inset-y-[3px] left-0 rounded-full bg-white shadow-sm"
+          className="absolute bottom-0 left-0 h-[2px] rounded-full bg-[#FF6B35]"
           initial={false}
-          animate={{ x: activeIndex * TAB_W + TAB_GAP / 2 }}
-          transition={{ type: "spring", stiffness: 380, damping: 32 }}
-          style={{ width: TAB_W - TAB_GAP }}
+          animate={{ x: activeIndex * TAB_W + TAB_GAP / 2, width: TAB_W - TAB_GAP }}
+          transition={{ type: "spring", stiffness: 400, damping: 34 }}
         />
-        {/* Hover pill */}
-        {hoveredIndex !== -1 && hoveredIndex !== activeIndex && (
-          <motion.div
-            className="absolute inset-y-[3px] left-0 rounded-full bg-white/30"
-            initial={false}
-            animate={{ x: hoveredIndex * TAB_W + TAB_GAP / 2 }}
-            transition={{ type: "spring", stiffness: 480, damping: 32 }}
-            style={{ width: TAB_W - TAB_GAP }}
-          />
-        )}
 
         {tabs.map((tab, index) => {
           const isActive = index === activeIndex
@@ -272,18 +360,17 @@ function FluidNav() {
                 <button
                   onClick={() => setCatalogOpen((v) => !v)}
                   style={{ width: TAB_W }}
-                  className={`relative z-10 flex items-center justify-center gap-1 py-2.5 text-[13px] font-semibold transition-colors duration-200 ${
-                    isActive ? "text-[#121A47]" : "text-white"
+                  className={`flex items-center justify-center gap-1 py-2.5 pb-3 text-[13px] font-semibold transition-colors duration-200 ${
+                    isActive ? "text-white" : "text-white/60 hover:text-white/90"
                   }`}
                 >
-                  <span className="opacity-80">{tab.icon}</span>
+                  <span className="opacity-75">{tab.icon}</span>
                   <span>{tab.label}</span>
                   <ChevronDown
                     size={11}
-                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} ${isActive ? "text-[#121A47]/60" : "text-white/40"}`}
+                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} opacity-60`}
                   />
                 </button>
-
                 <AnimatePresence>
                   {catalogOpen && <CatalogDropdown onClose={() => setCatalogOpen(false)} />}
                 </AnimatePresence>
@@ -298,11 +385,11 @@ function FluidNav() {
               onMouseEnter={() => setHoveredTab(tab.id)}
               onMouseLeave={() => setHoveredTab(null)}
               style={{ width: TAB_W }}
-              className={`relative z-10 flex items-center justify-center gap-1.5 py-2.5 text-[13px] font-semibold transition-colors duration-200 ${
-                isActive ? "text-[#121A47]" : "text-white"
+              className={`flex items-center justify-center gap-1.5 py-2.5 pb-3 text-[13px] font-semibold transition-colors duration-200 ${
+                isActive ? "text-white" : "text-white/60 hover:text-white/90"
               }`}
             >
-              <span className="opacity-80">{tab.icon}</span>
+              <span className="opacity-75">{tab.icon}</span>
               <span>{tab.label}</span>
             </Link>
           )
@@ -342,11 +429,11 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
           <motion.div
             initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className="fixed inset-y-0 left-0 z-[70] flex w-[300px] flex-col bg-gradient-to-b from-[#0a0f2c] to-[#121A47] shadow-2xl"
+            className="fixed inset-y-0 left-0 z-[70] flex w-[300px] flex-col bg-gradient-to-b bg-[#001f46] bg-[#002a5c] shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
-              <img src="/logo/logotipo.png" alt="Electro Thina" className="h-8 w-auto object-contain"
+              <img src="/logo/logotipo.svg" alt="Electro Thina" className="h-8 w-auto object-contain"
                 style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.6)) brightness(1.3)" }} />
               <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white">
                 <X size={16} />
@@ -363,9 +450,9 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
                       isActive ? "bg-white/15 text-white" : "text-white/60 hover:bg-white/10 hover:text-white"
                     }`}
                   >
-                    <span className={isActive ? "text-red-400" : "text-white/40"}>{tab.icon}</span>
+                    <span className={isActive ? "text-[#FF6B35]" : "text-white/40"}>{tab.icon}</span>
                     {tab.label}
-                    {isActive && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-red-500" />}
+                    {isActive && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#FF6B35]" />}
                   </Link>
                 )
               })}
@@ -429,7 +516,7 @@ export function Navigation() {
               <Link
                 href="/catalogo?bestSellers=true"
                 aria-label="Más Vendidos"
-                className="flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-700 sm:gap-2 sm:px-4"
+                className="flex items-center gap-1.5 rounded-lg bg-[#FF6B35] px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#e55a2a] sm:gap-2 sm:px-4"
               >
                 <IconFire className="h-4 w-4" />
                 <span className="hidden sm:inline">Mas Vendidos</span>

@@ -63,7 +63,7 @@ export function TerminosView() {
         </div>
 
         {/* Footer legal */}
-        <div className="mt-10 rounded-2xl bg-[#1e293b] p-7 text-center">
+        <div className="mt-10 rounded-2xl -[#003D73] p-7 text-center">
           <p className="mb-2 text-sm font-semibold text-white">¿Tienes preguntas sobre estos términos?</p>
           <p className="mb-5 text-xs text-slate-400">Contáctanos directamente y te responderemos a la brevedad.</p>
           <Link href="/contacto" className="inline-flex items-center gap-2 rounded-xl bg-slate-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-slate-700">

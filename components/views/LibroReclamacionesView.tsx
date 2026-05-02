@@ -131,7 +131,7 @@ export function LibroReclamacionesView() {
           </p>
           <button
             onClick={() => (window.location.href = "/")}
-            className="mt-8 rounded-xl bg-[#121A47] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#1C2870]"
+            className="mt-8 rounded-xl bg-[#002a5c] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#1C2870]"
           >
             Volver al inicio
           </button>
@@ -144,7 +144,7 @@ export function LibroReclamacionesView() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="bg-[#121A47] py-8 text-white">
+      <div className="-[#002a5c] py-8 text-white">
         <div className="mx-auto max-w-3xl px-4">
           <div className="mb-3 flex items-center gap-2 text-xs text-slate-400">
             <span>Inicio</span>
@@ -194,7 +194,7 @@ export function LibroReclamacionesView() {
         {/* ── Sección 1: Datos del consumidor ──────────────────────────────── */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#121A47]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#121A47] text-[11px] font-extrabold text-white">1</span>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#002a5c] text-[11px] font-extrabold text-white">1</span>
             Datos del Consumidor
           </h2>
 
@@ -292,7 +292,7 @@ export function LibroReclamacionesView() {
         {/* ── Sección 2: Tipo de reclamo ────────────────────────────────────── */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#121A47]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#121A47] text-[11px] font-extrabold text-white">2</span>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#002a5c] text-[11px] font-extrabold text-white">2</span>
             Tipo de Reclamo
           </h2>
 
@@ -341,7 +341,7 @@ export function LibroReclamacionesView() {
         {/* ── Sección 3: Detalle del reclamo ───────────────────────────────── */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <h2 className="mb-5 flex items-center gap-2 text-sm font-bold text-[#121A47]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#121A47] text-[11px] font-extrabold text-white">3</span>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#002a5c] text-[11px] font-extrabold text-white">3</span>
             Detalle del Reclamo
           </h2>
 
@@ -414,7 +414,7 @@ export function LibroReclamacionesView() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-xl bg-gradient-to-r from-[#121A47] to-[#1C2870] py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.01] hover:shadow-xl disabled:opacity-60 disabled:hover:scale-100"
+          className="w-full rounded-xl bg-gradient-to-r bg-[#002a5c] to-[#1C2870] py-4 text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.01] hover:shadow-xl disabled:opacity-60 disabled:hover:scale-100"
         >
           {saving ? "Registrando reclamo..." : "Enviar Reclamo"}
         </button>

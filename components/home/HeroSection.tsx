@@ -1,158 +1,222 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import { IconArrowRight, IconPhone } from "@/components/icons"
 
-import { fadeUp, staggerContainer, scaleUp, viewportOnce, useCountUp } from "@/hooks/useAnimations"
-import { IconBox, IconCertificate, IconBuilding, IconTruck, IconArrowRight, IconPhone } from "@/components/icons"
+// TODO: cuando haya imágenes reales, reemplazar `bg` por src de media.electrothina.com
+const SLIDES = [
+  { label: "Alta y Media Tensión",   bg: "from-[#003D73] via-[#00316b] to-[#00244f]" },
+  { label: "Ferretería Industrial",  bg: "from-[#004d8f] via-[#003d72] to-[#002a52]" },
+  { label: "Distribución Eléctrica", bg: "from-[#002a5c] via-[#001f46] to-[#001530]" },
+]
 
-function StatCard({ value, label, icon: Icon, suffix, index, wide }: {
-  value: number; label: string; icon: React.ComponentType<{className?: string}>; suffix: string; index: number; wide?: boolean;
-}) {
-  const { count, ref } = useCountUp(value, 2000)
-  return (
-    <motion.div
-      ref={ref}
-      variants={{
-        hidden: { opacity: 0, scale: 0.85, y: 30 },
-        visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 80, damping: 15, delay: index * 0.15 } }
-      }}
-      className={`group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0b122e]/60 p-6 backdrop-blur-2xl transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(204,27,27,0.2)] hover:border-slate-500/40 hover:bg-[#1e293b]/80 ${wide ? 'col-span-2 sm:col-span-2' : ''}`}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-500/10 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-      
-      {/* Decorative tech blur */}
-      <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-blue-500/10 blur-[30px] transition-all duration-700 group-hover:bg-slate-500/20 group-hover:blur-[40px]" />
-      
-      <div className="relative flex flex-col h-full justify-between">
-        <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-slate-500/20 to-slate-500/5 ring-1 ring-slate-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${wide ? 'group-hover:translate-x-3' : ''}`}>
-          <Icon className="h-6 w-6 text-slate-500" />
-        </div>
-        <div>
-          <p className="text-3xl font-black tracking-tight text-white lg:text-[2.25rem]">{count}{suffix}</p>
-          <p className="mt-1 text-[11px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-slate-200 transition-colors">{label}</p>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
+const STATS = [
+  { value: "1162", label: "Productos" },
+  { value: "350+", label: "Clientes"  },
+  { value: "12+",  label: "Años"      },
+  { value: "48h",  label: "Despacho"  },
+]
 
 export function HeroSection() {
-  const stats = [
-    { value: 1162, label: "Lorem Ipsum Dolor", icon: IconBox, suffix: "", wide: false },
-    { value: 350, label: "Lorem Ipsum Amet", icon: IconBuilding, suffix: "+", wide: false },
-    { value: 12, label: "Lorem Ipsum Sit", icon: IconCertificate, suffix: "+", wide: false },
-    { value: 48, label: "Lorem Ipsum Consectetur Adipiscing Elit Lorem Ipsum", icon: IconTruck, suffix: "", wide: true },
-  ]
+  const [current, setCurrent] = useState(0)
 
-  // No more scroll-driven parallax hooks here
-
+  useEffect(() => {
+    const t = setInterval(() => setCurrent(p => (p + 1) % SLIDES.length), 5000)
+    return () => clearInterval(t)
+  }, [])
 
   return (
-    <section className="relative overflow-hidden mb-12 voltage-scan-wrap arc-flash-wrap">
-      {/* === BACKGROUND === */}
+    <section className="relative min-h-[85vh] overflow-hidden sm:min-h-[75vh] lg:min-h-[600px]">
+
+      {/* ── FONDO: carrusel cubre todo el hero ─────────────────────────────── */}
       <div className="absolute inset-0">
-        <Image
-          src="/banner.jpg"
-          alt="Lorem ipsum dolor sit amet"
-          fill
-          priority
-          fetchPriority="high"
-          quality={60}
-          sizes="100vw"
-          className="object-cover"
-        />
-      </div>
-
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#050C2A]/90 via-[#0a1236]/80 to-[#020617]/95 backdrop-blur-[2px]" />
-
-      {/* Circuit board pattern — evoca PCB / tablero eléctrico */}
-      <div className="absolute inset-0 opacity-[0.05] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'60\' height=\'60\' fill=\'none\'/%3E%3Cpath d=\'M0 30h25M35 30h25M30 0v25M30 35v25\' stroke=\'%23f8fafc\' stroke-width=\'.8\'/%3E%3Crect x=\'26\' y=\'26\' width=\'8\' height=\'8\' fill=\'none\' stroke=\'%23f8fafc\' stroke-width=\'.8\'/%3E%3Ccircle cx=\'0\' cy=\'0\' r=\'2\' fill=\'%23ef4444\'/%3E%3C/svg%3E")' }} />
-
-      {/* Top red accent line */}
-      <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-[#64748b] to-transparent shadow-[0_0_15px_rgba(204,27,27,0.8)]" />
-
-      {/* Decorative bolt SVG — identidad eléctrica */}
-      <div className="absolute right-[6%] top-[10%] hidden lg:block electric-pulse" style={{ borderRadius: '50%' }}>
-        <svg width="120" height="140" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" className="float-slow opacity-[0.18]">
-          <polygon points="70,0 20,75 58,75 50,140 100,55 62,55" fill="none" stroke="#22d3ee" strokeWidth="2" strokeLinejoin="round"/>
-          <polygon points="70,0 20,75 58,75 50,140 100,55 62,55" fill="rgba(34,211,238,0.08)"/>
-        </svg>
-      </div>
-      <div className="absolute right-[12%] top-[8%] hidden h-28 w-28 -rotate-12 rounded-3xl border border-amber-400/[0.08] lg:block float" />
-
-      <div className="relative mx-auto max-w-7xl px-4 py-24 lg:py-32">
-        <div className="grid items-center gap-16 lg:grid-cols-12">
-          {/* LEFT — Content */}
+        <AnimatePresence mode="wait">
           <motion.div
-            className="lg:col-span-7"
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
+            key={current}
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
+            className={`absolute inset-0 bg-linear-to-br ${SLIDES[current].bg}`}
           >
-            <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-slate-500/30 bg-slate-500/10 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#f8fafc] backdrop-blur-md">
-              <span className="flex h-2 w-2 rounded-full bg-slate-500 animate-pulse" />
-              Lorem Ipsum Dolor Sit Amet
-            </motion.div>
+            {/* Patrón de puntos sutil sobre el fondo */}
+            <div
+              className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+                backgroundSize: "30px 30px",
+              }}
+            />
 
-            <motion.div variants={fadeUp} className="mb-8 flex items-center gap-2.5">
-              <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-4 py-1.5 text-[11px] font-bold tracking-widest backdrop-blur-md" style={{ color: 'var(--electric)' }}>
-                <span className="electric-pulse h-1.5 w-1.5 rounded-full" style={{ backgroundColor: 'var(--electric)', display: 'inline-block' }} />
-                Lorem A
-              </span>
-              <span className="text-white/20 text-xs font-light">—</span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-sky-400/20 bg-sky-400/[0.06] px-4 py-1.5 text-[11px] font-bold tracking-widest text-sky-400 backdrop-blur-md">
-                Lorem B
-              </span>
-              <span className="text-white/30 text-[10px] font-medium tracking-wider">Lorem C</span>
-            </motion.div>
+            {/* Rayo decorativo — identidad eléctrica */}
+            <div className="absolute right-[8%] top-[12%] hidden lg:block">
+              <svg width="110" height="128" viewBox="0 0 120 140" fill="none" className="opacity-[0.07]">
+                <polygon points="70,0 20,75 58,75 50,140 100,55 62,55" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinejoin="round"/>
+                <polygon points="70,0 20,75 58,75 50,140 100,55 62,55" fill="rgba(255,255,255,0.04)"/>
+              </svg>
+            </div>
 
-            <motion.h1 variants={fadeUp} className="mb-8 text-balance text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[3.5rem]">
-              Lorem Ipsum Dolor Sit Amet
-              <span
-                className="mt-2 block bg-gradient-to-r from-slate-400 via-slate-500 to-[#64748b] bg-clip-text text-transparent"
-              >
-                Consectetur Adipiscing Elit
-              </span>
-            </motion.h1>
+            {/* Gradiente oscuro en la zona del texto para mejor legibilidad */}
+            <div className="absolute inset-0 bg-linear-to-r from-black/50 via-black/20 to-transparent" />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-            <motion.p variants={fadeUp} className="mb-12 max-w-xl text-base leading-[1.8] text-white/90 sm:text-[1.05rem]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.
-            </motion.p>
+      {/* Línea superior de acento naranja */}
+      <div className="absolute inset-x-0 top-0 z-10 h-[3px] bg-linear-to-r from-transparent via-[#FF6B35]/80 to-transparent" />
 
-            <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5">
-              <Link href="/catalogo" className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#64748b] to-[#475569] px-9 py-4 text-sm font-bold text-white shadow-2xl shadow-slate-600/30 transition-all duration-300 hover:shadow-slate-600/50 hover:scale-[1.03]">
-                <span className="relative z-10">Ver Catálogo</span>
-                <IconArrowRight className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#475569] to-[#334155] opacity-0 transition-opacity group-hover:opacity-100" />
-              </Link>
-              <Link href="/contacto" className="group inline-flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.04] px-9 py-4 text-sm font-semibold text-white/90 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:border-slate-500/30 hover:text-white">
-                <IconPhone className="h-4 w-4 text-slate-500 transition-colors group-hover:text-slate-400" />
-                Contáctanos
-              </Link>
-            </motion.div>
+      {/* ── CONTENIDO: sobre el fondo ──────────────────────────────────────── */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:py-24 lg:py-32">
+        <div className="max-w-2xl">
+
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-white/80 backdrop-blur-sm"
+          >
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#FF6B35]" />
+            Ferretería Eléctrica AT/MT — Lima, Perú
           </motion.div>
 
-          {/* RIGHT — Stats Grid */}
-          <motion.div
-            className="lg:col-span-5"
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.15, delayChildren: 0.4 } },
-            }}
+          {/* Título */}
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.07, ease: "easeOut" }}
+            className="mb-5 text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-[3.2rem]"
           >
-            <div className="grid grid-cols-2 gap-4 lg:gap-5">
-              {stats.map((stat, index) => (
-                <StatCard key={index} {...stat} index={index} />
+            Soluciones en<br />
+            <span className="text-[#FF6B35]">Alta &amp; Media Tensión</span>
+          </motion.h1>
+
+          {/* Descripción */}
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.13, ease: "easeOut" }}
+            className="mb-8 max-w-lg text-[0.95rem] leading-[1.8] text-white/70 sm:text-base"
+          >
+            Fabricantes y distribuidores de ferretería y accesorios eléctricos para
+            alta y media tensión. Atendemos proyectos industriales, mineros y de
+            construcción en todo el Perú.
+          </motion.p>
+
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.18, ease: "easeOut" }}
+            className="mb-9 grid grid-cols-4 gap-2 sm:gap-3"
+          >
+            {STATS.map((s) => (
+              <div
+                key={s.label}
+                className="rounded-xl border border-white/15 bg-white/10 px-2 py-3 text-center backdrop-blur-sm"
+              >
+                <p className="text-lg font-black text-white sm:text-xl lg:text-2xl">{s.value}</p>
+                <p className="mt-0.5 text-[9px] font-bold uppercase tracking-wider text-white/50 sm:text-[10px]">
+                  {s.label}
+                </p>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.22, ease: "easeOut" }}
+            className="flex flex-wrap gap-3"
+          >
+            <Link
+              href="/catalogo"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#FF6B35] px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#FF6B35]/30 transition-all duration-200 hover:bg-[#e55a2a] hover:scale-[1.02]"
+            >
+              Ver Catálogo
+              <IconArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/contacto"
+              className="inline-flex items-center gap-2.5 rounded-xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white/85 backdrop-blur-sm transition-all duration-200 hover:bg-white/18 hover:text-white"
+            >
+              <IconPhone className="h-4 w-4 text-[#FF6B35]" />
+              Contáctanos
+            </Link>
+          </motion.div>
+
+        </div>
+
+        {/* ── Indicador de slide — barra + contador + etiqueta ─────────────── */}
+        <div className="absolute bottom-6 left-4 right-4 sm:left-auto sm:right-8 flex items-end justify-between sm:justify-end gap-6">
+
+          {/* Etiqueta del slide — sólo desktop a la izquierda */}
+          <div className="hidden sm:block">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={current}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.3 }}
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white/80 backdrop-blur-sm"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35]" />
+                {SLIDES[current].label}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+
+          {/* Barras de progreso + contador */}
+          <div className="flex flex-col items-end gap-2">
+            {/* Contador */}
+            <div className="flex items-baseline gap-1">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={current}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.25 }}
+                  className="text-lg font-black text-white tabular-nums leading-none"
+                >
+                  {String(current + 1).padStart(2, '0')}
+                </motion.span>
+              </AnimatePresence>
+              <span className="text-[10px] font-bold text-white/40">/ {String(SLIDES.length).padStart(2, '0')}</span>
+            </div>
+
+            {/* Barras */}
+            <div className="flex gap-1.5">
+              {SLIDES.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  aria-label={`Slide ${i + 1}`}
+                  className="relative h-[3px] rounded-full overflow-hidden transition-all duration-300"
+                  style={{ width: i === current ? '40px' : '16px', background: 'rgba(255,255,255,0.2)' }}
+                >
+                  {i === current && (
+                    <motion.span
+                      className="absolute inset-y-0 left-0 rounded-full"
+                      style={{ background: '#FF6B35' }}
+                      initial={{ width: 0 }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 5, ease: 'linear' }}
+                    />
+                  )}
+                  {i < current && (
+                    <span className="absolute inset-0 rounded-full" style={{ background: 'rgba(255,107,53,0.5)' }} />
+                  )}
+                </button>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
+
       </div>
     </section>
   )

@@ -21,8 +21,8 @@ export function ProcesoSection() {
       variants={staggerContainer}
       className="relative overflow-hidden py-32"
     >
-      <div className="absolute inset-0 bg-slate-50" />
-      <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-slate-100 to-transparent" />
+      <div className="absolute inset-0 bg-[#F5F7FA]" />
+      <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#eef1f7] to-transparent" />
       <div
         className="absolute inset-0 opacity-30"
         style={{
@@ -34,11 +34,11 @@ export function ProcesoSection() {
       <div className="relative mx-auto max-w-7xl px-4">
         <motion.div variants={fadeUp} className="mb-14 text-center">
           <div className="mb-4 flex items-center justify-center gap-3">
-            <div className="h-px w-8 bg-slate-500" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">
+            <div className="h-px w-8 bg-[#0066B3]" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#0066B3]">
               {PROCESO_CONTENT.badge}
             </span>
-            <div className="h-px w-8 bg-slate-500" />
+            <div className="h-px w-8 bg-[#0066B3]" />
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">
             {PROCESO_CONTENT.title}
@@ -54,7 +54,7 @@ export function ProcesoSection() {
         >
           <div className="absolute left-[16.66%] right-[16.66%] top-[2.2rem] hidden h-[2px] md:block overflow-hidden bg-slate-200">
             <motion.div
-              className="h-full w-1/3 bg-gradient-to-r from-transparent via-slate-500 to-transparent"
+              className="h-full w-1/3 bg-gradient-to-r from-transparent via-[#FF6B35] to-transparent"
               animate={{ x: ["-100%", "300%"] }}
               transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
             />
@@ -90,11 +90,11 @@ export function ProcesoSection() {
         <motion.div variants={fadeUp} className="mt-12 flex justify-center">
           <Link
             href={PROCESO_CONTENT.ctaHref}
-            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#1c2870] to-[#121a47] px-10 py-4 text-sm font-bold text-white shadow-xl shadow-[#1c2870]/20 transition-all duration-300 hover:shadow-2xl hover:shadow-[#1c2870]/30 hover:-translate-y-1"
+            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#FF6B35] to-[#e55a2a] px-10 py-4 text-sm font-bold text-white shadow-xl shadow-[#FF6B35]/20 transition-all duration-300 hover:shadow-2xl hover:shadow-[#FF6B35]/30 hover:-translate-y-1"
           >
             <span className="relative z-10">{PROCESO_CONTENT.ctaLabel}</span>
             <IconArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#64748b] to-[#475569] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#e55a2a] to-[#cc4a1e] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           </Link>
         </motion.div>
       </div>

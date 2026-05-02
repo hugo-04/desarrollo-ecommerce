@@ -89,7 +89,7 @@ export function GrupoEmpresarialSection() {
                 }`}
               >
                 {/* Top accent line */}
-                <div className={`absolute inset-x-0 top-0 h-[2px] ${empresa.actual ? "bg-gradient-to-r from-red-500/0 via-red-500 to-red-500/0" : "bg-gradient-to-r from-[#121A47]/0 via-[#121A47]/30 to-[#121A47]/0 opacity-0 group-hover:opacity-100 transition-opacity"}`} />
+                <div className={`absolute inset-x-0 top-0 h-[2px] ${empresa.actual ? "bg-gradient-to-r from-red-500/0 via-red-500 to-red-500/0" : "bg-gradient-to-r bg-[#002a5c]/0 bg-[#002a5c]/30 bg-[#002a5c]/0 opacity-0 group-hover:opacity-100 transition-opacity"}`} />
 
                 {/* Corner circuit decoration */}
                 <div className="absolute right-3 top-3 opacity-10">
@@ -161,7 +161,7 @@ export function GrupoEmpresarialSection() {
 
 export function GrupoEmpresarialBand() {
   return (
-    <section className="relative overflow-hidden bg-[#121A47] py-12">
+    <section className="relative overflow-hidden bg-[#002a5c] py-12">
       {/* Separador superior rojo — contrasta con secciones adyacentes */}
       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />

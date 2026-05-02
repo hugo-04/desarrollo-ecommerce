@@ -64,7 +64,10 @@ export async function getActiveFilterOptionsAction(): Promise<{
     db.brand.findMany({
       where: { products: { some: {} } },
       orderBy: { name: "asc" },
-      select: { name: true },
+      select: { 
+        name: true,
+        _count: { select: { products: true } }
+      },
     }),
   ])
 
@@ -86,9 +89,12 @@ export async function getActiveFilterOptionsAction(): Promise<{
     updatedAt:       c.updatedAt instanceof Date ? c.updatedAt.toISOString() : c.updatedAt,
   }))
 
-  const brandNames = brandRows.map((b: { name: string }) => b.name)
+  const brands = brandRows.map((b: any) => ({
+    name:         b.name,
+    productCount: b._count.products,
+  }))
 
-  return { categories, brandNames }
+  return { categories, brands }
 }
 
 // ─── Subcategorías ────────────────────────────────────────────────────────────

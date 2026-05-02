@@ -28,18 +28,24 @@ export interface TechnicalSpec {
 export interface Product {
   id: number
   name: string
-  /** Nombre de la marca (referencia por nombre, no por ID) */
-  brand: string
+  /** Nombres de las marcas (referencia por nombre, no por ID) */
+  brands: string[]
   /** Nombre de la categoría (referencia por nombre, no por ID) */
   category: string
   /** Slug URL de la categoría — para construir /categoria/[slug] */
   categorySlug?: string
+  /** ID de la subcategoría asociada (opcional) */
+  subcategoryId?: number
+  /** Nombre de la subcategoría asociada */
+  subcategoryName?: string
   /** URL de la imagen principal */
   image: string
   /** Texto alternativo SEO de la imagen principal */
   imageAlt?: string
   /** Título de la imagen (atributo title, tooltip en hover) */
   imageTitle?: string
+  /** Modelo comercial del producto (ej: "ANSI C135.1", "Serie 6000") */
+  modelo?: string
   /** Etiquetas técnicas cortas para mostrar como badges (ej: "22kV", "DN 50mm") */
   medidas: string[]
   /** Descripción corta — aparece en la tarjeta del catálogo */
@@ -111,6 +117,8 @@ export interface Brand {
   showInCarousel?: boolean
   createdAt?: string
   updatedAt?: string
+  /** Cantidad de productos asociados (para filtros) */
+  productCount?: number
 }
 
 /** Cliente/empresa que aparece en la sección de clientes del home */

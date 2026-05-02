@@ -59,7 +59,7 @@ export function ServiciosSection() {
                 className="group relative rounded-2xl bg-white p-7 shadow-sm shadow-black/[0.04] ring-1 ring-slate-200/80 transition-all duration-500 hover:shadow-xl hover:ring-primary/30"
               >
                 <motion.div
-                  className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#1e293b] to-primary text-white shadow-lg shadow-primary/20"
+                  className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br -[#003D73] to-primary text-white shadow-lg shadow-primary/20"
                   whileHover={{ scale: 1.15, rotate: -5 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >

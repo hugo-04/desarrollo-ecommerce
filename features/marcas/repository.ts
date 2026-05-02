@@ -78,11 +78,25 @@ export class DbBrandRepository implements IBrandRepository {
 
     const [total, rows] = await Promise.all([
       this.db.brand.count({ where }),
-      this.db.brand.findMany({ where, skip: (page - 1) * limit, take: limit, orderBy: { name: "asc" } }),
+      this.db.brand.findMany({ 
+        where, 
+        skip: (page - 1) * limit, 
+        take: limit, 
+        orderBy: { name: "asc" },
+        include: { _count: { select: { products: true } } }
+      }),
     ])
 
     const totalPages = Math.max(1, Math.ceil(total / limit))
-    return { data: rows.map((b) => this.map(b)), total, page, totalPages }
+    return { 
+      data: rows.map((b: any) => ({
+        ...this.map(b),
+        productCount: b._count.products
+      })), 
+      total, 
+      page, 
+      totalPages 
+    }
   }
 
   async create(data: CreateBrandDTO): Promise<Brand> {

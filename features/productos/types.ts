@@ -8,6 +8,7 @@ export interface ProductFilters {
   page?: number
   limit?: number
   sortBy?: "az" | "za" | "rating" | "recommended"
+  subcategoryId?: number
 }
 
 export interface PaginatedResult<T> {

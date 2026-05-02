@@ -6,9 +6,9 @@ import { MOCK_TESTIMONIALS as testimonials } from "@/lib/data/mock/testimonials.
 import { IconQuote } from "@/components/icons"
 
 const ACCENT_COLORS = [
-  { border: "border-l-red-500", glow: "bg-slate-500/5", badge: "bg-slate-500/10 text-slate-400 border-slate-500/20", quote: "text-slate-400/50" },
-  { border: "border-l-blue-500", glow: "bg-blue-500/5", badge: "bg-blue-500/10 text-blue-400 border-blue-500/20", quote: "text-blue-400/50" },
-  { border: "border-l-amber-500", glow: "bg-amber-500/5", badge: "bg-amber-500/10 text-amber-400 border-amber-500/20", quote: "text-amber-400/50" },
+  { border: "border-l-[#0066B3]", glow: "bg-[#0066B3]/5", badge: "bg-[#0066B3]/10 text-[#0066B3] border-[#0066B3]/20", quote: "text-[#0066B3]/40" },
+  { border: "border-l-[#FF6B35]", glow: "bg-[#FF6B35]/5", badge: "bg-[#FF6B35]/10 text-[#FF6B35] border-[#FF6B35]/20", quote: "text-[#FF6B35]/40" },
+  { border: "border-l-[#003D73]", glow: "bg-[#003D73]/5", badge: "bg-[#003D73]/10 text-[#003D73] border-[#003D73]/20", quote: "text-[#003D73]/30" },
 ]
 
 export function TestimonialsSection() {
@@ -20,7 +20,7 @@ export function TestimonialsSection() {
       variants={staggerContainer}
       className="relative overflow-hidden py-24"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F5F5FA] via-[#f0f2f8] to-[#F5F5FA]" />
+      <div className="absolute inset-0 bg-white" />
       <div
         className="absolute inset-0 opacity-40"
         style={{
@@ -34,8 +34,8 @@ export function TestimonialsSection() {
 
       <div className="relative mx-auto max-w-7xl px-4">
         <motion.div variants={fadeUp} className="mb-14 text-center">
-          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-slate-600">
-            <span className="h-1.5 w-1.5 rounded-full bg-slate-500" />
+          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#0066B3]/20 bg-[#0066B3]/[0.06] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#0066B3]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35]" />
             Testimonios
           </span>
           <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">

@@ -1,13 +1,9 @@
-import { PrismaClient } from "@prisma/client"
-import { PrismaPg } from "@prisma/adapter-pg"
+import "dotenv/config"
+import { db as prisma } from "../lib/db"
 import bcrypt from "bcryptjs"
 import { BRANDS_DATA } from "../lib/data/brands.data"
 import { CATEGORIES_DATA } from "../lib/data/categories.data"
 import { PRODUCTS_DATA } from "../lib/data/products.data"
-
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const prisma = new PrismaClient({ adapter } as any)
 
 async function main() {
   console.log("Starting seed...")
@@ -27,7 +23,7 @@ async function main() {
   for (const user of adminUsers) {
     // Genera el hash criptográfico para la contraseña antes de guardarla
     const passwordHash = await bcrypt.hash(user.password, 12)
-    
+
     // Se utiliza `upsert` para evitar duplicados:
     // Si el usuario por email ya existe, actualiza su contraseña y lo marca como activo.
     // Si no existe, crea un nuevo registro con los datos proporcionados.
@@ -49,8 +45,13 @@ async function main() {
   for (const brand of BRANDS_DATA) {
     await prisma.brand.upsert({
       where: { name: brand.name },
-      update: {},
-      create: { name: brand.name, logo: brand.logo, showInCarousel: brand.showInCarousel || false },
+      update: { logoAlt: brand.logoAlt ?? null },
+      create: {
+        name: brand.name,
+        logo: brand.logo,
+        logoAlt: brand.logoAlt ?? null,
+        showInCarousel: brand.showInCarousel || false,
+      },
     })
   }
   // Marca por defecto para productos sin marca asignada
@@ -61,17 +62,58 @@ async function main() {
   })
   console.log(`Seeded ${BRANDS_DATA.length + 1} brands`)
 
-  // ── 4. Nuevas categorías ──────────────────────────────────────────────────
+  // ── 4. Nuevas categorías y subcategorías ──────────────────────────────────
   for (const cat of CATEGORIES_DATA) {
+    // Primero nos aseguramos de que existan las subcategorías (idempotente)
+    const subIds = []
+    if (cat.subcategories) {
+      for (const subName of cat.subcategories) {
+        const sub = await prisma.subcategory.upsert({
+          where: { name: subName },
+          update: {},
+          create: { name: subName },
+        })
+        subIds.push(sub.id)
+      }
+    }
+
     await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: { name: cat.name, description: cat.description, subcategories: cat.subcategories },
-      create: { name: cat.name, slug: cat.slug, image: "", description: cat.description, subcategories: cat.subcategories, count: 0 },
+      update: {
+        name: cat.name,
+        description: cat.description,
+        keywords: cat.keywords ?? [],
+        imageAlt: cat.imageAlt ?? null,
+        imageTitle: cat.imageTitle ?? null,
+        featured: cat.featured ?? false,
+        subs: {
+          set: subIds.map(id => ({ id }))
+        }
+      },
+      create: {
+        name: cat.name,
+        slug: cat.slug,
+        image: "",
+        description: cat.description,
+        keywords: cat.keywords ?? [],
+        imageAlt: cat.imageAlt ?? null,
+        imageTitle: cat.imageTitle ?? null,
+        featured: cat.featured ?? false,
+        count: 0,
+        subs: {
+          connect: subIds.map(id => ({ id }))
+        }
+      },
     })
   }
-  console.log(`Seeded ${CATEGORIES_DATA.length} categorías`)
+  console.log(`Seeded ${CATEGORIES_DATA.length} categorías con sus subcategorías`)
 
-  // ── 5. Nuevos productos del XLSX ──────────────────────────────────────────
+  // ── 5. Mapa de marcas para lookup por nombre ──────────────────────────────
+  const brandMap = new Map<string, number>()
+  const allBrands = await prisma.brand.findMany({ select: { id: true, name: true } })
+  allBrands.forEach(b => brandMap.set(b.name, b.id))
+
+  // ── 6. Nuevos productos ────────────────────────────────────────────────────
   let seeded = 0
   for (const p of PRODUCTS_DATA) {
     const category = await prisma.category.findUnique({ where: { slug: p.catSlug } })
@@ -79,21 +121,26 @@ async function main() {
       console.warn(`Categoría no encontrada para slug "${p.catSlug}", saltando "${p.name}"`)
       continue
     }
+    const pBrands = p.brands && p.brands.length > 0 ? p.brands : ["Lorem Ipsum"]
+    const brandIds = pBrands.map(bName => brandMap.get(bName) ?? defaultBrand.id)
+
     await prisma.product.create({
       data: {
-        name:            p.name,
-        description:     p.description     ?? "",
+        name: p.name,
+        description: p.description ?? "",
         fullDescription: p.fullDescription ?? "",
-        image:           "",
-        gallery:         [],
-        medidas:         p.medidas         ?? [],
-        technicalSpecs:  p.technicalSpecs  ?? undefined,
-        fichaTecnica:    p.fichaTecnica    ?? null,
-        featured:        false,
-        bestSeller:      false,
-        rating:          4.5,
-        categoryId:      category.id,
-        brandId:         defaultBrand.id,
+        image: "",
+        gallery: [],
+        medidas: p.medidas ?? [],
+        technicalSpecs: p.technicalSpecs ?? undefined,
+        fichaTecnica: p.fichaTecnica ?? null,
+        modelo: p.modelo ?? null,
+        keywords: p.keywords ?? [],
+        featured: false,
+        bestSeller: false,
+        rating: 4.5,
+        category: { connect: { id: category.id } },
+        brands: { connect: brandIds.map(id => ({ id })) },
       },
     })
     seeded++

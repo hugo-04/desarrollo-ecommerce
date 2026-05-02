@@ -164,13 +164,15 @@ export function ProductoView({ product, initialRelatedProducts = [] }: ProductoV
 
       {/* Sticky mobile bar */}
       <div className="fixed bottom-0 inset-x-0 z-50 sm:hidden">
-        <button
-          onClick={() => setShowQuoteModal(true)}
+        <a
+          href={WA.producto(product.name, product.brands.join(", "), product.modelo)}
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex w-full items-center justify-center gap-3 bg-[#25D366] py-4 text-sm font-bold text-white shadow-[0_-4px_20px_-10px_rgba(37,211,102,0.5)] active:bg-[#1DA851]"
         >
           <IconWhatsApp className="h-5 w-5" />
           Cotizar este producto
-        </button>
+        </a>
       </div>
       <div className="h-14 sm:hidden" />
     </>

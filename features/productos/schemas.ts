@@ -6,7 +6,7 @@ import { z } from "zod"
 
 export const productSchema = z.object({
   name:        z.string().min(2, "Nombre del producto requerido"),
-  brand:       z.string().min(1, "Seleccioná una marca"),
+  brands:      z.array(z.string()).min(1, "Seleccioná al menos una marca"),
   category:    z.string().min(1, "Seleccioná una categoría"),
   description: z
     .string()

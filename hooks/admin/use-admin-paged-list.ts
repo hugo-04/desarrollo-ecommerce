@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useEffect, useCallback } from "react"
+import { useRef, useState, useEffect, useCallback, useMemo } from "react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { useQuery, useQueryClient, keepPreviousData }  from "@tanstack/react-query"
 import { toast }                                       from "sonner"
@@ -15,8 +15,9 @@ export interface PagedResult<T> {
 }
 
 export interface UseAdminPagedListOptions<T extends { id: number }> {
-  pageSize: number
-  loadFn:   (params: { page: number; query: string; limit: number }) => Promise<PagedResult<T>>
+  pageSize:  number
+  loadFn:    (params: { page: number; query: string; limit: number }) => Promise<PagedResult<T>>
+  queryKey?: readonly unknown[]
 }
 
 // ─── Caché de claves por función (implementación interna) ─────────────────────
@@ -34,12 +35,13 @@ function getStableKey(fn: Function): string {
 export function useAdminPagedList<T extends { id: number }>({
   pageSize: initialPageSize,
   loadFn,
+  queryKey,
 }: UseAdminPagedListOptions<T>) {
   const router       = useRouter()
   const pathname     = usePathname()
   const searchParams = useSearchParams()
   const queryClient  = useQueryClient()
-  const stableKey    = useRef(getStableKey(loadFn)).current
+  const stableKey    = useMemo(() => queryKey ?? [getStableKey(loadFn)], [queryKey, loadFn])
 
   // inputValue: valor inmediato del input controlado
   // query:      valor debounced que realmente dispara el fetch y actualiza la URL
@@ -85,10 +87,14 @@ export function useAdminPagedList<T extends { id: number }>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue])
 
-  const queryKey = [stableKey, currentPage, query, pageSize] as const
+  // Clave de consulta completa para la página y búsqueda actual
+  const activeQueryKey = useMemo(
+    () => [...stableKey, currentPage, query, pageSize] as const,
+    [stableKey, currentPage, query, pageSize]
+  )
 
-  const { data, isLoading, isFetching } = useQuery({
-    queryKey,
+  const { data, isLoading, isFetching } = useQuery<PagedResult<T>>({
+    queryKey:        activeQueryKey,
     queryFn:         () => loadFn({ page: currentPage, query, limit: pageSize }),
     placeholderData: keepPreviousData,
   })
@@ -121,7 +127,7 @@ export function useAdminPagedList<T extends { id: number }>({
     try {
       await deleteFn()
 
-      queryClient.setQueryData(queryKey, (old: PagedResult<T> | undefined) => {
+      queryClient.setQueryData(activeQueryKey, (old: PagedResult<T> | undefined) => {
         if (!old) return old
         return {
           ...old,
@@ -130,7 +136,7 @@ export function useAdminPagedList<T extends { id: number }>({
         }
       })
 
-      await queryClient.invalidateQueries({ queryKey: [stableKey] })
+      await queryClient.invalidateQueries({ queryKey: stableKey })
 
       setTimeout(() => setRemovingId(null), 280)
       toast.success(`"${itemName}" eliminado correctamente`)

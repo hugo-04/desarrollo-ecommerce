@@ -27,7 +27,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 export default async function CatalogoPage({ searchParams }: PageProps) {
   const params = await searchParams
 
-  const { categories, brandNames } = await getFilterOptions()
+  const { categories, brands } = await getFilterOptions()
 
   // Schema dinámico: si hay categoría activa → CollectionPage, si no → BreadcrumbList del catálogo
   const selectedCat = params.categoria
@@ -80,7 +80,7 @@ export default async function CatalogoPage({ searchParams }: PageProps) {
           initialQuery={params.q}
           initialBestSellers={params.bestSellers === "true"}
           initialCategories={categories}
-          initialBrands={brandNames}
+          initialBrands={brands}
         />
       </Suspense>
     </>

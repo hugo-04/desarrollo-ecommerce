@@ -55,6 +55,7 @@ export class DbProductRepository implements IProductRepository {
       gallery: p.gallery,
       galleryAlts: p.galleryAlts?.length ? p.galleryAlts : undefined,
       keywords: p.keywords?.length ? p.keywords : undefined,
+      modelo: p.modelo ?? undefined,
       medidas: p.medidas,
       fichaTecnica: p.fichaTecnica ?? undefined,
       featured: p.featured,
@@ -62,7 +63,9 @@ export class DbProductRepository implements IProductRepository {
       rating: p.rating,
       category: p.category?.name ?? "",
       categorySlug: p.category?.slug ?? undefined,
-      brand: p.brand?.name ?? "",
+      brands: p.brands?.map((b: any) => b.name) ?? [],
+      subcategoryId: p.subcategory?.id ?? undefined,
+      subcategoryName: p.subcategory?.name ?? undefined,
       technicalSpecs: this.parseSpecs(p.technicalSpecs),
       createdAt: p.createdAt instanceof Date ? p.createdAt.toISOString() : p.createdAt,
       updatedAt: p.updatedAt instanceof Date ? p.updatedAt.toISOString() : p.updatedAt,
@@ -118,14 +121,16 @@ export class DbProductRepository implements IProductRepository {
       page = 1,
       limit = 12,
       sortBy = "recommended",
+      subcategoryId,
     } = filters
 
     // ── Sin búsqueda: Prisma ORM directo (sin overhead de FTS) ────────────────
     if (!query.trim()) {
       const where: any = {}
       if (categories.length > 0) where.category = { name: { in: categories } }
-      if (brands.length > 0) where.brand = { name: { in: brands } }
+      if (brands.length > 0) where.brands = { some: { name: { in: brands } } }
       if (onlyBestSellers) where.bestSeller = true
+      if (subcategoryId) where.subcategoryId = subcategoryId
 
       const orderBy: any =
         sortBy === "az" ? { name: "asc" } :
@@ -137,7 +142,7 @@ export class DbProductRepository implements IProductRepository {
         this.db.product.count({ where }),
         this.db.product.findMany({
           where, skip: (page - 1) * limit, take: limit, orderBy,
-          include: { category: true, brand: true },
+          include: { category: true, brands: true, subcategory: true },
         }),
       ])
 
@@ -172,6 +177,11 @@ export class DbProductRepository implements IProductRepository {
 
     if (onlyBestSellers) {
       extraConditions.push(`p."bestSeller" = true`)
+    }
+
+    if (subcategoryId) {
+      extraConditions.push(`p."subcategoryId" = $${paramIdx++}`)
+      params.push(subcategoryId)
     }
 
     const extraWhere = extraConditions.length > 0
@@ -238,20 +248,22 @@ export class DbProductRepository implements IProductRepository {
 
     const baseFrom = `
       FROM products p
-      LEFT JOIN brands     br  ON br.id  = p."brandId"
+      LEFT JOIN "_BrandToProduct" _bp ON _bp."B" = p.id
+      LEFT JOIN brands     br  ON br.id  = _bp."A"
       LEFT JOIN categories cat ON cat.id = p."categoryId"
     `
 
     const countSQL = `
-      SELECT COUNT(*) AS total
+      SELECT COUNT(DISTINCT p.id) AS total
       ${baseFrom}
       WHERE ${searchWhere} ${extraWhere}
     `
 
     const dataSQL = `
-      SELECT p.id, (${scoreExpr}) AS _score
+      SELECT p.id, MAX(${scoreExpr}) AS _score
       ${baseFrom}
       WHERE ${searchWhere} ${extraWhere}
+      GROUP BY p.id
       ORDER BY _score DESC, ${tieBreak}
       LIMIT ${limit} OFFSET ${(page - 1) * limit}
     `
@@ -271,7 +283,7 @@ export class DbProductRepository implements IProductRepository {
     // Fetch completo de las filas encontradas
     const rows = await this.db.product.findMany({
       where: { id: { in: ids } },
-      include: { category: true, brand: true },
+      include: { category: true, brands: true, subcategory: true },
     })
 
     // Re-ordenar según ranking FTS (findMany no preserva el orden del IN)
@@ -288,7 +300,7 @@ export class DbProductRepository implements IProductRepository {
   async findById(id: number): Promise<Product | null> {
     const p = await this.db.product.findUnique({
       where: { id },
-      include: { category: true, brand: true },
+      include: { category: true, brands: true, subcategory: true },
     })
     return p ? this.mapProduct(p) : null
   }
@@ -297,7 +309,7 @@ export class DbProductRepository implements IProductRepository {
   async findBestSellers(): Promise<Product[]> {
     const rows = await this.db.product.findMany({
       where: { bestSeller: true },
-      include: { category: true, brand: true },
+      include: { category: true, brands: true, subcategory: true },
       orderBy: { rating: "desc" },
       take: 8,
     })
@@ -308,7 +320,7 @@ export class DbProductRepository implements IProductRepository {
   async findFeatured(): Promise<Product[]> {
     const rows = await this.db.product.findMany({
       where: { featured: true },
-      include: { category: true, brand: true },
+      include: { category: true, brands: true, subcategory: true },
       orderBy: { rating: "desc" },
       take: 6,
     })
@@ -319,7 +331,7 @@ export class DbProductRepository implements IProductRepository {
   async findRelated(productId: number, categoryName: string): Promise<Product[]> {
     const rows = await this.db.product.findMany({
       where: { category: { name: categoryName }, id: { not: productId } },
-      include: { category: true, brand: true },
+      include: { category: true, brands: true, subcategory: true },
       orderBy: { rating: "desc" },
       take: 8,
     })
@@ -333,18 +345,17 @@ export class DbProductRepository implements IProductRepository {
    * El DTO usa nombres (brand: string, category: string);
    * la DB necesita brandId/categoryId.
    */
-  private async resolveRelations(brand: string, category: string) {
-    const [brandRow, categoryRow] = await Promise.all([
-      this.db.brand.findFirst({ where: { name: brand } }),
+  private async resolveRelations(brands: string[], category: string) {
+    const [brandRows, categoryRow] = await Promise.all([
+      this.db.brand.findMany({ where: { name: { in: brands } } }),
       this.db.category.findFirst({ where: { name: category } }),
     ])
-    if (!brandRow) throw new Error(`Marca "${brand}" no encontrada`)
     if (!categoryRow) throw new Error(`Categoría "${category}" no encontrada`)
-    return { brandId: brandRow.id, categoryId: categoryRow.id }
+    return { brandIds: brandRows.map(b => b.id), categoryId: categoryRow.id }
   }
 
   async create(data: CreateProductDTO): Promise<Product> {
-    const { brandId, categoryId } = await this.resolveRelations(data.brand, data.category)
+    const { brandIds, categoryId } = await this.resolveRelations(data.brands ?? [], data.category)
 
     const [created] = await this.db.$transaction([
       this.db.product.create({
@@ -357,6 +368,7 @@ export class DbProductRepository implements IProductRepository {
           imageTitle: data.imageTitle,
           gallery: data.gallery ?? [],
           galleryAlts: data.galleryAlts ?? [],
+          modelo: data.modelo,
           keywords: data.keywords ?? [],
           medidas: data.medidas ?? [],
           fichaTecnica: data.fichaTecnica,
@@ -364,10 +376,11 @@ export class DbProductRepository implements IProductRepository {
           bestSeller: data.bestSeller ?? false,
           rating: data.rating ?? 4.5,
           technicalSpecs: (data.technicalSpecs ?? []) as object[],
-          brandId,
-          categoryId,
+          brands: { connect: brandIds.map(id => ({ id })) },
+          category: { connect: { id: categoryId } },
+          ...(data.subcategoryId != null && { subcategoryId: data.subcategoryId }),
         },
-        include: { category: true, brand: true },
+        include: { category: true, brands: true, subcategory: true },
       }),
       this.db.category.update({
         where: { id: categoryId },
@@ -378,33 +391,42 @@ export class DbProductRepository implements IProductRepository {
   }
 
   async update(id: number, data: UpdateProductDTO): Promise<Product> {
-    const { brand: _b, category: _c, technicalSpecs, ...rest } = data
+    const { brands: _b, category: _c, technicalSpecs, ...rest } = data
 
     // Resolver relaciones solo si se cambia marca o categoría
-    let connect: { brand?: { connect: { id: number } }; category?: { connect: { id: number } } } = {}
-    if (data.brand || data.category) {
+    let connect: any = {}
+    if (data.brands || data.category) {
       const row = await this.db.product.findUnique({
-        where: { id }, include: { brand: true, category: true },
+        where: { id }, include: { brands: true, category: true },
       })
       if (!row) throw new Error(`Producto con id ${id} no encontrado`)
       const ids = await this.resolveRelations(
-        data.brand ?? row.brand.name,
+        data.brands ?? row.brands.map((b: any) => b.name),
         data.category ?? row.category.name,
       )
       connect = {
-        brand: { connect: { id: ids.brandId } },
-        category: { connect: { id: ids.categoryId } },
+        ...(data.brands && { brands: { set: ids.brandIds.map(id => ({ id })) } }),
+        ...(data.category && { category: { connect: { id: ids.categoryId } } }),
       }
     }
+
+    // Manejar cambio de subcategoría (null desvincula, undefined no toca)
+    const subcategoryConnect =
+      data.subcategoryId === null
+        ? { subcategory: { disconnect: true } }
+        : data.subcategoryId !== undefined
+          ? { subcategory: { connect: { id: data.subcategoryId } } }
+          : {}
 
     const updated = await this.db.product.update({
       where: { id },
       data: {
         ...rest,
         ...connect,
+        ...subcategoryConnect,
         ...(technicalSpecs !== undefined && { technicalSpecs: technicalSpecs as object[] }),
       },
-      include: { category: true, brand: true },
+      include: { category: true, brands: true, subcategory: true },
     })
     return this.mapProduct(updated)
   }
