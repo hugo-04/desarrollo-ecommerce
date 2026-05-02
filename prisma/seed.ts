@@ -4,21 +4,13 @@ import bcrypt from "bcryptjs"
 import { BRANDS_DATA } from "../lib/data/brands.data"
 import { CATEGORIES_DATA } from "../lib/data/categories.data"
 import { PRODUCTS_DATA } from "../lib/data/products.data"
+import { ADMINS_DATA } from "../lib/data/admins.data"
 
 async function main() {
   console.log("Starting seed...")
 
   // ── 1. Admin Users ────────────────────────────────────────────────────────
-  /**
-   * Arreglo con las credenciales de los usuarios administradores.
-   * Ahora soporta la creación y actualización de múltiples cuentas a la vez,
-   * facilitando la gestión inicial de accesos al sistema.
-   */
-  const adminUsers = [
-    { email: "admin@admin.com", password: "Hugovega123" },
-    { email: "cornejosonia@gmail.com", password: "Insumind2026*" },
-    // Puedes agregar más usuarios a este arreglo
-  ]
+  const adminUsers = ADMINS_DATA
 
   for (const user of adminUsers) {
     // Genera el hash criptográfico para la contraseña antes de guardarla
