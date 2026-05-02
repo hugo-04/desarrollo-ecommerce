@@ -51,8 +51,10 @@ export class DbProductRepository implements IProductRepository {
       fullDescription: p.fullDescription,
       image: p.image,
       imageAlt: p.imageAlt ?? undefined,
+      imageTitle: p.imageTitle ?? undefined,
       gallery: p.gallery,
       galleryAlts: p.galleryAlts?.length ? p.galleryAlts : undefined,
+      keywords: p.keywords?.length ? p.keywords : undefined,
       medidas: p.medidas,
       fichaTecnica: p.fichaTecnica ?? undefined,
       featured: p.featured,
@@ -62,13 +64,50 @@ export class DbProductRepository implements IProductRepository {
       categorySlug: p.category?.slug ?? undefined,
       brand: p.brand?.name ?? "",
       technicalSpecs: this.parseSpecs(p.technicalSpecs),
+      createdAt: p.createdAt instanceof Date ? p.createdAt.toISOString() : p.createdAt,
+      updatedAt: p.updatedAt instanceof Date ? p.updatedAt.toISOString() : p.updatedAt,
     }
   }
 
   /**
-   * Catálogo paginado con filtros completos.
-   * COUNT + findMany en paralelo → una sola round-trip a la DB.
-   * Las queries ILIKE sobre name/sku/description usan índices GIN de trigramas.
+   * Catálogo paginado con filtros completos y búsqueda FTS avanzada.
+   *
+   * ── Estrategia de búsqueda (Full-Text Search + pg_trgm) ──────────────────
+   *
+   * Sin query → path rápido: Prisma ORM + índices B-tree existentes.
+   *
+   * Con query → PostgreSQL FTS nativo:
+   *   1. Normalización del input
+   *      - trim()   : elimina espacios al inicio/final
+   *      - lower()  : case-insensitive
+   *      - unaccent(): accent-insensitive (aislación = aislacion)
+   *
+   *   2. tsvector pre-calculado en columna `search_vector` con GIN index
+   *      - Peso A: name  (mayor relevancia)
+   *      - Peso D: description (menor relevancia)
+   *      - Diccionario 'simple': NO stemming → preserva términos técnicos
+   *        (NEMA, IEC, ANSI, aislador, etc.)
+   *
+   *   3. Marca y categoría: to_tsvector() on-the-fly en la query
+   *      (están en otras tablas, no se pueden pre-calcular en el trigger)
+   *
+   *   4. tsquery con prefijo (':*')
+   *      - Convierte "cable" → 'cable:*' → matches cable, cables, cableado…
+   *      - Cada palabra se convierte independientemente → multi-word
+   *
+   *   5. Ranking compuesto (ts_rank_cd)
+   *      - Pesa name (A) > brand (B) > category (B) > description (D)
+   *      - NORMALIZATION=32: divide por longitud del documento → justo para
+   *        productos con descripciones largas vs cortas
+   *
+   *   6. Fallback pg_trgm (word_similarity > 0.30)
+   *      - Solo activa cuando no hay match FTS exacto
+   *      - Umbral 0.30 evita falsos positivos
+   *      - Captura errores tipográficos: "aisaldor" → "aislador"
+   *
+   *   7. ILIKE exacto como tercer nivel (rápido vía GIN trigrama)
+   *
+   * COUNT + data en paralelo → mínimas round-trips a la DB.
    */
   async findAll(filters: ProductFilters): Promise<PaginatedResult<Product>> {
     const {
@@ -81,41 +120,167 @@ export class DbProductRepository implements IProductRepository {
       sortBy = "recommended",
     } = filters
 
-    const where: any = {}
+    // ── Sin búsqueda: Prisma ORM directo (sin overhead de FTS) ────────────────
+    if (!query.trim()) {
+      const where: any = {}
+      if (categories.length > 0) where.category = { name: { in: categories } }
+      if (brands.length > 0) where.brand = { name: { in: brands } }
+      if (onlyBestSellers) where.bestSeller = true
 
-    if (categories.length > 0) where.category = { name: { in: categories } }
-    if (brands.length > 0) where.brand = { name: { in: brands } }
-    if (onlyBestSellers) where.bestSeller = true
+      const orderBy: any =
+        sortBy === "az" ? { name: "asc" } :
+          sortBy === "za" ? { name: "desc" } :
+            sortBy === "rating" ? { rating: "desc" } :
+              { id: "desc" }
 
-    if (query) {
-      where.OR = [
-        { name: { contains: query, mode: "insensitive" } },
-        { description: { contains: query, mode: "insensitive" } },
-        { brand: { name: { contains: query, mode: "insensitive" } } },
-      ]
+      const [total, rows] = await Promise.all([
+        this.db.product.count({ where }),
+        this.db.product.findMany({
+          where, skip: (page - 1) * limit, take: limit, orderBy,
+          include: { category: true, brand: true },
+        }),
+      ])
+
+      return {
+        data: rows.map((p) => this.mapProduct(p)),
+        total, page,
+        totalPages: Math.ceil(total / limit) || 1,
+      }
     }
 
-    const orderBy: any =
-      sortBy === "az" ? { name: "asc" } :
-        sortBy === "za" ? { name: "desc" } :
-          sortBy === "rating" ? { rating: "desc" } :
-            { id: "desc" }  // recommended: más recientes primero
+    // ── Con búsqueda: FTS nativo PostgreSQL ────────────────────────────────────
 
-    const [total, rows] = await Promise.all([
-      this.db.product.count({ where }),
-      this.db.product.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy,
-        include: { category: true, brand: true },
-      }),
+    // $1 = query normalizado (trim + lower + unaccent via SQL)
+    // Los params $2..N son para los filtros adicionales
+    const params: unknown[] = [query.trim()]
+    let paramIdx = 2
+
+    // Filtros adicionales (categoría, marca, bestSeller)
+    const extraConditions: string[] = []
+
+    if (categories.length > 0) {
+      const ph = categories.map(() => `$${paramIdx++}`).join(", ")
+      extraConditions.push(`cat.name = ANY(ARRAY[${ph}]::text[])`)
+      categories.forEach((c) => params.push(c))
+    }
+
+    if (brands.length > 0) {
+      const ph = brands.map(() => `$${paramIdx++}`).join(", ")
+      extraConditions.push(`br.name = ANY(ARRAY[${ph}]::text[])`)
+      brands.forEach((b) => params.push(b))
+    }
+
+    if (onlyBestSellers) {
+      extraConditions.push(`p."bestSeller" = true`)
+    }
+
+    const extraWhere = extraConditions.length > 0
+      ? `AND ${extraConditions.join(" AND ")}`
+      : ""
+
+    // Tiebreak por sortBy cuando dos productos tienen el mismo score FTS
+    const tieBreak =
+      sortBy === "az" ? "p.name ASC" :
+        sortBy === "za" ? "p.name DESC" :
+          sortBy === "rating" ? "p.rating DESC" :
+            "p.id DESC"
+
+    // ── Normalización del input ────────────────────────────────────────────────
+    // f_unaccent() = wrapper IMMUTABLE sobre unaccent() (ver migration 010001)
+    // Necesario para que coincida con los índices funcionales GIN de trigramas.
+    const normQ = `f_unaccent(lower(trim($1::text)))`
+
+    // ── tsquery con prefijo (prefix matching) ─────────────────────────────────
+    // Convierte "cable ac" → 'cable:* & ac:*'
+    // Cada token del input se convierte en una búsqueda de prefijo independiente.
+    // Esto permite: "aislad" → matches "aislador", "aislamiento", etc.
+    const tsqueryExpr = `
+      to_tsquery('simple',
+        (SELECT string_agg(token || ':*', ' & ')
+         FROM unnest(regexp_split_to_array(${normQ}, '\\s+')) AS token
+         WHERE token <> '')
+      )
+    `
+
+    // ── tsvector de marca y categoría (on-the-fly) ────────────────────────────
+    // Peso B para brand y category (relevancia media)
+    const brandTsv   = `setweight(to_tsvector('simple', f_unaccent(coalesce(br.name, ''))), 'B')`
+    const catTsv     = `setweight(to_tsvector('simple', f_unaccent(coalesce(cat.name, ''))), 'B')`
+    // search_vector ya tiene name(A) + description(D) pre-calculado con GIN index
+    const fullVector = `(p.search_vector || ${brandTsv} || ${catTsv})`
+
+    // ── Score compuesto ────────────────────────────────────────────────────────
+    // ts_rank_cd con NORMALIZATION=32 (divide por log(ndoc)) → justo entre docs
+    // word_similarity como bono para typos (umbral aplicado en WHERE)
+    const scoreExpr = `
+      ts_rank_cd(${fullVector}, ${tsqueryExpr}, 32)
+      + GREATEST(
+          word_similarity(${normQ}, f_unaccent(lower(p.name))),
+          word_similarity(${normQ}, f_unaccent(lower(coalesce(br.name, ''))))
+        ) * 0.15
+    `
+
+    // ── WHERE: match FTS OR typo-tolerance OR substring exacta ──────────────
+    // Orden de precisión (menos → más falsos positivos):
+    //   1. @@ tsquery   → 0 falsos positivos (FTS exacto/prefijo)
+    //   2. word_sim>0.3 → mínimos falsos positivos (typo tolerance)
+    //   3. ILIKE        → subcadenas exactas (caso: "IEC" dentro de texto largo)
+    const searchWhere = `
+      (
+        ${fullVector} @@ ${tsqueryExpr}
+        OR word_similarity(${normQ}, f_unaccent(lower(p.name))) > 0.30
+        OR word_similarity(${normQ}, f_unaccent(lower(coalesce(br.name, '')))) > 0.30
+        OR p.name      ILIKE '%' || trim($1::text) || '%'
+        OR br.name     ILIKE '%' || trim($1::text) || '%'
+        OR cat.name    ILIKE '%' || trim($1::text) || '%'
+      )
+    `
+
+    const baseFrom = `
+      FROM products p
+      LEFT JOIN brands     br  ON br.id  = p."brandId"
+      LEFT JOIN categories cat ON cat.id = p."categoryId"
+    `
+
+    const countSQL = `
+      SELECT COUNT(*) AS total
+      ${baseFrom}
+      WHERE ${searchWhere} ${extraWhere}
+    `
+
+    const dataSQL = `
+      SELECT p.id, (${scoreExpr}) AS _score
+      ${baseFrom}
+      WHERE ${searchWhere} ${extraWhere}
+      ORDER BY _score DESC, ${tieBreak}
+      LIMIT ${limit} OFFSET ${(page - 1) * limit}
+    `
+
+    const [countResult, idRows] = await Promise.all([
+      this.db.$queryRawUnsafe<{ total: bigint }[]>(countSQL, ...params),
+      this.db.$queryRawUnsafe<{ id: number; _score: number }[]>(dataSQL, ...params),
     ])
 
+    const total = Number(countResult[0]?.total ?? 0)
+    const ids   = idRows.map((r) => r.id)
+
+    if (ids.length === 0) {
+      return { data: [], total, page, totalPages: Math.ceil(total / limit) || 1 }
+    }
+
+    // Fetch completo de las filas encontradas
+    const rows = await this.db.product.findMany({
+      where: { id: { in: ids } },
+      include: { category: true, brand: true },
+    })
+
+    // Re-ordenar según ranking FTS (findMany no preserva el orden del IN)
+    const rowMap  = new Map(rows.map((r) => [r.id, r]))
+    const ordered = ids.map((id) => rowMap.get(id)).filter(Boolean) as typeof rows
+
     return {
-      data: rows.map((p) => this.mapProduct(p)),
-      total,
-      page,
+      data: ordered.map((p) => this.mapProduct(p)),
+      total, page,
       totalPages: Math.ceil(total / limit) || 1,
     }
   }
@@ -189,8 +354,10 @@ export class DbProductRepository implements IProductRepository {
           fullDescription: data.fullDescription ?? "",
           image: data.image ?? "",
           imageAlt: data.imageAlt,
+          imageTitle: data.imageTitle,
           gallery: data.gallery ?? [],
           galleryAlts: data.galleryAlts ?? [],
+          keywords: data.keywords ?? [],
           medidas: data.medidas ?? [],
           fichaTecnica: data.fichaTecnica,
           featured: data.featured ?? false,

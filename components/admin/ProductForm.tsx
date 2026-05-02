@@ -102,8 +102,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const [description,  setDesc]         = useState(product?.description  ?? "")
   const [image,        setImage]        = useState(product?.image        ?? "")
   const [imageAlt,     setImageAlt]     = useState(product?.imageAlt     ?? "")
+  const [imageTitle,   setImageTitle]   = useState(product?.imageTitle   ?? "")
   const [gallery,      setGallery]      = useState<string[]>(product?.gallery       ?? [])
   const [galleryAlts,  setGalleryAlts]  = useState<string[]>(product?.galleryAlts   ?? [])
+  const [keywords,     setKeywords]     = useState<string[]>(product?.keywords        ?? [])
   const [medidas,      setMedidas]      = useState<string[]>(product?.medidas         ?? [])
   const [techSpecs,    setTechSpecs]    = useState<TechnicalSpec[]>(product?.technicalSpecs ?? [])
   const [fichaTecnica, setFichaTecnica] = useState(product?.fichaTecnica ?? "")
@@ -230,8 +232,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       bestSeller:      fd.get("bestSeller")      === "on",
       image:           finalImage,
       imageAlt:        imageAlt.trim() || undefined,
+      imageTitle:      imageTitle.trim() || undefined,
       gallery:         finalGallery.filter(Boolean),
       galleryAlts:     galleryAlts.filter(Boolean).length > 0 ? galleryAlts : undefined,
+      keywords:        keywords.length > 0 ? keywords : undefined,
       medidas,
       technicalSpecs:  techSpecs.filter((s) => s.label && s.value),
       fichaTecnica:    finalFicha,
@@ -245,6 +249,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         await createProductAction(data as Parameters<typeof createProductAction>[0])
         toast.success("Producto creado correctamente")
       }
+      router.refresh()
       router.push("/productos")
     } catch (e: unknown) {
       setServerError(e instanceof Error ? e.message : "Error al guardar")
@@ -295,7 +300,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 name="name"
                 value={name}
                 onChange={(e) => setName((e.target as HTMLInputElement).value)}
-                placeholder="Lorem Ipsum Producto"
+                placeholder="Aislador Polimérico 22kV"
                 required
               />
               {errors.name ? (
@@ -401,6 +406,23 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                   {errors.imageAlt}
                 </p>
               )}
+
+              {/* Título de imagen (atributo title → tooltip en hover) */}
+              <div className="mt-3">
+                <label className="mb-1 block text-xs font-semibold text-slate-600">
+                  Título de imagen
+                  <span className="ml-1.5 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-normal text-slate-500">Opcional</span>
+                </label>
+                <input
+                  type="text"
+                  value={imageTitle}
+                  onChange={(e) => setImageTitle(e.target.value)}
+                  maxLength={125}
+                  placeholder="Ej: Aislador Polimérico 22kV para líneas de distribución AT"
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs transition-all placeholder:text-slate-400 focus:border-[#1C2870]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1C2870]/15"
+                />
+                <p className="mt-1 text-[10px] text-slate-400">Aparece como tooltip al pasar el cursor sobre la imagen</p>
+              </div>
             </div>
 
             {/* Galería — en la misma sección para rapidez */}
@@ -424,11 +446,21 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
             <div>
-              <label className="mb-0.5 block text-xs font-semibold text-slate-600">
-                Descripción corta <span className="text-red-500">*</span>
-              </label>
+              <div className="mb-1 flex items-center justify-between">
+                <label className="text-xs font-semibold text-slate-600">
+                  Descripción corta <span className="text-red-500">*</span>
+                </label>
+                <span className={`text-[11px] tabular-nums ${
+                  description.length === 0     ? "text-slate-400"
+                  : description.length < 50   ? "text-amber-500"
+                  : description.length <= 160 ? "text-emerald-600"
+                  :                             "text-red-500"
+                }`}>
+                  {description.length} / 160
+                </span>
+              </div>
               <p className="mb-2 text-[11px] text-slate-400">
-                Aparece en la tarjeta del catálogo y al lado de la imagen
+                Meta description para Google · aparece en la tarjeta del catálogo
               </p>
               <textarea
                 name="description"
@@ -436,18 +468,51 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 required
                 value={description}
                 onChange={(e) => setDesc(e.target.value)}
-                placeholder="Ej: Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition placeholder-slate-300 focus:border-primary/40 focus:ring-2 focus:ring-primary/15"
+                placeholder="Ej: Aislador polimérico para líneas de distribución de media tensión"
+                maxLength={200}
+                className={`w-full rounded-xl border px-4 py-3 text-sm text-slate-700 outline-none transition placeholder-slate-300 focus:ring-2 ${
+                  errors.description
+                    ? "border-red-300 focus:border-red-400 focus:ring-red-100"
+                    : description.length > 160
+                      ? "border-amber-300 focus:border-amber-400 focus:ring-amber-100"
+                      : "border-slate-200 focus:border-primary/40 focus:ring-primary/15"
+                }`}
               />
-              {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description}</p>}
+              {errors.description ? (
+                <p className="mt-1 flex items-center gap-1 text-[11px] text-red-500">
+                  <AlertCircle className="h-3 w-3 shrink-0" />
+                  {errors.description}
+                </p>
+              ) : description.length > 160 ? (
+                <p className="mt-1 flex items-center gap-1 text-[11px] text-red-500">
+                  <AlertCircle className="h-3 w-3 shrink-0" />
+                  Demasiado larga — Google la cortará en los resultados de búsqueda.
+                </p>
+              ) : description.length >= 50 ? (
+                <p className="mt-1 flex items-center gap-1 text-[11px] text-emerald-600">
+                  <CheckCircle2 className="h-3 w-3 shrink-0" />
+                  Longitud ideal para Google
+                </p>
+              ) : null}
             </div>
 
             <TagsEditor
               label="Medidas disponibles"
-              hint="Las diferentes medidas o tamaños que tiene el producto (ej: Lorem A, Lorem B, Lorem C). Se muestran como badges en la tarjeta y la página de detalle."
+              hint="Las diferentes medidas o tamaños que tiene el producto (ej: 22kV, DN 50mm, 120–180 mm). Se muestran como badges en la tarjeta y la página de detalle."
               values={medidas}
               onChange={setMedidas}
-              placeholder="Ej: Lorem A, Lorem B, Lorem C…"
+              placeholder="Ej: 22kV, DN 50mm, 120–180 mm…"
+            />
+          </div>
+
+          <div className="mt-5 border-t border-slate-100 pt-5">
+            <TagsEditor
+              label="Palabras clave SEO"
+              hint='Keywords para el metatag de la página y búsqueda interna. Usá términos específicos del producto (ej: "aislador polimérico 22kV", "herraje AT", "conector ACSR"). Presioná Enter para agregar cada keyword.'
+              values={keywords}
+              onChange={setKeywords}
+              placeholder="Ej: aislador polimérico 22kV…"
+              seoHint
             />
           </div>
 
@@ -493,7 +558,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
           <button
             type="submit"
             disabled={saving}
-            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#334155] to-[#0ea5e9] px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#334155]/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-cyan-500/30 disabled:opacity-50 disabled:hover:scale-100"
+            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-[#1C2870] to-[#0ea5e9] px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#1C2870]/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-cyan-500/30 disabled:opacity-50 disabled:hover:scale-100"
           >
             <div className="absolute inset-0 bg-white/20 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0" />
             <Package className="relative z-10 h-4 w-4" />

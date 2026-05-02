@@ -51,7 +51,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
             style={{ border: "1px solid rgba(255,255,255,0.08)" }}
           >
             {/* Left Column */}
-            <div className="w-full sm:w-56 lg:w-64 shrink-0 bg-[#0f172a] p-3 max-h-[55vh] overflow-y-auto overscroll-contain">
+            <div className="w-full sm:w-56 lg:w-64 shrink-0 bg-[#0B1035] p-3 max-h-[55vh] overflow-y-auto overscroll-contain">
               <h3 className="mb-3 px-3 text-[9px] font-bold uppercase tracking-[0.25em] text-slate-500">Nuestro Catálogo</h3>
               <div className="space-y-0.5">
                 {categories.map((category) => {
@@ -62,74 +62,26 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                       key={category.id}
                       href={`/categoria/${category.slug}`}
                       onMouseEnter={() => setActiveCategory(category.id)}
-                      onClick={(e) => {
-                        if (activeCategory !== category.id) {
-                          e.preventDefault()
-                          setActiveCategory(category.id)
-                        } else {
-                          setIsOpen(false)
-                        }
-                      }}
+                      onClick={() => setIsOpen(false)}
                       className={`group relative flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition-all duration-150 ${
                         isActive ? "bg-white/15 text-white" : "text-white/75 hover:bg-white/10 hover:text-white active:bg-white/15 active:text-white"
                       }`}
                     >
-                      {isActive && <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-slate-500" />}
+                      {isActive && <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-red-500" />}
                       <div className="flex items-center gap-3 pl-1">
                         <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                          isActive ? "bg-slate-500/20 text-slate-400" : "bg-white/[0.05] text-white/40 group-hover:bg-white/15 group-hover:text-white group-active:bg-white/15 group-active:text-white"
+                          isActive ? "bg-red-500/20 text-red-400" : "bg-white/[0.05] text-white/40 group-hover:bg-white/15 group-hover:text-white group-active:bg-white/15 group-active:text-white"
                         }`}>
                           <Icon className="h-3.5 w-3.5" />
                         </div>
                         <span className="text-[12px] font-semibold">{category.name}</span>
                       </div>
-                      <IconChevronRight className={`h-3 w-3 transition-all ${isActive ? "text-slate-400 opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
+                      <IconChevronRight className={`h-3 w-3 transition-all ${isActive ? "text-red-400 opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
                     </Link>
                   )
                 })}
               </div>
 
-              {/* Subcategorías inline — solo mobile táctil */}
-              {activeCategory && (() => {
-                const activeCat = categories.find((c) => c.id === activeCategory)
-                if (!activeCat || !activeCat.subcategories.length) return null
-                return (
-                  <motion.div
-                    key={`sub-${activeCategory}`}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="sm:hidden mt-3 border-t border-white/[0.08] pt-3"
-                  >
-                    <div className="flex items-center justify-between mb-2 px-1">
-                      <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">
-                        {activeCat.name}
-                      </span>
-                      <Link
-                        href={`/categoria/${activeCat.slug}`}
-                        onClick={() => setIsOpen(false)}
-                        className="text-[10px] font-bold text-slate-400 hover:text-slate-300"
-                      >
-                        Ver todo →
-                      </Link>
-                    </div>
-                    <div className="grid grid-cols-1 gap-0.5">
-                      {activeCat.subcategories.map((sub, i) => (
-                        <Link
-                          key={i}
-                          href={`/categoria/${activeCat.slug}`}
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] text-white/60 transition-colors hover:bg-white/10 hover:text-white active:bg-white/10 active:text-white"
-                        >
-                          <IconChevronRight className="h-2.5 w-2.5 shrink-0 text-slate-500/50" />
-                          {sub}
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )
-              })()}
             </div>
 
             <div className="w-px bg-white/[0.06] shrink-0 hidden sm:block" />
@@ -143,7 +95,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                   <div className="animate-in fade-in slide-in-from-left-2 duration-200">
                     <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 sm:px-6 sm:py-4">
                       <div>
-                        <h2 className="text-base font-extrabold text-[#1e293b] sm:text-lg">{activeCat.name}</h2>
+                        <h2 className="text-base font-extrabold text-[#121A47] sm:text-lg">{activeCat.name}</h2>
                         <p className="mt-0.5 text-xs text-slate-500">
                           Más de <span className="font-bold text-primary">{activeCat.count}</span> productos
                         </p>
@@ -209,7 +161,7 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
           className="group flex items-center justify-between px-4 py-2.5 text-sm transition-colors hover:bg-white/[0.06]"
         >
           <span className="font-semibold text-white/90">Ver todo el catálogo</span>
-          <span className="rounded-md bg-slate-500/15 px-2 py-0.5 text-[10px] font-bold text-slate-400">Todo</span>
+          <span className="rounded-md bg-red-500/15 px-2 py-0.5 text-[10px] font-bold text-red-400">Todo</span>
         </Link>
 
         <div className="mx-4 my-1.5 h-px bg-white/[0.05]" />
@@ -223,7 +175,7 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
               onClick={onClose}
               className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/[0.06]"
             >
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.05] text-white/40 transition-colors group-hover:bg-slate-500/20 group-hover:text-slate-400">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.05] text-white/40 transition-colors group-hover:bg-red-500/20 group-hover:text-red-400">
                 <Icon className="h-3.5 w-3.5" />
               </div>
               <span className="flex-1 truncate text-[13px] font-medium text-white/60 transition-colors group-hover:text-white">
@@ -321,14 +273,14 @@ function FluidNav() {
                   onClick={() => setCatalogOpen((v) => !v)}
                   style={{ width: TAB_W }}
                   className={`relative z-10 flex items-center justify-center gap-1 py-2.5 text-[13px] font-semibold transition-colors duration-200 ${
-                    isActive ? "text-[#1e293b]" : "text-white"
+                    isActive ? "text-[#121A47]" : "text-white"
                   }`}
                 >
                   <span className="opacity-80">{tab.icon}</span>
                   <span>{tab.label}</span>
                   <ChevronDown
                     size={11}
-                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} ${isActive ? "text-[#1e293b]/60" : "text-white/40"}`}
+                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} ${isActive ? "text-[#121A47]/60" : "text-white/40"}`}
                   />
                 </button>
 
@@ -347,7 +299,7 @@ function FluidNav() {
               onMouseLeave={() => setHoveredTab(null)}
               style={{ width: TAB_W }}
               className={`relative z-10 flex items-center justify-center gap-1.5 py-2.5 text-[13px] font-semibold transition-colors duration-200 ${
-                isActive ? "text-[#1e293b]" : "text-white"
+                isActive ? "text-[#121A47]" : "text-white"
               }`}
             >
               <span className="opacity-80">{tab.icon}</span>
@@ -390,11 +342,11 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
           <motion.div
             initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className="fixed inset-y-0 left-0 z-[70] flex w-[300px] flex-col bg-gradient-to-b from-[#0f172a] to-[#1e293b] shadow-2xl"
+            className="fixed inset-y-0 left-0 z-[70] flex w-[300px] flex-col bg-gradient-to-b from-[#0a0f2c] to-[#121A47] shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
-              <img src="/logo/logotipo.png" alt="Logo" className="h-8 w-auto object-contain"
+              <img src="/logo/logotipo.png" alt="Electro Thina" className="h-8 w-auto object-contain"
                 style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.6)) brightness(1.3)" }} />
               <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white">
                 <X size={16} />
@@ -411,9 +363,9 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
                       isActive ? "bg-white/15 text-white" : "text-white/60 hover:bg-white/10 hover:text-white"
                     }`}
                   >
-                    <span className={isActive ? "text-slate-400" : "text-white/40"}>{tab.icon}</span>
+                    <span className={isActive ? "text-red-400" : "text-white/40"}>{tab.icon}</span>
                     {tab.label}
-                    {isActive && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-slate-500" />}
+                    {isActive && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-red-500" />}
                   </Link>
                 )
               })}
@@ -476,7 +428,8 @@ export function Navigation() {
               </Link>
               <Link
                 href="/catalogo?bestSellers=true"
-                className="flex items-center gap-1.5 rounded-lg bg-slate-600 px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-slate-700 sm:gap-2 sm:px-4"
+                aria-label="Más Vendidos"
+                className="flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-700 sm:gap-2 sm:px-4"
               >
                 <IconFire className="h-4 w-4" />
                 <span className="hidden sm:inline">Mas Vendidos</span>

@@ -17,6 +17,7 @@ export default function NuevaMarcaPage() {
   async function handleSave(data: { name: string; logo: string; logoAlt?: string; showInCarousel: boolean }) {
     await createBrandAction(data)
     toast.success("Marca creada correctamente")
+    router.refresh()
     router.push("/marcas")
   }
 

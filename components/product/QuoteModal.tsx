@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { IconWhatsApp, IconX } from "@/components/icons"
-import { WA } from "@/lib/contact"
+import { WA, CONTACT } from "@/lib/contact"
 import { PRODUCT_DETAIL_CONTENT } from "@/lib/data/mock/static-content.mock"
 import type { Product } from "@/lib/types"
 
@@ -17,10 +17,10 @@ export function QuoteModal({ product, onClose }: QuoteModalProps) {
 
   const handleSubmit = () => {
     const url = note
-      ? `https://wa.me/00000000000?text=${encodeURIComponent(
-          `Hola, me gustaria solicitar cotizacion del producto:\n*${product.name}*\nSKU: ${product.sku}\nMarca: ${product.brand}\n\nNota: ${note}`
+      ? `https://wa.me/${CONTACT.whatsappNumber}?text=${encodeURIComponent(
+          `Hola, me gustaría solicitar cotización del producto:\n*${product.name}*\nMarca: ${product.brand}\n\nNota: ${note}`
         )}`
-      : WA.producto(product.name, product.sku, product.brand)
+      : WA.producto(product.name, product.brand)
     window.open(url, "_blank")
     onClose()
   }
@@ -49,9 +49,9 @@ export function QuoteModal({ product, onClose }: QuoteModalProps) {
               {c.headerLabel}
             </p>
           </div>
-          <h3 className="text-base font-extrabold text-[#1e293b]">{product.name}</h3>
+          <h3 className="text-base font-extrabold text-[#121A47]">{product.name}</h3>
           <p className="text-xs text-slate-500">
-            SKU: {product.sku} · {product.brand}
+            {product.brand}
           </p>
         </div>
 

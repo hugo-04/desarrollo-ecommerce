@@ -58,6 +58,8 @@ export function HeroSection() {
           alt="Lorem ipsum dolor sit amet"
           fill
           priority
+          fetchPriority="high"
+          quality={60}
           sizes="100vw"
           className="object-cover"
         />

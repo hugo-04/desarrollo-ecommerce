@@ -3,9 +3,9 @@
  *
  * Thin shell (SRP):
  *  - generateMetadata: metadatos SEO de la categoría
- *  - Fetch de category + products en paralelo
+ *  - Fetch del primer lote de productos (SSR → rápido + indexable por Google)
  *  - JSON-LD schemas (BreadcrumbList, CategorySchema, FAQPage)
- *  - Renderiza CategoriaView con los datos obtenidos
+ *  - Renderiza CategoriaView (client) que gestiona el infinite scroll
  */
 
 import { notFound }              from "next/navigation"
@@ -14,8 +14,11 @@ import { getCategoryBySlugAction } from "@/features/categorias/actions"
 import { getCatalogAction }      from "@/features/productos/actions"
 import { generateCategoryMeta, buildCategorySchema, SITE_URL } from "@/lib/seo"
 import { CategoriaView }         from "@/features/categorias/components/CategoriaView"
+import { PageViewTracker }       from "@/components/analytics/PageViewTracker"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
+
+const LIMIT = 12
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -38,10 +41,11 @@ export default async function CategoriaPage({ params }: PageProps) {
   const category = await getCategoryBySlugAction(slug)
   if (!category) notFound()
 
-  const { data: products } = await getCatalogAction({
+  // Primer lote — SSR para velocidad + indexación SEO
+  const { data: initialProducts, total, totalPages } = await getCatalogAction({
     categories: [category.name],
     page: 1,
-    limit: 12,
+    limit: LIMIT,
   })
 
   // ── Schemas JSON-LD ──────────────────────────────────────────────────────────
@@ -56,7 +60,7 @@ export default async function CategoriaPage({ params }: PageProps) {
     ],
   }
 
-  const categorySchema = buildCategorySchema(category, products.map((p) => p.name))
+  const categorySchema = buildCategorySchema(category, initialProducts.map((p) => p.name))
 
   // FAQPage — genera rich snippets si hay ≥ 2 subcategorías
   const faqSchema = category.subcategories.length >= 2 ? {
@@ -98,7 +102,15 @@ export default async function CategoriaPage({ params }: PageProps) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       )}
 
-      <CategoriaView category={category} products={products} />
+      <PageViewTracker path={`/categoria/${category.slug}`} />
+
+      <CategoriaView
+        category={category}
+        initialProducts={initialProducts}
+        initialTotal={total}
+        initialTotalPages={totalPages}
+      />
     </>
   )
 }
+

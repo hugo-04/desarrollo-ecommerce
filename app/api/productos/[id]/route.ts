@@ -16,6 +16,7 @@
 
 import { NextRequest, NextResponse } from "next/server"
 import { getProductAction } from "@/features/productos/actions"
+import { log } from "@/lib/logger"
 
 export async function GET(
   _request: NextRequest,
@@ -37,7 +38,7 @@ export async function GET(
 
     return NextResponse.json(product)
   } catch (error) {
-    console.error("[GET /api/productos/[id]]", error)
+    log.error("[GET /api/productos/[id]]", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

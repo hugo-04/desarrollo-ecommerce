@@ -34,12 +34,12 @@ export function CompanyShowcase() {
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <motion.div variants={fadeLeft} className="order-2 lg:order-1">
             <div className="mb-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-slate-500" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-600">
+              <div className="h-px w-8 bg-red-500" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-red-600">
                 {c.badge}
               </span>
             </div>
-            <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-[#1e293b] lg:text-4xl">
+            <h2 className="mb-6 text-3xl font-extrabold leading-tight tracking-tight text-[#121A47] lg:text-4xl">
               {c.title}
               <br />
               <span className="text-primary">{c.titleHighlight}</span>
@@ -58,7 +58,7 @@ export function CompanyShowcase() {
                     <div className={`mb-2 flex h-10 w-10 items-center justify-center rounded-lg ${item.colorClass}`}>
                       {Icon && <Icon className="h-5 w-5" />}
                     </div>
-                    <h4 className="mb-1 text-sm font-bold text-[#1e293b]">{item.title}</h4>
+                    <p className="mb-1 text-sm font-bold text-[#121A47]">{item.title}</p>
                     <p className="text-xs text-slate-500">{item.desc}</p>
                   </motion.div>
                 )
@@ -74,7 +74,7 @@ export function CompanyShowcase() {
               </Link>
               <Link
                 href="/contacto"
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-[#1e293b] px-6 py-3 text-sm font-bold text-[#1e293b] transition-all hover:bg-[#1e293b] hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-[#121A47] px-6 py-3 text-sm font-bold text-[#121A47] transition-all hover:bg-[#121A47] hover:text-white"
               >
                 <IconPhone className="h-4 w-4" />
                 {c.ctaContacto}
@@ -99,11 +99,11 @@ export function CompanyShowcase() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={viewportOnce}
                 transition={{ delay: 0.4, duration: 0.6, type: "spring" }}
-                className="absolute -bottom-6 -left-6 rounded-2xl border border-white/20 bg-[#1e293b] p-5 shadow-[0_20px_40px_rgba(0,0,0,0.3)] backdrop-blur-md"
+                className="absolute -bottom-6 -left-6 rounded-2xl border border-white/20 bg-[#121A47] p-5 shadow-[0_20px_40px_rgba(0,0,0,0.3)] backdrop-blur-md"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-500/20">
-                    <IconCertificate className="h-6 w-6 text-slate-400" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20">
+                    <IconCertificate className="h-6 w-6 text-red-400" />
                   </div>
                   <div>
                     <p className="text-2xl font-extrabold text-white">ISO 9001</p>
@@ -112,7 +112,7 @@ export function CompanyShowcase() {
                 </div>
               </motion.div>
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-2xl border-2 border-primary/20 -rotate-12" />
-              <div className="absolute -right-8 -top-8 h-24 w-24 rounded-2xl border-2 border-slate-500/10" />
+              <div className="absolute -right-8 -top-8 h-24 w-24 rounded-2xl border-2 border-red-500/10" />
             </div>
           </motion.div>
         </div>

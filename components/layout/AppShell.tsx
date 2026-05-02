@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { usePathname } from "next/navigation"
+
 import { motion, useScroll, useMotionValueEvent } from "framer-motion"
 import { TopBar } from "./TopBar"
 import { Header } from "./Header"
@@ -10,6 +11,7 @@ import { Footer } from "./Footer"
 import { IconWhatsApp } from "@/components/icons"
 import { globalAnimationsCSS } from "@/styles/animations"
 import { WA } from "@/lib/contact"
+import { ScrollToTop } from "@/components/ScrollToTop"
 
 /**
  * AppShell wraps all pages with the shared layout.
@@ -23,6 +25,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isProductDetail = pathname?.startsWith("/producto/")
   const [searchQuery, setSearchQuery] = useState("")
+
+  // Sincroniza el input de búsqueda con el param ?q= de la URL del catálogo
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setSearchQuery(pathname === "/catalogo" ? (params.get("q") ?? "") : "")
+  }, [pathname])
   const [hidden, setHidden] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const nearTop = useRef(true)
@@ -63,6 +71,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <ScrollToTop />
       <style dangerouslySetInnerHTML={{ __html: globalAnimationsCSS }} />
       <div className="min-h-screen bg-white font-sans antialiased">
 
@@ -82,7 +91,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Contenido desplazado exactamente el alto del nav fijo */}
         <div style={{ paddingTop: navHeight }}>
-          {children}
+          <main>{children}</main>
           <Footer />
         </div>
 

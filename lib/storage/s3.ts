@@ -25,6 +25,7 @@ export const UPLOAD_FOLDERS = [
   "productos/imagenes",
   "productos/galeria",
   "productos/fichas",
+  "categorias/imagenes",
 ] as const
 
 export type UploadFolder = (typeof UPLOAD_FOLDERS)[number]
@@ -115,4 +116,37 @@ export function isS3Configured(): boolean {
     process.env.AWS_ACCESS_KEY_ID &&
     process.env.AWS_SECRET_ACCESS_KEY,
   )
+}
+
+/**
+ * Extrae la key S3 desde una URL pública.
+ * Soporta CDN_URL y AWS_S3_PUBLIC_URL como prefijos.
+ * Devuelve null si la URL no pertenece a nuestro bucket.
+ */
+export function extractS3Key(url: string): string | null {
+  if (!url) return null
+  const bases = [
+    process.env.CDN_URL,
+    process.env.AWS_S3_PUBLIC_URL,
+  ].filter(Boolean).map((u) => u!.replace(/\/$/, ""))
+  for (const base of bases) {
+    if (url.startsWith(base + "/")) return url.slice(base.length + 1)
+  }
+  return null
+}
+
+/**
+ * Elimina un archivo del bucket dado su URL pública.
+ * No lanza error si el archivo no existe o si la URL no es de nuestro bucket.
+ */
+export async function deleteFromS3(url: string): Promise<void> {
+  if (!isS3Configured()) return
+  const key = extractS3Key(url)
+  if (!key) return
+  const client = createS3Client()
+  try {
+    await client.send(new DeleteObjectCommand({ Bucket: process.env.AWS_S3_BUCKET!, Key: key }))
+  } catch {
+    // Silencioso: si el archivo ya no existe no es un error crítico
+  }
 }

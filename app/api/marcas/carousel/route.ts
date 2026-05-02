@@ -6,6 +6,7 @@
  */
 
 import { NextResponse } from "next/server"
+import { log } from "@/lib/logger"
 import { getBrandsForCarouselAction } from "@/features/marcas/actions"
 
 export async function GET() {
@@ -13,7 +14,7 @@ export async function GET() {
     const brands = await getBrandsForCarouselAction()
     return NextResponse.json(brands)
   } catch (error) {
-    console.error("[GET /api/marcas/carousel]", error)
+    log.error("[GET /api/marcas/carousel]", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

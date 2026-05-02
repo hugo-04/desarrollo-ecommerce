@@ -50,8 +50,8 @@ export function PdfUploader({ label, value, onChange, onTempKey, onSeoNameChange
       let data: Record<string, unknown> = {}
       try { data = await res.json() } catch { /* respuesta no-JSON (502, nginx error, etc.) */ }
       if (!res.ok) throw new Error((data.error as string) ?? `Error al subir (${res.status})`)
-      onChange(data.url)
-      if (data.tempKey) onTempKey?.(data.tempKey)
+      onChange(data.url as string)
+      if (data.tempKey) onTempKey?.(data.tempKey as string)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Error al subir")
       setFileName("")

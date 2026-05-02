@@ -1,18 +1,11 @@
 "use client"
 
-/**
- * useAdminPagedList — Hook para listados con paginación SERVER-SIDE.
- *
- * Soporta cambio dinámico de tamaño de página mediante `setPageSize`.
- * Todos los valores mutables se guardan en refs para evitar closures obsoletas.
- *
- * @template T - Cualquier entidad que tenga un campo `id: number`.
- */
+import { useRef, useState, useEffect, useCallback } from "react"
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
+import { useQuery, useQueryClient, keepPreviousData }  from "@tanstack/react-query"
+import { toast }                                       from "sonner"
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import { toast } from "sonner"
-
-// ─── Tipos ─────────────────────────────────────────────────────────────────────
+// ─── Tipos públicos ────────────────────────────────────────────────────────────
 
 export interface PagedResult<T> {
   data:       T[]
@@ -23,7 +16,17 @@ export interface PagedResult<T> {
 
 export interface UseAdminPagedListOptions<T extends { id: number }> {
   pageSize: number
-  loadFn: (params: { page: number; query: string; limit: number }) => Promise<PagedResult<T>>
+  loadFn:   (params: { page: number; query: string; limit: number }) => Promise<PagedResult<T>>
+}
+
+// ─── Caché de claves por función (implementación interna) ─────────────────────
+
+const fnKeys = new WeakMap<Function, string>()
+let   keyIdx = 0
+
+function getStableKey(fn: Function): string {
+  if (!fnKeys.has(fn)) fnKeys.set(fn, `ql-${++keyIdx}`)
+  return fnKeys.get(fn)!
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
@@ -32,98 +35,118 @@ export function useAdminPagedList<T extends { id: number }>({
   pageSize: initialPageSize,
   loadFn,
 }: UseAdminPagedListOptions<T>) {
-  const [items, setItems]             = useState<T[]>([])
-  const [total, setTotal]             = useState(0)
-  const [totalPages, setTotalPages]   = useState(1)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [search, setSearch]           = useState("")
-  const [loading, setLoading]         = useState(true)
-  const [removingId, setRemovingId]   = useState<number | null>(null)
-  const [pageSize, setPageSizeState]  = useState(initialPageSize)
+  const router       = useRouter()
+  const pathname     = usePathname()
+  const searchParams = useSearchParams()
+  const queryClient  = useQueryClient()
+  const stableKey    = useRef(getStableKey(loadFn)).current
 
-  // Refs para evitar closures obsoletas en el handler de focus y llamadas manuales
-  const loadFnRef   = useRef(loadFn)
-  const searchRef   = useRef("")
-  const pageRef     = useRef(1)
-  const pageSizeRef = useRef(initialPageSize)
+  // inputValue: valor inmediato del input controlado
+  // query:      valor debounced que realmente dispara el fetch y actualiza la URL
+  const [inputValue, setInputValue]  = useState(() => searchParams.get("q")    ?? "")
+  const [query, setQuery]            = useState(() => searchParams.get("q")    ?? "")
+  const [currentPage, setPageState]  = useState(() => Math.max(1, Number(searchParams.get("page") ?? 1)))
+  const [pageSize, setPageSizeState] = useState(initialPageSize)
+  const [removingId, setRemovingId]  = useState<number | null>(null)
 
-  useEffect(() => { loadFnRef.current = loadFn })
+  // Flags para el efecto de debounce
+  const isFirstRender    = useRef(true)
+  const skipNextDebounce = useRef(false)
 
-  /** Carga una página sin depender de estado — recibe todo por argumento */
-  const load = useCallback(async (page: number, query: string, limit: number) => {
-    setLoading(true)
-    try {
-      const result = await loadFnRef.current({ page, query, limit })
-      pageRef.current = result.page
-      setItems(result.data)
-      setTotal(result.total)
-      setTotalPages(result.totalPages)
-      setCurrentPage(result.page)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  // Actualiza la URL sin recargar la página
+  const pushParams = useCallback((q: string, page: number) => {
+    const params = new URLSearchParams()
+    if (q)        params.set("q",    q)
+    if (page > 1) params.set("page", String(page))
+    const qs = params.toString()
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+  }, [router, pathname])
 
-  // Carga inicial al montar
-  useEffect(() => { load(1, "", pageSizeRef.current) }, [load])
-
-  // Recarga al volver a la pestaña (útil después de crear/editar en otra ruta)
+  // Sincronizar estado cuando la URL cambia externamente (ej: botón atrás)
   useEffect(() => {
-    function onFocus() { load(pageRef.current, searchRef.current, pageSizeRef.current) }
-    window.addEventListener("focus", onFocus)
-    return () => window.removeEventListener("focus", onFocus)
-  }, [load])
+    const q    = searchParams.get("q")    ?? ""
+    const page = Math.max(1, Number(searchParams.get("page") ?? 1))
+    skipNextDebounce.current = true  // evitar que el efecto debounce sobreescriba la página
+    setInputValue(q)
+    setQuery(q)
+    setPageState(page)
+  }, [searchParams])
+
+  // Debounce: confirma inputValue → query + URL después de 400 ms sin tipear
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return }
+    if (skipNextDebounce.current) { skipNextDebounce.current = false; return }
+    const t = setTimeout(() => {
+      setQuery(inputValue)
+      setPageState(1)
+      pushParams(inputValue, 1)
+    }, 400)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputValue])
+
+  const queryKey = [stableKey, currentPage, query, pageSize] as const
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey,
+    queryFn:         () => loadFn({ page: currentPage, query, limit: pageSize }),
+    placeholderData: keepPreviousData,
+  })
+
+  const items      = data?.data       ?? []
+  const total      = data?.total      ?? 0
+  const totalPages = data?.totalPages ?? 1
 
   function handleSearch(q: string) {
-    searchRef.current = q
-    setSearch(q)
-    load(1, q, pageSizeRef.current)
+    setInputValue(q)  // inmediato — el debounce confirma contra la DB
   }
 
   function handlePage(p: number) {
-    pageRef.current = p
-    setCurrentPage(p)
-    load(p, searchRef.current, pageSizeRef.current)
+    setPageState(p)
+    pushParams(query, p)
   }
 
-  /** Cambia el tamaño de página y recarga desde la primera página */
   function handlePageSize(size: number) {
-    pageSizeRef.current = size
     setPageSizeState(size)
-    load(1, searchRef.current, size)
+    setPageState(1)
+    pushParams(query, 1)
   }
 
-  /**
-   * Elimina un ítem con animación de salida (280 ms) y toast de feedback.
-   * Actualiza el total y retira el ítem del estado local sin re-fetchear.
-   */
   async function handleDelete(
     id: number,
     deleteFn: () => Promise<void>,
     itemName = "ítem",
   ) {
     setRemovingId(id)
-    let timeout: ReturnType<typeof setTimeout> | null = null
     try {
       await deleteFn()
-      timeout = setTimeout(() => {
-        setItems((prev) => prev.filter((i) => i.id !== id))
-        setTotal((t) => Math.max(0, t - 1))
-        setRemovingId(null)
-      }, 280)
+
+      queryClient.setQueryData(queryKey, (old: PagedResult<T> | undefined) => {
+        if (!old) return old
+        return {
+          ...old,
+          data:  old.data.filter((i) => i.id !== id),
+          total: Math.max(0, old.total - 1),
+        }
+      })
+
+      await queryClient.invalidateQueries({ queryKey: [stableKey] })
+
+      setTimeout(() => setRemovingId(null), 280)
       toast.success(`"${itemName}" eliminado correctamente`)
-    } catch {
-      if (timeout) clearTimeout(timeout)
+    } catch (e) {
       setRemovingId(null)
-      toast.error(`No se pudo eliminar "${itemName}"`)
+      const msg = e instanceof Error ? e.message : `No se pudo eliminar "${itemName}"`
+      toast.error(msg)
     }
   }
 
   return {
     items,
     total,
-    loading,
-    search,
+    loading:     isLoading,
+    fetching:    isFetching && !isLoading,
+    search:      inputValue,  // valor inmediato para el input controlado
     pageSize,
     currentPage,
     totalPages,

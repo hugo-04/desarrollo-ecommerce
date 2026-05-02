@@ -15,6 +15,7 @@ import {
 } from "./actions"
 import type { Product } from "@/lib/types"
 import type { ProductFilters } from "./types"
+import { log } from "@/lib/logger"
 
 export function useProducts(filters: ProductFilters) {
   const [products, setProducts]     = useState<Product[]>([])
@@ -162,7 +163,7 @@ export function useRelatedProducts(productId: number, categoryName: string) {
     if (!categoryName) return
     getRelatedProductsAction(productId, categoryName)
       .then(setRelated)
-      .catch((err: unknown) => console.error("[useRelatedProducts]", err))
+      .catch((err: unknown) => log.error("[useRelatedProducts]", err))
   }, [productId, categoryName])
 
   return related

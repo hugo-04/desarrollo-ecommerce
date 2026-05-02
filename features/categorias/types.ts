@@ -5,7 +5,9 @@ export type CategoryDTO = Omit<Category, "icon">
 
 // ─── CRUD DTOs ─────────────────────────────────────────────────────────────────
 
-export type CreateCategoryDTO = Omit<CategoryDTO, "id">
+export type CreateCategoryDTO = Omit<CategoryDTO, "id" | "subcategories" | "subcategoryItems"> & {
+  subcategoryIds?: number[]
+}
 export type UpdateCategoryDTO = Partial<CreateCategoryDTO>
 
 // ─── Paginación ────────────────────────────────────────────────────────────────

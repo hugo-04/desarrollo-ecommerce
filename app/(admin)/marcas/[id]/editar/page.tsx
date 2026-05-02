@@ -39,12 +39,14 @@ export default function EditarMarcaPage() {
   async function handleSave(data: { name: string; logo: string; logoAlt?: string; showInCarousel: boolean }) {
     await updateBrandAction(brand!.id, data)
     toast.success("Marca actualizada correctamente")
+    router.refresh()
     router.push("/marcas")
   }
 
   async function handleDelete() {
     await deleteBrandAction(brand!.id)
     toast.success(`"${brand!.name}" eliminada correctamente`)
+    router.refresh()
     router.push("/marcas")
   }
 

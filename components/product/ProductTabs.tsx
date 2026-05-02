@@ -42,11 +42,13 @@ export function ProductTabs({ product, activeTab, onTabChange }: ProductTabsProp
             Acerca de {product.name}
           </h2>
           <div className="leading-7 text-slate-700 text-base">
-            <p>{product.fullDescription}</p>
-            <p className="mt-4 font-medium text-slate-800">
-              Perfecto para integraciones industriales y sistemas de distribucion que requieren
-              maxima fiabilidad en condiciones exigentes.
-            </p>
+            {product.fullDescription ? (
+              <p>{product.fullDescription}</p>
+            ) : (
+              <p className="text-slate-400 italic text-sm">
+                Descripción técnica no disponible. Contáctenos para más información.
+              </p>
+            )}
           </div>
         </div>
       ) : (

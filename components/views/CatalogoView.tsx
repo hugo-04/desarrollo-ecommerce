@@ -27,6 +27,34 @@ import type { CategoryDTO } from "@/features/categorias/types"
 
 const ITEMS_PER_PAGE = 20
 
+// ── Card con animación de entrada ────────────────────────────────────────────
+
+function AnimatedCard({ product, index, animate }: {
+  product: import("@/lib/types").Product
+  index: number
+  animate: boolean
+}) {
+  const [visible, setVisible] = useState(!animate)
+
+  useEffect(() => {
+    if (!animate) return
+    const t = setTimeout(() => setVisible(true), index * 50)
+    return () => clearTimeout(t)
+  }, [animate, index])
+
+  return (
+    <div
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(20px)",
+        transition: visible ? "opacity 0.35s ease, transform 0.35s ease" : "none",
+      }}
+    >
+      <ProductCard product={product} />
+    </div>
+  )
+}
+
 interface CatalogoViewProps {
   initialCategory?: string
   initialQuery?: string
@@ -72,6 +100,18 @@ export function CatalogoView({
   const { products, total, hasMore, loading, loadingMore, loadMore } = useInfiniteProducts(productFilters)
   const categories      = initialCategories
   const availableBrands = initialBrands
+
+  // Rastrear dónde empieza cada nuevo lote para animarlo
+  const [newBatchStart, setNewBatchStart] = useState<number | null>(null)
+  const prevProductCount = useRef(0)
+  useEffect(() => {
+    if (products.length > prevProductCount.current && prevProductCount.current > 0) {
+      setNewBatchStart(prevProductCount.current)
+    } else if (products.length === 0) {
+      setNewBatchStart(null)
+    }
+    prevProductCount.current = products.length
+  }, [products.length])
 
   // Sentinel para infinite scroll — dispara loadMore al entrar en viewport
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -211,18 +251,23 @@ export function CatalogoView({
 
             {/* Skeleton — solo primera carga */}
             {loading && (
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {Array.from({ length: ITEMS_PER_PAGE }).map((_, i) => (
-                  <div key={i} className="h-72 animate-pulse rounded-xl bg-slate-200" />
+                  <div key={i} className="h-52 animate-pulse rounded-xl bg-slate-200 sm:h-72" />
                 ))}
               </div>
             )}
 
             {/* Grid de productos */}
             {!loading && viewMode === "grid" && (
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {products.map((product, idx) => (
+                  <AnimatedCard
+                    key={product.id}
+                    product={product}
+                    index={newBatchStart !== null ? idx - newBatchStart : idx}
+                    animate={newBatchStart !== null && idx >= newBatchStart}
+                  />
                 ))}
               </div>
             )}
@@ -289,14 +334,34 @@ export function CatalogoView({
 
             {/* Empty state */}
             {!loading && products.length === 0 && (
-              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 py-16 text-center">
+              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 py-16 text-center px-4">
                 <IconSearch className="mb-3 h-12 w-12 text-slate-300" />
                 <h3 className="mb-1 text-base font-semibold text-slate-800">
                   No se encontraron productos
                 </h3>
-                <p className="mb-4 text-xs text-slate-500">
-                  Intenta ajustar los filtros o buscar con otros terminos
-                </p>
+                {activeFiltersCount > 0 ? (
+                  <div className="mb-4">
+                    <p className="text-xs text-slate-500 mb-2">
+                      La combinación de filtros activos no tiene resultados:
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-1.5">
+                      {selectedCategories.map((c) => (
+                        <span key={c} className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
+                          {c}
+                        </span>
+                      ))}
+                      {selectedBrands.map((b) => (
+                        <span key={b} className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-600">
+                          {b}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="mb-4 text-xs text-slate-500">
+                    Intenta ajustar los filtros o buscar con otros términos
+                  </p>
+                )}
                 <button
                   onClick={clearFilters}
                   className="rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-primary/90"
@@ -311,14 +376,22 @@ export function CatalogoView({
               <>
                 <div ref={sentinelRef} className="h-1" />
                 {loadingMore && (
-                  <div className="flex justify-center py-8">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-primary" />
+                  <div className="flex flex-col items-center justify-center py-8 gap-2">
+                    <div className="relative h-8 w-8">
+                      <div className="absolute inset-0 rounded-full border-4 border-slate-200" />
+                      <div className="absolute inset-0 rounded-full border-4 border-t-primary animate-spin" />
+                    </div>
+                    <p className="text-xs text-slate-400 font-medium">Cargando más productos…</p>
                   </div>
                 )}
                 {!hasMore && products.length > 0 && (
-                  <p className="py-8 text-center text-sm text-slate-400">
-                    {total} productos en total · fin del catálogo
-                  </p>
+                  <div className="flex flex-col items-center gap-2 py-8 text-center">
+                    <div className="h-px w-20 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+                    <p className="text-sm text-slate-400 font-medium">
+                      {total} productos · fin del catálogo
+                    </p>
+                    <div className="h-px w-20 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+                  </div>
                 )}
               </>
             )}

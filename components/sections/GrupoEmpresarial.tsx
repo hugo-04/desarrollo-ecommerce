@@ -7,24 +7,24 @@ import { fadeUp, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
 // ─── Datos del grupo ───────────────────────────────────────────────────────────
 const EMPRESAS = [
   {
-    nombre:   "Lorem Ipsum S.A.C.",
-    ruc:      "00000000000",
-    giro:     "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-    logo:     "",
+    nombre:   "Electro Thina S.A.C.",
+    ruc:      "20609410711",
+    giro:     "Fabricación y distribución de ferretería eléctrica AT/MT",
+    logo:     "/logo/logotipo.png",
     actual:   true,
   },
   {
-    nombre:   "Lorem Ipsum E.I.R.L.",
-    ruc:      "00000000001",
-    giro:     "Lorem ipsum dolor sit amet consectetur adipiscing",
-    logo:     "",
+    nombre:   "T & V Electro Comercial E.I.R.L.",
+    ruc:      "20600389867",
+    giro:     "Comercialización de materiales eléctricos",
+    logo:     "/logo/T&V-Electro-Comercial.jpeg",
     actual:   false,
   },
   {
-    nombre:   "Lorem Ipsum Corporación E.I.R.L.",
-    ruc:      "00000000002",
-    giro:     "Lorem ipsum dolor sit amet consectetur adipiscing elit",
-    logo:     "",
+    nombre:   "Alexza Corporación Ferretera E.I.R.L.",
+    ruc:      "20600389964",
+    giro:     "Distribución de materiales y ferretería eléctrica",
+    logo:     "/logo/ALEXZA-CORPORACION-SF.png",
     actual:   false,
   },
 ]
@@ -42,7 +42,7 @@ export function GrupoEmpresarialSection() {
         }}
       />
       {/* Separador superior — línea roja para cortar visualmente la sección anterior */}
-      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-slate-500/50 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
       <div className="relative mx-auto max-w-7xl px-4">
@@ -55,17 +55,17 @@ export function GrupoEmpresarialSection() {
           {/* Header */}
           <motion.div variants={fadeUp} className="mb-14 text-center">
             <div className="mb-4 inline-flex items-center gap-3">
-              <div className="h-px w-8 bg-slate-500/60" />
-              <span className="rounded border border-slate-500/40 bg-slate-50 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-600">
+              <div className="h-px w-8 bg-red-500/60" />
+              <span className="rounded border border-red-500/40 bg-red-50 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-red-600">
                 Grupo Empresarial
               </span>
-              <div className="h-px w-8 bg-slate-500/60" />
+              <div className="h-px w-8 bg-red-500/60" />
             </div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">
-              Lorem Ipsum del Grupo
+            <h2 className="text-3xl font-extrabold tracking-tight text-[#121A47] lg:text-4xl">
+              Empresas del Grupo
             </h2>
             <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
+              Empresas independientes bajo la misma titularidad, operando en distintos segmentos del sector eléctrico peruano.
             </p>
           </motion.div>
 
@@ -84,18 +84,18 @@ export function GrupoEmpresarialSection() {
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 className={`group relative overflow-hidden rounded-xl border p-6 transition-all duration-500 ${
                   empresa.actual
-                    ? "border-slate-500/40 bg-gradient-to-br from-slate-50 to-white shadow-lg shadow-slate-100"
+                    ? "border-red-500/40 bg-gradient-to-br from-red-50 to-white shadow-lg shadow-red-100"
                     : "border-slate-200 bg-white shadow-sm hover:border-slate-300 hover:shadow-md"
                 }`}
               >
                 {/* Top accent line */}
-                <div className={`absolute inset-x-0 top-0 h-[2px] ${empresa.actual ? "bg-gradient-to-r from-slate-500/0 via-slate-500 to-slate-500/0" : "bg-gradient-to-r from-[#1e293b]/0 via-[#1e293b]/30 to-[#1e293b]/0 opacity-0 group-hover:opacity-100 transition-opacity"}`} />
+                <div className={`absolute inset-x-0 top-0 h-[2px] ${empresa.actual ? "bg-gradient-to-r from-red-500/0 via-red-500 to-red-500/0" : "bg-gradient-to-r from-[#121A47]/0 via-[#121A47]/30 to-[#121A47]/0 opacity-0 group-hover:opacity-100 transition-opacity"}`} />
 
                 {/* Corner circuit decoration */}
                 <div className="absolute right-3 top-3 opacity-10">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M20 0 L20 10 L10 10 L10 20" stroke={empresa.actual ? "#ef4444" : "#1e293b"} strokeWidth="1" fill="none"/>
-                    <circle cx="10" cy="10" r="1.5" fill={empresa.actual ? "#ef4444" : "#1e293b"}/>
+                    <path d="M20 0 L20 10 L10 10 L10 20" stroke={empresa.actual ? "#ef4444" : "#121A47"} strokeWidth="1" fill="none"/>
+                    <circle cx="10" cy="10" r="1.5" fill={empresa.actual ? "#ef4444" : "#121A47"}/>
                   </svg>
                 </div>
 
@@ -103,10 +103,10 @@ export function GrupoEmpresarialSection() {
                 {empresa.actual && (
                   <div className="mb-4 inline-flex items-center gap-1.5">
                     <span className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-slate-400 opacity-75" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-slate-500" />
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-red-500" />
                     </span>
-                    <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-slate-600">
+                    <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-red-600">
                       Esta empresa
                     </span>
                   </div>
@@ -114,22 +114,18 @@ export function GrupoEmpresarialSection() {
 
                 {/* Logo */}
                 <div className="mb-4 flex h-14 items-center">
-                  {empresa.logo ? (
-                    <Image
-                      src={empresa.logo}
-                      alt={`Logo ${empresa.nombre}`}
-                      width={120}
-                      height={56}
-                      className="h-12 w-auto object-contain"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="h-12 w-28 rounded bg-slate-100 border border-slate-200" />
-                  )}
+                  <Image
+                    src={empresa.logo}
+                    alt={`Logo ${empresa.nombre}`}
+                    width={120}
+                    height={56}
+                    sizes="(min-width: 640px) 120px, 70px"
+                    className="h-12 w-auto object-contain"
+                  />
                 </div>
 
                 {/* Nombre */}
-                <h3 className={`mb-1 text-base font-bold leading-tight ${empresa.actual ? "text-[#1e293b]" : "text-slate-700 group-hover:text-[#1e293b] transition-colors"}`}>
+                <h3 className={`mb-1 text-base font-bold leading-tight ${empresa.actual ? "text-[#121A47]" : "text-slate-700 group-hover:text-[#121A47] transition-colors"}`}>
                   {empresa.nombre}
                 </h3>
 
@@ -139,11 +135,11 @@ export function GrupoEmpresarialSection() {
                 </p>
 
                 {/* RUC — tipo placa técnica */}
-                <div className={`rounded-lg border px-3 py-2 ${empresa.actual ? "border-slate-200 bg-slate-50" : "border-slate-200 bg-slate-50"}`}>
-                  <p className={`font-mono text-[9px] font-semibold uppercase tracking-[0.2em] ${empresa.actual ? "text-slate-500/70" : "text-slate-400"}`}>
+                <div className={`rounded-lg border px-3 py-2 ${empresa.actual ? "border-red-200 bg-red-50" : "border-slate-200 bg-slate-50"}`}>
+                  <p className={`font-mono text-[9px] font-semibold uppercase tracking-[0.2em] ${empresa.actual ? "text-red-500/70" : "text-slate-400"}`}>
                     RUC
                   </p>
-                  <p className={`font-mono text-sm font-bold tracking-wider ${empresa.actual ? "text-slate-600" : "text-slate-600"}`}>
+                  <p className={`font-mono text-sm font-bold tracking-wider ${empresa.actual ? "text-red-600" : "text-slate-600"}`}>
                     {empresa.ruc}
                   </p>
                 </div>
@@ -153,7 +149,7 @@ export function GrupoEmpresarialSection() {
 
           {/* Nota legal */}
           <motion.p variants={fadeUp} className="mt-8 text-center font-mono text-[10px] text-slate-400">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. · Lorem · Ipsum
+            Empresas con personería jurídica independiente bajo la misma titularidad. · SUNAT · Perú
           </motion.p>
         </motion.div>
       </div>
@@ -165,10 +161,10 @@ export function GrupoEmpresarialSection() {
 
 export function GrupoEmpresarialBand() {
   return (
-    <section className="relative overflow-hidden bg-[#1e293b] py-12">
+    <section className="relative overflow-hidden bg-[#121A47] py-12">
       {/* Separador superior rojo — contrasta con secciones adyacentes */}
-      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-slate-500/60 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-slate-500/30 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
 
       {/* Subtle circuit grid */}
       <div
@@ -208,44 +204,40 @@ export function GrupoEmpresarialBand() {
                 }}
                 className={`group relative overflow-hidden rounded-lg border px-4 py-3.5 transition-all duration-300 ${
                   empresa.actual
-                    ? "border-slate-500/40 bg-slate-500/[0.10]"
+                    ? "border-red-500/40 bg-red-500/[0.10]"
                     : "border-white/[0.10] bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.08]"
                 }`}
               >
                 {empresa.actual && (
-                  <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-slate-600/0 via-slate-500/90 to-slate-600/0" />
+                  <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-red-600/0 via-red-500/90 to-red-600/0" />
                 )}
 
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    {/* Mini logo */}
+                    {/* Mini logo — contenedor blanco para neutralizar fondos no transparentes */}
                     <div className="mb-2 flex h-8 items-center">
-                      {empresa.logo ? (
-                        <div className="inline-flex items-center rounded-md bg-white/95 px-2 py-0.5 shadow-sm">
-                          <Image
-                            src={empresa.logo}
-                            alt={`Logo ${empresa.nombre}`}
-                            width={80}
-                            height={24}
-                            className="h-5 w-auto object-contain"
-                            unoptimized
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-6 w-16 rounded bg-white/20 border border-white/10" />
-                      )}
+                      <div className="inline-flex items-center rounded-md bg-white/95 px-2 py-0.5 shadow-sm">
+                        <Image
+                          src={empresa.logo}
+                          alt={`Logo ${empresa.nombre}`}
+                          width={80}
+                          height={24}
+                          sizes="(min-width: 640px) 80px, 50px"
+                          className="h-5 w-auto object-contain"
+                        />
+                      </div>
                     </div>
                     <p className={`truncate text-[11px] font-bold leading-tight ${empresa.actual ? "text-white" : "text-white/60 group-hover:text-white/90 transition-colors"}`}>
                       {empresa.nombre}
                     </p>
-                    <p className={`mt-1.5 font-mono text-[10px] tracking-wider ${empresa.actual ? "text-slate-300/80" : "text-white/30"}`}>
+                    <p className={`mt-1.5 font-mono text-[10px] tracking-wider ${empresa.actual ? "text-red-300/80" : "text-white/30"}`}>
                       {empresa.ruc}
                     </p>
                   </div>
                   {empresa.actual && (
                     <span className="relative mt-0.5 flex h-1.5 w-1.5 shrink-0">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-slate-400 opacity-75" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-slate-500" />
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-red-500" />
                     </span>
                   )}
                 </div>
@@ -255,7 +247,7 @@ export function GrupoEmpresarialBand() {
 
           {/* Nota al pie */}
           <motion.p variants={fadeUp} className="mt-5 text-center font-mono text-[10px] text-white/25">
-            Lorem ipsum dolor sit amet · Lorem Ipsum · Lorem Ipsum
+            Empresas independientes bajo la misma titularidad · SUNAT · Perú
           </motion.p>
         </motion.div>
       </div>

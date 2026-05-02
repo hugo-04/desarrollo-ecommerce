@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/next"
 import { Nunito_Sans, Rubik } from "next/font/google"
 import { SEO, organizationSchema, websiteSchema } from "@/lib/seo"
 import "./globals.css"
@@ -29,6 +28,9 @@ export const metadata = SEO.root
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${nunito.variable} ${rubik.variable}`}>
+      <head>
+        <link rel="dns-prefetch" href="https://media.electrothina.com" />
+      </head>
       <body className="font-sans antialiased">
         <script
           type="application/ld+json"
@@ -39,7 +41,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         {children}
-        <Analytics />
       </body>
     </html>
   )

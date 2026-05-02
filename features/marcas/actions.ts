@@ -11,8 +11,8 @@ import { BrandService } from "./service"
 import type { CreateBrandDTO, UpdateBrandDTO, BrandFilters } from "./types"
 import { db } from "@/lib/db"
 import { getSession } from "@/lib/auth/session"
+import { deleteFromS3 } from "@/lib/storage/s3"
 
-// Singleton: una sola instancia compartida entre todas las llamadas del proceso.
 const _service = new BrandService(new DbBrandRepository(db))
 
 function getService() { return _service }
@@ -23,13 +23,10 @@ export async function getBrandsAction() {
   return getService().getAll()
 }
 
-/** Solo las marcas con showInCarousel=true — para el carrusel/marquee del home */
 export async function getBrandsForCarouselAction() {
   return getService().getCarousel()
 }
 
-/** Versión paginada — solo devuelve la página solicitada.
- *  Usar en el listado admin para no cargar todas las marcas de una vez. */
 export async function getBrandsPagedAction(filters: BrandFilters) {
   return getService().getPaged(filters)
 }
@@ -49,6 +46,7 @@ export async function createBrandAction(data: CreateBrandDTO) {
   if (!session) throw new Error("No autorizado")
   const result = await getService().create(data)
   revalidatePath("/catalogo")
+  revalidatePath("/marcas")
   revalidatePath("/")
   return result
 }
@@ -56,8 +54,13 @@ export async function createBrandAction(data: CreateBrandDTO) {
 export async function updateBrandAction(id: number, data: UpdateBrandDTO) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
+  const old = await getService().getById(id)
   const result = await getService().update(id, data)
+  if (old?.logo && data.logo !== undefined && old.logo !== data.logo)
+    await deleteFromS3(old.logo)
   revalidatePath("/catalogo")
+  revalidatePath("/marcas")
+  revalidatePath("/producto/[id]", "page")
   revalidatePath("/")
   return result
 }
@@ -65,8 +68,11 @@ export async function updateBrandAction(id: number, data: UpdateBrandDTO) {
 export async function deleteBrandAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
+  const brand = await getService().getById(id)
   const result = await getService().delete(id)
+  if (brand?.logo) await deleteFromS3(brand.logo)
   revalidatePath("/catalogo")
+  revalidatePath("/marcas")
   revalidatePath("/")
   return result
 }

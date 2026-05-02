@@ -8,7 +8,7 @@
 import { useEffect, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { getCategoryByIdAction, updateCategoryAction, deleteCategoryAction } from "@/features/categorias/actions"
-import { CategoryForm } from "@/components/admin/CategoryForm"
+import { CategoryForm, type CategorySaveData } from "@/components/admin/CategoryForm"
 import { AdminFormHeader } from "@/components/admin/AdminFormHeader"
 import type { CategoryDTO } from "@/features/categorias/types"
 import { toast } from "sonner"
@@ -36,20 +36,22 @@ export default function EditarCategoriaPage() {
     )
   }
 
-  async function handleSave(data: Omit<CategoryDTO, "id" | "count">) {
+  async function handleSave(data: CategorySaveData) {
     await updateCategoryAction(category!.id, data)
     toast.success("Categoría actualizada correctamente")
+    router.refresh()
     router.push("/categorias")
   }
 
   async function handleDelete() {
     await deleteCategoryAction(category!.id)
     toast.success(`"${category!.name}" eliminada correctamente`)
+    router.refresh()
     router.push("/categorias")
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className="mx-auto w-full max-w-5xl">
       <AdminFormHeader
         backHref="/categorias"
         backLabel="Volver a Categorías"

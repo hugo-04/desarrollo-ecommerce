@@ -8,6 +8,13 @@
     "start": "next start",
     "lint": "eslint ."
   },
+  "browserslist": [
+    "chrome >= 93",
+    "edge >= 93",
+    "firefox >= 92",
+    "safari >= 15.4",
+    "ios_saf >= 15.4"
+  ],
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1014.0",
     "@hookform/resolvers": "^3.9.1",
@@ -40,6 +47,7 @@
     "@radix-ui/react-toggle": "1.1.10",
     "@radix-ui/react-toggle-group": "1.1.11",
     "@radix-ui/react-tooltip": "1.2.8",
+    "@tanstack/react-query": "^5.100.6",
     "@tiptap/extension-placeholder": "^3.20.4",
     "@tiptap/extension-text-align": "^3.20.4",
     "@tiptap/extension-underline": "^3.20.4",

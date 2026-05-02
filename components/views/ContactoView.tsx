@@ -45,7 +45,7 @@ export function ContactoView() {
               <h2 className="mb-6 text-xl font-bold text-slate-900">Información de Contacto</h2>
               <div className="space-y-4">
                 {[
-                  { icon: IconPhone, title: "Teléfono", info: CONTACT.phone2Display, link: `tel:+51${CONTACT.phone2}` },
+                  { icon: IconPhone, title: "Teléfono", info: CONTACT.phoneDisplay, link: CONTACT.phoneTel },
                   { icon: IconMail, title: "Email", info: CONTACT.email, link: `mailto:${CONTACT.email}` },
                   { icon: IconMapPin, title: "Dirección", info: CONTACT.address, link: "#" },
                   { icon: IconClock, title: "Horario de Atención", info: CONTACT.hours, link: "#" },

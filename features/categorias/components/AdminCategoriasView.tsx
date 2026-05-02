@@ -1,14 +1,5 @@
 "use client"
 
-/**
- * AdminCategoriasView — Vista completa del listado de categorías (panel admin).
- *
- * Responsabilidad única (SRP): orquesta estado de paginación y renderiza la tabla.
- * Animación de cambio de página idéntica a AdminProductosView:
- *   - Wrapper: fade-out + sink cuando loading=true
- *   - Filas: rowEnter escalonado cuando llegan datos nuevos
- */
-
 import Link from "next/link"
 import { getCategoriesPagedAction, deleteCategoryAction } from "@/features/categorias/actions"
 import type { CategoryDTO } from "@/features/categorias/types"
@@ -21,14 +12,16 @@ import { AdminListHeader }   from "@/components/admin/AdminListHeader"
 import { AdminPagination }   from "@/components/admin/AdminPagination"
 import { DeleteDialog }      from "@/components/admin/DeleteDialog"
 import { useAdminPagedList } from "@/hooks/admin/use-admin-paged-list"
+import { Skeleton }          from "@/components/ui/skeleton"
 
-// ── Constantes ────────────────────────────────────────────────────────────────
+function fmtDate(d?: string): string {
+  if (!d) return "—"
+  return new Date(d).toLocaleDateString("es-PE", { day: "2-digit", month: "2-digit", year: "numeric" })
+}
 
 const PAGE_SIZE         = 10
 const PAGE_SIZE_OPTIONS = [10, 25, 50]
 const ROW_STAGGER_MS    = 35
-
-// ── Helper: gradiente determinístico por slug (sin campo en DB) ────────────────
 
 const GRADIENT_PALETTE = [
   "from-[#334155] to-[#151f5c]",
@@ -41,14 +34,11 @@ const GRADIENT_PALETTE = [
   "from-blue-800 to-indigo-950",
 ]
 
-/** Devuelve un gradiente consistente basado en el hash del slug */
 function autoGradient(slug: string): string {
   let h = 0
   for (const c of slug) h = (h * 31 + c.charCodeAt(0)) >>> 0
   return GRADIENT_PALETTE[h % GRADIENT_PALETTE.length]
 }
-
-// ── Subcomponente: fila de categoría ─────────────────────────────────────────
 
 interface CategoryRowProps {
   cat:        CategoryDTO
@@ -57,21 +47,20 @@ interface CategoryRowProps {
   onDelete:   () => void
 }
 
-/** Fila individual con animación de entrada escalonada y salida al eliminar */
 function CategoryRow({ cat, index, removingId, onDelete }: CategoryRowProps) {
   const isRemoving = removingId === cat.id
   return (
     <TableRow
       className="border-slate-100"
       style={{
-        animation: `rowEnter 0.28s ease-out both`,
+        animation:      `rowEnter 0.28s ease-out both`,
         animationDelay: `${index * ROW_STAGGER_MS}ms`,
         opacity:    isRemoving ? 0 : undefined,
         transform:  isRemoving ? "translateX(12px) scale(0.98)" : undefined,
         transition: isRemoving ? "all 0.3s ease" : undefined,
       }}
     >
-      {/* Franja de color derivada del slug */}
+      {/* Franja de color */}
       <TableCell className="w-2 p-0">
         <div className={`h-full min-h-[60px] w-1.5 rounded-r-full bg-gradient-to-b ${autoGradient(cat.slug)}`} />
       </TableCell>
@@ -79,30 +68,26 @@ function CategoryRow({ cat, index, removingId, onDelete }: CategoryRowProps) {
       {/* Nombre */}
       <TableCell className="px-5 py-4 font-semibold text-slate-800">{cat.name}</TableCell>
 
-      {/* Slug — monospace */}
+      {/* Slug */}
       <TableCell className="px-5 py-4">
-        <span className="rounded-md bg-slate-100 px-2.5 py-1.5 font-mono text-xs text-slate-500">
-          {cat.slug}
-        </span>
+        <span className="rounded-md bg-slate-100 px-2.5 py-1.5 font-mono text-xs text-slate-500">{cat.slug}</span>
       </TableCell>
 
-      {/* Contador de productos */}
+      {/* Productos */}
       <TableCell className="px-5 py-4">
         <span className="inline-flex h-7 min-w-[28px] items-center justify-center rounded-full bg-[#334155]/8 px-2.5 text-xs font-bold text-[#334155]">
           {cat.count}
         </span>
       </TableCell>
 
-      {/* Subcategorías — chips (máx. 3 + overflow) */}
+      {/* Subcategorías */}
       <TableCell className="px-5 py-4">
         {cat.subcategories.length === 0 ? (
           <span className="text-xs text-slate-300">—</span>
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {cat.subcategories.slice(0, 3).map((sub) => (
-              <span key={sub} className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600">
-                {sub}
-              </span>
+              <span key={sub} className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600">{sub}</span>
             ))}
             {cat.subcategories.length > 3 && (
               <span className="rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-400">
@@ -112,6 +97,12 @@ function CategoryRow({ cat, index, removingId, onDelete }: CategoryRowProps) {
           </div>
         )}
       </TableCell>
+
+      {/* Creado */}
+      <TableCell className="px-5 py-4 text-xs text-slate-500 tabular-nums">{fmtDate(cat.createdAt)}</TableCell>
+
+      {/* Actualizado */}
+      <TableCell className="px-5 py-4 text-xs text-slate-500 tabular-nums">{fmtDate(cat.updatedAt)}</TableCell>
 
       {/* Acciones */}
       <TableCell className="px-5 py-4">
@@ -137,24 +128,36 @@ function CategoryRow({ cat, index, removingId, onDelete }: CategoryRowProps) {
   )
 }
 
-// ── Componente principal ──────────────────────────────────────────────────────
+function CategorySkeletonRow() {
+  return (
+    <TableRow className="border-slate-100">
+      <TableCell className="w-2 p-0"><div className="min-h-[60px] w-1.5 rounded-r-full bg-slate-200" /></TableCell>
+      <TableCell className="px-5 py-4"><Skeleton className="h-4 w-36" /></TableCell>
+      <TableCell className="px-5 py-4"><Skeleton className="h-6 w-28 rounded-md" /></TableCell>
+      <TableCell className="px-5 py-4"><Skeleton className="h-7 w-7 rounded-full" /></TableCell>
+      <TableCell className="px-5 py-4"><div className="flex gap-1.5"><Skeleton className="h-6 w-20 rounded-md" /><Skeleton className="h-6 w-16 rounded-md" /></div></TableCell>
+      <TableCell className="px-5 py-4"><Skeleton className="h-4 w-20" /></TableCell>
+      <TableCell className="px-5 py-4"><Skeleton className="h-4 w-20" /></TableCell>
+      <TableCell className="px-5 py-4"><div className="flex gap-2"><Skeleton className="h-7 w-14 rounded-md" /><Skeleton className="h-7 w-16 rounded-md" /></div></TableCell>
+    </TableRow>
+  )
+}
 
-/** Orquesta el estado de paginación y compone la tabla de categorías */
 export function AdminCategoriasView() {
   const {
-    items: paged, total, loading, search,
+    items: paged, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
     handleSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<CategoryDTO>({
     pageSize: PAGE_SIZE,
-    loadFn: ({ page, query, limit }) => getCategoriesPagedAction({ page, query, limit }),
+    loadFn:   getCategoriesPagedAction,
   })
 
   return (
     <div>
       <AdminListHeader
         title="Categorías"
-        subtitle={loading ? "Cargando…" : `${total} categoría${total !== 1 ? "s" : ""}`}
+        subtitle={loading || fetching ? "Cargando…" : `${total} categoría${total !== 1 ? "s" : ""}`}
         newHref="/categorias/nueva"
         newLabel="Nueva categoría"
         searchValue={search}
@@ -162,7 +165,6 @@ export function AdminCategoriasView() {
         onSearch={handleSearch}
       />
 
-      {/* Keyframes de entrada compartidos con el resto de vistas de lista */}
       <style>{`
         @keyframes rowEnter {
           from { opacity: 0; transform: translateY(10px); }
@@ -170,48 +172,50 @@ export function AdminCategoriasView() {
         }
       `}</style>
 
-      {/* Wrapper animado: se atenúa durante la carga, filas entran con stagger */}
-      <div
-        className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
-        style={{
-          opacity:    loading ? 0.45 : 1,
-          transform:  loading ? "translateY(4px)" : "translateY(0)",
-          transition: "opacity 0.2s ease, transform 0.2s ease",
-        }}
-      >
-        <Table>
-          <TableHeader className="bg-slate-50">
-            <TableRow className="border-slate-100">
-              <TableHead className="w-8 px-0 py-4" />
-              <TableHead className="px-5 py-4 font-semibold text-slate-600">Nombre</TableHead>
-              <TableHead className="px-5 py-4 font-semibold text-slate-600">Slug</TableHead>
-              <TableHead className="px-5 py-4 font-semibold text-slate-600">Productos</TableHead>
-              <TableHead className="px-5 py-4 font-semibold text-slate-600">Subcategorías</TableHead>
-              <TableHead className="px-5 py-4 font-semibold text-slate-600">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {!loading && paged.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={6} className="py-10 text-center text-slate-400">
-                  {search ? "Sin resultados para esa búsqueda." : "No hay categorías aún."}
-                </TableCell>
+      <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        {fetching && (
+          <div className="absolute inset-x-0 top-0 h-0.5 overflow-hidden rounded-t-xl bg-slate-100">
+            <div className="h-full w-1/2 animate-[fetchBar_1.2s_ease-in-out_infinite] bg-[#1C2870]/50" />
+          </div>
+        )}
+        <div className="overflow-x-auto overflow-y-hidden">
+          <Table>
+            <TableHeader className="bg-slate-50">
+              <TableRow className="border-slate-100">
+                <TableHead className="w-8 px-0 py-4" />
+                <TableHead className="px-5 py-4 font-semibold text-slate-600">Nombre</TableHead>
+                <TableHead className="px-5 py-4 font-semibold text-slate-600">Slug</TableHead>
+                <TableHead className="px-5 py-4 font-semibold text-slate-600">Productos</TableHead>
+                <TableHead className="px-5 py-4 font-semibold text-slate-600">Subcategorías</TableHead>
+                <TableHead className="px-5 py-4 font-semibold text-slate-600">Creado</TableHead>
+                <TableHead className="px-5 py-4 font-semibold text-slate-600">Actualizado</TableHead>
+                <TableHead className="px-5 py-4 font-semibold text-slate-600">Acciones</TableHead>
               </TableRow>
-            )}
+            </TableHeader>
 
-            {/* key incluye currentPage para re-montar filas y disparar rowEnter */}
-            {paged.map((cat, i) => (
-              <CategoryRow
-                key={`${currentPage}-${cat.id}`}
-                cat={cat}
-                index={i}
-                removingId={removingId}
-                onDelete={() => handleDelete(cat.id, () => deleteCategoryAction(cat.id), cat.name)}
-              />
-            ))}
-          </TableBody>
-        </Table>
+            <TableBody>
+              {(loading || fetching) && Array.from({ length: PAGE_SIZE }).map((_, i) => <CategorySkeletonRow key={i} />)}
+
+              {!loading && !fetching && paged.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={8} className="py-10 text-center text-slate-400">
+                    {search ? "Sin resultados para esa búsqueda." : "No hay categorías aún."}
+                  </TableCell>
+                </TableRow>
+              )}
+
+              {!loading && !fetching && paged.map((cat, i) => (
+                <CategoryRow
+                  key={`${currentPage}-${cat.id}`}
+                  cat={cat}
+                  index={i}
+                  removingId={removingId}
+                  onDelete={() => handleDelete(cat.id, () => deleteCategoryAction(cat.id), cat.name)}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <AdminPagination

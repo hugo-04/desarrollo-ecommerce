@@ -3,12 +3,26 @@
 // ============================================================
 
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+// ──────────────────────────────────────────────────────────
+// Analytics: visitas diarias agregadas por ruta
+// ──────────────────────────────────────────────────────────
+model DailyView {
+  id    Int      @id @default(autoincrement())
+  path  String
+  date  DateTime @db.Date
+  count Int      @default(1)
+
+  @@unique([path, date])
+  @@index([date(sort: Desc)])
+  @@map("daily_views")
 }
 
 // ──────────────────────────────────────────────────────────
@@ -25,27 +39,44 @@ model AdminUser {
 }
 
 // ──────────────────────────────────────────────────────────
+// Subcategorías (entidad propia — many-to-many con Category)
+// ──────────────────────────────────────────────────────────
+model Subcategory {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  categories Category[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@map("subcategories")
+}
+
+// ──────────────────────────────────────────────────────────
 // Categorías
 // ──────────────────────────────────────────────────────────
 model Category {
-  id            Int       @id @default(autoincrement())
-  name          String    @unique           // @unique ya crea B-tree index
-  slug          String    @unique           // @unique ya crea B-tree index
-  image         String    @default("")
-  imageAlt      String?
-  description   String    @default("")
-  subcategories String[]
-  count         Int       @default(0)
-  featured      Boolean   @default(false)
+  id          Int     @id @default(autoincrement())
+  name        String  @unique // @unique ya crea B-tree index
+  slug        String  @unique // @unique ya crea B-tree index
+  image       String  @default("")
+  imageAlt    String?
+  imageTitle  String?
+  description String  @default("")
+  keywords    String[]
+  count       Int     @default(0)
+  featured    Boolean @default(false)
 
-  products      Product[]
+  subs     Subcategory[]
+  products Product[]
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // count desc → home page muestra las categorías con más productos primero
   @@index([count(sort: Desc)])
-
   @@map("categories")
 }
 
@@ -53,20 +84,19 @@ model Category {
 // Marcas
 // ──────────────────────────────────────────────────────────
 model Brand {
-  id             Int       @id @default(autoincrement())
-  name           String    @unique          // @unique ya crea B-tree index
-  logo           String    @default("")
+  id             Int     @id @default(autoincrement())
+  name           String  @unique // @unique ya crea B-tree index
+  logo           String  @default("")
   logoAlt        String?
-  showInCarousel Boolean   @default(false)
+  showInCarousel Boolean @default(false)
 
-  products       Product[]
+  products Product[]
 
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Filtra marcas del carrusel sin full scan
   @@index([showInCarousel])
-
   @@map("brands")
 }
 
@@ -74,33 +104,32 @@ model Brand {
 // Libro de Reclamaciones (INDECOPI — Ley N° 29571)
 // ──────────────────────────────────────────────────────────
 model Reclamacion {
-  id          Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   // Datos del consumidor
-  nombres     String
-  apellidos   String
-  tipoDoc     String   // DNI | RUC | CE | Pasaporte
-  nroDoc      String
-  domicilio   String   @default("")
-  email       String
-  telefono    String   @default("")
+  nombres   String
+  apellidos String
+  tipoDoc   String // DNI | RUC | CE | Pasaporte
+  nroDoc    String
+  domicilio String @default("")
+  email     String
+  telefono  String @default("")
 
   // Tipo de reclamo (INDECOPI distingue queja y reclamación)
-  tipo        String   // RECLAMACION | QUEJA
-  tipoBien    String   // PRODUCTO | SERVICIO
+  tipo        String // RECLAMACION | QUEJA
+  tipoBien    String // PRODUCTO | SERVICIO
   descripcion String
   pedido      String
 
   // Gestión interna
-  estado      String   @default("PENDIENTE") // PENDIENTE | EN_PROCESO | RESPONDIDO | CERRADO
-  respuesta   String?
+  estado    String  @default("PENDIENTE") // PENDIENTE | EN_PROCESO | RESPONDIDO | CERRADO
+  respuesta String?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([estado])
   @@index([createdAt(sort: Desc)])
-
   @@map("reclamaciones")
 }
 
@@ -108,46 +137,45 @@ model Reclamacion {
 // Productos
 // ──────────────────────────────────────────────────────────
 model Product {
-  id              Int      @id @default(autoincrement())
-  name            String   @unique
-  description     String   @default("")
-  fullDescription String   @default("")
+  id              Int    @id @default(autoincrement())
+  name            String @unique
+  description     String @default("")
+  fullDescription String @default("")
 
-  image           String   @default("")
-  imageAlt        String?
-  gallery         String[]
-  galleryAlts     String[]
+  image       String   @default("")
+  imageAlt    String?
+  imageTitle  String?
+  gallery     String[]
+  galleryAlts String[]
 
-  medidas         String[]
-  fichaTecnica    String?
+  medidas      String[]
+  keywords     String[]
+  fichaTecnica String?
 
-  featured        Boolean  @default(false)
-  bestSeller      Boolean  @default(false)
-  rating          Float    @default(4.5)
+  featured   Boolean @default(false)
+  bestSeller Boolean @default(false)
+  rating     Float   @default(4.5)
 
-  category        Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  categoryId      Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId Int
 
-  brand           Brand    @relation(fields: [brandId], references: [id], onDelete: Restrict)
-  brandId         Int
+  brand   Brand @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  brandId Int
 
-  technicalSpecs  Json?
+  technicalSpecs Json?
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // ── Índices de relación (JOIN rápido) ─────────────────
   @@index([categoryId])
   @@index([brandId])
-
   // ── Índices de filtros booleanos ──────────────────────
   @@index([featured])
   @@index([bestSeller])
   // Composite para la query del home (featured + bestSeller a la vez)
   @@index([featured, bestSeller])
-
   // ── Sort por rating ───────────────────────────────────
   @@index([rating(sort: Desc)])
-
   @@map("products")
 }

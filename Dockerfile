@@ -22,8 +22,9 @@ COPY prisma ./prisma
 RUN npm ci --frozen-lockfile --no-audit --no-fund
 
 # Genera el cliente Prisma cacheado junto con node_modules:
-# solo se re-ejecuta si package.json o schema.prisma cambian
-RUN npx prisma generate
+# solo se re-ejecuta si package.json o schema.prisma cambian.
+# DATABASE_URL dummy: generate no conecta a la BD, solo lee el schema.
+RUN DATABASE_URL="postgresql://x:x@localhost/x" npx prisma generate
 
 # ── Etapa 2: Build ───────────────────────────────────────────
 FROM node:22-alpine AS builder
@@ -34,7 +35,11 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build de producción (output: standalone en next.config.mjs)
-RUN npm run build
+# DATABASE_URL se inyecta como build secret para el pre-render de ISR
+# (nunca queda grabado en capas de imagen)
+RUN --mount=type=secret,id=database_url,required=false \
+    DATABASE_URL=$(cat /run/secrets/database_url 2>/dev/null || echo "postgresql://x:x@localhost/x") \
+    npm run build
 
 # Compila el seed a JS puro para que corra en el runner sin tsx
 RUN npx esbuild prisma/seed.ts \

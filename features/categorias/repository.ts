@@ -3,13 +3,32 @@
  *
  * ICategoryRepository: contrato que el servicio usa.
  * DbCategoryRepository: implementación con Prisma/PostgreSQL.
- *
- * Las queries de texto usan ILIKE aceleradas por índice GIN de trigramas.
- * findAll() ordena por count desc → home page muestra las más populares primero.
  */
 
 import type { CategoryDTO, CreateCategoryDTO, UpdateCategoryDTO, CategoryFilters, CategoryPaginatedResult } from "./types"
 import { PrismaClient, Prisma } from "@prisma/client"
+
+// ─── Tipos internos ────────────────────────────────────────────────────────────
+
+type SubRow = { id: number; name: string }
+
+type CategoryRow = {
+  id:          number
+  name:        string
+  slug:        string
+  image:       string
+  imageAlt:    string | null
+  imageTitle:  string | null
+  description: string
+  subs:        SubRow[]
+  keywords:    string[]
+  count:       number
+  featured:    boolean
+  createdAt:   Date
+  updatedAt:   Date
+}
+
+const INCLUDE_SUBS = { subs: true } as const
 
 // ─── Interface ─────────────────────────────────────────────────────────────────
 
@@ -29,26 +48,35 @@ export interface ICategoryRepository {
 export class DbCategoryRepository implements ICategoryRepository {
   constructor(private db: PrismaClient) {}
 
-  /**
-   * Ordena por count desc: las categorías con más productos aparecen
-   * primero → el slice(0,6) del home grid muestra las más relevantes.
-   */
+  private map(c: CategoryRow): CategoryDTO {
+    return {
+      id:              c.id,
+      name:            c.name,
+      slug:            c.slug,
+      image:           c.image,
+      imageAlt:        c.imageAlt    ?? undefined,
+      imageTitle:      c.imageTitle  ?? undefined,
+      description:     c.description ?? undefined,
+      subcategories:   c.subs.map((s) => s.name),
+      subcategoryItems: c.subs.map((s) => ({ id: s.id, name: s.name })),
+      keywords:        c.keywords,
+      count:           c.count,
+      featured:        c.featured,
+      createdAt:       c.createdAt.toISOString(),
+      updatedAt:       c.updatedAt.toISOString(),
+    }
+  }
+
   async findAll(): Promise<CategoryDTO[]> {
-    return this.db.category.findMany({ orderBy: { count: "desc" } })
+    const rows = await this.db.category.findMany({ orderBy: { count: "desc" }, include: INCLUDE_SUBS })
+    return rows.map((c) => this.map(c as CategoryRow))
   }
 
-  /** Solo las categorías marcadas como destacadas, ordenadas por count desc */
   async findFeatured(): Promise<CategoryDTO[]> {
-    return this.db.category.findMany({
-      where:   { featured: true },
-      orderBy: { count: "desc" },
-    })
+    const rows = await this.db.category.findMany({ where: { featured: true }, orderBy: { count: "desc" }, include: INCLUDE_SUBS })
+    return rows.map((c) => this.map(c as CategoryRow))
   }
 
-  /**
-   * COUNT + findMany en paralelo.
-   * La búsqueda ILIKE sobre name y slug usa los índices GIN de trigramas.
-   */
   async findPaged(filters: CategoryFilters): Promise<CategoryPaginatedResult> {
     const { query = "", page = 1, limit = 12 } = filters
 
@@ -61,44 +89,63 @@ export class DbCategoryRepository implements ICategoryRepository {
         }
       : {}
 
-    const [total, data] = await Promise.all([
+    const [total, rows] = await Promise.all([
       this.db.category.count({ where }),
-      this.db.category.findMany({
-        where,
-        skip:    (page - 1) * limit,
-        take:    limit,
-        orderBy: { name: "asc" },
-      }),
+      this.db.category.findMany({ where, skip: (page - 1) * limit, take: limit, orderBy: { name: "asc" }, include: INCLUDE_SUBS }),
     ])
 
     const totalPages = Math.max(1, Math.ceil(total / limit))
-    return { data, total, page, totalPages }
+    return { data: rows.map((c) => this.map(c as CategoryRow)), total, page, totalPages }
   }
 
   async findById(id: number): Promise<CategoryDTO | null> {
-    return this.db.category.findUnique({ where: { id } })
+    const c = await this.db.category.findUnique({ where: { id }, include: INCLUDE_SUBS })
+    return c ? this.map(c as CategoryRow) : null
   }
 
   async findBySlug(slug: string): Promise<CategoryDTO | null> {
-    return this.db.category.findUnique({ where: { slug } })
+    const c = await this.db.category.findUnique({ where: { slug }, include: INCLUDE_SUBS })
+    return c ? this.map(c as CategoryRow) : null
   }
 
   async create(data: CreateCategoryDTO): Promise<CategoryDTO> {
+    const { subcategoryIds, ...rest } = data
     try {
-      return await this.db.category.create({ data })
+      const c = await this.db.category.create({
+        data: {
+          ...rest,
+          keywords: rest.keywords ?? [],
+          ...(subcategoryIds && subcategoryIds.length > 0 && {
+            subs: { connect: subcategoryIds.map((id) => ({ id })) },
+          }),
+        },
+        include: INCLUDE_SUBS,
+      })
+      return this.map(c as CategoryRow)
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
-        throw new Error(`Ya existe una categoría con ese nombre o slug`)
+        throw new Error("Ya existe una categoría con ese nombre o slug")
       throw e
     }
   }
 
   async update(id: number, data: UpdateCategoryDTO): Promise<CategoryDTO> {
+    const { subcategoryIds, ...rest } = data
     try {
-      return await this.db.category.update({ where: { id }, data })
+      const c = await this.db.category.update({
+        where: { id },
+        data: {
+          ...rest,
+          ...(subcategoryIds !== undefined && {
+            subs: { set: subcategoryIds.map((sid) => ({ id: sid })) },
+          }),
+        },
+        include: INCLUDE_SUBS,
+      })
+      return this.map(c as CategoryRow)
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
-        throw new Error(`Ya existe una categoría con ese nombre o slug`)
+        throw new Error("Ya existe una categoría con ese nombre o slug")
       throw e
     }
   }
@@ -108,7 +155,7 @@ export class DbCategoryRepository implements ICategoryRepository {
       await this.db.category.delete({ where: { id } })
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2003")
-        throw new Error(`No se puede eliminar: la categoría tiene productos asociados`)
+        throw new Error("No se puede eliminar: la categoría tiene productos asociados")
       throw e
     }
   }

@@ -7,22 +7,22 @@
 
 import { useRouter } from "next/navigation"
 import { createCategoryAction } from "@/features/categorias/actions"
-import { CategoryForm } from "@/components/admin/CategoryForm"
+import { CategoryForm, type CategorySaveData } from "@/components/admin/CategoryForm"
 import { AdminFormHeader } from "@/components/admin/AdminFormHeader"
 import { toast } from "sonner"
-import type { CategoryDTO } from "@/features/categorias/types"
 
 export default function NuevaCategoriaPage() {
   const router = useRouter()
 
-  async function handleSave(data: Omit<CategoryDTO, "id" | "count">) {
+  async function handleSave(data: CategorySaveData) {
     await createCategoryAction({ ...data, count: 0 })
     toast.success("Categoría creada correctamente")
+    router.refresh()
     router.push("/categorias")
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className="mx-auto w-full max-w-5xl">
       <AdminFormHeader
         backHref="/categorias"
         backLabel="Volver a Categorías"

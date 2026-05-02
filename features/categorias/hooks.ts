@@ -11,6 +11,7 @@
 import { useState, useEffect } from "react"
 import { getCategoriesAction } from "./actions"
 import type { CategoryDTO } from "./types"
+import { log } from "@/lib/logger"
 
 interface UseCategoriesReturn {
   categories: CategoryDTO[]
@@ -28,7 +29,7 @@ export function useCategories(): UseCategoriesReturn {
     getCategoriesAction()
       .then((c) => { setCategories(c); setLoading(false) })
       .catch((err: unknown) => {
-        console.error("[useCategories]", err)
+        log.error("[useCategories]", err)
         setError("No se pudieron cargar las categorías")
         setLoading(false)
       })

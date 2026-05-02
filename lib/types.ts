@@ -9,6 +9,12 @@
  * solo cambiarán los repositorios que las implementan.
  */
 
+/** Subcategoría como entidad — id + name para el editor admin */
+export interface SubcategoryItem {
+  id:   number
+  name: string
+}
+
 /** Par clave-valor para la ficha técnica de un producto (ej: Tensión → 22 kV) */
 export interface TechnicalSpec {
   label: string
@@ -32,6 +38,8 @@ export interface Product {
   image: string
   /** Texto alternativo SEO de la imagen principal */
   imageAlt?: string
+  /** Título de la imagen (atributo title, tooltip en hover) */
+  imageTitle?: string
   /** Etiquetas técnicas cortas para mostrar como badges (ej: "22kV", "DN 50mm") */
   medidas: string[]
   /** Descripción corta — aparece en la tarjeta del catálogo */
@@ -44,12 +52,17 @@ export interface Product {
   gallery: string[]
   /** Textos alt SEO para cada imagen de la galería (mismo orden que gallery) */
   galleryAlts?: string[]
+  /** Palabras clave SEO para metatag keywords y búsqueda interna */
+  keywords?: string[]
   featured: boolean
   bestSeller: boolean
   /** Calificación de 0 a 5 */
   rating: number
   /** URL al PDF de la ficha técnica descargable (opcional) */
   fichaTecnica?: string
+  /** Fechas de auditoría (ISO string tras serialización de Server Action) */
+  createdAt?: string
+  updatedAt?: string
 }
 
 /**
@@ -66,15 +79,24 @@ export interface Category {
   image: string
   /** Meta description SEO (~155 chars) mostrada en resultados de Google */
   description?: string
+  /** Nombres de subcategorías — para páginas públicas y SEO */
   subcategories: string[]
+  /** Subcategorías con ID — solo disponible en respuestas del admin */
+  subcategoryItems?: SubcategoryItem[]
   /** Cantidad de productos en esta categoría */
   count: number
   /** Componente icono — solo válido en el cliente, resuelto con getCategoryIcon(slug) */
   icon?: React.ComponentType<{ className?: string }>
   /** Alt text SEO de la imagen */
   imageAlt?: string
+  /** Título de la imagen (atributo title, tooltip en hover) */
+  imageTitle?: string
+  /** Palabras clave SEO para metatag keywords y búsqueda interna */
+  keywords?: string[]
   /** Si aparece en la grilla del home */
   featured: boolean
+  createdAt?: string
+  updatedAt?: string
 }
 
 /** Marca fabricante o distribuidora de productos */
@@ -87,6 +109,8 @@ export interface Brand {
   logoAlt?: string
   /** Si true, el logo aparece en el carrusel de marcas del home */
   showInCarousel?: boolean
+  createdAt?: string
+  updatedAt?: string
 }
 
 /** Cliente/empresa que aparece en la sección de clientes del home */

@@ -35,8 +35,14 @@ export class DbBrandRepository implements IBrandRepository {
    * Prisma devuelve logoAlt: string | null; Brand espera string | undefined.
    * Este mapper normaliza la diferencia.
    */
-  private map(b: { id: number; name: string; logo: string; logoAlt: string | null; showInCarousel: boolean }): Brand {
-    return { id: b.id, name: b.name, logo: b.logo, logoAlt: b.logoAlt ?? undefined, showInCarousel: b.showInCarousel }
+  private map(b: { id: number; name: string; logo: string; logoAlt: string | null; showInCarousel: boolean; createdAt: Date; updatedAt: Date }): Brand {
+    return {
+      id: b.id, name: b.name, logo: b.logo,
+      logoAlt: b.logoAlt ?? undefined,
+      showInCarousel: b.showInCarousel,
+      createdAt: b.createdAt.toISOString(),
+      updatedAt: b.updatedAt.toISOString(),
+    }
   }
 
   async findAll(): Promise<Brand[]> {
@@ -93,9 +99,8 @@ export class DbBrandRepository implements IBrandRepository {
     try {
       await this.db.brand.delete({ where: { id } })
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2003") {
-        throw new Error("No se puede eliminar: la marca tiene productos asociados")
-      }
+      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2003")
+        throw new Error(`No se puede eliminar: la marca tiene productos asociados`)
       throw e
     }
   }

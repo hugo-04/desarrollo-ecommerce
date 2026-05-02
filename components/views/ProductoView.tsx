@@ -17,27 +17,25 @@ import { QuoteModal } from "@/components/product/QuoteModal"
 import { ProductCard } from "@/components/product/ProductCard"
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel"
 import { PRODUCT_DETAIL_CONTENT } from "@/lib/data/mock/static-content.mock"
-import { useRelatedProducts } from "@/features/productos/hooks"
-import { useFadeInOnScroll } from "@/hooks/useAnimations"
 import { IconChevronRight, IconChevronLeft, IconWhatsApp } from "@/components/icons"
+import { WA } from "@/lib/contact"
 import type { Product } from "@/lib/types"
 
 interface ProductoViewProps {
   product: Product
+  initialRelatedProducts?: Product[]
 }
 
-export function ProductoView({ product }: ProductoViewProps) {
-  const { ref, isVisible } = useFadeInOnScroll()
+export function ProductoView({ product, initialRelatedProducts = [] }: ProductoViewProps) {
   const [selectedImage, setSelectedImage] = useState(0)
   const [activeTab, setActiveTab] = useState<"desc" | "medidas">("desc")
   const [showQuoteModal, setShowQuoteModal] = useState(false)
   const c = PRODUCT_DETAIL_CONTENT
 
-  // Navigation within category — via API route interna
-  const categoryProducts = useRelatedProducts(product.id, product.category)
-  const prevProduct = categoryProducts[0] ?? null
-  const nextProduct = categoryProducts[1] ?? null
-  const relatedProducts = categoryProducts
+  // Productos relacionados — vienen del servidor (SSR) para que Google los vea en el HTML inicial
+  const relatedProducts = initialRelatedProducts
+  const prevProduct = relatedProducts[0] ?? null
+  const nextProduct = relatedProducts[1] ?? null
 
   return (
     <>
@@ -70,9 +68,6 @@ export function ProductoView({ product }: ProductoViewProps) {
 
             {/* Prev / Next */}
             <div className="flex shrink-0 items-center gap-1.5">
-              <span className="hidden text-[10px] text-slate-400 sm:inline">
-                {categoryProducts.length} en esta categoría
-              </span>
               <Link
                 href={prevProduct ? `/producto/${prevProduct.id}` : "#"}
                 title={prevProduct?.name}
@@ -101,12 +96,12 @@ export function ProductoView({ product }: ProductoViewProps) {
       </div>
 
       {/* Main content */}
-      <div ref={ref} className={`bg-white ${isVisible ? "animate-reveal" : "opacity-0"}`}>
+      <div className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8">
           <div className="grid gap-10 lg:grid-cols-2">
             <ProductGallery
-              gallery={product.gallery}
-              galleryAlts={product.galleryAlts}
+              gallery={product.gallery.length > 0 ? product.gallery : product.image ? [product.image] : []}
+              galleryAlts={product.gallery.length > 0 ? product.galleryAlts : product.image ? [product.imageAlt ?? product.name] : []}
               productName={product.name}
               bestSeller={product.bestSeller}
               selectedImage={selectedImage}
@@ -130,7 +125,7 @@ export function ProductoView({ product }: ProductoViewProps) {
           {relatedProducts.length > 0 && (
             <div className="mt-16">
               <div className="mb-6">
-                <h2 className="text-xl font-extrabold text-[#1e293b]">{c.relatedTitle}</h2>
+                <h2 className="text-xl font-extrabold text-[#121A47]">{c.relatedTitle}</h2>
                 <p className="mt-1 text-sm text-slate-500">{c.relatedSubtitle}</p>
               </div>
 
@@ -171,10 +166,10 @@ export function ProductoView({ product }: ProductoViewProps) {
       <div className="fixed bottom-0 inset-x-0 z-50 sm:hidden">
         <button
           onClick={() => setShowQuoteModal(true)}
-          className="flex w-full items-center justify-center gap-3 bg-green-600 py-4 text-sm font-bold text-white shadow-2xl shadow-green-600/40 active:bg-green-700"
+          className="flex w-full items-center justify-center gap-3 bg-[#25D366] py-4 text-sm font-bold text-white shadow-[0_-4px_20px_-10px_rgba(37,211,102,0.5)] active:bg-[#1DA851]"
         >
           <IconWhatsApp className="h-5 w-5" />
-          Cotizar este producto via WhatsApp
+          Cotizar este producto
         </button>
       </div>
       <div className="h-14 sm:hidden" />

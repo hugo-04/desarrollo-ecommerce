@@ -1,13 +1,21 @@
 "use client"
 
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { fadeUp, blurIn, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
-import { useBrandsCarousel } from "@/features/marcas/hooks"
 import { MARQUEE_BRANDS_CONTENT } from "@/lib/data/mock/static-content.mock"
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars"
+import type { Brand } from "@/lib/types"
 
-export function MarqueeBrands() {
-  const brands = useBrandsCarousel()
+interface MarqueeBrandsProps {
+  brands: Brand[]
+}
+
+export function MarqueeBrands({ brands: rawBrands = [] }: MarqueeBrandsProps) {
+  const brands = rawBrands.map((b) => ({
+    ...b,
+    logo: b.logo && (b.logo.startsWith("https://") || b.logo.startsWith("/")) ? b.logo : undefined,
+  }))
 
   return (
     <motion.section
@@ -48,12 +56,15 @@ export function MarqueeBrands() {
                     key={`brand-1-${index}`}
                     className="group mx-3 flex h-[80px] min-w-[220px] items-center gap-4 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-6 backdrop-blur-md transition-all duration-300 hover:border-amber-400/20 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(245,158,11,0.25)]"
                   >
-                    <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08] transition-colors group-hover:bg-white/[0.1]">
+                    <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-sm ring-1 ring-white/20">
                       {brand.logo && (
-                        <img
+                        <Image
                           src={brand.logo}
                           alt={brand.logoAlt ?? brand.name}
-                          className="max-h-[22px] max-w-[22px] object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100"
+                          width={30}
+                          height={30}
+                          unoptimized
+                          className="max-h-full max-w-full object-contain"
                           onError={(e) => {
                             ;(e.target as HTMLImageElement).style.display = "none"
                           }}
@@ -78,15 +89,15 @@ export function MarqueeBrands() {
                       key={`brand-2-${index}`}
                       className="group mx-3 flex h-[80px] min-w-[220px] items-center gap-4 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-6 backdrop-blur-md transition-all duration-300 hover:border-blue-500/30 hover:bg-white/[0.06] hover:shadow-[0_0_20px_-4px_rgba(59,130,246,0.20)]"
                     >
-                      <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white/[0.05] ring-1 ring-white/[0.08] transition-colors group-hover:bg-white/[0.1]">
+                      <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-sm ring-1 ring-white/20">
                         {brand.logo && (
-                          <img
+                          <Image
                             src={brand.logo}
-                            alt={brand.logoAlt ?? brand.name}
-                            className="max-h-[22px] max-w-[22px] object-contain brightness-0 invert opacity-60 transition-all group-hover:opacity-100"
-                            onError={(e) => {
-                              ;(e.target as HTMLImageElement).style.display = "none"
-                            }}
+                            alt={brand.logoAlt ?? `Logo ${brand.name}`}
+                            width={30}
+                            height={30}
+                            unoptimized
+                            className="object-contain"
                           />
                         )}
                       </div>
