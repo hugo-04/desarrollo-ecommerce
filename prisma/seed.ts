@@ -12,15 +12,32 @@ const prisma = new PrismaClient({ adapter } as any)
 async function main() {
   console.log("Starting seed...")
 
-  // ── 1. Admin User ─────────────────────────────────────────────────────────
-  await prisma.adminUser.deleteMany({ where: { email: "admin@admin.com" } })
-  const passwordHash = await bcrypt.hash("Hugovega123", 12)
-  const adminUser = await prisma.adminUser.upsert({
-    where: { email: "admin@admin.com" },
-    update: { passwordHash, isActive: true },
-    create: { email: "admin@admin.com", passwordHash, isActive: true },
-  })
-  console.log(`Admin user: ${adminUser.email}`)
+  // ── 1. Admin Users ────────────────────────────────────────────────────────
+  /**
+   * Arreglo con las credenciales de los usuarios administradores.
+   * Ahora soporta la creación y actualización de múltiples cuentas a la vez,
+   * facilitando la gestión inicial de accesos al sistema.
+   */
+  const adminUsers = [
+    { email: "admin@admin.com", password: "Hugovega123" },
+    { email: "nuevo.usuario@admin.com", password: "OtraPassword456" },
+    // Puedes agregar más usuarios a este arreglo
+  ]
+
+  for (const user of adminUsers) {
+    // Genera el hash criptográfico para la contraseña antes de guardarla
+    const passwordHash = await bcrypt.hash(user.password, 12)
+    
+    // Se utiliza `upsert` para evitar duplicados:
+    // Si el usuario por email ya existe, actualiza su contraseña y lo marca como activo.
+    // Si no existe, crea un nuevo registro con los datos proporcionados.
+    const adminUser = await prisma.adminUser.upsert({
+      where: { email: user.email },
+      update: { passwordHash, isActive: true },
+      create: { email: user.email, passwordHash, isActive: true },
+    })
+    console.log(`Admin user: ${adminUser.email}`)
+  }
 
   // ── 2. Limpiar productos y categorías anteriores ──────────────────────────
   await prisma.product.deleteMany()
