@@ -16,7 +16,7 @@ async function main() {
    */
   const adminUsers = [
     { email: "admin@admin.com", password: "Hugovega123" },
-    { email: "nuevo.usuario@admin.com", password: "OtraPassword456" },
+    { email: "cornejosonia@gmail.com", password: "Insumind2026*" },
     // Puedes agregar más usuarios a este arreglo
   ]
 
