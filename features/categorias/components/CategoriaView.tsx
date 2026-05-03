@@ -294,20 +294,6 @@ export function CategoriaView({
         </section>
       )}
 
-      {/* Internal linking */}
-      <section className="border-t border-slate-200 bg-white py-10">
-        <div className="mx-auto max-w-7xl px-4">
-          <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">También te puede interesar</p>
-          <div className="flex flex-wrap gap-2">
-            <Link href="/catalogo" className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-600 transition-all hover:border-primary/30 hover:bg-white hover:text-primary">
-              Ver todo el catálogo
-            </Link>
-            <Link href="/contacto" className="rounded-full border border-[#FF6B35]/30 bg-[#FF6B35]/5 px-4 py-2 text-sm font-medium text-[#FF6B35] transition-all hover:bg-[#FF6B35]/10">
-              Cotizar ahora →
-            </Link>
-          </div>
-        </div>
-      </section>
     </>
   )
 }
