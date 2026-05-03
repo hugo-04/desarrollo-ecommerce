@@ -39,7 +39,7 @@ export function CompanyShowcase() {
       whileInView="visible"
       viewport={viewportOnce}
       variants={staggerContainer}
-      className="relative overflow-hidden"
+      className="relative overflow-hidden bg-slate-50"
     >
       <div className="mx-auto max-w-7xl px-4 py-20">
         <div className="grid items-center gap-12 lg:grid-cols-2">

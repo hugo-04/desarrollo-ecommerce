@@ -28,7 +28,7 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section className="relative min-h-[85vh] overflow-hidden sm:min-h-[75vh] lg:min-h-[600px]">
+    <section className="relative overflow-hidden sm:min-h-[75vh] lg:min-h-[600px]">
 
       {/* ── FONDO: carrusel cubre todo el hero ─────────────────────────────── */}
       <div className="absolute inset-0">
@@ -68,7 +68,7 @@ export function HeroSection() {
       <div className="absolute inset-x-0 top-0 z-10 h-[3px] bg-linear-to-r from-transparent via-[#FF6B35]/80 to-transparent" />
 
       {/* ── CONTENIDO: sobre el fondo ──────────────────────────────────────── */}
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:py-24 lg:py-32">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-10 pb-20 sm:py-24 sm:pb-24 lg:py-32 lg:pb-32">
         <div className="max-w-2xl">
 
           {/* Badge */}
