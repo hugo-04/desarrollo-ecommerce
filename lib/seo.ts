@@ -185,24 +185,23 @@ export const SEO = {
   root: {
     metadataBase: new URL(SITE_URL),
     title: {
-      default:  `${SITE_NAME} | Ferretería Eléctrica para Alta y Media Tensión`,
+      default:  SITE_NAME,
       template: `%s | ${SITE_NAME}`,
     },
-    description:
-      `Fabricantes de ferretería eléctrica AT/MT en Lima, Perú. Aisladores, herrajes, conectores y accesorios certificados IEC, ANSI y NTP. Despacho en 48 h.`,
-    keywords: [KW_CORE, ...KW_SECONDARY],
-    authors:  [{ name: "Insumind S.A.C." }],
-    creator:  "Insumind S.A.C.",
+    description: SITE_NAME,
+    keywords: [],
+    authors:  [{ name: SITE_NAME }],
+    creator:  SITE_NAME,
     openGraph: {
       ...defaultOG,
       url:         SITE_URL,
-      title:       `${SITE_NAME} | Ferretería Eléctrica para Alta y Media Tensión`,
-      description: `Fabricantes de ferretería eléctrica AT/MT en Lima, Perú. Aisladores, herrajes y conectores certificados IEC, ANSI y NTP. Despacho en 48 h.`,
+      title:       SITE_NAME,
+      description: SITE_NAME,
     },
     twitter: {
       card:        "summary_large_image" as const,
-      title:       `${SITE_NAME} | Ferretería Eléctrica para Alta y Media Tensión`,
-      description: `Fabricantes de ferretería eléctrica AT/MT en Lima. Certificaciones IEC, ANSI y NTP. Despacho en 48 h.`,
+      title:       SITE_NAME,
+      description: SITE_NAME,
       images:      [OG_IMAGE],
     },
     robots: {
@@ -225,19 +224,19 @@ export const SEO = {
 
   /** / — Página principal */
   home: {
-    title:       { absolute: `${SITE_NAME} — Ferretería Eléctrica AT/MT | Lima, Perú` },
-    description: `Ferretería y accesorios eléctricos AT/MT en Lima, Perú. Stock permanente de aisladores, herrajes y conectores certificados IEC, ANSI y NTP. Despacho 48 h.`,
+    title:       { absolute: SITE_NAME },
+    description: SITE_NAME,
     alternates:  { canonical: "/" },
     openGraph: {
       ...defaultOG,
       url:         SITE_URL,
-      title:       `${SITE_NAME} — Ferretería Eléctrica AT/MT | Lima, Perú`,
-      description: `Fabricantes de ferretería eléctrica AT/MT. Aisladores, herrajes y conectores certificados. Stock permanente en Lima. Despacho en 48 h.`,
+      title:       SITE_NAME,
+      description: SITE_NAME,
     },
     twitter: {
       card:        "summary_large_image" as const,
-      title:       `${SITE_NAME} — Ferretería Eléctrica AT/MT | Lima, Perú`,
-      description: `Ferretería eléctrica AT/MT en Lima. Certificaciones IEC, ANSI y NTP. Despacho en 48 h.`,
+      title:       SITE_NAME,
+      description: SITE_NAME,
       images:      [OG_IMAGE],
     },
   } satisfies Metadata,
