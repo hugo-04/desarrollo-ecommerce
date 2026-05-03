@@ -9,8 +9,8 @@ import type { Metadata } from "next"
 
 // ─── Configuración base ────────────────────────────────────────────────────────
 
-export const SITE_URL  = "https://electrothina.com"
-export const SITE_NAME = "Electro Thina"
+export const SITE_URL  = "https://xxxxxxxxxxxxxxxx.com"
+export const SITE_NAME = "Insumind"
 
 /** Imagen OG por defecto — redes sociales y WhatsApp */
 const OG_IMAGE = `${SITE_URL}/logo/logotipo.png`
@@ -36,7 +36,8 @@ const KW_SECONDARY = [
   "ferretería galvanizada para líneas eléctricas Perú",
   "grapas y empalmes para conductores eléctricos",
   "certificaciones IEC ANSI NTP herrajes eléctricos",
-  "Electro Thina SAC Lima",
+  "Insumind SAC Lima",
+  "insumind Lima",
   "cotización ferretería eléctrica Peru",
 ]
 
@@ -50,7 +51,7 @@ const defaultOG = {
 // ─── Schema.org — LocalBusiness ───────────────────────────────────────────────
 
 /**
- * JSON-LD para Google: marca a Electro Thina como negocio local con actividad
+ * JSON-LD para Google: marca a Insumind como negocio local con actividad
  * de fabricación y distribución de materiales eléctricos AT/MT.
  *
  * Incluir en el layout raíz con:
@@ -60,8 +61,8 @@ export const organizationSchema = {
   "@context":    "https://schema.org",
   "@type":       ["Organization", "LocalBusiness"],
   "@id":         `${SITE_URL}/#organization`,
-  name:          "Electro Thina S.A.C.",
-  alternateName: ["Electro Thina", "ElectroThina"],
+  name:          "Insumind S.A.C.",
+  alternateName: ["Insumind", "Insumind"],
   description:   "Fabricante y distribuidor de ferretería eléctrica para alta y media tensión (AT/MT) en Lima, Perú. Fundada en 2010, ofrece herrajes, aisladores de porcelana, conectores bimetálicos, pernos galvanizados, abrazaderas y sistemas de puesta a tierra certificados bajo normas IEC, ANSI C135, ANSI C29 y NTP. Atiende concesionarias eléctricas, contratistas y proyectos de distribución en todo el Perú con despacho en 24 a 48 horas.",
   slogan:        "Ferretería Eléctrica AT/MT certificada — Lima, Perú",
   url:           SITE_URL,
@@ -69,7 +70,7 @@ export const organizationSchema = {
     "@type":      "ImageObject",
     "@id":        `${SITE_URL}/#logo`,
     url:          OG_IMAGE,
-    caption:      "Electro Thina S.A.C. — Ferretería Eléctrica AT/MT",
+    caption:      "Insumind S.A.C. — Ferretería Eléctrica AT/MT",
     width:        "400",
     height:       "100",
   },
@@ -85,14 +86,14 @@ export const organizationSchema = {
     },
   },
   taxID:         "20609410711",
-  legalName:     "Electro Thina S.A.C.",
+  legalName:     "Insumind S.A.C.",
   areaServed:    [
     { "@type": "Country", name: "Perú" },
     { "@type": "City",    name: "Lima" },
   ],
   priceRange:    "$$",
   telephone:     "+51981375196",
-  email:         "electrothina522@gmail.com",
+  email:         "xxxxxxxxxxxxxxxx@gmail.com",
   address: {
     "@type":         "PostalAddress",
     streetAddress:   "Av. Guillermo Dansey N° 481 - Int. 143 - C.C. Loreto",
@@ -121,7 +122,7 @@ export const organizationSchema = {
     },
   ],
   sameAs: [
-    "https://www.facebook.com/electrothina",
+    "https://www.facebook.com/xxxxxxxxxxxxxxxx",
   ],
   hasCredential: [
     { "@type": "EducationalOccupationalCredential", name: "Certificación ISO 9001 — Sistema de Gestión de Calidad" },
@@ -190,8 +191,8 @@ export const SEO = {
     description:
       `Fabricantes de ferretería eléctrica AT/MT en Lima, Perú. Aisladores, herrajes, conectores y accesorios certificados IEC, ANSI y NTP. Despacho en 48 h.`,
     keywords: [KW_CORE, ...KW_SECONDARY],
-    authors:  [{ name: "Electro Thina S.A.C." }],
-    creator:  "Electro Thina S.A.C.",
+    authors:  [{ name: "Insumind S.A.C." }],
+    creator:  "Insumind S.A.C.",
     openGraph: {
       ...defaultOG,
       url:         SITE_URL,
@@ -244,7 +245,7 @@ export const SEO = {
   /** /nosotros */
   nosotros: {
     title:       "Sobre Nosotros — Fabricantes de Ferretería Eléctrica en Perú",
-    description: `Electro Thina: fabricantes y distribuidores de ferretería eléctrica AT/MT en Lima desde 2010. Certificaciones IEC y ANSI, planta propia e ingenieros especializados.`,
+    description: `Insumind: fabricantes y distribuidores de ferretería eléctrica AT/MT en Lima desde 2010. Certificaciones IEC y ANSI, planta propia e ingenieros especializados.`,
     alternates:  { canonical: "/nosotros" },
     openGraph: {
       ...defaultOG,
@@ -295,7 +296,7 @@ export const SEO = {
   /** /terminos — noindex: no aporta SEO y consume crawl budget */
   terminos: {
     title:       "Términos y Condiciones",
-    description: `Términos y condiciones de uso del sitio web y servicios comerciales de Electro Thina S.A.C., fabricante y distribuidor de ferretería eléctrica AT/MT en Lima, Perú.`,
+    description: `Términos y condiciones de uso del sitio web y servicios comerciales de Insumind S.A.C., fabricante y distribuidor de ferretería eléctrica AT/MT en Lima, Perú.`,
     alternates:  { canonical: "/terminos" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -303,7 +304,7 @@ export const SEO = {
   /** /politica-privacidad — noindex */
   politicaPrivacidad: {
     title:       "Política de Privacidad",
-    description: `Política de privacidad y tratamiento de datos personales de Electro Thina S.A.C. conforme a la Ley N° 29733 — Ley de Protección de Datos Personales del Perú.`,
+    description: `Política de privacidad y tratamiento de datos personales de Insumind S.A.C. conforme a la Ley N° 29733 — Ley de Protección de Datos Personales del Perú.`,
     alternates:  { canonical: "/politica-privacidad" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -311,7 +312,7 @@ export const SEO = {
   /** /libro-reclamaciones — noindex */
   libroReclamaciones: {
     title:       "Libro de Reclamaciones",
-    description: `Libro de Reclamaciones Virtual de Electro Thina S.A.C. conforme a la Ley N° 29571 — Código de Protección y Defensa del Consumidor (INDECOPI). Lima, Perú.`,
+    description: `Libro de Reclamaciones Virtual de Insumind S.A.C. conforme a la Ley N° 29571 — Código de Protección y Defensa del Consumidor (INDECOPI). Lima, Perú.`,
     alternates:  { canonical: "/libro-reclamaciones" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -379,7 +380,7 @@ export function generateProductMeta(product: {
   description?: string | null
   image?: string | null
 }): Metadata {
-  // Sin el sufijo "| Electro Thina" — el template del root layout lo agrega automáticamente
+  // Sin el sufijo "| Insumind" — el template del root layout lo agrega automáticamente
   const title       = `${product.name} — Precio y Ficha Técnica`
   const description = (product.description?.trim() && product.description.trim().length > 30)
     ? `${product.description.trim().slice(0, 120)}. Cotización en Lima en 24 h.`
@@ -492,7 +493,7 @@ export function buildProductSchema(product: {
       },
       seller: {
         "@type": "Organization",
-        name:    "Electro Thina S.A.C.",
+        name:    "Insumind S.A.C.",
       },
     },
   }
