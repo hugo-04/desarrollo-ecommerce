@@ -33,6 +33,48 @@ const SEO_SIZE_TIP: Record<string, string> = {
   "16/9": "1200×675 px recomendado",
 }
 
+const MAX_DIMENSION = 1200
+const WEBP_QUALITY  = 0.82
+const SKIP_COMPRESS_BYTES = 150 * 1024 // ya está optimizada si pesa < 150 KB
+
+/** Comprime y redimensiona una imagen a WebP antes de subirla */
+async function compressToWebP(file: File): Promise<File> {
+  // SVG: no comprimir (vector)
+  if (file.type === "image/svg+xml") return file
+  // Ya optimizada: no recomprimir
+  if (file.size <= SKIP_COMPRESS_BYTES) return file
+
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      let { naturalWidth: w, naturalHeight: h } = img
+      if (w > MAX_DIMENSION || h > MAX_DIMENSION) {
+        const ratio = Math.min(MAX_DIMENSION / w, MAX_DIMENSION / h)
+        w = Math.round(w * ratio)
+        h = Math.round(h * ratio)
+      }
+      const canvas = document.createElement("canvas")
+      canvas.width  = w
+      canvas.height = h
+      const ctx = canvas.getContext("2d")!
+      ctx.drawImage(img, 0, 0, w, h)
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) { reject(new Error("No se pudo comprimir la imagen")); return }
+          const name = file.name.replace(/\.\w+$/, ".webp")
+          resolve(new File([blob], name, { type: "image/webp" }))
+        },
+        "image/webp",
+        WEBP_QUALITY,
+      )
+    }
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Imagen inválida")) }
+    img.src = url
+  })
+}
+
 /** Convierte texto libre a slug SEO-friendly */
 function toSeoSlug(text: string): string {
   return text
@@ -97,16 +139,15 @@ export function ImageUpload({
     async (file: File) => {
       setUploading(true)
       setUploadError("")
-      const fd = new FormData()
-      fd.append("file", file)
-      // El seoName se aplica al finalizar (al guardar el formulario), no aquí
-      if (folder) fd.append("folder", folder)
       try {
+        const compressed = await compressToWebP(file)
+        const fd = new FormData()
+        fd.append("file", compressed)
+        if (folder) fd.append("folder", folder)
         const res  = await fetch("/api/upload", { method: "POST", body: fd })
         const data = await res.json()
         if (!res.ok) throw new Error(data.error ?? "Error al subir")
         onChange(data.url)
-        // Notificar la key temporal para que el formulario pueda finalizarla al guardar
         if (data.tempKey) onTempKey?.(data.tempKey)
       } catch (e: unknown) {
         setUploadError(e instanceof Error ? e.message : "Error al subir")
@@ -120,14 +161,14 @@ export function ImageUpload({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "image/jpeg": [], "image/png": [], "image/webp": [] },
     maxFiles: 1,
-    maxSize: 5 * 1024 * 1024,
+    maxSize: 10 * 1024 * 1024, // acepta hasta 10 MB — se comprime a WebP antes de subir
     disabled: uploading,
     onDropAccepted: ([file]) => uploadFile(file),
     onDropRejected: (rejected) => {
       const code = rejected[0]?.errors[0]?.code
-      if (code === "file-too-large")    setUploadError("El archivo excede 5 MB")
+      if (code === "file-too-large")         setUploadError("El archivo excede 10 MB")
       else if (code === "file-invalid-type") setUploadError("Solo JPG, PNG o WebP")
-      else setUploadError("Archivo no válido")
+      else                                   setUploadError("Archivo no válido")
     },
   })
 
@@ -259,12 +300,12 @@ export function ImageUpload({
                 <p className={`text-sm font-semibold ${displayError ? "text-red-500" : "text-slate-600"}`}>
                   {isDragActive ? "Soltá la imagen aquí" : "Arrastrá o hacé clic para subir"}
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400">JPG, PNG, WebP — máx. 5 MB</p>
+                <p className="mt-0.5 text-xs text-slate-400">JPG, PNG, WebP — se convierte a WebP automáticamente</p>
               </div>
               {/* Tip SEO de tamaño */}
               <div className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 text-[11px] text-blue-600">
                 <Info className="h-3 w-3 shrink-0" />
-                <span>SEO: {sizeTip}, WebP preferido</span>
+                <span>SEO: {sizeTip} · Auto-comprime a WebP</span>
               </div>
             </>
           )}

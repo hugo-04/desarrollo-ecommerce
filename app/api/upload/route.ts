@@ -18,9 +18,10 @@ import { NextRequest, NextResponse } from "next/server"
 import { getSession } from "@/lib/auth/session"
 import { uploadToS3, isS3Configured, UPLOAD_FOLDERS } from "@/lib/storage/s3"
 
-const UPLOAD_DIR = join(process.cwd(), "public", "uploads")
-const MAX_SIZE   = 10 * 1024 * 1024 // 10 MB (PDFs pueden ser más pesados)
-const ALLOWED    = ["image/jpeg", "image/png", "image/webp", "image/svg+xml", "application/pdf"]
+const UPLOAD_DIR      = join(process.cwd(), "public", "uploads")
+const MAX_IMAGE_SIZE  = 2 * 1024 * 1024  // 2 MB — imágenes ya llegan comprimidas a WebP
+const MAX_PDF_SIZE    = 10 * 1024 * 1024 // 10 MB — PDFs de ficha técnica
+const ALLOWED         = ["image/jpeg", "image/png", "image/webp", "image/svg+xml", "application/pdf"]
 
 export async function POST(request: NextRequest) {
   // Auth guard
@@ -41,8 +42,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Tipo de archivo no permitido" }, { status: 400 })
     }
 
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json({ error: "El archivo excede 10 MB" }, { status: 400 })
+    const isPdf   = file.type === "application/pdf"
+    const maxSize = isPdf ? MAX_PDF_SIZE : MAX_IMAGE_SIZE
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { error: isPdf ? "El PDF excede 10 MB" : "La imagen excede 2 MB — redimensionala antes de subir" },
+        { status: 400 },
+      )
     }
 
     // Nombre SEO único: timestamp + slug limpio derivado del alt text
