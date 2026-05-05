@@ -14,9 +14,10 @@ export type UpdateCategoryDTO = Partial<CreateCategoryDTO>
 
 /** Parámetros de filtrado y paginación para el listado de categorías */
 export interface CategoryFilters {
-  query?: string
-  page?:  number
-  limit?: number
+  query?:            string
+  page?:             number
+  limit?:            number
+  withProductsOnly?: boolean
 }
 
 /** Resultado paginado del repositorio de categorías */

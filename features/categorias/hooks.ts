@@ -39,8 +39,9 @@ export function useCategory(id: number) {
 // ─── useInfiniteCategories ───────────────────────────────────────────────────
 export function useInfiniteCategories(query: string = "") {
   return useInfiniteQuery({
-    queryKey: categoryKeys.infinite(query),
-    queryFn: ({ pageParam = 1 }) => getCategoriesPagedAction({ query, page: pageParam as number, limit: 15 }),
+    queryKey: [...categoryKeys.infinite(query), "withProducts"],
+    queryFn: ({ pageParam = 1 }) =>
+      getCategoriesPagedAction({ query, page: pageParam as number, limit: 15, withProductsOnly: true }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => (lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined),
   })

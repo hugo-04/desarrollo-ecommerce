@@ -5,8 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Home, ShoppingBag, Users, PhoneCall, UserRound, X, Menu, ChevronDown, LayoutGrid } from "lucide-react"
-import { IconChevronDown, IconChevronRight, IconFire } from "@/components/icons"
-import { useCategories } from "@/features/categorias/hooks"
+import { IconChevronRight, IconFire } from "@/components/icons"
 import { getCategoryIcon } from "@/lib/category-icons"
 
 import { useInfiniteCategories } from "@/features/categorias/hooks"
@@ -87,9 +86,6 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
       >
         <LayoutGrid className="h-4 w-4 shrink-0" />
         <span className="text-[13px] font-bold tracking-wide">Categorías</span>
-        <IconChevronDown
-          className={`h-3 w-3 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-        />
       </button>
 
       <AnimatePresence>
@@ -154,7 +150,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
               </div>
 
               {/* Lista de categorías — scrollable */}
-              <div className="flex-1 overflow-y-auto overscroll-contain">
+              <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
                 {status === "pending" ? (
                   <div className="flex justify-center py-10">
                     <Loader2 className="h-5 w-5 animate-spin text-slate-300" />

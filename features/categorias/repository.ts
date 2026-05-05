@@ -29,6 +29,7 @@ type CategoryRow = {
 }
 
 const INCLUDE_SUBS = { subs: true } as const
+const INCLUDE_SUBS_WITH_PRODUCTS = { subs: { where: { products: { some: {} } } } } as const
 
 // ─── Interface ─────────────────────────────────────────────────────────────────
 
@@ -78,20 +79,31 @@ export class DbCategoryRepository implements ICategoryRepository {
   }
 
   async findPaged(filters: CategoryFilters): Promise<CategoryPaginatedResult> {
-    const { query = "", page = 1, limit = 12 } = filters
+    const { query = "", page = 1, limit = 12, withProductsOnly = false } = filters
 
-    const where = query
-      ? {
-          OR: [
-            { name: { contains: query, mode: "insensitive" as const } },
-            { slug: { contains: query, mode: "insensitive" as const } },
-          ],
-        }
-      : {}
+    const where: Prisma.CategoryWhereInput = {
+      ...(withProductsOnly ? { count: { gt: 0 } } : {}),
+      ...(query
+        ? {
+            OR: [
+              { name: { contains: query, mode: "insensitive" as const } },
+              { slug: { contains: query, mode: "insensitive" as const } },
+            ],
+          }
+        : {}),
+    }
+
+    const include = withProductsOnly ? INCLUDE_SUBS_WITH_PRODUCTS : INCLUDE_SUBS
 
     const [total, rows] = await Promise.all([
       this.db.category.count({ where }),
-      this.db.category.findMany({ where, skip: (page - 1) * limit, take: limit, orderBy: { name: "asc" }, include: INCLUDE_SUBS }),
+      this.db.category.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: withProductsOnly ? { count: "desc" } : { name: "asc" },
+        include,
+      }),
     ])
 
     const totalPages = Math.max(1, Math.ceil(total / limit))
