@@ -82,7 +82,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all ${
-          isOpen ? "bg-[#0066B3] text-white shadow-md" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+          isOpen ? "bg-[#1B2B4B] text-white shadow-md" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
         }`}
       >
         <LayoutGrid className="h-4 w-4 shrink-0" />
@@ -128,8 +128,8 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
               {/* Header */}
               <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-3">
                 <div className="flex items-center gap-2">
-                  <LayoutGrid className="h-4 w-4 text-[#0066B3]" />
-                  <h2 className="text-base font-extrabold text-[#003D73]">Categorías</h2>
+                  <LayoutGrid className="h-4 w-4 text-[#1B2B4B]" />
+                  <h2 className="text-base font-extrabold text-[#0f1e35]">Categorías</h2>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
@@ -148,7 +148,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Buscar categoría..."
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-[#0066B3]/40 focus:bg-white focus:ring-2 focus:ring-[#0066B3]/15"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-[#1B2B4B]/40 focus:bg-white focus:ring-2 focus:ring-[#1B2B4B]/15"
                   />
                 </div>
               </div>
@@ -176,7 +176,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                               onClick={() => setIsOpen(false)}
                               className="flex flex-1 items-center gap-3 py-3.5 pl-2 pr-1"
                             >
-                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#0066B3]/[0.07] text-[#0066B3]">
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#1B2B4B]/[0.07] text-[#1B2B4B]">
                                 <Icon className="h-4 w-4" />
                               </div>
                               <span className="text-sm font-semibold text-slate-700">{cat.name}</span>
@@ -193,7 +193,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                               >
                                 <ChevronDown
                                   size={15}
-                                  className={`transition-transform duration-200 ${isExpanded ? "rotate-180 text-[#0066B3]" : ""}`}
+                                  className={`transition-transform duration-200 ${isExpanded ? "rotate-180 text-[#1B2B4B]" : ""}`}
                                 />
                               </button>
                             )}
@@ -209,11 +209,11 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                 transition={{ duration: 0.22, ease: "easeInOut" }}
                                 className="overflow-hidden"
                               >
-                                <div className="ml-12 mb-2 grid grid-cols-2 gap-1 border-l-2 border-[#0066B3]/10 pl-3">
+                                <div className="ml-12 mb-2 grid grid-cols-2 gap-1 border-l-2 border-[#1B2B4B]/10 pl-3">
                                   <Link
                                     href={`/categoria/${cat.slug}`}
                                     onClick={() => setIsOpen(false)}
-                                    className="col-span-2 flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-bold text-[#0066B3] transition-colors hover:bg-[#0066B3]/[0.06]"
+                                    className="col-span-2 flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-bold text-[#1B2B4B] transition-colors hover:bg-[#1B2B4B]/[0.06]"
                                   >
                                     <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35]" />
                                     Ver todos
@@ -223,7 +223,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                       key={sub.id}
                                       href={`/categoria/${cat.slug}?subId=${sub.id}`}
                                       onClick={() => setIsOpen(false)}
-                                      className="flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[#0066B3]"
+                                      className="flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[#1B2B4B]"
                                     >
                                       <span className="h-1 w-1 shrink-0 rounded-full bg-slate-300" />
                                       <span className="truncate">{sub.name}</span>
@@ -254,7 +254,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                 <Link
                   href="/catalogo"
                   onClick={() => setIsOpen(false)}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#003D73] to-[#0066B3] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#0066B3]/20"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#0f1e35] to-[#1B2B4B] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#1B2B4B]/20"
                 >
                   Ver todo el catálogo
                   <IconChevronRight className="h-4 w-4" />
@@ -283,13 +283,13 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Buscar categoría..."
-                    className="w-full rounded-lg bg-slate-50 py-2 pl-9 pr-3 text-[12px] text-slate-700 outline-none ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-[#0066B3]/40"
+                    className="w-full rounded-lg bg-slate-50 py-2 pl-9 pr-3 text-[12px] text-slate-700 outline-none ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-[#1B2B4B]/40"
                   />
                 </div>
                 <Link
                   href="/catalogo"
                   onClick={() => setIsOpen(false)}
-                  className="flex shrink-0 items-center gap-1.5 rounded-lg bg-[#0066B3] px-3 py-2 text-[11px] font-bold text-white transition-colors hover:bg-[#004f8c]"
+                  className="flex shrink-0 items-center gap-1.5 rounded-lg bg-[#1B2B4B] px-3 py-2 text-[11px] font-bold text-white transition-colors hover:bg-[#243660]"
                 >
                   Ver todo
                   <IconChevronRight className="h-3 w-3" />
@@ -317,7 +317,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                             key={cat.id}
                             className={`group relative flex w-full items-center rounded-xl transition-all duration-150 ${
                               isActive
-                                ? "bg-[#0066B3]/[0.07] text-[#0066B3]"
+                                ? "bg-[#1B2B4B]/[0.07] text-[#1B2B4B]"
                                 : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                             }`}
                             onMouseEnter={() => setActiveCategory(cat.id)}
@@ -332,8 +332,8 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                             >
                               <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors ${
                                 isActive
-                                  ? "bg-[#0066B3]/10 text-[#0066B3]"
-                                  : "bg-slate-100 text-slate-400 group-hover:bg-[#0066B3]/10 group-hover:text-[#0066B3]"
+                                  ? "bg-[#1B2B4B]/10 text-[#1B2B4B]"
+                                  : "bg-slate-100 text-slate-400 group-hover:bg-[#1B2B4B]/10 group-hover:text-[#1B2B4B]"
                               }`}>
                                 <Icon className="h-3.5 w-3.5" />
                               </div>
@@ -368,15 +368,15 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                     >
                       <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
                         <div>
-                          <h2 className="text-sm font-extrabold text-[#003D73]">{activeCat.name}</h2>
+                          <h2 className="text-sm font-extrabold text-[#0f1e35]">{activeCat.name}</h2>
                           <p className="mt-0.5 text-[11px] text-slate-400">
-                            <span className="font-bold text-[#0066B3]">{activeCat.count}</span> productos disponibles
+                            <span className="font-bold text-[#1B2B4B]">{activeCat.count}</span> productos disponibles
                           </p>
                         </div>
                         <Link
                           href={`/categoria/${activeCat.slug}`}
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 transition-colors hover:border-[#0066B3]/30 hover:bg-[#0066B3]/[0.04] hover:text-[#0066B3]"
+                          className="flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 transition-colors hover:border-[#1B2B4B]/30 hover:bg-[#1B2B4B]/[0.04] hover:text-[#1B2B4B]"
                         >
                           Ver todo
                           <IconChevronRight className="h-2.5 w-2.5" />
@@ -392,10 +392,10 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                 onClick={() => setIsOpen(false)}
                                 className="group flex items-center gap-2 rounded-xl border border-transparent px-3 py-2.5 transition-all hover:border-slate-200 hover:bg-slate-50"
                               >
-                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#0066B3]/[0.07] text-[#0066B3] transition-colors group-hover:bg-[#0066B3]/15">
+                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#1B2B4B]/[0.07] text-[#1B2B4B] transition-colors group-hover:bg-[#1B2B4B]/15">
                                   <IconChevronRight className="h-2.5 w-2.5" />
                                 </span>
-                                <span className="truncate text-[12px] font-medium text-slate-600 transition-colors group-hover:text-[#0066B3]">
+                                <span className="truncate text-[12px] font-medium text-slate-600 transition-colors group-hover:text-[#1B2B4B]">
                                   {sub.name}
                                 </span>
                               </Link>
@@ -407,7 +407,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                             <Link
                               href={`/categoria/${activeCat.slug}`}
                               onClick={() => setIsOpen(false)}
-                              className="mt-1 rounded-lg bg-[#0066B3] px-4 py-2 text-[11px] font-bold text-white transition-colors hover:bg-[#004f8c]"
+                              className="mt-1 rounded-lg bg-[#1B2B4B] px-4 py-2 text-[11px] font-bold text-white transition-colors hover:bg-[#243660]"
                             >
                               Ver categoría
                             </Link>
@@ -479,7 +479,7 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar..."
-            className="w-full rounded-lg bg-slate-50 py-2 pl-9 pr-3 text-[12px] text-slate-700 outline-none ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-[#0066B3]/40"
+            className="w-full rounded-lg bg-slate-50 py-2 pl-9 pr-3 text-[12px] text-slate-700 outline-none ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-[#1B2B4B]/40"
           />
         </div>
       </div>
@@ -493,7 +493,7 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
           className="group flex items-center justify-between px-4 py-2.5 text-sm transition-colors hover:bg-slate-50"
         >
           <span className="font-semibold text-slate-700">Ver todo el catálogo</span>
-          <span className="rounded-md bg-[#0066B3]/10 px-2 py-0.5 text-[10px] font-bold text-[#0066B3]">Todo</span>
+          <span className="rounded-md bg-[#1B2B4B]/10 px-2 py-0.5 text-[10px] font-bold text-[#1B2B4B]">Todo</span>
         </Link>
 
         <div className="mx-4 my-1.5 h-px bg-slate-100" />
@@ -513,13 +513,13 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
                   onClick={onClose}
                   className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50"
                 >
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400 transition-colors group-hover:bg-[#0066B3]/10 group-hover:text-[#0066B3]">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400 transition-colors group-hover:bg-[#1B2B4B]/10 group-hover:text-[#1B2B4B]">
                     <Icon className="h-3.5 w-3.5" />
                   </div>
-                  <span className="flex-1 truncate text-[13px] font-medium text-slate-600 transition-colors group-hover:text-[#0066B3]">
+                  <span className="flex-1 truncate text-[13px] font-medium text-slate-600 transition-colors group-hover:text-[#1B2B4B]">
                     {cat.name}
                   </span>
-                  <span className="text-[10px] text-slate-400 group-hover:text-[#0066B3]">{cat.count}</span>
+                  <span className="text-[10px] text-slate-400 group-hover:text-[#1B2B4B]">{cat.count}</span>
                 </Link>
               )
             })}
@@ -574,7 +574,7 @@ function FluidNav() {
 
         {/* Línea inferior animada — indicador de tab activo */}
         <motion.div
-          className="absolute bottom-0 left-0 h-[3px] rounded-t-full bg-[#0066B3]"
+          className="absolute bottom-0 left-0 h-[3px] rounded-t-full bg-[#FF6B35]"
           initial={false}
           animate={{ x: activeIndex * TAB_W + TAB_GAP / 2, width: TAB_W - TAB_GAP }}
           transition={{ type: "spring", stiffness: 400, damping: 34 }}
@@ -604,14 +604,14 @@ function FluidNav() {
                   onClick={() => setCatalogOpen((v) => !v)}
                   style={{ width: TAB_W }}
                   className={`flex items-center justify-center gap-1.5 py-3 pb-3.5 text-[13px] font-bold transition-colors duration-200 ${
-                    isActive ? "text-[#0066B3]" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50/50"
+                    isActive ? "text-[#1B2B4B]" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50/50"
                   }`}
                 >
                   <span className={isActive ? "text-[#FF6B35]" : "text-slate-400"}>{tab.icon}</span>
                   <span>{tab.label}</span>
                   <ChevronDown
                     size={11}
-                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} ${isActive ? "text-[#0066B3]" : "text-slate-400"}`}
+                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} ${isActive ? "text-[#1B2B4B]" : "text-slate-400"}`}
                   />
                 </button>
                 <AnimatePresence>
@@ -629,7 +629,7 @@ function FluidNav() {
               onMouseLeave={() => setHoveredTab(null)}
               style={{ width: TAB_W }}
               className={`flex items-center justify-center gap-1.5 py-3 pb-3.5 text-[13px] font-bold transition-colors duration-200 ${
-                isActive ? "text-[#0066B3]" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50/50"
+                isActive ? "text-[#1B2B4B]" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50/50"
               }`}
             >
               <span className={isActive ? "text-[#FF6B35]" : "text-slate-400"}>{tab.icon}</span>
@@ -681,7 +681,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
           <motion.div
             initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className="fixed inset-y-0 left-0 z-[70] flex w-[300px] flex-col bg-gradient-to-b from-[#003D73] to-[#002a5c] shadow-2xl"
+            className="fixed inset-y-0 left-0 z-[70] flex w-[300px] flex-col bg-gradient-to-b from-[#1B2B4B] to-[#0f1e35] shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
@@ -760,7 +760,7 @@ export function Navigation() {
             <div className="flex items-center gap-1.5 sm:gap-3">
               <Link
                 href="/login"
-                className="hidden items-center gap-2 rounded-lg border border-slate-200 px-3.5 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-[#0066B3] sm:flex"
+                className="hidden items-center gap-2 rounded-lg border border-slate-200 px-3.5 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-[#1B2B4B] sm:flex"
               >
                 <UserRound size={15} />
                 <span className="hidden sm:inline">Login</span>

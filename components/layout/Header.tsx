@@ -3,7 +3,6 @@
 import { useRef, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
 import { X, Search } from "lucide-react"
 
 interface HeaderProps {
@@ -40,26 +39,23 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
   }
 
   return (
-    <header className="bg-white border-b border-slate-100 relative z-50">
+    <header className="bg-[#1B2B4B] text-white relative z-50">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:py-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-8 justify-between">
         
         {/* Logo */}
-        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90">
-          <Image
-            src="/logo/logotipo.svg"
-            alt="Insumind"
-            width={180}
-            height={45}
-            className="h-9 sm:h-11 w-auto"
-            priority
-            unoptimized
-          />
+        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90 text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" fill="none" className="h-9 sm:h-11 w-auto">
+            <polygon points="28,4 10,32 22,32 18,56 40,24 28,24" fill="#FF6B35"/>
+            <text x="52" y="40" fontFamily="system-ui, -apple-system, sans-serif" fontSize="28" fontWeight="800" letterSpacing="-0.5" fill="currentColor">
+              INSU<tspan fill="#FF6B35">MIND</tspan>
+            </text>
+          </svg>
         </Link>
 
         {/* Search */}
         <div className="w-full sm:max-w-2xl flex-1 relative group">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-slate-400 group-focus-within:text-[#0066B3] transition-colors" />
+            <Search className="h-4 w-4 text-white/40 group-focus-within:text-white transition-colors" />
           </div>
           <input
             type="text"
@@ -67,13 +63,13 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
             value={searchQuery}
             onChange={(e) => handleChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full h-12 bg-slate-50 hover:bg-slate-50/80 border border-slate-200 rounded-2xl pl-11 pr-24 text-[13px] text-slate-700 placeholder:text-slate-400 focus:bg-white focus:border-[#0066B3]/30 focus:ring-4 focus:ring-[#0066B3]/10 transition-all outline-none"
+            className="w-full h-12 bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl pl-11 pr-24 text-[13px] text-white placeholder:text-white/50 focus:bg-[#0f1e35] focus:border-[#FF6B35]/50 focus:ring-4 focus:ring-[#FF6B35]/20 transition-all outline-none backdrop-blur-sm"
           />
           <div className="absolute inset-y-1.5 right-1.5 flex items-center gap-1">
             {searchQuery && (
               <button
                 onClick={() => handleChange("")}
-                className="h-full px-2 text-slate-400 hover:text-slate-600 transition-colors"
+                className="h-full px-2 text-white/40 hover:text-white transition-colors"
                 aria-label="Limpiar búsqueda"
               >
                 <X size={14} />
@@ -81,7 +77,7 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
             )}
             <button
               onClick={handleSearch}
-              className="h-full bg-[#0066B3] hover:bg-[#005299] text-white px-5 rounded-xl text-xs font-bold tracking-wide shadow-sm transition-all"
+              className="h-full bg-[#FF6B35] hover:bg-[#f97316] text-white px-5 rounded-xl text-xs font-bold tracking-wide shadow-sm transition-all"
             >
               Buscar
             </button>
