@@ -1,43 +1,38 @@
 "use client"
 
-import { IconMail, IconPhone, IconClock } from "@/components/icons"
 import { CONTACT } from "@/lib/contact"
 
 export function TopBar() {
   return (
-    <div className="bg-[#1B2B4B] text-slate-300/80 py-2 border-b border-[#FF6B35]/20 relative z-50">
-      <div className="mx-auto max-w-7xl px-4 flex items-center justify-between text-[11px] font-medium tracking-wide">
+    <div className="bg-[#FF6B35] text-white py-1.5 border-b border-[#ffffff10] relative z-50">
+      <div className="mx-auto max-w-7xl px-4 flex items-center justify-center text-[11px] font-medium tracking-wide">
         
-        {/* Contact Info (scrollable on mobile) */}
-        <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide w-full sm:w-auto">
-          {/* Online Indicator */}
-          <span className="flex items-center gap-1.5 text-emerald-400 shrink-0">
-             <span className="relative flex h-1.5 w-1.5">
-               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-             </span>
-             <span className="font-bold tracking-widest text-[10px]">EN LÍNEA</span>
+        {/* Container: Centered on desktop, scrollable on mobile */}
+        <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide whitespace-nowrap w-full md:w-auto md:justify-center">
+          
+          <span className="flex items-center gap-1.5 font-bold shrink-0">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+            EN LÍNEA
           </span>
           
-          <span className="w-px h-3 bg-white/15 shrink-0" />
+          <span className="w-px h-3 bg-white/30 shrink-0" />
           
-          <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-1.5 hover:text-white transition-colors shrink-0">
-            <IconMail className="h-3.5 w-3.5 text-slate-400" /> 
+          <a href={`mailto:${CONTACT.email}`} className="hover:text-white/80 transition-colors shrink-0">
             {CONTACT.email}
           </a>
           
-          <span className="w-px h-3 bg-white/15 shrink-0" />
+          <span className="w-px h-3 bg-white/30 shrink-0" />
           
-          <a href={CONTACT.phoneTel} className="flex items-center gap-1.5 hover:text-white transition-colors font-semibold text-slate-200 shrink-0">
-            <IconPhone className="h-3.5 w-3.5 text-slate-400" /> 
-            {CONTACT.phoneDisplay}
-          </a>
-        </div>
-
-        {/* Business Hours (hidden on small mobile) */}
-        <div className="hidden md:flex items-center gap-1.5 shrink-0">
-          <IconClock className="h-3.5 w-3.5 text-slate-400/60" /> 
-          <span>{CONTACT.hours}</span>
+          <span className="shrink-0">
+            xxxxxxxxxxxxxxxx
+          </span>
+          
+          <span className="w-px h-3 bg-white/30 shrink-0" />
+          
+          <span className="shrink-0">
+            {CONTACT.hours}
+          </span>
+          
         </div>
 
       </div>
