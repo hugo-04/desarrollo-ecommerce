@@ -733,7 +733,7 @@ export function Navigation() {
 
   return (
     <>
-      <nav className="bg-[#0f1e35] border-b border-[#ffffff10] shadow-md relative z-40">
+      <nav className="bg-[#003D73] border-b border-[#ffffff10] shadow-md relative z-40">
         <div className="mx-auto max-w-7xl px-3 py-1.5 sm:px-4 sm:py-0">
           <div className="flex items-center justify-between gap-2">
 
