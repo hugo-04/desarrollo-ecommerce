@@ -42,11 +42,11 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
     <>
 
 
-      <header className="bg-[#1B2B4B] text-white relative z-50">
+      <header className="bg-white text-slate-900 relative z-50">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:py-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-8 justify-between">
         
         {/* Logo */}
-        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90 text-white">
+        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90 text-[#1B2B4B]">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" fill="none" className="h-9 sm:h-11 w-auto">
             <polygon points="28,4 10,32 22,32 18,56 40,24 28,24" fill="#FF6B35"/>
             <text x="52" y="40" fontFamily="system-ui, -apple-system, sans-serif" fontSize="28" fontWeight="800" letterSpacing="-0.5" fill="currentColor">
@@ -58,7 +58,7 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
         {/* Search */}
         <div className="w-full sm:max-w-2xl flex-1 relative group">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-white/40 group-focus-within:text-white transition-colors" />
+            <Search className="h-4 w-4 text-slate-400 group-focus-within:text-[#1B2B4B] transition-colors" />
           </div>
           <input
             type="text"
@@ -66,13 +66,13 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
             value={searchQuery}
             onChange={(e) => handleChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full h-12 bg-white/10 hover:bg-white/15 border border-white/10 rounded-2xl pl-11 pr-24 text-[13px] text-white placeholder:text-white/50 focus:bg-[#0f1e35] focus:border-[#FF6B35]/50 focus:ring-4 focus:ring-[#FF6B35]/20 transition-all outline-none backdrop-blur-sm"
+            className="w-full h-12 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl pl-11 pr-24 text-[13px] text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#FF6B35]/50 focus:ring-4 focus:ring-[#FF6B35]/20 transition-all outline-none"
           />
           <div className="absolute inset-y-1.5 right-1.5 flex items-center gap-1">
             {searchQuery && (
               <button
                 onClick={() => handleChange("")}
-                className="h-full px-2 text-white/40 hover:text-white transition-colors"
+                className="h-full px-2 text-slate-400 hover:text-slate-600 transition-colors"
                 aria-label="Limpiar búsqueda"
               >
                 <X size={14} />
