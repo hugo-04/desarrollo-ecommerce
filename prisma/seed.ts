@@ -106,16 +106,18 @@ async function main() {
   }
   console.log(`Seeded ${CATEGORIES_DATA.length} categorías con sus subcategorías`)
 
-  // ── 5. Mapa de marcas para lookup por nombre ──────────────────────────────
+  // ── 5. Mapas de lookup: marcas, categorías y subcategorías ───────────────
   const brandMap = new Map<string, number>()
   const allBrands = await prisma.brand.findMany({ select: { id: true, name: true } })
   allBrands.forEach(b => brandMap.set(b.name, b.id))
 
-  // ── 6. Nuevos productos ────────────────────────────────────────────────────
-  // Resolver categoría y marcas de cada producto antes de la transacción
   const allCategories = await prisma.category.findMany({ select: { id: true, slug: true } })
   const catMap = new Map(allCategories.map(c => [c.slug, c.id]))
 
+  const allSubs = await prisma.subcategory.findMany({ select: { id: true, name: true } })
+  const subMap = new Map(allSubs.map(s => [s.name.toLowerCase(), s.id]))
+
+  // ── 6. Nuevos productos ────────────────────────────────────────────────────
   const productData = PRODUCTS_DATA.flatMap(p => {
     const categoryId = catMap.get(p.catSlug)
     if (!categoryId) {
@@ -124,11 +126,12 @@ async function main() {
     }
     const pBrands = p.brands && p.brands.length > 0 ? p.brands : ["Lorem Ipsum"]
     const brandIds = pBrands.map(bName => brandMap.get(bName) ?? defaultBrand.id)
-    return [{ p, categoryId, brandIds }]
+    const subcategoryId = p.subcategory ? (subMap.get(p.subcategory.toLowerCase()) ?? null) : null
+    return [{ p, categoryId, brandIds, subcategoryId }]
   })
 
   await prisma.$transaction(
-    productData.map(({ p, categoryId, brandIds }) =>
+    productData.map(({ p, categoryId, brandIds, subcategoryId }) =>
       prisma.product.create({
         data: {
           name: p.name,
@@ -146,6 +149,7 @@ async function main() {
           rating: 4.5,
           category: { connect: { id: categoryId } },
           brands: { connect: brandIds.map(id => ({ id })) },
+          ...(subcategoryId != null && { subcategory: { connect: { id: subcategoryId } } }),
         },
       })
     )

@@ -268,3 +268,11 @@
   pointer-events: none;
   height: 0;
 }
+
+/* Ocultar el botón de WhatsApp cuando el drawer móvil o el bottom sheet está abierto */
+body.drawer-open #whatsapp-button {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: all 0.2s ease-in-out;
+}

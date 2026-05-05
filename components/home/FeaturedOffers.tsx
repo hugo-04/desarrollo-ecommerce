@@ -21,8 +21,9 @@ export function FeaturedOffers() {
       variants={staggerContainer}
       className="relative overflow-hidden py-20"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-background to-[#eaedf2]" />
-      <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/[0.02] to-transparent" />
+      {/* Fondo blanco — foco en contenido especialidades */}
+      <div className="absolute inset-0 bg-white" />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-50/60 to-transparent" />
       <div className="relative mx-auto max-w-7xl px-4">
         <motion.div variants={fadeUp} className="mb-14 text-center">
           <span className="mb-2 inline-block text-xs font-bold uppercase tracking-[0.2em] text-foreground/70">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import { ProductCard } from "@/components/product/ProductCard"
 import { Pagination } from "@/components/ui/pagination"
@@ -18,27 +18,7 @@ interface CategoriaViewProps {
   initialProducts: Product[]
   initialTotal: number
   initialTotalPages: number
-  /** Subcategoría activa (opcional — para navegar directo a una sub) */
   activeSubcategoryId?: number
-}
-
-// ── Card con animación de entrada ─────────────────────────────────────────────
-
-function AnimatedCard({ product, index }: { product: Product; index: number }) {
-  const [visible, setVisible] = useState(false)
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), index * 50)
-    return () => clearTimeout(t)
-  }, [index])
-  return (
-    <div style={{
-      opacity: visible ? 1 : 0,
-      transform: visible ? "translateY(0)" : "translateY(20px)",
-      transition: "opacity 0.35s ease, transform 0.35s ease",
-    }}>
-      <ProductCard product={product} />
-    </div>
-  )
 }
 
 // ── Vista principal ───────────────────────────────────────────────────────────
@@ -58,7 +38,9 @@ export function CategoriaView({
   const [loading, setLoading]         = useState(false)
   const [subcategoryId, setSubId]     = useState<number | undefined>(activeSubcategoryId)
 
-  // Nombre de la subcategoría activa (para mostrar en breadcrumb / badge)
+  // Salta el primer disparo del effect (usa datos SSR ya hidratados)
+  const skipNext = useRef(true)
+
   const activeSubName = subcategoryId
     ? category.subcategoryItems?.find((s) => s.id === subcategoryId)?.name
     : undefined
@@ -82,17 +64,18 @@ export function CategoriaView({
     }
   }, [category.name])
 
-  // Refetch cuando cambia página, tamaño o subcategoría
+  // Fetch cada vez que cambia página, tamaño o subcategoría — omite el primer render (datos SSR)
   useEffect(() => {
-    // Solo si no es la carga inicial (los datos SSR ya están listos)
-    if (page === 1 && pageSize === DEFAULT_LIMIT && subcategoryId === activeSubcategoryId) return
+    if (skipNext.current) { skipNext.current = false; return }
     fetchPage(page, pageSize, subcategoryId)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, pageSize, subcategoryId])
+  }, [page, pageSize, subcategoryId, fetchPage])
+
+  const sectionRef = useRef<HTMLElement>(null)
 
   function handlePageChange(p: number) {
     setPage(p)
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    // Scroll suave solo hasta el encabezado de la sección de productos, no al tope de la página
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
   }
 
   function handlePageSizeChange(size: number) {
@@ -100,10 +83,10 @@ export function CategoriaView({
     setPage(1)
   }
 
+  // Solo actualiza el estado — el useEffect dispara el fetch automáticamente
   function handleSubcategory(subId: number | undefined) {
     setSubId(subId)
     setPage(1)
-    if (subId !== subcategoryId) fetchPage(1, pageSize, subId)
   }
 
   return (
@@ -178,7 +161,7 @@ export function CategoriaView({
       </section>
 
       {/* Grid de productos con paginación */}
-      <section className="bg-slate-50 py-10">
+      <section ref={sectionRef} className="bg-slate-50 py-10 scroll-mt-4">
         <div className="mx-auto max-w-7xl px-4">
           {/* Encabezado */}
           <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
@@ -198,48 +181,61 @@ export function CategoriaView({
             </Link>
           </div>
 
-          {/* Skeleton */}
-          {loading && (
-            <div className="grid grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4">
-              {Array.from({ length: pageSize }).map((_, i) => (
-                <div key={i} className="h-52 animate-pulse rounded-xl bg-slate-200 sm:h-64" />
-              ))}
+          {/* Grid con overlay de carga — sin salto de layout */}
+          <div className="relative min-h-[320px]">
+            {/* Spinner flotante — aparece sobre el grid sin mover nada */}
+            <div
+              className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-200 ${
+                loading ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <div className="rounded-2xl bg-white/90 px-6 py-4 shadow-md ring-1 ring-slate-100 backdrop-blur-sm">
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-200 border-t-[#0066B3]" />
+              </div>
             </div>
-          )}
 
-          {/* Grid */}
-          {!loading && products.length > 0 && (
-            <div className="grid grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4">
-              {products.map((p, idx) => (
-                <AnimatedCard key={p.id} product={p} index={idx} />
-              ))}
-            </div>
-          )}
-
-          {/* Empty */}
-          {!loading && products.length === 0 && (
-            <div className="py-20 text-center text-slate-500">
-              <p className="text-lg font-semibold">No hay productos disponibles en esta selección.</p>
-              <button
-                onClick={() => handleSubcategory(undefined)}
-                className="mt-4 inline-block text-primary hover:underline"
+            {/* Grid — siempre presente, solo cambia opacidad */}
+            {products.length > 0 && (
+              <div
+                className={`grid grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4 transition-opacity duration-200 ${
+                  loading ? "pointer-events-none opacity-30" : "opacity-100"
+                }`}
               >
-                Ver todos los productos de {category.name} →
-              </button>
-            </div>
-          )}
+                {products.map((p) => (
+                  <div key={p.id}>
+                    <ProductCard product={p} />
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {/* Paginación */}
-          {!loading && total > 0 && (
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              total={total}
-              pageSize={pageSize}
-              pageSizeOptions={PAGE_SIZE_OPTIONS}
-              onPageChange={handlePageChange}
-              onPageSizeChange={handlePageSizeChange}
-            />
+            {/* Empty — solo cuando no hay productos y no está cargando */}
+            {!loading && products.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-20 text-center text-slate-500">
+                <p className="text-base font-semibold">No hay productos en esta selección.</p>
+                <button
+                  onClick={() => handleSubcategory(undefined)}
+                  className="mt-3 text-sm text-primary hover:underline"
+                >
+                  Ver todos los productos de {category.name} →
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Paginación — siempre visible, bloqueada durante carga */}
+          {total > 0 && (
+            <div className={`transition-opacity duration-200 ${loading ? "pointer-events-none opacity-50" : "opacity-100"}`}>
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                total={total}
+                pageSize={pageSize}
+                pageSizeOptions={PAGE_SIZE_OPTIONS}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            </div>
           )}
         </div>
       </section>
@@ -258,19 +254,20 @@ export function CategoriaView({
                   ¿Qué tipos de {category.name} tienen disponibles?
                 </AccordionTrigger>
                 <AccordionContent className="pb-5 text-sm leading-relaxed text-slate-600">
-                  En Electro Thina contamos con {category.subcategories.length} variantes de {category.name}:{" "}
+                  En Insumind contamos con{" "}
                   <strong className="text-slate-700">{category.subcategories.slice(0, 4).join(", ")}</strong>
-                  {category.subcategories.length > 4 && ` y ${category.subcategories.length - 4} modelos adicionales`}.
-                  Todos están disponibles en stock permanente en nuestra sede de Lima.
+                  {category.subcategories.length > 4 && ` y ${category.subcategories.length - 4} referencias adicionales`}.
+                  {" "}Todo nuestro stock está disponible en Lima con despacho inmediato.
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="certificacion" className="px-6 border-slate-100">
+              <AccordionItem value="calidad" className="px-6 border-slate-100">
                 <AccordionTrigger className="py-5 text-sm font-semibold text-slate-800 hover:no-underline hover:text-[#003D73]">
-                  ¿Los {category.name} cuentan con certificación IEC y ANSI?
+                  ¿Los productos cuentan con certificación de calidad?
                 </AccordionTrigger>
                 <AccordionContent className="pb-5 text-sm leading-relaxed text-slate-600">
-                  Sí. Todos los {category.name} que distribuimos cumplen con las normas <strong className="text-slate-700">IEC, ANSI C135 y NTP</strong> vigentes.
-                  Podemos entregar certificados de calidad y fichas técnicas con cada pedido.
+                  Sí. Trabajamos con marcas líderes del mercado que cuentan con certificaciones internacionales y normas{" "}
+                  <strong className="text-slate-700">ISO, NTP y estándares industriales</strong> vigentes.
+                  Podemos entregar fichas técnicas y certificados de calidad con cada pedido.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="cotizacion" className="px-6 border-slate-100">
@@ -278,7 +275,9 @@ export function CategoriaView({
                   ¿Cómo solicito una cotización?
                 </AccordionTrigger>
                 <AccordionContent className="pb-5 text-sm leading-relaxed text-slate-600">
-                  Puede solicitar su cotización por WhatsApp, completando el formulario de <strong>Contacto</strong>, o llamándonos al <strong>+51 981 375 196</strong>. Respondemos en menos de 24 horas hábiles.
+                  Puede solicitar su cotización por WhatsApp, a través del formulario de{" "}
+                  <strong>Contacto</strong> o escribiéndonos directamente.
+                  Nuestro equipo responde en menos de <strong>24 horas hábiles</strong> con precios y disponibilidad de stock.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="provincias" className="px-6 border-slate-100">
@@ -286,7 +285,9 @@ export function CategoriaView({
                   ¿Realizan despachos a provincias?
                 </AccordionTrigger>
                 <AccordionContent className="pb-5 text-sm leading-relaxed text-slate-600">
-                  Sí. Realizamos despachos en Lima en <strong>24 a 48 horas</strong>. Para envíos a provincias coordinamos mediante empresas de encomiendas de alcance nacional.
+                  Sí. Realizamos despachos en Lima en <strong>24 a 48 horas</strong>.
+                  Para envíos a provincias coordinamos con empresas de encomiendas de alcance nacional.
+                  Contáctenos para coordinar el envío según su ubicación.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

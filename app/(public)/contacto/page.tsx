@@ -7,7 +7,7 @@ const contactPageSchema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
   name: `Contacto — ${SITE_NAME}`,
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  description: "Solicita cotización de materiales eléctricos AT/MT: aisladores, herrajes, conectores bimetálicos y más. Nuestro equipo técnico responde en menos de 24 horas hábiles.",
   url: `${SITE_URL}/contacto`,
   breadcrumb: {
     "@type": "BreadcrumbList",
@@ -18,14 +18,13 @@ const contactPageSchema = {
   },
   mainEntity: {
     "@type": "Organization",
-    name: "Lorem Ipsum S.A.C.",
-    telephone: "+00000000000",
-    email: "lorem@ipsum.com",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Lorem Ipsum N° 000 - Int. 000",
-      addressLocality: "Lorem",
-      addressRegion: "Ipsum",
+      addressLocality: "Lima",
+      addressRegion: "Lima",
       addressCountry: "PE",
     },
     openingHoursSpecification: [
@@ -39,7 +38,7 @@ const contactPageSchema = {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: ["Saturday"],
         opens: "09:00",
-        closes: "13:00",
+        closes: "15:00",
       },
     ],
   },

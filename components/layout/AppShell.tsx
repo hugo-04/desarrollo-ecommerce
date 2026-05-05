@@ -107,6 +107,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Botón flotante WhatsApp — pill estática con texto integrado */}
         {!hideWhatsApp && (
           <a
+            id="whatsapp-button"
             href={WA.general}
             target="_blank"
             rel="noopener noreferrer"

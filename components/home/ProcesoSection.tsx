@@ -21,13 +21,14 @@ export function ProcesoSection() {
       variants={staggerContainer}
       className="relative overflow-hidden py-32"
     >
-      <div className="absolute inset-0 bg-[#F5F7FA]" />
-      <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#eef1f7] to-transparent" />
+      {/* Fondo azul frío — proceso = orden, confianza, sistematización */}
+      <div className="absolute inset-0 bg-[#EEF4FF]" />
+      <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#ddeaff] to-transparent" />
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-40"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(0,51,160,0.05) 1px, transparent 0)",
+            "radial-gradient(circle at 1px 1px, rgba(0,82,204,0.06) 1px, transparent 0)",
           backgroundSize: "36px 36px",
         }}
       />

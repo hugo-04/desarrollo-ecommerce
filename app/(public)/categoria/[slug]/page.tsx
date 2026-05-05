@@ -18,10 +18,11 @@ import { PageViewTracker }       from "@/components/analytics/PageViewTracker"
 
 export const revalidate = 3600
 
-const LIMIT = 12
+const LIMIT = 20
 
 interface PageProps {
-  params: Promise<{ slug: string }>
+  params:       Promise<{ slug: string }>
+  searchParams: Promise<{ subId?: string }>
 }
 
 // ── Metadatos SEO ──────────────────────────────────────────────────────────────
@@ -35,17 +36,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // ── Página ─────────────────────────────────────────────────────────────────────
 
-export default async function CategoriaPage({ params }: PageProps) {
-  const { slug } = await params
+export default async function CategoriaPage({ params, searchParams }: PageProps) {
+  const { slug }  = await params
+  const { subId } = await searchParams
+
+  const activeSubcategoryId = subId ? Number(subId) : undefined
 
   const category = await getCategoryBySlugAction(slug)
   if (!category) notFound()
 
-  // Primer lote — SSR para velocidad + indexación SEO
+  // Primer lote — SSR filtrado por subcategoría si viene en la URL
   const { data: initialProducts, total, totalPages } = await getCatalogAction({
     categories: [category.name],
     page: 1,
     limit: LIMIT,
+    ...(activeSubcategoryId && { subcategoryId: activeSubcategoryId }),
   })
 
   // ── Schemas JSON-LD ──────────────────────────────────────────────────────────
@@ -109,6 +114,7 @@ export default async function CategoriaPage({ params }: PageProps) {
         initialProducts={initialProducts}
         initialTotal={total}
         initialTotalPages={totalPages}
+        activeSubcategoryId={activeSubcategoryId}
       />
     </>
   )

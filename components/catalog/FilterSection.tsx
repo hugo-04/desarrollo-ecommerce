@@ -31,7 +31,7 @@ export function FilterSection({ title, children, badge, onClear }: FilterSection
           ) : null}
         </div>
       </div>
-      <div className="max-h-[200px] overflow-y-auto overscroll-contain rounded-lg border border-slate-100 bg-slate-50/50 py-1 custom-scrollbar">
+      <div className="rounded-lg border border-slate-100 bg-slate-50/50 py-1">
         {children}
       </div>
     </div>

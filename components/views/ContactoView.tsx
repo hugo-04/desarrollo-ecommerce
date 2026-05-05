@@ -2,142 +2,478 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useFadeInOnScroll } from "@/hooks/useAnimations"
+import { motion, AnimatePresence } from "framer-motion"
+import { WA, CONTACT } from "@/lib/contact"
 import {
-  IconPhone, IconMail, IconMapPin, IconClock, IconCheck,
-  IconArrowRight, IconHeadphones,
+  IconPhone, IconMail, IconMapPin, IconClock,
+  IconCheck, IconArrowRight, IconWhatsApp,
 } from "@/components/icons"
+import { fadeUp, fadeLeft, fadeRight, staggerContainer, viewportOnce } from "@/hooks/useAnimations"
 
+// ── Campo de formulario reutilizable ─────────────────────────────────────────
+function Field({
+  label, required = false, error = false,
+  children,
+}: {
+  label: string
+  required?: boolean
+  error?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        {label} {required && <span className="text-[#FF6B35]">*</span>}
+      </label>
+      {children}
+      {error && (
+        <p className="mt-1 text-[10px] font-semibold text-red-500">Este campo es requerido</p>
+      )}
+    </div>
+  )
+}
+
+const INPUT_CLS =
+  "w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none ring-0 transition-all placeholder:text-slate-400 focus:border-[#0066B3]/50 focus:bg-white focus:ring-2 focus:ring-[#0066B3]/15"
+
+// ── Chip de canal rápido ──────────────────────────────────────────────────────
+function QuickChannel({
+  href, icon: Icon, label, sub, highlight = false,
+}: {
+  href: string
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  sub: string
+  highlight?: boolean
+}) {
+  return (
+    <a
+      href={href}
+      target={href.startsWith("http") ? "_blank" : undefined}
+      rel="noopener noreferrer"
+      className={`group flex items-center gap-4 rounded-2xl border px-5 py-4 transition-all duration-300 ${
+        highlight
+          ? "border-green-400/30 bg-green-50 hover:border-green-400/60 hover:shadow-lg hover:shadow-green-500/10"
+          : "border-slate-200 bg-white hover:border-[#0066B3]/30 hover:shadow-md hover:shadow-[#0066B3]/5"
+      }`}
+    >
+      <div
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors duration-300 ${
+          highlight
+            ? "bg-green-500/10 text-green-600 group-hover:bg-green-500 group-hover:text-white"
+            : "bg-[#0066B3]/[0.07] text-[#0066B3] group-hover:bg-[#0066B3] group-hover:text-white"
+        }`}
+      >
+        <Icon className="h-5 w-5" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-bold text-slate-800">{label}</p>
+        <p className="truncate text-[11px] text-slate-500">{sub}</p>
+      </div>
+      <IconArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-slate-500" />
+    </a>
+  )
+}
+
+// ── Vista principal ───────────────────────────────────────────────────────────
 export function ContactoView() {
-  const { ref, isVisible } = useFadeInOnScroll()
-  const [formState, setFormState] = useState({
+  const [form, setForm] = useState({
     nombre: "", empresa: "", email: "", telefono: "", asunto: "", mensaje: "",
   })
+  const [errors, setErrors] = useState<Record<string, boolean>>({})
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
+
+  const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm((prev) => ({ ...prev, [key]: e.target.value }))
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 5000)
+    const newErrors: Record<string, boolean> = {}
+    if (!form.nombre.trim()) newErrors.nombre = true
+    if (!form.email.trim())  newErrors.email  = true
+    if (!form.asunto)        newErrors.asunto  = true
+    if (!form.mensaje.trim()) newErrors.mensaje = true
+    if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return }
+    setErrors({})
+    setSending(true)
+    setTimeout(() => { setSending(false); setSubmitted(true) }, 1200)
   }
 
   return (
     <>
-      {/* Hero Contacto */}
-      <section className="relative overflow-hidden bg-[#003D73] py-20">
-        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h40v40H0z\' fill=\'none\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")' }} />
-        <div className="relative mx-auto max-w-7xl px-4 text-center">
-          <span className="mb-2 inline-block text-xs font-bold uppercase tracking-widest text-slate-400">Contacto</span>
-          <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">Cotizaciones y Asesoría Técnica AT/MT</h1>
-          <p className="mx-auto max-w-2xl text-base text-slate-400 sm:text-lg">
-            Cuéntanos tu proyecto. Nuestros ingenieros te ayudan a seleccionar los materiales eléctricos correctos antes de que arranque la obra.
-          </p>
-        </div>
+      {/* ══════════════════════════════════════════════════════════════════════
+          HERO — dark
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#001a3d] via-[#003D73] to-[#002a5c]" />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0z' fill='none' stroke='%23fff' stroke-width='.5'/%3E%3C/svg%3E\")",
+          }}
+        />
+        <div className="absolute -right-32 top-0 h-80 w-80 rounded-full bg-[#FF6B35]/10 blur-[100px]" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[#FF6B35]/60 to-transparent" />
+
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+          className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:py-24"
+        >
+          <motion.div variants={fadeUp} className="mb-5 flex justify-center">
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.07] px-5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-white/60">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35] animate-pulse" />
+              Contacto
+            </span>
+          </motion.div>
+
+          <motion.h1 variants={fadeUp} className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Cotizaciones y{" "}
+            <span className="text-[#FF6B35]">Asesoría Técnica</span>
+          </motion.h1>
+
+          <motion.p variants={fadeUp} className="mx-auto mb-10 max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base">
+            Cuéntanos tu proyecto. Nuestro equipo de ingenieros especializados en AT/MT te
+            responde con precios, disponibilidad y especificaciones técnicas en menos de 24 horas hábiles.
+          </motion.p>
+
+          {/* Respuesta rápida pill */}
+          <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-3">
+            {[
+              { label: "Respuesta en &lt;24 h" },
+              { label: "Fichas técnicas incluidas" },
+              { label: "Stock en Lima" },
+            ].map(({ label }) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 text-[11px] font-semibold text-white/60"
+                dangerouslySetInnerHTML={{ __html: `<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' class='h-3 w-3 text-[#FF6B35]'><path d='M5 13l4 4L19 7'/></svg>&nbsp;${label}` }}
+              />
+            ))}
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Contact Info + Form */}
-      <section ref={ref} className={`py-16 ${isVisible ? "animate-reveal" : "opacity-0"}`}>
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="grid gap-10 lg:grid-cols-5">
-            {/* Contact Info */}
-            <div className="lg:col-span-2">
-              <h2 className="mb-6 text-xl font-bold text-slate-900">Información de Contacto</h2>
-              <div className="space-y-4">
-                {[
-                  { icon: IconPhone, title: "Teléfono", info: "XXX XXX XXX" },
-                  { icon: IconMail, title: "Email", info: "XXXXXXX@XXXXX.com" },
-                  { icon: IconMapPin, title: "Dirección", info: "XXXXXXX N° XXX - Int. XXX, XXXXX" },
-                  { icon: IconClock, title: "Horario de Atención", info: "X-X: Xam-Xpm | XXX: Xam-Xpm" },
-                ].map((item, index) => (
-                  <div key={index} className="flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                      <item.icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-500">{item.title}</p>
-                      <p className="text-sm font-semibold text-slate-800 tracking-widest">{item.info}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Contact Form */}
-            <div className="lg:col-span-3">
-              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
-                <h2 className="mb-6 text-xl font-bold text-slate-900">Formulario de Contacto</h2>
-
-                {submitted ? (
-                  <div className="rounded-xl bg-green-50 p-8 text-center">
-                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                      <IconCheck className="h-8 w-8 text-green-600" />
-                    </div>
-                    <h3 className="mb-2 text-lg font-bold text-green-800">Mensaje enviado</h3>
-                    <p className="text-sm text-green-700">Nos pondremos en contacto en un plazo de 24 horas hábiles.</p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="mb-1.5 block text-xs font-semibold text-slate-700">Nombre Completo *</label>
-                        <input type="text" required value={formState.nombre} onChange={(e) => setFormState({...formState, nombre: e.target.value})} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Tu nombre" />
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-semibold text-slate-700">Empresa</label>
-                        <input type="text" value={formState.empresa} onChange={(e) => setFormState({...formState, empresa: e.target.value})} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Nombre de empresa" />
-                      </div>
-                    </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="mb-1.5 block text-xs font-semibold text-slate-700">Email *</label>
-                        <input type="email" required value={formState.email} onChange={(e) => setFormState({...formState, email: e.target.value})} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="correo@empresa.com" />
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-semibold text-slate-700">Teléfono</label>
-                        <input type="tel" value={formState.telefono} onChange={(e) => setFormState({...formState, telefono: e.target.value})} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="+51 987 654 321" />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-slate-700">Asunto *</label>
-                      <select required value={formState.asunto} onChange={(e) => setFormState({...formState, asunto: e.target.value})} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20">
-                        <option value="">Selecciona un asunto</option>
-                        <option value="cotizacion">Solicitar Cotización</option>
-                        <option value="asesoria">Asesoría Técnica</option>
-                        <option value="proyecto">Suministro para Proyecto</option>
-                        <option value="general">Consulta General</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-slate-700">Mensaje *</label>
-                      <textarea required rows={5} value={formState.mensaje} onChange={(e) => setFormState({...formState, mensaje: e.target.value})} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Describe tu requerimiento..." />
-                    </div>
-                    <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6B35] to-[#e55a2a] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#FF6B35]/20 transition-all hover:shadow-xl hover:shadow-[#FF6B35]/30">
-                      <IconArrowRight className="h-4 w-4" />
-                      Enviar Mensaje
-                    </button>
-                  </form>
-                )}
-              </div>
-            </div>
+      {/* ══════════════════════════════════════════════════════════════════════
+          CANALES RÁPIDOS — chips de contacto
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="border-b border-slate-100 bg-white py-8">
+        <div className="mx-auto max-w-4xl px-4">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <QuickChannel
+              href={WA.cotizar}
+              icon={IconWhatsApp}
+              label="WhatsApp"
+              sub="Respuesta inmediata"
+              highlight
+            />
+            <QuickChannel
+              href={`tel:${CONTACT.phoneTel}`}
+              icon={IconPhone}
+              label={CONTACT.phoneDisplay}
+              sub="Llamada directa"
+            />
+            <QuickChannel
+              href={`mailto:${CONTACT.email}`}
+              icon={IconMail}
+              label={CONTACT.email}
+              sub="Email comercial"
+            />
           </div>
         </div>
       </section>
 
-      {/* Map */}
-      <section className="relative bg-[#F5F7FA] pb-20 pt-16 border-b-[3px] border-[#FF6B35]/40">
+      {/* ══════════════════════════════════════════════════════════════════════
+          MAIN — sidebar info + formulario
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="bg-[#F5F7FA] py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4">
-          <div className="mb-6 text-center">
-            <h2 className="text-xl font-bold text-slate-900">Encuéntranos</h2>
-          </div>
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 shadow-sm">
-            <div className="flex h-80 items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300">
-              <div className="text-center">
-                <IconMapPin className="mx-auto mb-3 h-12 w-12 text-primary" />
-                <p className="text-sm font-semibold text-slate-700">XXXXXXX N° XXX - Int. XXX, XXXXX</p>
-                <p className="text-xs text-slate-500">Lorem Ipsum, Lorem Ipsum</p>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={staggerContainer}
+            className="grid gap-8 lg:grid-cols-5 lg:gap-10"
+          >
+            {/* ── Sidebar izquierdo ── */}
+            <motion.aside variants={fadeLeft} className="lg:col-span-2">
+              {/* Tarjeta oscura de info */}
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#001a3d] via-[#003D73] to-[#002a5c] p-8 text-white shadow-xl">
+                <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#FF6B35]/10 blur-3xl" />
+                <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-[#0066B3]/20 blur-3xl" />
+                <div className="relative">
+                  <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">
+                    Información de contacto
+                  </p>
+                  <h2 className="mb-6 text-xl font-extrabold text-white">
+                    Estamos aquí para ayudarte
+                  </h2>
+
+                  {/* WhatsApp CTA dentro del sidebar */}
+                  <a
+                    href={WA.cotizar}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mb-8 flex items-center gap-3 rounded-2xl bg-green-500/20 px-5 py-4 transition-all hover:bg-green-500/30 ring-1 ring-green-400/20"
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-500 shadow-lg shadow-green-500/30">
+                      <IconWhatsApp className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-white">Cotizar por WhatsApp</p>
+                      <p className="text-[11px] text-white/50">Respuesta en minutos</p>
+                    </div>
+                  </a>
+
+                  {/* Info items */}
+                  <div className="space-y-5">
+                    {[
+                      { icon: IconPhone, label: "Teléfono", value: CONTACT.phoneDisplay },
+                      { icon: IconMail,  label: "Email",    value: CONTACT.email },
+                      { icon: IconMapPin, label: "Dirección", value: CONTACT.address },
+                      { icon: IconClock, label: "Horario",  value: CONTACT.hours },
+                    ].map(({ icon: Icon, label, value }) => (
+                      <div key={label} className="flex items-start gap-3.5">
+                        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
+                          <Icon className="h-4 w-4 text-white/60" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-white/35">{label}</p>
+                          <p className="mt-0.5 text-sm font-semibold text-white/80">{value}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Trust note */}
+                  <div className="mt-8 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3">
+                    <p className="text-[11px] leading-relaxed text-white/45">
+                      Atendemos concesionarias eléctricas, contratistas y empresas mineras en todo el Perú.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.aside>
+
+            {/* ── Formulario ── */}
+            <motion.div variants={fadeRight} className="lg:col-span-3">
+              <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+                <AnimatePresence mode="wait">
+                  {submitted ? (
+                    <motion.div
+                      key="success"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex flex-col items-center justify-center py-16 text-center"
+                    >
+                      <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-green-50 ring-8 ring-green-50">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500">
+                          <IconCheck className="h-7 w-7 text-white" />
+                        </div>
+                      </div>
+                      <h3 className="mb-2 text-xl font-extrabold text-[#1e293b]">¡Mensaje enviado!</h3>
+                      <p className="mb-6 max-w-xs text-sm text-slate-500">
+                        Nos pondremos en contacto contigo en un plazo de 24 horas hábiles con precios y disponibilidad.
+                      </p>
+                      <div className="flex flex-wrap gap-3 justify-center">
+                        <button
+                          onClick={() => { setSubmitted(false); setForm({ nombre: "", empresa: "", email: "", telefono: "", asunto: "", mensaje: "" }) }}
+                          className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+                        >
+                          Enviar otro mensaje
+                        </button>
+                        <a
+                          href={WA.cotizar}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 rounded-xl bg-green-500 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-green-600"
+                        >
+                          <IconWhatsApp className="h-4 w-4" />
+                          Cotizar por WhatsApp
+                        </a>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.form
+                      key="form"
+                      onSubmit={handleSubmit}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="space-y-5"
+                    >
+                      <div className="mb-6">
+                        <h2 className="text-xl font-extrabold text-[#1e293b]">Formulario de cotización</h2>
+                        <p className="mt-1 text-sm text-slate-500">
+                          Completa los datos y te respondemos a la brevedad.
+                        </p>
+                      </div>
+
+                      {/* Fila 1 */}
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <Field label="Nombre completo" required error={errors.nombre}>
+                          <input
+                            type="text" value={form.nombre} onChange={set("nombre")} placeholder="Tu nombre"
+                            className={`${INPUT_CLS} ${errors.nombre ? "border-red-300 focus:ring-red-200" : ""}`}
+                          />
+                        </Field>
+                        <Field label="Empresa">
+                          <input
+                            type="text" value={form.empresa} onChange={set("empresa")} placeholder="Nombre de empresa"
+                            className={INPUT_CLS}
+                          />
+                        </Field>
+                      </div>
+
+                      {/* Fila 2 */}
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <Field label="Email" required error={errors.email}>
+                          <input
+                            type="email" value={form.email} onChange={set("email")} placeholder="correo@empresa.com"
+                            className={`${INPUT_CLS} ${errors.email ? "border-red-300 focus:ring-red-200" : ""}`}
+                          />
+                        </Field>
+                        <Field label="Teléfono / WhatsApp">
+                          <input
+                            type="tel" value={form.telefono} onChange={set("telefono")} placeholder="+51 987 654 321"
+                            className={INPUT_CLS}
+                          />
+                        </Field>
+                      </div>
+
+                      {/* Asunto */}
+                      <Field label="Tipo de solicitud" required error={errors.asunto}>
+                        <select
+                          value={form.asunto} onChange={set("asunto")}
+                          className={`${INPUT_CLS} ${errors.asunto ? "border-red-300 focus:ring-red-200" : ""}`}
+                        >
+                          <option value="">Selecciona un asunto</option>
+                          <option value="cotizacion">Solicitar cotización de productos</option>
+                          <option value="asesoria">Asesoría técnica AT/MT</option>
+                          <option value="proyecto">Suministro para proyecto</option>
+                          <option value="mineria">Proyecto minero</option>
+                          <option value="general">Consulta general</option>
+                        </select>
+                      </Field>
+
+                      {/* Mensaje */}
+                      <Field label="Describe tu requerimiento" required error={errors.mensaje}>
+                        <textarea
+                          rows={5} value={form.mensaje} onChange={set("mensaje")}
+                          placeholder="Indica qué producto necesitas, cantidades, tensión de trabajo y cualquier especificación técnica relevante..."
+                          className={`${INPUT_CLS} resize-none ${errors.mensaje ? "border-red-300 focus:ring-red-200" : ""}`}
+                        />
+                      </Field>
+
+                      {/* Submit */}
+                      <button
+                        type="submit"
+                        disabled={sending}
+                        className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#003D73] to-[#0066B3] py-4 text-sm font-bold text-white shadow-lg shadow-[#0066B3]/20 transition-all hover:shadow-xl hover:shadow-[#0066B3]/30 disabled:opacity-70"
+                      >
+                        {sending ? (
+                          <>
+                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                            Enviando...
+                          </>
+                        ) : (
+                          <>
+                            Enviar solicitud
+                            <IconArrowRight className="h-4 w-4" />
+                          </>
+                        )}
+                      </button>
+
+                      <p className="text-center text-[11px] text-slate-400">
+                        También puedes contactarnos por{" "}
+                        <a href={WA.cotizar} target="_blank" rel="noopener noreferrer" className="font-bold text-green-600 hover:underline">
+                          WhatsApp
+                        </a>{" "}
+                        para una respuesta inmediata.
+                      </p>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          MAPA — placeholder estilizado
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="bg-white pb-16 pt-0">
+        <div className="mx-auto max-w-7xl px-4">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={fadeUp}
+          >
+            <div className="overflow-hidden rounded-3xl border border-slate-200 shadow-sm">
+              {/* Header del mapa */}
+              <div className="flex items-center justify-between border-b border-slate-100 bg-white px-6 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#003D73]/[0.07]">
+                    <IconMapPin className="h-4 w-4 text-[#003D73]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-[#1e293b]">Nuestra ubicación</p>
+                    <p className="text-[11px] text-slate-500">{CONTACT.address}</p>
+                  </div>
+                </div>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 sm:flex"
+                >
+                  Abrir en Google Maps
+                  <IconArrowRight className="h-3 w-3" />
+                </a>
+              </div>
+
+              {/* Placeholder visual del mapa */}
+              <div className="relative flex h-72 items-center justify-center overflow-hidden bg-[#EEF1F5] sm:h-80">
+                {/* Grid decorativo */}
+                <div
+                  className="absolute inset-0 opacity-60"
+                  style={{
+                    backgroundImage: "linear-gradient(rgba(0,61,115,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,61,115,0.07) 1px, transparent 1px)",
+                    backgroundSize: "40px 40px",
+                  }}
+                />
+                {/* Círculo concéntrico tipo radar */}
+                <div className="absolute h-64 w-64 rounded-full border border-[#0066B3]/10" />
+                <div className="absolute h-44 w-44 rounded-full border border-[#0066B3]/15" />
+                <div className="absolute h-28 w-28 rounded-full border border-[#0066B3]/20" />
+                {/* Pin */}
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#003D73] shadow-xl shadow-[#003D73]/30 ring-4 ring-[#003D73]/15">
+                    <IconMapPin className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="mt-4 rounded-xl bg-white px-5 py-3 text-center shadow-lg">
+                    <p className="text-sm font-bold text-[#1e293b]">Insumind</p>
+                    <p className="text-[11px] text-slate-500">{CONTACT.address}</p>
+                  </div>
+                </div>
+                {/* Botón móvil de maps */}
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[11px] font-semibold text-[#003D73] shadow-md sm:hidden"
+                >
+                  Ver en Maps
+                  <IconArrowRight className="h-3 w-3" />
+                </a>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </>

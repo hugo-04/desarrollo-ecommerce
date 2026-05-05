@@ -136,6 +136,6 @@ export interface Testimonial {
   /** Cargo del autor (ej: "Jefe de Proyectos") */
   position: string
   company: string
-  /** URL de foto de perfil */
-  avatar: string
+  /** URL de foto de perfil (opcional) */
+  avatar?: string
 }

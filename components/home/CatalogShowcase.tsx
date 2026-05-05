@@ -283,13 +283,13 @@ export function CatalogShowcase({ categories }: CatalogShowcaseProps) {
       viewport={viewportOnce}
       className="relative overflow-hidden py-14 sm:py-20 lg:py-28"
     >
-      {/* Fondo */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F0F0F5] via-[#E8E8F0] to-[#F0F0F5]" />
+      {/* Fondo — blanco puro, máxima claridad para productos */}
+      <div className="absolute inset-0 bg-white" />
       <div
-        className="absolute inset-0 opacity-25"
+        className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, rgb(0 51 160 / 0.04) 1px, transparent 0)",
-          backgroundSize: "40px 40px",
+          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(0,102,179,0.06) 1px, transparent 0)",
+          backgroundSize: "36px 36px",
         }}
       />
 
