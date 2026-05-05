@@ -81,12 +81,12 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
       {/* Trigger button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium text-white transition-all ${
-          isOpen ? "bg-white/20" : "bg-white/10 hover:bg-white/20"
+        className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all ${
+          isOpen ? "bg-[#0066B3] text-white shadow-md" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
         }`}
       >
         <LayoutGrid className="h-4 w-4 shrink-0" />
-        <span className="text-xs font-semibold">Categorías</span>
+        <span className="text-[13px] font-bold tracking-wide">Categorías</span>
         <IconChevronDown
           className={`h-3 w-3 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
         />
@@ -467,20 +467,19 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 6, scale: 0.97 }}
       transition={{ duration: 0.15 }}
-      className="absolute top-full left-1/2 z-50 mt-2 w-72 -translate-x-1/2 overflow-hidden rounded-2xl bg-[#002a5c] shadow-2xl"
-      style={{ border: "1px solid rgba(255,255,255,0.07)" }}
+      className="absolute top-full left-1/2 z-50 mt-2 w-72 -translate-x-1/2 overflow-hidden rounded-2xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.12)] ring-1 ring-slate-200"
     >
       {/* Header + Search */}
-      <div className="border-b border-white/[0.06] px-4 py-3 space-y-3">
-        <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-500">Categorías</p>
+      <div className="border-b border-slate-100 px-4 py-3 space-y-3">
+        <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-400">Categorías</p>
         <div className="relative">
-          <Search className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-white/30" />
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar..."
-            className="w-full rounded-md bg-white/5 py-1.5 pl-7 pr-2 text-[10px] text-white outline-none transition-all focus:bg-white/10"
+            className="w-full rounded-lg bg-slate-50 py-2 pl-9 pr-3 text-[12px] text-slate-700 outline-none ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-[#0066B3]/40"
           />
         </div>
       </div>
@@ -491,18 +490,18 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
         <Link
           href="/catalogo"
           onClick={onClose}
-          className="group flex items-center justify-between px-4 py-2.5 text-sm transition-colors hover:bg-white/[0.06]"
+          className="group flex items-center justify-between px-4 py-2.5 text-sm transition-colors hover:bg-slate-50"
         >
-          <span className="font-semibold text-white/90">Ver todo el catálogo</span>
-          <span className="rounded-md bg-[#FF6B35]/15 px-2 py-0.5 text-[10px] font-bold text-[#FF6B35]">Todo</span>
+          <span className="font-semibold text-slate-700">Ver todo el catálogo</span>
+          <span className="rounded-md bg-[#0066B3]/10 px-2 py-0.5 text-[10px] font-bold text-[#0066B3]">Todo</span>
         </Link>
 
-        <div className="mx-4 my-1.5 h-px bg-white/[0.05]" />
+        <div className="mx-4 my-1.5 h-px bg-slate-100" />
 
         {status === "pending" ? (
-          <div className="flex justify-center py-4"><Loader2 className="h-4 w-4 animate-spin text-white/20" /></div>
+          <div className="flex justify-center py-4"><Loader2 className="h-4 w-4 animate-spin text-slate-300" /></div>
         ) : categories.length === 0 ? (
-          <p className="py-4 text-center text-[11px] text-white/40 italic">No hay resultados</p>
+          <p className="py-4 text-center text-[11px] text-slate-400 italic">No hay resultados</p>
         ) : (
           <>
             {categories.map((cat) => {
@@ -512,20 +511,20 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
                   key={cat.id}
                   href={`/categoria/${cat.slug}`}
                   onClick={onClose}
-                  className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/[0.06]"
+                  className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50"
                 >
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-white/40 transition-colors group-hover:bg-[#FF6B35]/20 group-hover:text-[#FF6B35]">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400 transition-colors group-hover:bg-[#0066B3]/10 group-hover:text-[#0066B3]">
                     <Icon className="h-3.5 w-3.5" />
                   </div>
-                  <span className="flex-1 truncate text-[13px] font-medium text-white/60 transition-colors group-hover:text-white">
+                  <span className="flex-1 truncate text-[13px] font-medium text-slate-600 transition-colors group-hover:text-[#0066B3]">
                     {cat.name}
                   </span>
-                  <span className="text-[10px] text-white/20 group-hover:text-white/40">{cat.count}</span>
+                  <span className="text-[10px] text-slate-400 group-hover:text-[#0066B3]">{cat.count}</span>
                 </Link>
               )
             })}
             <div ref={observerRef} className="h-4 w-full">
-               {isFetchingNextPage && <div className="flex justify-center py-2"><Loader2 className="h-3 w-3 animate-spin text-white/20" /></div>}
+               {isFetchingNextPage && <div className="flex justify-center py-2"><Loader2 className="h-3 w-3 animate-spin text-slate-300" /></div>}
             </div>
           </>
         )}
@@ -575,7 +574,7 @@ function FluidNav() {
 
         {/* Línea inferior animada — indicador de tab activo */}
         <motion.div
-          className="absolute bottom-0 left-0 h-[2px] rounded-full bg-[#FF6B35]"
+          className="absolute bottom-0 left-0 h-[3px] rounded-t-full bg-[#0066B3]"
           initial={false}
           animate={{ x: activeIndex * TAB_W + TAB_GAP / 2, width: TAB_W - TAB_GAP }}
           transition={{ type: "spring", stiffness: 400, damping: 34 }}
@@ -604,15 +603,15 @@ function FluidNav() {
                 <button
                   onClick={() => setCatalogOpen((v) => !v)}
                   style={{ width: TAB_W }}
-                  className={`flex items-center justify-center gap-1 py-2.5 pb-3 text-[13px] font-semibold transition-colors duration-200 ${
-                    isActive ? "text-white" : "text-white/60 hover:text-white/90"
+                  className={`flex items-center justify-center gap-1.5 py-3 pb-3.5 text-[13px] font-bold transition-colors duration-200 ${
+                    isActive ? "text-[#0066B3]" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50/50"
                   }`}
                 >
-                  <span className="opacity-75">{tab.icon}</span>
+                  <span className={isActive ? "text-[#FF6B35]" : "text-slate-400"}>{tab.icon}</span>
                   <span>{tab.label}</span>
                   <ChevronDown
                     size={11}
-                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} opacity-60`}
+                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} ${isActive ? "text-[#0066B3]" : "text-slate-400"}`}
                   />
                 </button>
                 <AnimatePresence>
@@ -629,11 +628,11 @@ function FluidNav() {
               onMouseEnter={() => setHoveredTab(tab.id)}
               onMouseLeave={() => setHoveredTab(null)}
               style={{ width: TAB_W }}
-              className={`flex items-center justify-center gap-1.5 py-2.5 pb-3 text-[13px] font-semibold transition-colors duration-200 ${
-                isActive ? "text-white" : "text-white/60 hover:text-white/90"
+              className={`flex items-center justify-center gap-1.5 py-3 pb-3.5 text-[13px] font-bold transition-colors duration-200 ${
+                isActive ? "text-[#0066B3]" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50/50"
               }`}
             >
-              <span className="opacity-75">{tab.icon}</span>
+              <span className={isActive ? "text-[#FF6B35]" : "text-slate-400"}>{tab.icon}</span>
               <span>{tab.label}</span>
             </Link>
           )
@@ -734,8 +733,8 @@ export function Navigation() {
 
   return (
     <>
-      <nav className="bg-primary relative z-40">
-        <div className="mx-auto max-w-7xl px-3 py-2 sm:px-4 sm:py-2.5">
+      <nav className="bg-white border-b border-slate-200 shadow-sm relative z-40">
+        <div className="mx-auto max-w-7xl px-3 py-1.5 sm:px-4 sm:py-0">
           <div className="flex items-center justify-between gap-2">
 
             {/* Izquierda */}
@@ -743,7 +742,7 @@ export function Navigation() {
               {/* Hamburger — mobile/tablet */}
               <button
                 onClick={() => setDrawerOpen(true)}
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white hover:bg-white/20 lg:hidden"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 lg:hidden"
                 aria-label="Abrir menú"
               >
                 <Menu size={18} />
@@ -758,10 +757,10 @@ export function Navigation() {
             </div>
 
             {/* Derecha */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-3">
               <Link
                 href="/login"
-                className="hidden items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20 sm:flex"
+                className="hidden items-center gap-2 rounded-lg border border-slate-200 px-3.5 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-[#0066B3] sm:flex"
               >
                 <UserRound size={15} />
                 <span className="hidden sm:inline">Login</span>
@@ -769,7 +768,7 @@ export function Navigation() {
               <Link
                 href="/catalogo?bestSellers=true"
                 aria-label="Más Vendidos"
-                className="flex items-center gap-1.5 rounded-lg bg-[#FF6B35] px-3 py-2 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#e55a2a] sm:gap-2 sm:px-4"
+                className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#FF6B35] to-[#f97316] px-3 py-2 text-[13px] font-bold text-white shadow-sm shadow-[#FF6B35]/20 transition-all hover:-translate-y-0.5 hover:shadow-md hover:shadow-[#FF6B35]/30 sm:gap-2 sm:px-4"
               >
                 <IconFire className="h-4 w-4" />
                 <span className="hidden sm:inline">Mas Vendidos</span>

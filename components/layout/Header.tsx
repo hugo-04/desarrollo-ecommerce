@@ -4,8 +4,7 @@ import { useRef, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { X } from "lucide-react"
-import { IconSearch } from "@/components/icons"
+import { X, Search } from "lucide-react"
 
 interface HeaderProps {
   searchQuery: string
@@ -41,54 +40,54 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
   }
 
   return (
-    <header className="border-b border-slate-200 bg-white shadow-sm relative z-50">
-      <div className="mx-auto max-w-7xl px-3 py-2.5 sm:px-4 sm:py-3">
+    <header className="bg-white border-b border-slate-100 relative z-50">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:py-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-8 justify-between">
+        
+        {/* Logo */}
+        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90">
+          <Image
+            src="/logo/logotipo.svg"
+            alt="Insumind"
+            width={180}
+            height={45}
+            className="h-9 sm:h-11 w-auto"
+            priority
+            unoptimized
+          />
+        </Link>
 
-        {/* Mobile: logo arriba, buscador abajo. Desktop: fila única */}
-        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
-
-          {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center transition-transform hover:scale-[1.02]">
-            <Image
-              src="/logo/logotipo.svg"
-              alt="Electro Thina — Soluciones Eléctricas AT/MT"
-              width={160}
-              height={40}
-              className="h-8 w-auto object-contain drop-shadow-sm sm:h-10"
-              priority
-              unoptimized
-            />
-          </Link>
-
-          {/* Search — full width en móvil, empujado a la derecha en desktop */}
-          <div className="relative w-full sm:ml-auto sm:w-[520px] sm:max-w-[60%]">
-            <IconSearch className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Buscar producto, marca o categoría…"
-              value={searchQuery}
-              onChange={(e) => handleChange(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-full rounded-full border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-[5.5rem] text-sm transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:shadow-md"
-            />
+        {/* Search */}
+        <div className="w-full sm:max-w-2xl flex-1 relative group">
+          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-slate-400 group-focus-within:text-[#0066B3] transition-colors" />
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar productos, marcas o categorías..."
+            value={searchQuery}
+            onChange={(e) => handleChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="w-full h-12 bg-slate-50 hover:bg-slate-50/80 border border-slate-200 rounded-2xl pl-11 pr-24 text-[13px] text-slate-700 placeholder:text-slate-400 focus:bg-white focus:border-[#0066B3]/30 focus:ring-4 focus:ring-[#0066B3]/10 transition-all outline-none"
+          />
+          <div className="absolute inset-y-1.5 right-1.5 flex items-center gap-1">
             {searchQuery && (
               <button
                 onClick={() => handleChange("")}
-                className="absolute right-[4.5rem] top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                className="h-full px-2 text-slate-400 hover:text-slate-600 transition-colors"
                 aria-label="Limpiar búsqueda"
               >
-                <X size={13} />
+                <X size={14} />
               </button>
             )}
             <button
               onClick={handleSearch}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-primary/90"
+              className="h-full bg-[#0066B3] hover:bg-[#005299] text-white px-5 rounded-xl text-xs font-bold tracking-wide shadow-sm transition-all"
             >
               Buscar
             </button>
           </div>
-
         </div>
+
       </div>
     </header>
   )
