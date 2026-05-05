@@ -39,7 +39,27 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
   }
 
   return (
-    <header className="bg-[#1B2B4B] text-white relative z-50">
+    <>
+      {/* Top Contact Bar */}
+      <div className="bg-[#FF6B35] text-white py-1.5 px-4 text-[11px] font-medium hidden md:block">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 font-bold">
+              <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+              EN LÍNEA
+            </span>
+            <span>L-V: 9am-6pm | Sáb: 9am-3pm</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="mailto:contacto@empresa.com" className="hover:text-white/80 transition-colors">
+              contacto@empresa.com
+            </a>
+            <span>xxxxxxxxxxxxxxxx</span>
+          </div>
+        </div>
+      </div>
+
+      <header className="bg-[#1B2B4B] text-white relative z-50">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:py-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-8 justify-between">
         
         {/* Logo */}
@@ -86,5 +106,6 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
 
       </div>
     </header>
+    </>
   )
 }
