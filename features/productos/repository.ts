@@ -378,7 +378,7 @@ export class DbProductRepository implements IProductRepository {
           technicalSpecs: (data.technicalSpecs ?? []) as object[],
           brands: { connect: brandIds.map(id => ({ id })) },
           category: { connect: { id: categoryId } },
-          ...(data.subcategoryId != null && { subcategoryId: data.subcategoryId }),
+          ...(data.subcategoryId != null && { subcategory: { connect: { id: data.subcategoryId } } }),
         },
         include: { category: true, brands: true, subcategory: true },
       }),

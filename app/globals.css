@@ -276,3 +276,26 @@ body.drawer-open #whatsapp-button {
   pointer-events: none !important;
   transition: all 0.2s ease-in-out;
 }
+
+/* ─── Brand Marquee Carousel ─────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-container-reverse {
+  overflow: hidden;
+  width: 100%;
+  cursor: grab;
+}
+.marquee-container-reverse:active {
+  cursor: grabbing;
+}
+.marquee-content-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+.marquee-content-reverse:hover {
+  animation-play-state: paused;
+}

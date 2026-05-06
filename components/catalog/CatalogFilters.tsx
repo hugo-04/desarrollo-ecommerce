@@ -156,7 +156,7 @@ function InfiniteFilterList({
     return () => observer.disconnect()
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  const allItems = data?.pages.flatMap(page => page.data) ?? []
+  const allItems = (data?.pages.flatMap((page: any) => page.data) ?? []) as any[]
 
   return (
     <div className="space-y-3">

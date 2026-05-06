@@ -27,7 +27,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 export default async function CatalogoPage({ searchParams }: PageProps) {
   const params = await searchParams
 
-  const { categories, brands } = await getFilterOptions()
+  const { categories } = await getFilterOptions()
 
   // Schema dinámico: si hay categoría activa → CollectionPage, si no → BreadcrumbList del catálogo
   const selectedCat = params.categoria
@@ -40,7 +40,7 @@ export default async function CatalogoPage({ searchParams }: PageProps) {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         name: `Catálogo — ${SITE_NAME}`,
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        description: "Catálogo de insumos industriales y mineros originales en Lima, Perú. Rodamientos, filtros, válvulas, correas y componentes hidráulicos de marcas SKF, Parker, Gates, Donaldson y más. Stock permanente y entrega al día siguiente.",
         url: `${SITE_URL}/catalogo`,
         breadcrumb: {
           "@type": "BreadcrumbList",
@@ -64,11 +64,11 @@ export default async function CatalogoPage({ searchParams }: PageProps) {
         <div className="border-b border-slate-100 bg-white">
           <div className="mx-auto max-w-7xl px-4 py-5">
             <p className="max-w-3xl text-sm leading-relaxed text-slate-500">
-              Catálogo completo de ferretería eléctrica para alta y media tensión (AT/MT) en Lima, Perú.
-              Distribuimos <strong className="font-semibold text-slate-700">herrajes, aisladores eléctricos, conectores bimetálicos, pernos galvanizados, grapas y abrazaderas</strong> para
-              postes de concreto y madera, certificados bajo normas IEC, ANSI y NTP.
-              Stock permanente para concesionarias eléctricas, contratistas y proyectos de distribución eléctrica.
-              Despacho en Lima en 24–48 h; envíos a todo el Perú.
+              Catálogo completo de insumos industriales y mineros en Lima, Perú.
+              Distribuimos <strong className="font-semibold text-slate-700">rodamientos, filtros, válvulas, correas y componentes hidráulicos</strong>{" "}
+              100% originales con garantía de fábrica para minería, construcción, manufactura y pesca.
+              Marcas SKF, Timken, Parker, Gates, Donaldson, Kitz y más.
+              Stock permanente en Lima — entrega al día siguiente de confirmado tu depósito. Despacho nacional.
             </p>
           </div>
         </div>
@@ -80,7 +80,6 @@ export default async function CatalogoPage({ searchParams }: PageProps) {
           initialQuery={params.q}
           initialBestSellers={params.bestSellers === "true"}
           initialCategories={categories}
-          initialBrands={brands}
         />
       </Suspense>
     </>

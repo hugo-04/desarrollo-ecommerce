@@ -141,7 +141,7 @@ export function AdminDashboardView({ recentProducts, totalProducts, categories, 
                   <p className="truncate text-sm font-bold text-slate-800 transition-colors group-hover:text-[#334155]">{product.name}</p>
                   <p className="mt-0.5 text-xs font-medium text-slate-500">
                     {product.category}
-                    {product.brand && <><span className="px-1 text-slate-300">•</span><span className="font-semibold text-slate-600">{product.brand}</span></>}
+                    {product.brands?.[0] && <><span className="px-1 text-slate-300">•</span><span className="font-semibold text-slate-600">{product.brands[0]}</span></>}
                   </p>
                 </div>
                 <div className="hidden shrink-0 gap-1.5 sm:flex">

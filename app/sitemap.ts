@@ -3,11 +3,11 @@ import { db } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
 
-const BASE_URL = "https://lorem-ipsum.com"
+const BASE_URL = "https://insumind.pe"
 
 // Fecha fija para páginas cuyo contenido no cambia con cada request.
 // Actualizar manualmente cuando se edite el contenido de esas páginas.
-const SITE_LAUNCH = new Date("2026-04-01")
+const SITE_LAUNCH = new Date("2026-06-06")
 
 // Solo las páginas indexables (noindex excluidas: /terminos, /politica-privacidad, /libro-reclamaciones)
 // Google ignora priority y changeFrequency — solo <loc> y <lastmod> son relevantes.

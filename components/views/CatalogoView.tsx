@@ -50,7 +50,6 @@ interface CatalogoViewProps {
   initialQuery?: string
   initialBestSellers?: boolean
   initialCategories: CategoryDTO[]
-  initialBrands: import("@/lib/types").Brand[]
 }
 
 export function CatalogoView({
@@ -58,7 +57,6 @@ export function CatalogoView({
   initialQuery = "",
   initialBestSellers = false,
   initialCategories,
-  initialBrands,
 }: CatalogoViewProps) {
   const [filterOpen, setFilterOpen] = useState(false)
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
@@ -95,7 +93,6 @@ export function CatalogoView({
   const totalPages = data?.totalPages ?? 0
 
   const categories      = initialCategories
-  const availableBrands = initialBrands
 
   const selectedCat = selectedCategories.length === 1
     ? categories.find((c) => c.name === selectedCategories[0]) ?? null

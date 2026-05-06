@@ -21,13 +21,13 @@ export const CONTACT = {
   ruc: "xxxxxxxxxxxxxxxx",
 
   /** Correo electrónico principal */
-  email: "contacto@empresa.com",
+  email: "ventas@insumindperu.pe",
 
   /** Dirección física */
-  address: "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  address: "Calle 55 Mz WW2 Lote 13, La Floresta de Pro, Los Olivos, Lima, Perú",
 
   /** Horario de atención — fuente única; usado en TopBar, Footer y Contacto */
-  hours: "L-V: 9am-6pm | Sáb: 9am-3pm",
+  hours: "L-V: 9am-6pm | Sáb: 9am-1pm",
 } as const
 
 // ─── URLs de WhatsApp prearmadas ──────────────────────────────────────────────
@@ -42,13 +42,13 @@ export const WA = {
   cotizar: `${base}?text=${encodeURIComponent("Hola, me gustaría solicitar una cotización directa.")}`,
 
   /** Cotización desde la página de catálogo */
-  catalogo: `${base}?text=${encodeURIComponent("Hola, quisiera cotizar varios productos de su catálogo AT/MT.")}`,
+  catalogo: `${base}?text=${encodeURIComponent("Hola, quisiera cotizar varios productos de su catálogo de insumos industriales.")}`,
 
-  /** Cotización de materiales AT/MT (sección home) */
-  materiales: `${base}?text=${encodeURIComponent("Hola, quisiera cotizar materiales AT/MT.")}`,
+  /** Cotización desde sección home */
+  materiales: `${base}?text=${encodeURIComponent("Hola, quisiera cotizar insumos industriales o mineros.")}`,
 
-  /** Hablar con un ingeniero (nosotros) */
-  ingeniero: `${base}?text=${encodeURIComponent("Hola, quisiera hablar con un ingeniero sobre mi proyecto AT/MT.")}`,
+  /** Asesor técnico (nosotros) */
+  ingeniero: `${base}?text=${encodeURIComponent("Hola, quisiera hablar con un asesor técnico sobre mis requerimientos de insumos industriales.")}`,
 
   /** Cotización de un producto específico — recibe nombre, marca y modelo */
   producto: (nombre: string, marca: string, modelo?: string) =>

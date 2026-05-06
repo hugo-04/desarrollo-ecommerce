@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" fill="none">
-  <!-- Rayo eléctrico -->
-  <polygon points="28,4 10,32 22,32 18,56 40,24 28,24" fill="#FF6B35"/>
-  <!-- Texto INSUMIND -->
-  <text x="52" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="800" letter-spacing="-0.5" fill="currentColor">
-    INSU<tspan fill="#FF6B35">MIND</tspan>
-  </text>
-</svg>

@@ -33,17 +33,15 @@ export function Footer() {
           {/* Col 1 — Marca (ancho completo en mobile, 1 col en desktop) */}
           <div className="col-span-2 sm:col-span-1">
             <Image
-              src="/logo/logotipo.svg"
-              alt="Insumind"
+              src="/logo/insumind-logo.png"
+              alt="INSUMIND — Insumos Industriales y Mineros"
               width={160}
               height={40}
-              sizes="72px"
               unoptimized
               className="mb-4 h-10 w-auto object-contain"
-              style={{ filter: "drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,1)) brightness(1.4) contrast(1.1)" }}
             />
             <p className="mb-6 text-[12px] leading-relaxed text-slate-400">
-              Distribuidores de materiales y accesorios eléctricos. Atención especializada para proyectos de distribución en todo el Perú.
+              Distribuidora peruana de insumos industriales y mineros 100% originales. Rodamientos, filtros, válvulas, correas y componentes hidráulicos para minería, construcción y manufactura.
             </p>
           </div>
 

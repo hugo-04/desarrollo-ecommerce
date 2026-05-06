@@ -3,6 +3,7 @@
 import { useRef, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { X, Search } from "lucide-react"
 
 interface HeaderProps {
@@ -46,13 +47,16 @@ export function Header({ searchQuery, setSearchQuery }: HeaderProps) {
       <div className="mx-auto max-w-7xl px-4 py-4 sm:py-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-8 justify-between">
         
         {/* Logo */}
-        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90 text-[#1B2B4B]">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" fill="none" className="h-9 sm:h-11 w-auto">
-            <polygon points="28,4 10,32 22,32 18,56 40,24 28,24" fill="#FF6B35"/>
-            <text x="52" y="40" fontFamily="system-ui, -apple-system, sans-serif" fontSize="28" fontWeight="800" letterSpacing="-0.5" fill="currentColor">
-              INSU<tspan fill="#FF6B35">MIND</tspan>
-            </text>
-          </svg>
+        <Link href="/" className="shrink-0 transition-opacity hover:opacity-90">
+          <Image
+            src="/logo/insumind-logo.png"
+            alt="INSUMIND — Insumos Industriales y Mineros"
+            width={180}
+            height={36}
+            priority
+            unoptimized
+            className="h-9 sm:h-11 w-auto"
+          />
         </Link>
 
         {/* Search */}

@@ -1,98 +1,97 @@
 /**
- * CONTENIDO ESTÁTICO DEL SITIO
+ * CONTENIDO ESTÁTICO DEL SITIO — INSUMIND Perú S.A.C.
  * Todos los textos, listas y datos que aparecen en las secciones del home y otras páginas.
  * Cambia aquí para actualizar cualquier texto en el sitio sin tocar los componentes.
  */
 
-export const FOUNDING_YEAR = 2010
-const YEARS_ACTIVE = new Date().getFullYear() - FOUNDING_YEAR
-
 // ─── HERO SECTION ────────────────────────────────────────────────────────────
 
 export const HERO_CONTENT = {
-  badge: "Lorem Ipsum · Lorem, Ipsum",
-  title: "Lorem Ipsum Dolor Sit Amet",
-  titleHighlight: "consectetur adipiscing elit",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
-  ctaPrimary: "Ver Catálogo",
-  ctaPrimaryHref: "/catalogo",
-  ctaSecondary: "Solicitar Cotización",
+  badge: "Insumos Industriales y Mineros · Lima, Perú",
+  title: "Soluciones en Insumos",
+  titleHighlight: "Industriales y Mineros para el Perú",
+  subtitle: "Distribuidora peruana con stock permanente de materiales y accesorios 100% originales y con garantía para minería, construcción, manufactura y pesca. Entrega en Lima y despacho a nivel nacional.",
+  ctaPrimary: "Cotiza por WhatsApp",
+  ctaPrimaryHref: "/contacto",
+  ctaSecondary: "Ver Catálogo",
+  ctaSecondaryHref: "/catalogo",
   stats: [
-    { value: "50+",               label: "Lorem Ipsum Stock" },
-    { value: `${YEARS_ACTIVE}+`, label: "Lorem de Experiencia" },
-    { value: "350+",             label: "Lorem Ejecutados" },
+    { value: "500+",  label: "Referencias en Stock" },
+    { value: "20+",   label: "Marcas Originales" },
+    { value: "24h",   label: "Entrega en Lima" },
+    { value: "100%",  label: "Productos Originales" },
   ],
 } as const
 
 // ─── TRUST BAR ────────────────────────────────────────────────────────────────
 
 export const TRUST_BAR_CONTENT = {
-  label: "Lorem ipsum confianza",
-  badge: "120+ lorem",
+  label: "Empresas y sectores que confían en INSUMIND",
+  badge: "500+ referencias en stock",
   companies: [
-    "Lorem Ipsum A",
-    "Lorem Ipsum B",
-    "Lorem Ipsum C",
-    "Lorem Ipsum D",
-    "Lorem Ipsum E",
-    "Lorem Ipsum F",
-    "Lorem Ipsum G",
+    "Minería",
+    "Construcción",
+    "Manufactura",
+    "Pesca",
+    "Agroindustria",
+    "Proyectos Mineros",
+    "Plantas Industriales",
   ],
 } as const
 
 // ─── CATEGORIES GRID ─────────────────────────────────────────────────────────
 
 export const CATEGORIES_GRID_CONTENT = {
-  badge: "Lorem Ipsum Líneas",
-  title: "Lorem Ipsum Categorías",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+  badge: "5 Categorías Principales",
+  title: "Encuentra el insumo que necesitas",
+  subtitle: "Stock permanente de las principales marcas industriales del mundo. Rodamientos, filtros, válvulas, correas y componentes hidráulicos originales.",
 } as const
 
 // ─── BEST SELLERS CAROUSEL ───────────────────────────────────────────────────
 
 export const BEST_SELLERS_CONTENT = {
-  badge: "Lorem Ipsum",
-  title: "Lorem Ipsum Vendidos",
-  subtitle: "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod",
+  badge: "Más Consultados",
+  title: "Insumos con mayor demanda",
+  subtitle: "Los productos que las empresas mineras e industriales del Perú solicitan con mayor frecuencia",
 } as const
 
 // ─── MARQUEE BRANDS ──────────────────────────────────────────────────────────
 
 export const MARQUEE_BRANDS_CONTENT = {
-  badge: "Lorem Ipsum Autorizados",
-  title: "Lorem Ipsum de Clase Mundial",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
+  badge: "Distribuidores Autorizados",
+  title: "Distribuimos las marcas industriales más confiables del mundo",
+  subtitle: "SKF · Timken · INA · NSK · FAG · Parker · Rexroth · Gates · Optibelt · Donaldson · Kitz · Bray y más",
 } as const
 
 // ─── PROCESO SECTION ─────────────────────────────────────────────────────────
 
 export const PROCESO_CONTENT = {
-  badge: "Lorem ipsum funciona",
-  title: "Lorem Ipsum de Compra",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-  ctaLabel: "Lorem ipsum consulta",
+  badge: "Así funciona",
+  title: "Proceso de cotización y despacho",
+  subtitle: "Simple, rápido y transparente. Tu insumo en Lima al día siguiente de confirmado tu depósito.",
+  ctaLabel: "Iniciar cotización ahora",
   ctaHref: "/contacto",
   steps: [
     {
       num: "01",
-      title: "Lorem ipsum consulta",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
+      title: "Escríbenos qué necesitas",
+      desc: "Contáctanos por WhatsApp o correo indicando el producto, marca, modelo y cantidad. Si tienes el código o referencia del fabricante, inclúyelo para mayor precisión.",
       colorClass: "from-primary/20 to-primary/5",
       textClass: "text-primary",
       borderClass: "border-primary/20",
     },
     {
       num: "02",
-      title: "Lorem ipsum cotización",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-      colorClass: "from-red-500/20 to-red-500/5",
-      textClass: "text-red-500",
-      borderClass: "border-red-500/20",
+      title: "Recibe tu cotización formal",
+      desc: "En menos de 2 horas en horario hábil te enviamos una cotización formal con precios, disponibilidad de stock y tiempo de entrega exacto. Sin compromisos.",
+      colorClass: "from-[#FF6B35]/20 to-[#FF6B35]/5",
+      textClass: "text-[#FF6B35]",
+      borderClass: "border-[#FF6B35]/20",
     },
     {
       num: "03",
-      title: "Lorem ipsum despacho",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
+      title: "Confirmás y despachamos",
+      desc: "Confirmado tu depósito o transferencia, preparamos tu pedido y despachamos al día siguiente hábil en Lima. Despacho nacional coordinado con operadores logísticos confiables.",
       colorClass: "from-emerald-500/20 to-emerald-500/5",
       textClass: "text-emerald-600",
       borderClass: "border-emerald-500/20",
@@ -103,33 +102,33 @@ export const PROCESO_CONTENT = {
 // ─── SECTORES SECTION ─────────────────────────────────────────────────────────
 
 export const SECTORES_CONTENT = {
-  badge: "Lorem Ipsum",
-  title: "Lorem Ipsum que Atendemos",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+  badge: "Sectores",
+  title: "Atendemos a los sectores más exigentes del Perú",
+  subtitle: "Stock permanente de insumos originales para minería, construcción, manufactura, pesca y agroindustria en todo el Perú.",
   sectors: [
     {
       iconName: "lightning",
-      title: "Lorem Ipsum A",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      stat: "Lorem A",
+      title: "Minería",
+      desc: "Insumos para operaciones mineras en Cajamarca, Arequipa, Cusco, Moquegua y todo el Perú.",
+      stat: "Cobertura nacional",
     },
     {
       iconName: "zap",
-      title: "Lorem Ipsum B",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      stat: "Lorem B",
+      title: "Construcción",
+      desc: "Materiales para equipos CAT, Komatsu, Volvo CE, JCB y retroexcavadoras en obra.",
+      stat: "CAT · Komatsu · Volvo",
     },
     {
       iconName: "building",
-      title: "Lorem Ipsum C",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      stat: "Lorem C",
+      title: "Manufactura",
+      desc: "Insumos para líneas de producción, motores eléctricos, compresores y reductores industriales.",
+      stat: "Líneas de producción",
     },
     {
       iconName: "fire",
-      title: "Lorem Ipsum D",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      stat: "Lorem D",
+      title: "Pesca y Agroindustria",
+      desc: "Rodamientos, correas y filtros para embarcaciones, plantas pesqueras y maquinaria agroindustrial.",
+      stat: "Pesca · Agro",
     },
   ],
 } as const
@@ -138,40 +137,40 @@ export const SECTORES_CONTENT = {
 
 export const STATS_CONTENT = {
   stats: [
-    { value: YEARS_ACTIVE, label: "Lorem\nExperiencia", suffix: "+" },
-    { value: 50, label: "Lorem\nIpsum Stock", suffix: "+" },
-    { value: 350, label: "Lorem\nEjecutados", suffix: "+" },
-    { value: 98, label: "Lorem\nSatisfechos", suffix: "%" },
-    { value: 12, label: "Lorem\nMarcas", suffix: "+" },
+    { value: 500, label: "Referencias\nen Stock",    suffix: "+" },
+    { value: 20,  label: "Marcas\nOriginales",       suffix: "+" },
+    { value: 5,   label: "Categorías\nPrincipales",  suffix: "" },
+    { value: 98,  label: "Clientes\nSatisfechos",    suffix: "%" },
+    { value: 1,   label: "Día Entrega\nLima",        suffix: "" },
   ],
 } as const
 
 // ─── FEATURED OFFERS ──────────────────────────────────────────────────────────
 
 export const FEATURED_OFFERS_CONTENT = {
-  badge: "Lorem Ipsum Líneas",
-  title: "Lorem Ipsum Especialidades",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore",
+  badge: "Líneas Principales",
+  title: "Nuestras especialidades en insumos",
+  subtitle: "Stock permanente de las categorías más demandadas por la industria y minería peruana",
   offers: [
     {
       iconName: "shield",
-      title: "Lorem Ipsum A",
-      subtitle: "Lorem Ipsum, Lorem et Ipsum",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      title: "Rodamientos Industriales",
+      subtitle: "SKF · Timken · INA · NSK · FAG",
+      description: "Rodamientos de bolas, rodillos, cónicos y esféricos de las marcas líderes mundiales. Stock permanente para minería, manufactura y construcción.",
       gradient: "from-primary to-[#00528c]",
     },
     {
       iconName: "bolt",
-      title: "Lorem Ipsum B",
-      subtitle: "Lorem Ipsum, Lorem et Ipsum",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      title: "Filtros y Correas",
+      subtitle: "Donaldson · Gates · Optibelt · Fleetguard",
+      description: "Filtros para maquinaria pesada y correas de transmisión de potencia originales con garantía de fábrica. Para equipos CAT, Komatsu y más.",
       gradient: "from-secondary to-[#002a52]",
     },
     {
       iconName: "tools",
-      title: "Lorem Ipsum C",
-      subtitle: "Lorem Ipsum, Lorem, Ipsum",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      title: "Hidráulicos y Válvulas",
+      subtitle: "Parker · Rexroth · Kitz · Bray",
+      description: "Componentes hidráulicos y válvulas industriales para procesos de minería, manufactura y tratamiento de fluidos en todo el Perú.",
       gradient: "from-accent to-[#e55b2a]",
     },
   ],
@@ -180,84 +179,84 @@ export const FEATURED_OFFERS_CONTENT = {
 // ─── CERTIFICACIONES STRIP ────────────────────────────────────────────────────
 
 export const CERTIFICACIONES_CONTENT = {
-  label: "Lorem ipsum certificaciones et normas",
+  label: "Productos originales con garantía de fábrica y trazabilidad de lote",
   certs: [
-    { code: "Lorem A-001", desc: "Lorem ipsum dolor sit amet", colorClass: "text-blue-700", bgClass: "bg-blue-50 border-blue-100" },
-    { code: "Lorem B-002", desc: "Lorem ipsum dolor sit amet", colorClass: "text-indigo-700", bgClass: "bg-indigo-50 border-indigo-100" },
-    { code: "Lorem C-003", desc: "Lorem ipsum dolor sit amet", colorClass: "text-emerald-700", bgClass: "bg-emerald-50 border-emerald-100" },
-    { code: "Lorem D-004", desc: "Lorem ipsum dolor sit amet", colorClass: "text-amber-700", bgClass: "bg-amber-50 border-amber-100" },
-    { code: "Lorem E-005", desc: "Lorem ipsum dolor sit amet", colorClass: "text-red-700", bgClass: "bg-red-50 border-red-100" },
+    { code: "100% Originales", desc: "Solo productos nuevos con garantía", colorClass: "text-blue-700", bgClass: "bg-blue-50 border-blue-100" },
+    { code: "Garantía Fábrica", desc: "Trazabilidad de lote certificada", colorClass: "text-indigo-700", bgClass: "bg-indigo-50 border-indigo-100" },
+    { code: "RUC Activo SUNAT", desc: "Empresa formal registrada en Perú", colorClass: "text-emerald-700", bgClass: "bg-emerald-50 border-emerald-100" },
+    { code: "Factura Electrónica", desc: "Comprobantes electrónicos SUNAT", colorClass: "text-amber-700", bgClass: "bg-amber-50 border-amber-100" },
+    { code: "Stock en Lima", desc: "Entrega al día siguiente en Lima", colorClass: "text-red-700", bgClass: "bg-red-50 border-red-100" },
   ],
 } as const
 
 // ─── COMPANY SHOWCASE ─────────────────────────────────────────────────────────
 
 export const COMPANY_SHOWCASE_CONTENT = {
-  badge: "Lorem Ipsum Empresa",
-  title: "Lorem Ipsum y Distribuidores",
-  titleHighlight: "de Lorem Ipsum",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-  ctaNosotros: "Conocer Más",
+  badge: "Quiénes Somos",
+  title: "Tu proveedor de insumos industriales",
+  titleHighlight: "de confianza en Lima",
+  description: "Insumind Perú S.A.C. es una empresa peruana especializada en la distribución de insumos industriales y mineros de alta calidad. Distribuimos rodamientos, filtros, válvulas, correas y componentes hidráulicos de las marcas más reconocidas del mundo: SKF, Timken, Parker, Gates, Donaldson, Kitz y más. Todos originales, todos con garantía, todos disponibles en Lima.",
+  ctaNosotros: "Conoce más sobre nosotros",
   ctaContacto: "Contáctanos",
-  image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80",
-  imageAlt: "Lorem ipsum dolor sit amet",
+  image: "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=800&q=80",
+  imageAlt: "Almacén de insumos industriales y mineros en Lima, Perú",
   features: [
-    { iconName: "shield", title: "Lorem Ipsum", desc: "Lorem, Ipsum, Dolor, Sit", colorClass: "bg-primary/10 text-primary" },
-    { iconName: "truck", title: "Lorem Ipsum", desc: "Lorem ipsum dolor sit amet", colorClass: "bg-red-500/10 text-red-600" },
-    { iconName: "headphones", title: "Lorem Ipsum", desc: "Lorem ipsum especializados", colorClass: "bg-emerald-500/10 text-emerald-600" },
-    { iconName: "clock", title: "Lorem Ipsum", desc: "Lorem ipsum en 24 horas", colorClass: "bg-blue-500/10 text-blue-600" },
+    { iconName: "shield",     title: "Productos 100% Originales",  desc: "Garantía de fábrica · Trazabilidad de lote",         colorClass: "bg-primary/10 text-primary" },
+    { iconName: "truck",      title: "Entrega en 1 día en Lima",   desc: "Confirmado el depósito, despachamos al día siguiente", colorClass: "bg-[#FF6B35]/10 text-[#FF6B35]" },
+    { iconName: "headphones", title: "Asesoría Técnica Gratuita",  desc: "Identificamos el producto correcto para tu equipo",    colorClass: "bg-emerald-500/10 text-emerald-600" },
+    { iconName: "clock",      title: "Empresa Formal Registrada",  desc: "RUC activo · Facturas y boletas electrónicas",         colorClass: "bg-blue-500/10 text-blue-600" },
   ],
 } as const
 
 // ─── FABRICACION SECTION ──────────────────────────────────────────────────────
 
 export const FABRICACION_CONTENT = {
-  badge: "Lorem Ipsum Propia",
-  title: "Lorem ipsum distribuimos.",
-  titleHighlight: "Lorem ipsum fabricamos.",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-  ctaLabel: "Lorem ipsum propios",
+  badge: "Distribución Especializada",
+  title: "No importamos bajo pedido.",
+  titleHighlight: "Tenemos stock real en Lima.",
+  description: "A diferencia de intermediarios que deben importar bajo pedido, Insumind mantiene stock permanente en su almacén en Los Olivos, Lima. Más de 500 referencias disponibles para entrega al día siguiente de confirmado tu depósito, sin esperas de semanas.",
+  ctaLabel: "Ver productos en stock",
   ctaHref: "/catalogo",
-  badgeLabel: "Lorem Ipsum ET",
-  image: "https://images.unsplash.com/photo-1581093196867-ca9b9e02e42e?w=800&q=80",
-  imageAlt: "Lorem ipsum dolor sit amet consectetur adipiscing elit",
+  badgeLabel: "Stock Permanente",
+  image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80",
+  imageAlt: "Almacén con stock permanente de insumos industriales en Lima",
   productLines: [
-    "Lorem ipsum dolor sit amet",
-    "Lorem ipsum adipiscing elit",
-    "Lorem ipsum accesorios",
-    "Lorem ipsum protecciones",
-    "Lorem ipsum líneas aéreas",
+    "Rodamientos SKF · Timken · INA · NSK · FAG",
+    "Filtros Donaldson · Fleetguard · Caterpillar",
+    "Válvulas Kitz · Bray · KSB · Velan",
+    "Correas Gates · Optibelt · Continental",
+    "Hidráulicos Parker · Rexroth · Yuken",
   ],
 } as const
 
 // ─── BENEFITS SECTION ─────────────────────────────────────────────────────────
 
 export const BENEFITS_CONTENT = {
-  badge: "Lorem ipsum elegirnos",
-  yearsExperience: YEARS_ACTIVE,
-  experienceLabel: "Lorem de experiencia",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
-  ctaLabel: "Lorem ipsum empresa",
+  badge: "Por qué elegirnos",
+  yearsExperience: 5,
+  experienceLabel: "años de experiencia en insumos industriales",
+  description: "En un mercado donde abundan las falsificaciones y los productos de dudosa procedencia, INSUMIND se distingue por la garantía de originalidad, el stock real y la atención técnica especializada.",
+  ctaLabel: "Conoce nuestra empresa",
   ctaHref: "/nosotros",
   stats: [
-    { value: "350+", label: "Lorem ipsum ejecutados" },
-    { value: "98%", label: "Lorem ipsum satisfechos" },
+    { value: "500+", label: "referencias en stock" },
+    { value: "98%",  label: "clientes satisfechos" },
   ],
   benefits: [
     {
       iconName: "shield",
-      title: "Lorem Ipsum A",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
+      title: "Garantía de Originalidad",
+      description: "Todos nuestros productos son 100% originales con garantía de fábrica y trazabilidad de lote. Nunca vendemos imitaciones ni productos reacondicionados.",
     },
     {
       iconName: "truck",
-      title: "Lorem Ipsum B",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
+      title: "Stock Real · Entrega en 24h",
+      description: "Almacén propio en Los Olivos, Lima. Más de 500 referencias para entrega al día siguiente de confirmado tu depósito, sin esperas de importación.",
     },
     {
       iconName: "headphones",
-      title: "Lorem Ipsum C",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.",
+      title: "Asesoría Técnica Gratuita",
+      description: "Nuestro equipo te ayuda a identificar el producto correcto para tu equipo, modelo y condiciones de operación — sin costo adicional.",
     },
   ],
 } as const
@@ -265,29 +264,29 @@ export const BENEFITS_CONTENT = {
 // ─── SERVICIOS SECTION ────────────────────────────────────────────────────────
 
 export const SERVICIOS_CONTENT = {
-  badge: "Lorem Ipsum",
-  title: "Lorem Ipsum Servicios",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit acompañamos",
+  badge: "Servicios",
+  title: "¿Cómo te ayudamos?",
+  subtitle: "Acompañamos cada requerimiento desde la consulta hasta la entrega y postventa",
   services: [
     {
       iconName: "fileText",
-      title: "Lorem Ipsum A",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      title: "Cotización Formal",
+      desc: "Recibes una cotización formal con precios, disponibilidad y tiempo de entrega en menos de 2 horas en horario hábil.",
     },
     {
       iconName: "box",
-      title: "Lorem Ipsum B",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      title: "Despacho Rápido",
+      desc: "Confirmado tu depósito, despachamos en Lima al día siguiente. Coordinamos despachos nacionales con operadores logísticos confiables.",
     },
     {
       iconName: "download",
-      title: "Lorem Ipsum C",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      title: "Comprobantes Electrónicos",
+      desc: "Emitimos facturas y boletas electrónicas SUNAT para todas nuestras ventas. Puedes registrarnos como proveedor con total confianza.",
     },
     {
       iconName: "tools",
-      title: "Lorem Ipsum D",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      title: "Soporte Postventa",
+      desc: "Si un producto presenta falla de fabricación, gestionamos la garantía con el fabricante. Responsabilidad postventa garantizada.",
     },
   ],
 } as const
@@ -295,10 +294,10 @@ export const SERVICIOS_CONTENT = {
 // ─── PROMO BANNER ─────────────────────────────────────────────────────────────
 
 export const PROMO_BANNER_CONTENT = {
-  badge: "Lorem ipsum proyecto",
-  title: "Lorem Ipsum con",
-  titleHighlight: "lorem ipsum garantizada",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
+  badge: "¿Insumo urgente para tu proyecto?",
+  title: "Entrega en Lima al",
+  titleHighlight: "día siguiente garantizada",
+  description: "Stock permanente en nuestro almacén en Los Olivos. Confirmado tu depósito, preparamos y despachamos. Sin esperas de importación, sin pretextos.",
   ctaPrimary: "Solicitar Cotización",
   ctaPrimaryHref: "/contacto",
   ctaSecondary: "Ver Catálogo",
@@ -306,22 +305,22 @@ export const PROMO_BANNER_CONTENT = {
   features: [
     {
       iconName: "clock",
-      title: "Lorem Ipsum Express",
-      desc: "Lorem ipsum dolor sit amet menos de 24 horas",
+      title: "Cotización Express",
+      desc: "Respuesta en menos de 2 horas en horario hábil",
       textClass: "text-[#E60000]",
       iconBgClass: "bg-[#E60000]/10 border-[#E60000]/20",
     },
     {
       iconName: "box",
-      title: "Lorem Ipsum Stock",
-      desc: "Lorem ipsum dolor sit amet referencias disponibles",
+      title: "500+ en Stock",
+      desc: "Referencias disponibles para entrega inmediata",
       textClass: "text-[#3B82F6]",
       iconBgClass: "bg-[#3B82F6]/10 border-[#3B82F6]/20",
     },
     {
       iconName: "headphones",
-      title: "Lorem Ipsum Técnica",
-      desc: "Lorem ipsum especialistas disponibles",
+      title: "Asesoría Técnica",
+      desc: "Asesores especializados disponibles Lun-Vie 9am-6pm",
       textClass: "text-[#10B981]",
       iconBgClass: "bg-[#10B981]/10 border-[#10B981]/20",
     },
@@ -331,11 +330,11 @@ export const PROMO_BANNER_CONTENT = {
 // ─── CTA BAND ─────────────────────────────────────────────────────────────────
 
 export const CTA_BAND_CONTENT = {
-  badge: "Lorem ipsum cotizar",
-  title: "Lorem ipsum dolor sit",
-  titleHighlight: "amet consectetur?",
-  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna. Lorem ipsum sin compromisos.",
-  ctaPrimary: "Solicitar Cotización",
+  badge: "¿Insumo urgente?",
+  title: "¿Necesitas un insumo industrial",
+  titleHighlight: "o minero urgente?",
+  subtitle: "Contáctanos ahora y recibe atención inmediata de nuestro equipo técnico especializado. Entrega en Lima al día siguiente de confirmado tu depósito.",
+  ctaPrimary: "Cotizar por WhatsApp",
   ctaPrimaryHref: "/contacto",
   ctaSecondary: "Ver Catálogo",
   ctaSecondaryHref: "/catalogo",
@@ -344,47 +343,47 @@ export const CTA_BAND_CONTENT = {
 // ─── PRODUCT DETAIL ───────────────────────────────────────────────────────────
 
 export const PRODUCT_DETAIL_CONTENT = {
-  stockBadge: "Lorem Ipsum — Despacho inmediato",
-  certTitle: "Lorem Ipsum Certificado",
-  certDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum normas internacionales.",
-  requestLabel: "Lorem ipsum información",
-  fichaTecnicaLabel: "Lorem Ipsum Técnica",
-  fichaTecnicaSubLabel: "PDF · Lorem",
-  cotizarLabel: "Lorem Ipsum Cotización",
-  cotizarSubLabel: "Lorem ipsum < 2 horas",
-  trustSignal: "Lorem ipsum gratuita · Lorem compromiso · Lorem ipsum especializada",
-  tabDesc: "Lorem Ipsum Completa",
-  tabSpecs: "Lorem Ipsum Técnicas",
+  stockBadge: "En stock — Despacho al día siguiente en Lima",
+  certTitle: "Producto 100% Original",
+  certDesc: "Todos nuestros productos son nuevos, originales y cuentan con garantía de fábrica y trazabilidad de lote.",
+  requestLabel: "Solicitar información técnica",
+  fichaTecnicaLabel: "Ficha Técnica",
+  fichaTecnicaSubLabel: "PDF · Fabricante",
+  cotizarLabel: "Solicitar Cotización",
+  cotizarSubLabel: "Respuesta en < 2 horas",
+  trustSignal: "Asesoría técnica gratuita · Sin compromiso · Producto original garantizado",
+  tabDesc: "Descripción Completa",
+  tabSpecs: "Especificaciones Técnicas",
   garantia: [
     {
       iconName: "shield",
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
-      title: "Lorem Ipsum 12 meses",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+      title: "Garantía de Fábrica",
+      desc: "Producto original con garantía del fabricante. Ante cualquier falla de fabricación, gestionamos el reclamo directamente.",
     },
     {
       iconName: "certificate",
       iconBg: "bg-amber-100",
       iconColor: "text-amber-600",
-      title: "Lorem Ipsum Técnica",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+      title: "Trazabilidad de Lote",
+      desc: "Cada producto tiene documentación de origen y trazabilidad de lote que acredita su autenticidad.",
     },
     {
       iconName: "tools",
       iconBg: "bg-emerald-100",
       iconColor: "text-emerald-600",
-      title: "Lorem Ipsum Técnico",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+      title: "Soporte Técnico",
+      desc: "Nuestro equipo técnico te asesora en la selección del producto correcto según tu aplicación y equipo.",
     },
   ],
   quoteModal: {
-    headerLabel: "Lorem Ipsum Cotización",
-    noteLabel: "Lorem ipsum nota específica (opcional)",
-    notePlaceholder: "Lorem ipsum dolor sit amet, consectetur adipiscing...",
-    submitLabel: "Lorem ipsum enviar consulta",
-    footer: "Lorem ipsum menos de 24 horas · L-V 9am-6pm · Sáb 9am-3pm",
+    headerLabel: "Solicitar Cotización",
+    noteLabel: "Nota específica (opcional)",
+    notePlaceholder: "Indica marca de preferencia, cantidad exacta o cualquier especificación adicional...",
+    submitLabel: "Enviar solicitud de cotización",
+    footer: "Respuesta en menos de 2 horas · L-V 9am-6pm · Sáb 9am-1pm",
   },
-  relatedTitle: "Lorem ipsum dolor sit amet también compraron:",
-  relatedSubtitle: "Lorem ipsum complementarios del mismo sector",
+  relatedTitle: "Clientes que vieron este producto también consultaron:",
+  relatedSubtitle: "Insumos complementarios de la misma categoría",
 } as const

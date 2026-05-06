@@ -49,27 +49,14 @@ export async function getCategoryBySlugAction(slug: string) {
  */
 export async function getActiveFilterOptionsAction(): Promise<{
   categories: import("./types").CategoryDTO[]
-  brandNames: string[]
 }> {
   const INCLUDE_SUBS = { subs: true } as const
 
-  const [categoryRows, brandRows] = await Promise.all([
-    // Categorías con al menos 1 producto (field denormalizado)
-    db.category.findMany({
-      where: { count: { gt: 0 } },
-      orderBy: { count: "desc" },
-      include: INCLUDE_SUBS,
-    }),
-    // Marcas que tienen al menos 1 producto (JOIN real)
-    db.brand.findMany({
-      where: { products: { some: {} } },
-      orderBy: { name: "asc" },
-      select: { 
-        name: true,
-        _count: { select: { products: true } }
-      },
-    }),
-  ])
+  const categoryRows = await db.category.findMany({
+    where: { count: { gt: 0 } },
+    orderBy: { count: "desc" },
+    include: INCLUDE_SUBS,
+  })
 
   // Mapear a CategoryDTO
   const categories = categoryRows.map((c: any) => ({
@@ -89,12 +76,7 @@ export async function getActiveFilterOptionsAction(): Promise<{
     updatedAt:       c.updatedAt instanceof Date ? c.updatedAt.toISOString() : c.updatedAt,
   }))
 
-  const brands = brandRows.map((b: any) => ({
-    name:         b.name,
-    productCount: b._count.products,
-  }))
-
-  return { categories, brands }
+  return { categories }
 }
 
 // ─── Subcategorías ────────────────────────────────────────────────────────────

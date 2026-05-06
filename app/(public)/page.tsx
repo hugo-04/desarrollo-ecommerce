@@ -12,7 +12,7 @@ const homeSchema = {
   "@type": "WebSite",
   name: SITE_NAME,
   url: SITE_URL,
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  description: "Insumind Perú S.A.C. distribuye rodamientos, filtros, válvulas, correas y componentes hidráulicos originales para minería e industria en Lima, Perú. Marcas SKF, Parker, Gates, Timken.",
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -30,20 +30,6 @@ export default async function HomePage() {
   ])
   return (
     <>
-      {/* Preload banner LCP — descubierto en el HTML inicial sin esperar JS (elimina ~1200ms de retraso) */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <link rel="preload" as="image" media="(max-width: 799px)"
-        // @ts-ignore
-        imageSrcSet="/_next/image?url=%2Fbanner.jpg&w=640&q=60 640w,/_next/image?url=%2Fbanner.jpg&w=750&q=60 750w,/_next/image?url=%2Fbanner.jpg&w=828&q=60 828w"
-        imageSizes="100vw"
-        fetchPriority="high"
-      />
-      <link rel="preload" as="image" media="(min-width: 800px)"
-        // @ts-ignore
-        imageSrcSet="/_next/image?url=%2Fbanner.jpg&w=1080&q=60 1080w,/_next/image?url=%2Fbanner.jpg&w=1200&q=60 1200w,/_next/image?url=%2Fbanner.jpg&w=1366&q=60 1366w,/_next/image?url=%2Fbanner.jpg&w=1440&q=60 1440w,/_next/image?url=%2Fbanner.jpg&w=1920&q=60 1920w"
-        imageSizes="100vw"
-        fetchPriority="high"
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}

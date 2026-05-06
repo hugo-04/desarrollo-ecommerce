@@ -114,43 +114,45 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 340, damping: 34 }}
               className="fixed inset-x-0 bottom-0 z-[60] flex flex-col rounded-t-3xl bg-white shadow-2xl sm:hidden"
-              style={{ maxHeight: "88vh" }}
+              style={{ maxHeight: "92vh" }}
             >
-              {/* Handle */}
+              {/* Handle — siempre visible */}
               <div className="flex shrink-0 justify-center pt-3 pb-1">
                 <div className="h-1 w-10 rounded-full bg-slate-200" />
               </div>
 
-              {/* Header */}
-              <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-3">
-                <div className="flex items-center gap-2">
-                  <LayoutGrid className="h-4 w-4 text-[#1B2B4B]" />
-                  <h2 className="text-base font-extrabold text-[#0f1e35]">Categorías</h2>
-                </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200"
-                >
-                  <X size={16} />
-                </button>
-              </div>
+              {/* Contenedor de scroll único — cubre header + búsqueda + lista + footer */}
+              <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain">
 
-              {/* Search */}
-              <div className="shrink-0 px-4 py-3">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Buscar categoría..."
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-[#1B2B4B]/40 focus:bg-white focus:ring-2 focus:ring-[#1B2B4B]/15"
-                  />
+                {/* Header sticky */}
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-5 py-3">
+                  <div className="flex items-center gap-2">
+                    <LayoutGrid className="h-4 w-4 text-[#1B2B4B]" />
+                    <h2 className="text-base font-extrabold text-[#0f1e35]">Categorías</h2>
+                  </div>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200"
+                  >
+                    <X size={16} />
+                  </button>
                 </div>
-              </div>
 
-              {/* Lista de categorías — scrollable */}
-              <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+                {/* Search */}
+                <div className="px-4 py-3">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="text"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Buscar categoría..."
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-[#1B2B4B]/40 focus:bg-white focus:ring-2 focus:ring-[#1B2B4B]/15"
+                    />
+                  </div>
+                </div>
+
+                {/* Lista de categorías */}
                 {status === "pending" ? (
                   <div className="flex justify-center py-10">
                     <Loader2 className="h-5 w-5 animate-spin text-slate-300" />
@@ -158,14 +160,14 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                 ) : categories.length === 0 ? (
                   <p className="py-8 text-center text-sm italic text-slate-400">Sin resultados</p>
                 ) : (
-                  <div className="px-3 pb-2">
+                  <div className="px-3">
                     {categories.map((cat) => {
                       const Icon = getCategoryIcon(cat.slug)
                       const isExpanded = mobileExpanded === cat.id
 
                       return (
                         <div key={cat.id} className="border-b border-slate-50 last:border-0">
-                          {/* Fila — navega a categoría + acordeón */}
+                          {/* Fila: link a categoría (izq) + botón acordeón (der) */}
                           <div className="flex items-center">
                             <Link
                               href={`/categoria/${cat.slug}`}
@@ -186,6 +188,7 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                               <button
                                 onClick={() => setMobileExpanded(isExpanded ? null : cat.id)}
                                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-50"
+                                aria-label={isExpanded ? "Cerrar subcategorías" : "Ver subcategorías"}
                               >
                                 <ChevronDown
                                   size={15}
@@ -205,21 +208,23 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                 transition={{ duration: 0.22, ease: "easeInOut" }}
                                 className="overflow-hidden"
                               >
-                                <div className="ml-12 mb-2 grid grid-cols-2 gap-1 border-l-2 border-[#1B2B4B]/10 pl-3">
+                                <div className="ml-2 mb-2 space-y-0.5 border-l-2 border-[#1B2B4B]/10 pl-3">
+                                  {/* Ver todos los productos de la categoría */}
                                   <Link
                                     href={`/categoria/${cat.slug}`}
                                     onClick={() => setIsOpen(false)}
-                                    className="col-span-2 flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-bold text-[#1B2B4B] transition-colors hover:bg-[#1B2B4B]/[0.06]"
+                                    className="flex items-center gap-2 rounded-lg px-2 py-2.5 text-xs font-bold text-[#1B2B4B] transition-colors hover:bg-[#1B2B4B]/[0.06]"
                                   >
                                     <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35]" />
-                                    Ver todos
+                                    Ver todos ({cat.count} productos)
                                   </Link>
+                                  {/* Subcategorías individuales */}
                                   {cat.subcategoryItems?.map((sub) => (
                                     <Link
                                       key={sub.id}
                                       href={`/categoria/${cat.slug}?subId=${sub.id}`}
                                       onClick={() => setIsOpen(false)}
-                                      className="flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[#1B2B4B]"
+                                      className="flex items-center gap-2 rounded-lg px-2 py-2.5 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[#1B2B4B]"
                                     >
                                       <span className="h-1 w-1 shrink-0 rounded-full bg-slate-300" />
                                       <span className="truncate">{sub.name}</span>
@@ -243,18 +248,19 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                     </div>
                   </div>
                 )}
-              </div>
 
-              {/* Footer CTA */}
-              <div className="shrink-0 border-t border-slate-100 p-4">
-                <Link
-                  href="/catalogo"
-                  onClick={() => setIsOpen(false)}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#0f1e35] to-[#1B2B4B] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#1B2B4B]/20"
-                >
-                  Ver todo el catálogo
-                  <IconChevronRight className="h-4 w-4" />
-                </Link>
+                {/* Footer CTA — dentro del scroll, siempre accesible al fondo */}
+                <div className="border-t border-slate-100 p-4">
+                  <Link
+                    href="/catalogo"
+                    onClick={() => setIsOpen(false)}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#0f1e35] to-[#1B2B4B] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#1B2B4B]/20"
+                  >
+                    Ver todo el catálogo
+                    <IconChevronRight className="h-4 w-4" />
+                  </Link>
+                </div>
+
               </div>
             </motion.div>
 
@@ -535,7 +541,6 @@ const TAB_GAP = 6
 
 function FluidNav() {
   const pathname = usePathname()
-  const [hoveredTab, setHoveredTab] = useState<string | null>(null)
   const [catalogOpen, setCatalogOpen] = useState(false)
   const catalogRef = useRef<HTMLDivElement>(null)
   const catalogTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -588,11 +593,9 @@ function FluidNav() {
                 style={{ width: TAB_W }}
                 onMouseEnter={() => {
                   if (catalogTimeout.current) clearTimeout(catalogTimeout.current)
-                  setHoveredTab(tab.id)
                   setCatalogOpen(true)
                 }}
                 onMouseLeave={() => {
-                  setHoveredTab(null)
                   catalogTimeout.current = setTimeout(() => setCatalogOpen(false), 180)
                 }}
               >
@@ -621,8 +624,6 @@ function FluidNav() {
             <Link
               key={tab.id}
               href={tab.id}
-              onMouseEnter={() => setHoveredTab(tab.id)}
-              onMouseLeave={() => setHoveredTab(null)}
               style={{ width: TAB_W }}
               className={`flex items-center justify-center gap-1.5 py-3 pb-3.5 text-[13px] font-bold transition-colors duration-200 ${
                 isActive ? "text-white" : "text-white/60 hover:text-white hover:bg-white/5"
@@ -681,8 +682,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
-              <img src="/logo/logotipo.svg" alt="Insumind" className="h-8 w-auto object-contain"
-                style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.6)) brightness(1.3)" }} />
+              <img src="/logo/logotipo-white.svg" alt="INSUMIND" className="h-8 w-auto object-contain" />
               <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white">
                 <X size={16} />
               </button>

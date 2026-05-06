@@ -18,9 +18,9 @@ export function QuoteModal({ product, onClose }: QuoteModalProps) {
   const handleSubmit = () => {
     const url = note
       ? `https://wa.me/${CONTACT.whatsappNumber}?text=${encodeURIComponent(
-          `Hola, me gustaría solicitar cotización del producto:\n*${product.name}*\nMarca: ${product.brand}\n\nNota: ${note}`
+          `Hola, me gustaría solicitar cotización del producto:\n*${product.name}*\nMarca: ${product.brands?.[0] || ""}\n\nNota: ${note}`
         )}`
-      : WA.producto(product.name, product.brand)
+      : WA.producto(product.name, product.brands?.[0] || "")
     window.open(url, "_blank")
     onClose()
   }
@@ -51,7 +51,7 @@ export function QuoteModal({ product, onClose }: QuoteModalProps) {
           </div>
           <h3 className="text-base font-extrabold text-[#121A47]">{product.name}</h3>
           <p className="text-xs text-slate-500">
-            {product.brand}
+            {product.brands?.[0]}
           </p>
         </div>
 

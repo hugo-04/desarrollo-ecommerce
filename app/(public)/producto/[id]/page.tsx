@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const product = await getProductAction(numId)
   if (!product) return {}
 
-  return generateProductMeta(product)
+  return generateProductMeta({ ...product, keywords: product.keywords })
 }
 
 export default async function ProductoPage({ params }: PageProps) {
@@ -45,7 +45,7 @@ export default async function ProductoPage({ params }: PageProps) {
   // Fetch en servidor para que Google vea los links en el HTML inicial
   const initialRelated = await getRelatedProductsAction(numId, product.category)
 
-  const productSchema = buildProductSchema(product)
+  const productSchema = buildProductSchema({ ...product, keywords: product.keywords })
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",

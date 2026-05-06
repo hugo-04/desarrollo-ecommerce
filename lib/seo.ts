@@ -9,73 +9,64 @@ import type { Metadata } from "next"
 
 // ─── Configuración base ────────────────────────────────────────────────────────
 
-export const SITE_URL  = "https://xxxxxxxxxxxxxxxx.com"
-export const SITE_NAME = "Insumind"
+export const SITE_URL  = "https://insumindperu.pe"
+export const SITE_NAME = "INSUMIND"
 
 /** Imagen OG por defecto — redes sociales y WhatsApp */
 const OG_IMAGE = `${SITE_URL}/logo/logotipo.png`
 
 /**
  * Keyword principal del negocio — frase corta y real que la gente busca.
- * Aparece en todas las descripciones y schema.
  */
-const KW_CORE = "ferretería eléctrica AT/MT Lima Perú"
+const KW_CORE = "insumos industriales y mineros Lima Perú"
 
 /**
  * Keywords secundarias — cubren intenciones de búsqueda reales.
- * Incluyen variantes de producto, material, uso y ubicación.
  */
 const KW_SECONDARY = [
-  "herrajes para líneas eléctricas alta tensión",
-  "aisladores eléctricos para postes Lima",
-  "conectores eléctricos para conductores AT/MT",
-  "materiales eléctricos para distribución",
-  "pernos y abrazaderas galvanizadas para postes eléctricos",
-  "distribuidores ferretería eléctrica Lima",
-  "accesorios para postes de concreto distribución eléctrica",
-  "ferretería galvanizada para líneas eléctricas Perú",
-  "grapas y empalmes para conductores eléctricos",
-  "certificaciones IEC ANSI NTP herrajes eléctricos",
-  "Insumind SAC Lima",
-  "insumind Lima",
-  "cotización ferretería eléctrica Peru",
+  "rodamientos SKF Timken Lima Perú",
+  "filtros industriales Donaldson Fleetguard Lima",
+  "válvulas industriales Kitz Bray Lima",
+  "correas industriales Gates Optibelt Lima",
+  "componentes hidráulicos Parker Rexroth Lima",
+  "insumos para minería Perú",
+  "insumos para construcción Perú",
+  "distribuidora insumos industriales Lima",
+  "stock rodamientos Lima entrega rápida",
+  "cotización insumos industriales Lima",
+  "Insumind Perú SAC",
+  "insumindperu.pe",
+  "insumos mineros industriales Los Olivos Lima",
 ]
 
 const defaultOG = {
   siteName: SITE_NAME,
   locale:   "es_PE",
   type:     "website" as const,
-  images:   [{ url: OG_IMAGE, width: 1200, height: 630, alt: `${SITE_NAME} — Ferretería Eléctrica AT/MT` }],
+  images:   [{ url: OG_IMAGE, width: 1200, height: 630, alt: `${SITE_NAME} — Insumos Industriales y Mineros` }],
 }
 
 // ─── Schema.org — LocalBusiness ───────────────────────────────────────────────
 
-/**
- * JSON-LD para Google: marca a Insumind como negocio local con actividad
- * de fabricación y distribución de materiales eléctricos AT/MT.
- *
- * Incluir en el layout raíz con:
- *   <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
- */
 export const organizationSchema = {
   "@context":    "https://schema.org",
   "@type":       ["Organization", "LocalBusiness"],
   "@id":         `${SITE_URL}/#organization`,
-  name:          "Insumind S.A.C.",
-  alternateName: ["Insumind", "Insumind"],
-  description:   "Fabricante y distribuidor de ferretería eléctrica para alta y media tensión (AT/MT) en Lima, Perú. Fundada en 2010, ofrece herrajes, aisladores de porcelana, conectores bimetálicos, pernos galvanizados, abrazaderas y sistemas de puesta a tierra certificados bajo normas IEC, ANSI C135, ANSI C29 y NTP. Atiende concesionarias eléctricas, contratistas y proyectos de distribución en todo el Perú con despacho en 24 a 48 horas.",
-  slogan:        "Ferretería Eléctrica AT/MT certificada — Lima, Perú",
+  name:          "Insumind Perú S.A.C.",
+  alternateName: ["INSUMIND", "Insumos Mineros Industriales"],
+  description:   "Insumind Perú S.A.C. es una empresa peruana especializada en la distribución de insumos industriales y mineros de alta calidad. Distribuimos rodamientos, filtros, válvulas, correas y componentes hidráulicos de marcas líderes: SKF, Timken, Parker, Gates, Donaldson, Kitz y más. Todos originales, todos con garantía. Stock permanente en Lima y despacho nacional.",
+  slogan:        "Garantía y Confianza en cada Insumo",
   url:           SITE_URL,
   logo: {
     "@type":      "ImageObject",
     "@id":        `${SITE_URL}/#logo`,
     url:          OG_IMAGE,
-    caption:      "Insumind S.A.C. — Ferretería Eléctrica AT/MT",
+    caption:      "Insumind Perú S.A.C. — Insumos Mineros Industriales",
     width:        "400",
     height:       "100",
   },
   image:         OG_IMAGE,
-  foundingDate:  "2010",
+  legalName:     "Insumind Perú S.A.C.",
   foundingLocation: {
     "@type":        "Place",
     name:           "Lima, Perú",
@@ -85,27 +76,23 @@ export const organizationSchema = {
       addressCountry:  "PE",
     },
   },
-  taxID:         "20609410711",
-  legalName:     "Insumind S.A.C.",
-  areaServed:    [
+  areaServed: [
     { "@type": "Country", name: "Perú" },
     { "@type": "City",    name: "Lima" },
   ],
-  priceRange:    "$$",
-  telephone:     "+51981375196",
-  email:         "xxxxxxxxxxxxxxxx@gmail.com",
+  priceRange: "$$",
+  email:      "ventas@insumindperu.pe",
   address: {
-    "@type":         "PostalAddress",
-    streetAddress:   "Av. Guillermo Dansey N° 481 - Int. 143 - C.C. Loreto",
-    addressLocality: "Lima",
-    addressRegion:   "Lima",
-    addressCountry:  "PE",
-    postalCode:      "15001",
+    "@type":          "PostalAddress",
+    streetAddress:    "Calle 55 Mz WW2 Lote 13, La Floresta de Pro",
+    addressLocality:  "Los Olivos",
+    addressRegion:    "Lima",
+    addressCountry:   "PE",
   },
   geo: {
     "@type":    "GeoCoordinates",
-    latitude:   "-12.0522",
-    longitude:  "-77.0313",
+    latitude:   "-11.988",
+    longitude:  "-77.058",
   },
   openingHoursSpecification: [
     {
@@ -118,49 +105,37 @@ export const organizationSchema = {
       "@type":    "OpeningHoursSpecification",
       dayOfWeek: ["Saturday"],
       opens:     "09:00",
-      closes:    "15:00",
+      closes:    "13:00",
     },
-  ],
-  sameAs: [
-    "https://www.facebook.com/xxxxxxxxxxxxxxxx",
-  ],
-  hasCredential: [
-    { "@type": "EducationalOccupationalCredential", name: "Certificación ISO 9001 — Sistema de Gestión de Calidad" },
-    { "@type": "EducationalOccupationalCredential", name: "Cumplimiento IEC 61284 — Herrajes para líneas aéreas" },
-    { "@type": "EducationalOccupationalCredential", name: "Cumplimiento ANSI C135 — Herrajes de acero galvanizado" },
-    { "@type": "EducationalOccupationalCredential", name: "Cumplimiento NTP 370.043 — Ferretería eléctrica Perú" },
   ],
   hasOfferCatalog: {
     "@type":       "OfferCatalog",
-    name:          "Catálogo de Ferretería Eléctrica AT/MT",
-    numberOfItems: 50,
+    name:          "Catálogo de Insumos Industriales y Mineros",
+    numberOfItems: 500,
     itemListElement: [
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Grapas para conductores AT/MT" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Conectores eléctricos bimetálicos Al/Cu y Al/Al" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Pernos de acero galvanizado A°G° para postes" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Aisladores de porcelana ANSI 54-1 y 56-1" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Abrazaderas galvanizadas para postes de distribución" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Herrajes de anclaje para postes de concreto" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Sistemas de puesta a tierra — planchas de cobre tipo J" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Rodamientos industriales SKF · Timken · INA · NSK · FAG" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Filtros industriales Donaldson · Fleetguard · Caterpillar · Mann+Hummel" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Válvulas industriales Kitz · Bray · KSB · Velan" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Correas industriales Gates · Optibelt · Continental" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Componentes hidráulicos Parker · Rexroth · Yuken" } },
     ],
   },
   knowsAbout: [
-    "ferretería eléctrica para alta tensión AT/MT",
-    "herrajes galvanizados para líneas de distribución eléctrica",
-    "aisladores de porcelana ANSI C29 e IEC 60305",
-    "conectores bimetálicos aluminio cobre a compresión IEC 61238",
-    "pernos galvanizados ASTM A153 para postes de concreto",
-    "abrazaderas para postes de distribución eléctrica",
-    "sistemas de puesta a tierra para instalaciones AT/MT",
-    "normas IEC ANSI NTP para distribución eléctrica en Perú",
-    "suministro eléctrico para concesionarias eléctricas peruanas",
-    "proyectos SEIN Sistema Eléctrico Interconectado Nacional Perú",
+    "rodamientos industriales para minería y manufactura",
+    "filtros industriales para maquinaria pesada",
+    "válvulas industriales para procesos",
+    "correas industriales para transmisión de potencia",
+    "componentes hidráulicos para maquinaria industrial",
+    "insumos para minería en Cajamarca, Arequipa, Cusco y Moquegua",
+    "insumos para construcción con equipos CAT, Komatsu, Volvo CE",
+    "insumos para pesca y agroindustria en el Perú",
+    "marcas originales SKF, Timken, Parker, Gates, Donaldson",
+    "distribución de insumos industriales con entrega en Lima al día siguiente",
   ],
 } as const
 
 /**
  * JSON-LD WebSite — habilita el Sitelinks Searchbox de Google.
- * Incluir en el layout raíz junto al Organization schema.
  */
 export const websiteSchema = {
   "@context":  "https://schema.org",
@@ -185,23 +160,23 @@ export const SEO = {
   root: {
     metadataBase: new URL(SITE_URL),
     title: {
-      default:  SITE_NAME,
+      default:  `${SITE_NAME} | Insumos Industriales y Mineros en Lima, Perú`,
       template: `%s | ${SITE_NAME}`,
     },
-    description: SITE_NAME,
-    keywords: [],
-    authors:  [{ name: SITE_NAME }],
-    creator:  SITE_NAME,
+    description: "Insumind Perú S.A.C. distribuye rodamientos, filtros, válvulas, correas y componentes hidráulicos originales para minería e industria. Marcas SKF, Parker, Gates, Timken. Entrega en Lima y despacho nacional.",
+    keywords: KW_SECONDARY,
+    authors:  [{ name: "Insumind Perú S.A.C." }],
+    creator:  "Insumind Perú S.A.C.",
     openGraph: {
       ...defaultOG,
       url:         SITE_URL,
-      title:       SITE_NAME,
-      description: SITE_NAME,
+      title:       `${SITE_NAME} | Insumos Industriales y Mineros en Lima, Perú`,
+      description: "Distribuidora peruana de insumos industriales y mineros originales. SKF, Parker, Gates, Timken. Stock permanente en Lima. Entrega al día siguiente.",
     },
     twitter: {
       card:        "summary_large_image" as const,
-      title:       SITE_NAME,
-      description: SITE_NAME,
+      title:       `${SITE_NAME} | Insumos Industriales y Mineros en Lima, Perú`,
+      description: "Distribuidora peruana de insumos industriales y mineros originales. SKF, Parker, Gates, Timken. Stock permanente en Lima. Entrega al día siguiente.",
       images:      [OG_IMAGE],
     },
     robots: {
@@ -212,45 +187,37 @@ export const SEO = {
     verification: {
       google: "TQPQo2oWum6WSo5GuM0eOmYGLiKHmHLbVKRWJSeOq94",
     },
-    icons: {
-      icon:     [
-        { url: "/favicon.ico",  sizes: "32x32",   type: "image/x-icon" },
-        { url: "/icon.png",     sizes: "512x512",  type: "image/png" },
-      ],
-      shortcut: "/favicon.ico",
-      apple:    [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-    },
   } satisfies Metadata,
 
   /** / — Página principal */
   home: {
-    title:       { absolute: SITE_NAME },
-    description: SITE_NAME,
+    title:       { absolute: `${SITE_NAME} | Insumos Industriales y Mineros en Lima, Perú` },
+    description: "Insumind Perú S.A.C. distribuye rodamientos, filtros, válvulas, correas y componentes hidráulicos originales para minería e industria. Marcas SKF, Parker, Gates, Timken. Entrega en Lima y despacho nacional.",
     alternates:  { canonical: "/" },
     openGraph: {
       ...defaultOG,
       url:         SITE_URL,
-      title:       SITE_NAME,
-      description: SITE_NAME,
+      title:       `${SITE_NAME} | Insumos Industriales y Mineros en Lima, Perú`,
+      description: "Distribuidora peruana con stock permanente de insumos industriales y mineros 100% originales. SKF, Timken, Parker, Gates, Donaldson. Entrega en Lima al día siguiente.",
     },
     twitter: {
       card:        "summary_large_image" as const,
-      title:       SITE_NAME,
-      description: SITE_NAME,
+      title:       `${SITE_NAME} | Insumos Industriales y Mineros en Lima, Perú`,
+      description: "Distribuidora peruana con stock permanente de insumos industriales y mineros 100% originales. SKF, Timken, Parker, Gates, Donaldson. Entrega en Lima al día siguiente.",
       images:      [OG_IMAGE],
     },
   } satisfies Metadata,
 
   /** /nosotros */
   nosotros: {
-    title:       "Sobre Nosotros — Fabricantes de Ferretería Eléctrica en Perú",
-    description: `Insumind: fabricantes y distribuidores de ferretería eléctrica AT/MT en Lima desde 2010. Certificaciones IEC y ANSI, planta propia e ingenieros especializados.`,
+    title:       "Nosotros | INSUMIND — Distribuidora Peruana de Insumos Industriales",
+    description: "Conoce a Insumind Perú S.A.C., empresa peruana formal especializada en distribución de insumos industriales y mineros originales. Stock en Lima, entregas nacionales. SKF, Parker, Gates y más.",
     alternates:  { canonical: "/nosotros" },
     openGraph: {
       ...defaultOG,
       url:         "/nosotros",
-      title:       `Sobre Nosotros — Fabricantes AT/MT | ${SITE_NAME}`,
-      description: `Más de 15 años fabricando ferretería eléctrica AT/MT en Perú. Herrajes, aisladores y conectores certificados IEC y ANSI.`,
+      title:       `Nosotros — Distribuidora Peruana de Insumos Industriales | ${SITE_NAME}`,
+      description: "Empresa peruana formal con almacén en Los Olivos, Lima. Distribuimos rodamientos, filtros, válvulas, correas e hidráulicos de marcas líderes mundiales.",
     },
     twitter: {
       card:   "summary_large_image" as const,
@@ -260,14 +227,14 @@ export const SEO = {
 
   /** /contacto */
   contacto: {
-    title:       "Cotizaciones y Asesoría Técnica — Ferretería Eléctrica AT/MT",
-    description: `Solicita cotización de ferretería eléctrica AT/MT en Lima. Ingenieros especializados disponibles. Respondemos en menos de 24 h.`,
+    title:       "Contacto | INSUMIND Lima — Cotiza Insumos Industriales por WhatsApp",
+    description: "Contáctanos para cotizar rodamientos, filtros, válvulas, correas y componentes hidráulicos en Lima, Perú. Insumind Perú S.A.C. Atención Lun-Vie 9am-6pm y Sáb 9am-1pm.",
     alternates:  { canonical: "/contacto" },
     openGraph: {
       ...defaultOG,
       url:         "/contacto",
-      title:       `Cotizaciones AT/MT | ${SITE_NAME}`,
-      description: `Cotizaciones y asesoría técnica para ferretería eléctrica AT/MT en Lima. Ingenieros especializados. Respuesta en menos de 24 h.`,
+      title:       `Contacto — Cotiza Insumos Industriales | ${SITE_NAME}`,
+      description: "Cotización inmediata de insumos industriales y mineros en Lima. Respuesta en menos de 2 horas. Atención Lun-Vie 9am-6pm y Sáb 9am-1pm.",
     },
     twitter: {
       card:   "summary_large_image" as const,
@@ -277,14 +244,14 @@ export const SEO = {
 
   /** /catalogo */
   catalogo: {
-    title:       "Catálogo de Ferretería Eléctrica AT/MT — Herrajes, Aisladores y Conectores",
-    description: `Catálogo de ferretería eléctrica AT/MT: herrajes, aisladores, conectores y accesorios certificados IEC, ANSI y NTP. Stock permanente en Lima. Cotización en 24 h.`,
+    title:       "Catálogo de Insumos Industriales y Mineros — Rodamientos, Filtros, Válvulas",
+    description: "Catálogo de insumos industriales y mineros originales: rodamientos, filtros, válvulas, correas y componentes hidráulicos. Marcas SKF, Parker, Gates, Donaldson. Stock permanente en Lima.",
     alternates:  { canonical: "/catalogo" },
     openGraph: {
       ...defaultOG,
       url:         "/catalogo",
-      title:       `Catálogo Ferretería Eléctrica AT/MT | ${SITE_NAME}`,
-      description: `Herrajes, aisladores, conectores y accesorios eléctricos AT/MT. Certificaciones IEC, ANSI y NTP. Stock permanente en Lima, Perú.`,
+      title:       `Catálogo Insumos Industriales y Mineros | ${SITE_NAME}`,
+      description: "Rodamientos, filtros, válvulas, correas y componentes hidráulicos originales. SKF, Timken, Parker, Gates, Donaldson. Stock permanente en Lima, Perú.",
     },
     twitter: {
       card:   "summary_large_image" as const,
@@ -295,7 +262,7 @@ export const SEO = {
   /** /terminos — noindex: no aporta SEO y consume crawl budget */
   terminos: {
     title:       "Términos y Condiciones",
-    description: `Términos y condiciones de uso del sitio web y servicios comerciales de Insumind S.A.C., fabricante y distribuidor de ferretería eléctrica AT/MT en Lima, Perú.`,
+    description: `Términos y condiciones de uso del sitio web y servicios comerciales de Insumind Perú S.A.C., distribuidora de insumos industriales y mineros en Lima, Perú.`,
     alternates:  { canonical: "/terminos" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -303,7 +270,7 @@ export const SEO = {
   /** /politica-privacidad — noindex */
   politicaPrivacidad: {
     title:       "Política de Privacidad",
-    description: `Política de privacidad y tratamiento de datos personales de Insumind S.A.C. conforme a la Ley N° 29733 — Ley de Protección de Datos Personales del Perú.`,
+    description: `Política de privacidad y tratamiento de datos personales de Insumind Perú S.A.C. conforme a la Ley N° 29733 — Ley de Protección de Datos Personales del Perú.`,
     alternates:  { canonical: "/politica-privacidad" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -311,7 +278,7 @@ export const SEO = {
   /** /libro-reclamaciones — noindex */
   libroReclamaciones: {
     title:       "Libro de Reclamaciones",
-    description: `Libro de Reclamaciones Virtual de Insumind S.A.C. conforme a la Ley N° 29571 — Código de Protección y Defensa del Consumidor (INDECOPI). Lima, Perú.`,
+    description: `Libro de Reclamaciones Virtual de Insumind Perú S.A.C. conforme a la Ley N° 29571 — Código de Protección y Defensa del Consumidor (INDECOPI). Lima, Perú.`,
     alternates:  { canonical: "/libro-reclamaciones" },
     robots:      { index: false, follow: false },
   } satisfies Metadata,
@@ -320,37 +287,28 @@ export const SEO = {
 
 // ─── Metadata dinámica por categoría ──────────────────────────────────────────
 
-/**
- * URL canónica para una categoría — ruta limpia con slug.
- * Ejemplo: /categoria/aisladores
- */
 export function categoryUrl(slug: string): string {
   return `/categoria/${slug}`
 }
 
-/**
- * Genera metadata Next.js para una página de categoría.
- * La `description` se toma del campo `Category.description` almacenado en DB.
- *
- * @example
- * const cat = cats.find(c => c.name === categoria)
- * return cat ? generateCategoryMeta(cat) : SEO.catalogo
- */
 export function generateCategoryMeta(category: {
   name: string
   slug: string
   description?: string | null
   image?: string | null
+  keywords?: string[]
 }): Metadata {
   const title       = `${category.name} — Precio y Cotización | ${SITE_NAME}`
   const description = (category.description?.trim())
-    || `${category.name} — ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Stock permanente en Lima, Perú. Cotización en 24 h.`
+    || `${category.name} — insumos industriales y mineros originales con garantía. Stock permanente en Lima, Perú. Cotización inmediata.`
   const url         = categoryUrl(category.slug)
   const ogImage     = (category.image && category.image.startsWith("http")) ? category.image : OG_IMAGE
+  const keywords    = category.keywords?.length ? category.keywords : undefined
 
   return {
     title,
     description,
+    ...(keywords && { keywords }),
     alternates: { canonical: url },
     openGraph: {
       ...defaultOG,
@@ -368,29 +326,27 @@ export function generateCategoryMeta(category: {
   }
 }
 
-/**
- * Genera metadata Next.js para una página de producto individual.
- * Llamar desde `generateMetadata` en `/producto/[id]/page.tsx`.
- */
 export function generateProductMeta(product: {
   id: number
   name: string
   category: string
   description?: string | null
   image?: string | null
+  keywords?: string[]
 }): Metadata {
-  // Sin el sufijo "| Insumind" — el template del root layout lo agrega automáticamente
   const title       = `${product.name} — Precio y Ficha Técnica`
   const description = (product.description?.trim() && product.description.trim().length > 30)
-    ? `${product.description.trim().slice(0, 120)}. Cotización en Lima en 24 h.`
-    : `${product.name} — Ferretería eléctrica AT/MT certificada IEC, ANSI y NTP. Stock en Lima, Perú. Cotización en 24 h.`
+    ? `${product.description.trim().slice(0, 120)}. Cotización en Lima en menos de 2 horas.`
+    : `${product.name} — Insumo industrial original con garantía de fábrica. Stock en Lima, Perú. Cotización inmediata.`
 
   const url      = `/producto/${product.id}`
   const imageUrl = (product.image && product.image.startsWith("http")) ? product.image : OG_IMAGE
+  const keywords = product.keywords?.length ? product.keywords : undefined
 
   return {
     title,
     description,
+    ...(keywords && { keywords }),
     alternates: { canonical: url },
     openGraph: {
       siteName: SITE_NAME,
@@ -410,13 +366,8 @@ export function generateProductMeta(product: {
   }
 }
 
-/**
- * JSON-LD Schema.org para una página de categoría (CollectionPage + ItemList).
- * Insertar en la página con:
- *   <script type="application/ld+json">{JSON.stringify(buildCategorySchema(cat, products))}</script>
- */
 export function buildCategorySchema(
-  category: { name: string; slug: string; description?: string | null },
+  category: { name: string; slug: string; description?: string | null; keywords?: string[] },
   productNames: string[] = [],
 ) {
   const catUrl = `${SITE_URL}${categoryUrl(category.slug)}`
@@ -427,6 +378,7 @@ export function buildCategorySchema(
     "@id":        `${catUrl}#collection`,
     name:         category.name,
     description:  category.description ?? undefined,
+    ...(category.keywords?.length && { keywords: category.keywords.join(", ") }),
     url:          catUrl,
     inLanguage:   "es-PE",
     provider:     { "@type": "Organization", "@id": `${SITE_URL}/#organization`, name: SITE_NAME, url: SITE_URL },
@@ -444,10 +396,6 @@ export function buildCategorySchema(
   }
 }
 
-/**
- * JSON-LD Schema.org para una página de producto (Product).
- * Insertar en `/producto/[id]` para rich results en Google Shopping.
- */
 export function buildProductSchema(product: {
   id: number
   name: string
@@ -456,11 +404,11 @@ export function buildProductSchema(product: {
   description?: string | null
   fullDescription?: string | null
   image?: string | null
+  keywords?: string[]
   rating?: number
 }) {
   const productUrl  = `${SITE_URL}/producto/${product.id}`
   const productImage = (product.image && product.image.startsWith("http")) ? product.image : null
-  // fullDescription puede contener HTML — extraemos texto plano como fallback
   const fullDescText = product.fullDescription
     ? product.fullDescription.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
     : ""
@@ -472,6 +420,7 @@ export function buildProductSchema(product: {
     "@id":        productUrl,
     name:         product.name,
     description:  descriptionText.slice(0, 500),
+    ...(product.keywords?.length && { keywords: product.keywords.join(", ") }),
     ...(productImage && { image: productImage }),
     url:          productUrl,
     inLanguage:   "es-PE",
@@ -492,7 +441,7 @@ export function buildProductSchema(product: {
       },
       seller: {
         "@type": "Organization",
-        name:    "Insumind S.A.C.",
+        name:    "Insumind Perú S.A.C.",
       },
     },
   }

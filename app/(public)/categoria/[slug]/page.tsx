@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params
   const category = await getCategoryBySlugAction(slug)
   if (!category) return {}
-  return generateCategoryMeta(category)
+  return generateCategoryMeta({ ...category, keywords: category.keywords })
 }
 
 // ── Página ─────────────────────────────────────────────────────────────────────
@@ -65,7 +65,7 @@ export default async function CategoriaPage({ params, searchParams }: PageProps)
     ],
   }
 
-  const categorySchema = buildCategorySchema(category, initialProducts.map((p) => p.name))
+  const categorySchema = buildCategorySchema({ ...category, keywords: category.keywords }, initialProducts.map((p) => p.name))
 
   // FAQPage — genera rich snippets si hay ≥ 2 subcategorías
   const faqSchema = category.subcategories.length >= 2 ? {
