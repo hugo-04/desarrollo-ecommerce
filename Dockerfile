@@ -48,6 +48,13 @@ RUN npx esbuild prisma/seed.ts \
       --external:@prisma/client \
       --outfile=seed.cjs
 
+# Compila el importador a JS puro
+RUN npx esbuild scripts/import_excel_products.ts \
+      --bundle \
+      --platform=node \
+      --external:@prisma/client \
+      --outfile=import_excel_products.cjs
+
 # ── Etapa 3: Runner (imagen final mínima) ────────────────────
 FROM node:22-alpine AS runner
 
@@ -91,8 +98,9 @@ RUN printf '%s\n' \
 COPY --from=builder --chown=nextjs:nodejs /app/prisma/schema.prisma ./prisma/schema.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma/migrations    ./prisma/migrations
 
-# Seed compilado y entrypoint
+# Seed y scripts compilados, y entrypoint
 COPY --from=builder --chown=nextjs:nodejs /app/seed.cjs ./seed.cjs
+COPY --from=builder --chown=nextjs:nodejs /app/import_excel_products.cjs ./import_excel_products.cjs
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
 

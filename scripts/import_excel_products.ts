@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg"
 import fs from "fs"
 import path from "path"
+import productsData from "../lib/data/products.json"
 
 // Cliente dedicado con pool de 1 conexión
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL!, max: 1 })
@@ -11,13 +12,7 @@ const prisma = new PrismaClient({ adapter })
 async function main() {
   console.log("Iniciando importación de productos desde products.json...")
 
-  // Leer JSON
-  const jsonPath = path.join(process.cwd(), "lib", "data", "products.json")
-  if (!fs.existsSync(jsonPath)) {
-    console.error(`No se encontró el archivo: ${jsonPath}`)
-    process.exit(1)
-  }
-  const productsData = JSON.parse(fs.readFileSync(jsonPath, "utf-8"))
+  // El JSON ya fue importado en la cabecera
 
   console.log(`Leídos ${productsData.length} productos del JSON.`)
 
