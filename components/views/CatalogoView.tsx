@@ -8,7 +8,7 @@ import { CatalogFilters } from "@/components/catalog/CatalogFilters"
 import { CategoryBanner } from "@/components/catalog/CategoryBanner"
 import { ActiveFilterChips } from "@/components/catalog/ActiveFilterChips"
 import { CatalogToolbar } from "@/components/catalog/CatalogToolbar"
-import { Pagination } from "@/components/ui/pagination"
+import { CatalogPagination } from "@/components/catalog/CatalogPagination"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { useCatalogFilters } from "@/features/catalogo/hooks"
 import { useProducts } from "@/features/productos/hooks"
@@ -313,7 +313,7 @@ export function CatalogoView({
 
             {/* Paginación */}
             {!loading && total > 0 && (
-              <Pagination
+              <CatalogPagination
                 page={currentPage}
                 totalPages={totalPages}
                 total={total}

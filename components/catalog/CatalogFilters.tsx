@@ -123,6 +123,9 @@ function InfiniteFilterList({
 }) {
   const [search, setSearch] = useState("")
   const [debouncedSearch, setDebouncedSearch] = useState("")
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
 
   // Debounce simple para evitar demasiadas peticiones
   useEffect(() => {
@@ -174,7 +177,7 @@ function InfiniteFilterList({
       </div>
 
       <div className="space-y-0.5">
-        {status === "pending" ? (
+        {!mounted || status === "pending" ? (
           <div className="flex justify-center py-4">
             <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
           </div>
