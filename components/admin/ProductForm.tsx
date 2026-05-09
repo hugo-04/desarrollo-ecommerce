@@ -299,7 +299,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               <p className="text-sm font-semibold text-amber-800">Completá los campos requeridos:</p>
               <ul className="mt-1 list-disc pl-4 text-xs text-amber-700">
                 {errors.name        && <li>Nombre del producto</li>}
-                {errors.description && <li>Descripción corta</li>}
                 {errors.image       && <li>Imagen principal</li>}
                 {errors.imageAlt    && <li>Nombre SEO de la imagen</li>}
                 {errors.category    && <li>Categoría</li>}
@@ -430,7 +429,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         </div>
 
         {/* ── Sección 2: Imagen principal ── */}
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-br from-white to-primary/[0.02] p-6 shadow-md ring-1 ring-primary/5">
           <SectionStep n={2} icon={ImageIcon} title="Imagen principal" subtitle="Foto del producto + nombre SEO" />
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -442,6 +441,16 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 value={image}
                 onChange={(v) => { setImage(v); if (v) setErrors((e) => ({ ...e, image: undefined })) }}
                 onTempKey={setImageTempKey}
+                onFileSelect={(filename) => {
+                  if (!imageAlt) setImageAlt(filename)
+                  if (!imageTitle) {
+                    // Convertir guiones o guiones bajos a espacios y capitalizar la primera letra
+                    const readableTitle = filename
+                      .replace(/[-_]/g, " ")
+                      .replace(/^\w/, (c) => c.toUpperCase())
+                    setImageTitle(readableTitle)
+                  }
+                }}
                 altValue={imageAlt}
                 onAltChange={(v) => { setImageAlt(v); if (v) setErrors((e) => ({ ...e, imageAlt: undefined })) }}
                 required
@@ -496,7 +505,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             <div>
               <div className="mb-1 flex items-center justify-between">
                 <label className="text-xs font-semibold text-slate-600">
-                  Descripción corta <span className="text-red-500">*</span>
+                  Descripción corta
                 </label>
                 <span className={`text-[11px] tabular-nums ${
                   description.length === 0     ? "text-slate-400"
@@ -513,7 +522,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               <textarea
                 name="description"
                 rows={4}
-                required
                 value={description}
                 onChange={(e) => setDesc(e.target.value)}
                 placeholder="Ej: Aislador polimérico para líneas de distribución de media tensión"

@@ -117,6 +117,8 @@ interface ImageUploadProps {
   aspect?: string
   /** Carpeta S3 destino — se valida en el servidor contra la whitelist */
   folder?: string
+  /** Emite el nombre del archivo subido (sin extensión) para auto-completar campos SEO */
+  onFileSelect?: (filename: string) => void
 }
 
 export function ImageUpload({
@@ -130,6 +132,7 @@ export function ImageUpload({
   error,
   aspect = "4/3",
   folder,
+  onFileSelect,
 }: ImageUploadProps) {
   const [uploading, setUploading]       = useState(false)
   const [uploadError, setUploadError]   = useState("")
@@ -140,6 +143,10 @@ export function ImageUpload({
       setUploading(true)
       setUploadError("")
       try {
+        if (onFileSelect) {
+          const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "")
+          onFileSelect(nameWithoutExt)
+        }
         const compressed = await compressToWebP(file)
         const fd = new FormData()
         fd.append("file", compressed)
@@ -284,12 +291,12 @@ export function ImageUpload({
         <div
           {...getRootProps()}
           onPaste={handlePaste}
-          className={`flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed transition-all ${
+          className={`flex min-h-[200px] cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed transition-all duration-300 ${
             isDragActive
-              ? "border-primary bg-primary/5 scale-[1.01]"
+              ? "border-primary bg-primary/10 scale-[1.02] shadow-lg shadow-primary/5"
               : displayError
               ? "border-red-300 bg-red-50"
-              : "border-slate-200 bg-slate-50/50 hover:border-primary/50 hover:bg-primary/[0.02]"
+              : "border-primary/30 bg-gradient-to-b from-primary/[0.02] to-primary/[0.05] hover:border-primary/60 hover:bg-primary/[0.08] hover:shadow-md"
           }`}
         >
           <input {...getInputProps()} />
@@ -302,17 +309,17 @@ export function ImageUpload({
           ) : (
             <>
               <div
-                className={`flex h-11 w-11 items-center justify-center rounded-xl border-2 border-dashed ${
-                  displayError ? "border-red-300" : "border-slate-200"
+                className={`flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-dashed shadow-sm transition-transform group-hover:scale-110 ${
+                  displayError ? "border-red-300 bg-red-50" : "border-primary/30 bg-white"
                 }`}
               >
-                <ImagePlus className={`h-5 w-5 ${displayError ? "text-red-400" : "text-slate-300"}`} />
+                <ImagePlus className={`h-6 w-6 ${displayError ? "text-red-400" : "text-primary/70"}`} />
               </div>
               <div className="text-center">
-                <p className={`text-sm font-semibold ${displayError ? "text-red-500" : "text-slate-600"}`}>
+                <p className={`text-base font-bold ${displayError ? "text-red-500" : "text-slate-700"}`}>
                   {isDragActive ? "Soltá la imagen aquí" : "Arrastrá o hacé clic para subir"}
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400">JPG, PNG, WebP · o pegá con Ctrl+V</p>
+                <p className="mt-1 text-xs font-medium text-slate-500">JPG, PNG, WebP · o pegá con Ctrl+V</p>
               </div>
               {/* Tip SEO de tamaño */}
               <div className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 text-[11px] text-blue-600">
