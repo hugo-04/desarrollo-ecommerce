@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { WA, CONTACT } from "@/lib/contact"
 import {
@@ -291,21 +292,39 @@ export function ContactoView() {
 
                   {/* Info items */}
                   <div className="space-y-5">
-                    {[
-                      { icon: IconMail,   label: "Correo",    value: CONTACT.email },
-                      { icon: IconMapPin, label: "Dirección", value: CONTACT.address },
-                      { icon: IconClock,  label: "Horario",   value: CONTACT.hours },
-                    ].map(({ icon: Icon, label, value }) => (
-                      <div key={label} className="flex items-start gap-3.5">
-                        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
-                          <Icon className="h-4 w-4 text-white/60" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-white/35">{label}</p>
-                          <p className="mt-0.5 text-sm font-semibold text-white/80">{value}</p>
-                        </div>
+                    <div className="flex items-start gap-3.5">
+                      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
+                        <IconMail className="h-4 w-4 text-white/60" />
                       </div>
-                    ))}
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-white/35">Correo</p>
+                        <p className="mt-0.5 text-sm font-semibold text-white/80">{CONTACT.email}</p>
+                      </div>
+                    </div>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.address)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3.5 group"
+                    >
+                      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.08] transition-colors group-hover:bg-[#FF6B35]/30">
+                        <IconMapPin className="h-4 w-4 text-white/60 transition-colors group-hover:text-[#FF6B35]" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-white/35">Dirección</p>
+                        <p className="mt-0.5 text-sm font-semibold text-white/80 group-hover:text-white transition-colors">{CONTACT.address}</p>
+                        <p className="text-[10px] text-white/30 group-hover:text-[#FF6B35] transition-colors">Ver en Google Maps ↗</p>
+                      </div>
+                    </a>
+                    <div className="flex items-start gap-3.5">
+                      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
+                        <IconClock className="h-4 w-4 text-white/60" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-white/35">Horario</p>
+                        <p className="mt-0.5 text-sm font-semibold text-white/80">{CONTACT.hours}</p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Trust note */}
@@ -503,9 +522,15 @@ export function ContactoView() {
               {/* Header del mapa */}
               <div className="flex items-center justify-between border-b border-slate-100 bg-white px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#003D73]/[0.07]">
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.address)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Abrir en Google Maps"
+                    className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#003D73]/[0.07] transition-colors hover:bg-[#FF6B35]/10"
+                  >
                     <IconMapPin className="h-4 w-4 text-[#003D73]" />
-                  </div>
+                  </a>
                   <div>
                     <p className="text-sm font-bold text-[#1e293b]">Nuestra ubicación — Los Olivos, Lima</p>
                     <p className="text-[11px] text-slate-500">{CONTACT.address}</p>
@@ -522,38 +547,30 @@ export function ContactoView() {
                 </a>
               </div>
 
-              {/* Placeholder visual del mapa */}
-              <div className="relative flex h-72 items-center justify-center overflow-hidden bg-[#EEF1F5] sm:h-80">
-                <div
-                  className="absolute inset-0 opacity-60"
-                  style={{
-                    backgroundImage: "linear-gradient(rgba(0,61,115,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,61,115,0.07) 1px, transparent 1px)",
-                    backgroundSize: "40px 40px",
-                  }}
+              {/* Imagen del mapa — clic abre Google Maps */}
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative block overflow-hidden"
+                title="Ver en Google Maps"
+              >
+                <Image
+                  src="/mapa-ubicacion.png"
+                  alt="Ubicación Insumind Perú — Los Olivos, Lima"
+                  width={1400}
+                  height={600}
+                  className="w-full h-auto transition-transform duration-500 group-hover:scale-[1.02]"
+                  priority
                 />
-                <div className="absolute h-64 w-64 rounded-full border border-[#0066B3]/10" />
-                <div className="absolute h-44 w-44 rounded-full border border-[#0066B3]/15" />
-                <div className="absolute h-28 w-28 rounded-full border border-[#0066B3]/20" />
-                <div className="relative z-10 flex flex-col items-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#003D73] shadow-xl shadow-[#003D73]/30 ring-4 ring-[#003D73]/15">
-                    <IconMapPin className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="mt-4 rounded-xl bg-white px-5 py-3 text-center shadow-lg">
-                    <p className="text-sm font-bold text-[#1e293b]">INSUMIND — Los Olivos</p>
-                    <p className="text-[11px] text-slate-500">La Floresta de Pro, Los Olivos, Lima</p>
-                    <p className="mt-1 text-[10px] text-slate-400">Atención con previa coordinación</p>
-                  </div>
+                {/* Overlay al hover */}
+                <div className="absolute inset-0 flex items-end justify-end bg-black/0 transition-colors duration-300 group-hover:bg-black/15 p-4">
+                  <span className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-[#003D73] shadow-lg opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                    <IconMapPin className="h-4 w-4 text-[#FF6B35]" />
+                    Abrir en Google Maps ↗
+                  </span>
                 </div>
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.address)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[11px] font-semibold text-[#003D73] shadow-md sm:hidden"
-                >
-                  Ver en Maps
-                  <IconArrowRight className="h-3 w-3" />
-                </a>
-              </div>
+              </a>
             </div>
           </motion.div>
         </div>

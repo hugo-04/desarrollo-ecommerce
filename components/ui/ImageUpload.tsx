@@ -158,6 +158,15 @@ export function ImageUpload({
     [onChange, onTempKey, folder],
   )
 
+  function handlePaste(e: React.ClipboardEvent) {
+    const items = Array.from(e.clipboardData.items)
+    const imageItem = items.find(i => i.type.startsWith("image/"))
+    if (imageItem) {
+      const file = imageItem.getAsFile()
+      if (file) uploadFile(file)
+    }
+  }
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "image/jpeg": [], "image/png": [], "image/webp": [] },
     maxFiles: 1,
@@ -188,7 +197,9 @@ export function ImageUpload({
       {value ? (
         /* ── Preview ──────────────────────────────────────────────── */
         <div
-          className="group relative overflow-hidden rounded-xl border-2 border-slate-200 bg-slate-50"
+          onPaste={handlePaste}
+          tabIndex={0}
+          className="group relative overflow-hidden rounded-xl border-2 border-slate-200 bg-slate-50 focus:outline-none"
           style={{ aspectRatio: aspect }}
         >
           <img
@@ -272,6 +283,7 @@ export function ImageUpload({
         /* ── Drop zone ─────────────────────────────────────────────── */
         <div
           {...getRootProps()}
+          onPaste={handlePaste}
           className={`flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed transition-all ${
             isDragActive
               ? "border-primary bg-primary/5 scale-[1.01]"
@@ -300,7 +312,7 @@ export function ImageUpload({
                 <p className={`text-sm font-semibold ${displayError ? "text-red-500" : "text-slate-600"}`}>
                   {isDragActive ? "Soltá la imagen aquí" : "Arrastrá o hacé clic para subir"}
                 </p>
-                <p className="mt-0.5 text-xs text-slate-400">JPG, PNG, WebP — se convierte a WebP automáticamente</p>
+                <p className="mt-0.5 text-xs text-slate-400">JPG, PNG, WebP · o pegá con Ctrl+V</p>
               </div>
               {/* Tip SEO de tamaño */}
               <div className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 text-[11px] text-blue-600">

@@ -62,6 +62,11 @@ export function PdfUploader({ label, value, onChange, onTempKey, onSeoNameChange
 
   const seoSlug = toSeoSlug(seoName)
 
+  function handlePaste(e: React.ClipboardEvent) {
+    const file = Array.from(e.clipboardData.files).find(f => f.type === "application/pdf")
+    if (file) handleFile(file)
+  }
+
   return (
     <div>
       <label className="mb-1.5 block text-xs font-semibold text-slate-600">{label}</label>
@@ -106,7 +111,9 @@ export function PdfUploader({ label, value, onChange, onTempKey, onSeoNameChange
         /* Vista: área de subida */
         <div
           onClick={() => inputRef.current?.click()}
-          className="flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-slate-200 p-4 transition-all hover:border-primary/40 hover:bg-primary/[0.02]"
+          onPaste={handlePaste}
+          tabIndex={0}
+          className="flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-slate-200 p-4 transition-all hover:border-primary/40 hover:bg-primary/[0.02] focus:outline-none focus:border-primary/40"
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100">
             {uploading ? (
@@ -119,7 +126,7 @@ export function PdfUploader({ label, value, onChange, onTempKey, onSeoNameChange
             <p className="text-sm font-medium text-slate-600">
               {uploading ? "Subiendo PDF…" : "Subir ficha técnica"}
             </p>
-            <p className="text-xs text-slate-400">Opcional · Solo PDF · Máx. 10 MB</p>
+            <p className="text-xs text-slate-400">Opcional · Solo PDF · Máx. 10 MB · o pega con Ctrl+V</p>
           </div>
         </div>
       )}
