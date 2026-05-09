@@ -25,7 +25,7 @@ export function LoginView() {
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="relative mb-5 flex flex-col items-center">
             <div className="pointer-events-none absolute inset-0 scale-150 rounded-full bg-white/10 blur-2xl" />
-            <img src="/logo/logotipo.svg" alt="Logo" className="relative h-14 w-auto object-contain"
+            <img src="/logo/insumind-logo.png" alt="Logo" className="relative h-14 w-auto object-contain"
               style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.6)) brightness(1.15)" }} />
           </div>
           <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cyan-400 drop-shadow-sm">Panel de Administración</p>

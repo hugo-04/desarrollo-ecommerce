@@ -56,7 +56,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
         <div className="relative z-10 px-4 py-4 border-b border-white/[0.05]">
           <div className="flex items-center gap-3">
             <img
-              src="/logo/logotipo.svg"
+              src="/logo/insumind-logo.png"
               alt="Logo"
               className="h-8 w-auto object-contain"
               style={{ filter: "drop-shadow(0 0 18px rgba(255,255,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,1)) brightness(1.4) contrast(1.1)" }}
@@ -137,7 +137,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
           >
             <Menu size={16} />
           </button>
-          <img src="/logo/logotipo.svg" alt="Logo" className="h-7 w-auto object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+          <img src="/logo/insumind-logo.png" alt="Logo" className="h-7 w-auto object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
           <span className="text-xs font-bold uppercase tracking-widest ml-1" style={{ color: 'var(--brand-orange)' }}>Admin</span>
         </div>
 
