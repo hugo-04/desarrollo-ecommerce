@@ -16,7 +16,7 @@ import { generateCategoryMeta, buildCategorySchema, SITE_URL } from "@/lib/seo"
 import { CategoriaView }         from "@/features/categorias/components/CategoriaView"
 import { PageViewTracker }       from "@/components/analytics/PageViewTracker"
 
-export const revalidate = 3600
+export const dynamic = "force-dynamic"
 
 const LIMIT = 20
 

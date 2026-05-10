@@ -12,7 +12,7 @@ import { SITE_URL, SITE_NAME, buildBrandsListSchema } from "@/lib/seo"
 import { IconChevronRight }        from "@/components/icons"
 import { PageViewTracker }         from "@/components/analytics/PageViewTracker"
 
-export const revalidate = 3600
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title:       `Marcas de Insumos Industriales y Mineros | ${SITE_NAME}`,

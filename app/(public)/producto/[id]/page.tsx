@@ -15,7 +15,7 @@ import { getProductAction, getRelatedProductsAction } from "@/features/productos
 import { generateProductMeta, buildProductSchema, SITE_URL } from "@/lib/seo"
 import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 
-export const revalidate = 3600
+export const dynamic = "force-dynamic"
 
 interface PageProps {
   params: Promise<{ id: string }>

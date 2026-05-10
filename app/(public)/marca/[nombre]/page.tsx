@@ -15,7 +15,7 @@ import { generateBrandMeta, buildBrandSchema, SITE_URL } from "@/lib/seo"
 import { MarcaView }               from "@/features/marcas/components/MarcaView"
 import { PageViewTracker }         from "@/components/analytics/PageViewTracker"
 
-export const revalidate = 3600
+export const dynamic = "force-dynamic"
 
 const LIMIT = 20
 

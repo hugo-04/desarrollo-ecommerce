@@ -3,6 +3,8 @@ import { getPublishedBlogPostsAction } from "@/features/blogs/actions"
 import { BlogCard } from "@/components/blog/BlogCard"
 import { SITE_URL, SITE_NAME } from "@/lib/seo"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   title:       "Blog | INSUMIND — Artículos sobre Insumos Industriales y Eléctricos",
   description: "Artículos, guías y consejos sobre insumos industriales, cables eléctricos, equipos antiexplosión y más. Blog técnico de Insumind Perú.",
