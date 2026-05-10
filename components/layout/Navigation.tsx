@@ -4,11 +4,12 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { Home, ShoppingBag, Users, PhoneCall, UserRound, X, Menu, ChevronDown, LayoutGrid } from "lucide-react"
+import { Home, ShoppingBag, Users, PhoneCall, UserRound, X, Menu, ChevronDown, LayoutGrid, Award, BookOpen } from "lucide-react"
 import { IconChevronRight, IconFire } from "@/components/icons"
 import { getCategoryIcon } from "@/lib/category-icons"
 
 import { useInfiniteCategories } from "@/features/categorias/hooks"
+import { useInfiniteBrands }    from "@/features/marcas/hooks"
 import { Search, Loader2 } from "lucide-react"
 
 // ========== MEGA MENU (botón izquierdo) ==========
@@ -174,8 +175,12 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                               onClick={() => setIsOpen(false)}
                               className="flex flex-1 items-center gap-3 py-3.5 pl-2 pr-1"
                             >
-                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#1B2B4B]/[0.07] text-[#1B2B4B]">
-                                <Icon className="h-4 w-4" />
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#1B2B4B]/[0.07] text-[#1B2B4B]">
+                                {cat.image && cat.image.startsWith("http") ? (
+                                  <img src={cat.image} alt={cat.imageAlt ?? cat.name} className="h-full w-full object-cover" />
+                                ) : (
+                                  <Icon className="h-4 w-4" />
+                                )}
                               </div>
                               <span className="text-sm font-semibold text-slate-700">{cat.name}</span>
                               {cat.count > 0 && (
@@ -224,9 +229,15 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                       key={sub.id}
                                       href={`/categoria/${cat.slug}?subId=${sub.id}`}
                                       onClick={() => setIsOpen(false)}
-                                      className="flex items-center gap-2 rounded-lg px-2 py-2.5 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[#1B2B4B]"
+                                      className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[#1B2B4B]"
                                     >
-                                      <span className="h-1 w-1 shrink-0 rounded-full bg-slate-300" />
+                                      {sub.image && sub.image.startsWith("http") ? (
+                                        <div className="flex h-6 w-6 shrink-0 overflow-hidden rounded-md">
+                                          <img src={sub.image} alt={sub.imageAlt ?? sub.name} className="h-full w-full object-cover" />
+                                        </div>
+                                      ) : (
+                                        <span className="h-1 w-1 shrink-0 rounded-full bg-slate-300" />
+                                      )}
                                       <span className="truncate">{sub.name}</span>
                                     </Link>
                                   ))}
@@ -332,12 +343,16 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                               onClick={() => setIsOpen(false)}
                               className="flex flex-1 items-center gap-2.5 px-3 py-2.5 pl-4"
                             >
-                              <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                              <div className={`flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-lg transition-colors ${
                                 isActive
                                   ? "bg-[#1B2B4B]/10 text-[#1B2B4B]"
                                   : "bg-slate-100 text-slate-400 group-hover:bg-[#1B2B4B]/10 group-hover:text-[#1B2B4B]"
                               }`}>
-                                <Icon className="h-3.5 w-3.5" />
+                                {cat.image && cat.image.startsWith("http") ? (
+                                  <img src={cat.image} alt={cat.imageAlt ?? cat.name} className="h-full w-full object-cover" />
+                                ) : (
+                                  <Icon className="h-3.5 w-3.5" />
+                                )}
                               </div>
                               <span className="text-[12px] font-semibold leading-tight">{cat.name}</span>
                               <IconChevronRight className={`ml-auto h-3 w-3 shrink-0 transition-all ${
@@ -392,11 +407,15 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                 key={sub.id}
                                 href={`/categoria/${activeCat.slug}?subId=${sub.id}`}
                                 onClick={() => setIsOpen(false)}
-                                className="group flex items-center gap-2 rounded-xl border border-transparent px-3 py-2.5 transition-all hover:border-slate-200 hover:bg-slate-50"
+                                className="group flex items-center gap-2.5 rounded-xl border border-transparent px-2.5 py-2 transition-all hover:border-slate-200 hover:bg-slate-50"
                               >
-                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#1B2B4B]/[0.07] text-[#1B2B4B] transition-colors group-hover:bg-[#1B2B4B]/15">
-                                  <IconChevronRight className="h-2.5 w-2.5" />
-                                </span>
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#1B2B4B]/[0.07] transition-colors group-hover:bg-[#1B2B4B]/15">
+                                  {sub.image && sub.image.startsWith("http") ? (
+                                    <img src={sub.image} alt={sub.imageAlt ?? sub.name} className="h-full w-full object-cover" />
+                                  ) : (
+                                    <IconChevronRight className="h-2.5 w-2.5 text-[#1B2B4B]" />
+                                  )}
+                                </div>
                                 <span className="truncate text-[12px] font-medium text-slate-600 transition-colors group-hover:text-[#1B2B4B]">
                                   {sub.name}
                                 </span>
@@ -535,39 +554,142 @@ function CatalogDropdown({ onClose }: { onClose: () => void }) {
   )
 }
 
+// ========== MARCAS DROPDOWN (tab Marcas del FluidNav) ==========
+function MarcasDropdown({ onClose }: { onClose: () => void }) {
+  const [search, setSearch]             = useState("")
+  const [debouncedSearch, setDebounced] = useState("")
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(search), 300)
+    return () => clearTimeout(timer)
+  }, [search])
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteBrands(debouncedSearch)
+  const brands = data?.pages.flatMap((p) => p.data) ?? []
+
+  const observerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) fetchNextPage()
+    }, { threshold: 0.1 })
+    if (observerRef.current) observer.observe(observerRef.current)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 6, scale: 0.97 }}
+      transition={{ duration: 0.15 }}
+      className="absolute top-full left-1/2 z-50 mt-2 w-72 -translate-x-1/2 overflow-hidden rounded-2xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.12)] ring-1 ring-slate-200"
+    >
+      {/* Header + Search */}
+      <div className="border-b border-slate-100 px-4 py-3 space-y-3">
+        <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-slate-400">Marcas</p>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar marca..."
+            className="w-full rounded-lg bg-slate-50 py-2 pl-9 pr-3 text-[12px] text-slate-700 outline-none ring-1 ring-slate-200 transition-all placeholder:text-slate-400 focus:bg-white focus:ring-[#1B2B4B]/40"
+          />
+        </div>
+      </div>
+
+      {/* Lista de marcas */}
+      <div className="max-h-[60vh] overflow-y-auto py-2 custom-scrollbar">
+        {/* Ver todas las marcas */}
+        <Link
+          href="/marcas"
+          onClick={onClose}
+          className="group flex items-center justify-between px-4 py-2.5 text-sm transition-colors hover:bg-slate-50"
+        >
+          <span className="font-semibold text-slate-700">Ver todas las marcas</span>
+          <span className="rounded-md bg-[#1B2B4B]/10 px-2 py-0.5 text-[10px] font-bold text-[#1B2B4B]">Todas</span>
+        </Link>
+
+        <div className="mx-4 my-1.5 h-px bg-slate-100" />
+
+        {status === "pending" ? (
+          <div className="flex justify-center py-4"><Loader2 className="h-4 w-4 animate-spin text-slate-300" /></div>
+        ) : brands.length === 0 ? (
+          <p className="py-4 text-center text-[11px] text-slate-400 italic">No hay resultados</p>
+        ) : (
+          <>
+            {brands.map((brand) => {
+              const hasLogo = brand.logo && brand.logo.startsWith("http")
+              return (
+                <Link
+                  key={brand.id}
+                  href={`/marca/${encodeURIComponent(brand.name)}`}
+                  onClick={onClose}
+                  className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50"
+                >
+                  <div className="flex h-7 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-100 transition-colors group-hover:bg-[#1B2B4B]/10">
+                    {hasLogo ? (
+                      <img src={brand.logo} alt={brand.logoAlt ?? brand.name} className="h-full w-full object-contain p-0.5" />
+                    ) : (
+                      <Award className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1B2B4B]" />
+                    )}
+                  </div>
+                  <span className="flex-1 truncate text-[13px] font-medium text-slate-600 transition-colors group-hover:text-[#1B2B4B]">
+                    {brand.name}
+                  </span>
+                  {brand.productCount !== undefined && (
+                    <span className="text-[10px] text-slate-400 group-hover:text-[#1B2B4B]">{brand.productCount}</span>
+                  )}
+                </Link>
+              )
+            })}
+            <div ref={observerRef} className="h-4 w-full">
+              {isFetchingNextPage && <div className="flex justify-center py-2"><Loader2 className="h-3 w-3 animate-spin text-slate-300" /></div>}
+            </div>
+          </>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
 // ========== FLUID NAV (desktop) ==========
-const TAB_W = 130
+const TAB_W = 100
 const TAB_GAP = 6
 
 function FluidNav() {
   const pathname = usePathname()
-  const [catalogOpen, setCatalogOpen] = useState(false)
-  const catalogRef = useRef<HTMLDivElement>(null)
-  const catalogTimeout = useRef<NodeJS.Timeout | null>(null)
+  const [marcasOpen, setMarcasOpen]   = useState(false)
+  const marcasRef                      = useRef<HTMLDivElement>(null)
+  const marcasTimeout                  = useRef<NodeJS.Timeout | null>(null)
 
   const tabs = [
-    { id: "/", label: "Inicio", icon: <Home size={14} />, hasDropdown: false },
-    { id: "/catalogo", label: "Productos", icon: <ShoppingBag size={14} />, hasDropdown: false },
-    { id: "/nosotros", label: "Nosotros", icon: <Users size={14} />, hasDropdown: false },
-    { id: "/contacto", label: "Contacto", icon: <PhoneCall size={14} />, hasDropdown: false },
+    { id: "/",         label: "Inicio",    icon: <Home size={14} />,        dropdown: null },
+    { id: "/catalogo", label: "Productos", icon: <ShoppingBag size={14} />, dropdown: null },
+    { id: "/marcas",   label: "Marcas",    icon: <Award size={14} />,       dropdown: "marcas" as const },
+    { id: "/blog",     label: "Blog",      icon: <BookOpen size={14} />,    dropdown: null },
+    { id: "/nosotros", label: "Nosotros",  icon: <Users size={14} />,       dropdown: null },
+    { id: "/contacto", label: "Contacto",  icon: <PhoneCall size={14} />,   dropdown: null },
   ]
 
   const activeIndex = (() => {
-    const i = tabs.findIndex(t => pathname === t.id || (t.id !== "/" && pathname.startsWith(t.id)))
+    const i = tabs.findIndex((t) => pathname === t.id || (t.id !== "/" && pathname.startsWith(t.id)))
     if (i !== -1) return i
-    if (pathname.startsWith("/producto") || pathname.startsWith("/categoria")) return tabs.findIndex(t => t.id === "/catalogo")
+    if (pathname.startsWith("/producto") || pathname.startsWith("/categoria")) return tabs.findIndex((t) => t.id === "/catalogo")
+    if (pathname.startsWith("/marca")) return tabs.findIndex((t) => t.id === "/marcas")
     return 0
   })()
-  // Cierra el dropdown al hacer click fuera
+
+  // Cierra marcas al click fuera
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (catalogRef.current && !catalogRef.current.contains(e.target as Node)) {
-        setCatalogOpen(false)
-      }
+      if (marcasRef.current && !marcasRef.current.contains(e.target as Node)) setMarcasOpen(false)
     }
-    if (catalogOpen) document.addEventListener("mousedown", handler)
+    if (marcasOpen) document.addEventListener("mousedown", handler)
     return () => document.removeEventListener("mousedown", handler)
-  }, [catalogOpen])
+  }, [marcasOpen])
 
   return (
     <div className="hidden lg:flex items-center shrink-0">
@@ -584,23 +706,18 @@ function FluidNav() {
         {tabs.map((tab, index) => {
           const isActive = index === activeIndex
 
-          if (tab.hasDropdown) {
+          if (tab.dropdown === "marcas") {
             return (
               <div
                 key={tab.id}
-                ref={catalogRef}
+                ref={marcasRef}
                 className="relative"
                 style={{ width: TAB_W }}
-                onMouseEnter={() => {
-                  if (catalogTimeout.current) clearTimeout(catalogTimeout.current)
-                  setCatalogOpen(true)
-                }}
-                onMouseLeave={() => {
-                  catalogTimeout.current = setTimeout(() => setCatalogOpen(false), 180)
-                }}
+                onMouseEnter={() => { if (marcasTimeout.current) clearTimeout(marcasTimeout.current); setMarcasOpen(true) }}
+                onMouseLeave={() => { marcasTimeout.current = setTimeout(() => setMarcasOpen(false), 180) }}
               >
                 <button
-                  onClick={() => setCatalogOpen((v) => !v)}
+                  onClick={() => setMarcasOpen((v) => !v)}
                   style={{ width: TAB_W }}
                   className={`flex items-center justify-center gap-1.5 py-3 pb-3.5 text-[13px] font-bold transition-colors duration-200 ${
                     isActive ? "text-white" : "text-white/60 hover:text-white hover:bg-white/5"
@@ -610,11 +727,11 @@ function FluidNav() {
                   <span>{tab.label}</span>
                   <ChevronDown
                     size={11}
-                    className={`transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""} ${isActive ? "text-white" : "text-white/40"}`}
+                    className={`transition-transform duration-200 ${marcasOpen ? "rotate-180" : ""} ${isActive ? "text-white" : "text-white/40"}`}
                   />
                 </button>
                 <AnimatePresence>
-                  {catalogOpen && <CatalogDropdown onClose={() => setCatalogOpen(false)} />}
+                  {marcasOpen && <MarcasDropdown onClose={() => setMarcasOpen(false)} />}
                 </AnimatePresence>
               </div>
             )
@@ -646,6 +763,8 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
   const tabs = [
     { id: "/",         label: "Inicio",    icon: <Home size={18} />        },
     { id: "/catalogo", label: "Productos", icon: <ShoppingBag size={18} /> },
+    { id: "/marcas",   label: "Marcas",    icon: <Award size={18} />       },
+    { id: "/blog",     label: "Blog",      icon: <BookOpen size={18} />    },
     { id: "/nosotros", label: "Nosotros",  icon: <Users size={18} />       },
     { id: "/contacto", label: "Contacto",  icon: <PhoneCall size={18} />   },
   ]
@@ -743,7 +862,7 @@ export function Navigation() {
               >
                 <Menu size={18} />
               </button>
-              {/* Mega menú — todos los dispositivos */}
+              {/* Mega menú categorías — todos los dispositivos */}
               <MegaMenu isOpen={megaMenuOpen} setIsOpen={setMegaMenuOpen} />
             </div>
 

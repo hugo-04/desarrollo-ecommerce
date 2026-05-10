@@ -47,14 +47,15 @@ export type CategorySaveData = Omit<CategoryDTO, "id" | "count" | "subcategories
 }
 
 interface CategoryFormProps {
-  initialData?: CategoryDTO
-  onSave: (data: CategorySaveData) => Promise<void>
-  onDelete?: () => Promise<void>
+  initialData?:  CategoryDTO
+  onSave:        (data: CategorySaveData) => Promise<void>
+  onDelete?:     () => Promise<void>
+  deleteWarning?: string
 }
 
 // ── Componente ─────────────────────────────────────────────────────────────────
 
-export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProps) {
+export function CategoryForm({ initialData, onSave, onDelete, deleteWarning }: CategoryFormProps) {
   const router    = useRouter()
   const isEditing = !!initialData
 
@@ -421,6 +422,7 @@ export function CategoryForm({ initialData, onSave, onDelete }: CategoryFormProp
             }
             itemName={initialData?.name ?? "esta categoría"}
             onConfirm={handleDelete}
+            warning={deleteWarning}
           />
         )}
       </div>

@@ -1,10 +1,5 @@
 "use client"
 
-/**
- * /marcas/[id]/editar — Editar marca existente.
- * Carga la marca por ID y delega el formulario a BrandForm.
- */
-
 import { useRouter, useParams } from "next/navigation"
 import { useBrand, useUpdateBrand, useDeleteBrand } from "@/features/marcas/hooks"
 import { BrandForm } from "@/components/admin/BrandForm"
@@ -21,7 +16,7 @@ export default function EditarMarcaPage() {
   const deleteBrand = useDeleteBrand()
 
   if (isNaN(numId)) {
-    router.replace("/marcas")
+    router.replace("/gestion-marcas")
     return null
   }
 
@@ -35,26 +30,26 @@ export default function EditarMarcaPage() {
   }
 
   if (!brand) {
-    router.replace("/marcas")
+    router.replace("/gestion-marcas")
     return null
   }
 
   async function handleSave(data: any) {
     await updateBrand.mutateAsync({ id: numId, data })
     toast.success("Marca actualizada correctamente")
-    router.push("/marcas")
+    router.push("/gestion-marcas")
   }
 
   async function handleDelete() {
     await deleteBrand.mutateAsync(numId)
     toast.success(`"${brand!.name}" eliminada correctamente`)
-    router.push("/marcas")
+    router.push("/gestion-marcas")
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className="w-full">
       <AdminFormHeader
-        backHref="/marcas"
+        backHref="/gestion-marcas"
         backLabel="Volver a Marcas"
         title="Editar Marca"
         subtitle={<>Modificando: <span className="font-semibold text-slate-700">{brand.name}</span></>}

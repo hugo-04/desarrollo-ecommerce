@@ -1,6 +1,8 @@
 import { SEO, SITE_URL, SITE_NAME } from "@/lib/seo"
 import { NosotrosView } from "@/components/views/NosotrosView"
+import { getNosotrosDataAction } from "@/features/nosotros/actions"
 
+export const dynamic = "force-dynamic"
 export const metadata = SEO.nosotros
 
 const aboutPageSchema = {
@@ -41,20 +43,21 @@ const aboutPageSchema = {
   breadcrumb: {
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Inicio",     item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Nosotros",   item: `${SITE_URL}/nosotros` },
+      { "@type": "ListItem", position: 1, name: "Inicio",   item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Nosotros", item: `${SITE_URL}/nosotros` },
     ],
   },
 }
 
-export default function NosotrosPage() {
+export default async function NosotrosPage() {
+  const data = await getNosotrosDataAction()
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutPageSchema) }}
       />
-      <NosotrosView />
+      <NosotrosView data={data} />
     </>
   )
 }

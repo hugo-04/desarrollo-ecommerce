@@ -1,12 +1,9 @@
 "use client"
 
-/**
- * /categorias/[id]/editar — Editar categoría existente.
- * Carga la categoría por ID y delega el formulario a CategoryForm.
- */
-
 import { useRouter, useParams } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
 import { useCategory, useUpdateCategory, useDeleteCategory } from "@/features/categorias/hooks"
+import { getCategoryProductCountAction } from "@/features/categorias/actions"
 import { CategoryForm, type CategorySaveData } from "@/components/admin/CategoryForm"
 import { AdminFormHeader } from "@/components/admin/AdminFormHeader"
 import { toast } from "sonner"
@@ -17,6 +14,11 @@ export default function EditarCategoriaPage() {
   const numId = parseInt(id, 10)
 
   const { data: category, isLoading } = useCategory(numId)
+  const { data: productCount = 0 } = useQuery({
+    queryKey: ["category-product-count", numId],
+    queryFn:  () => getCategoryProductCountAction(numId),
+    enabled:  !!numId && !isNaN(numId),
+  })
   const updateCategory = useUpdateCategory()
   const deleteCategory = useDeleteCategory()
 
@@ -64,6 +66,11 @@ export default function EditarCategoriaPage() {
         initialData={category}
         onSave={handleSave}
         onDelete={handleDelete}
+        deleteWarning={
+          productCount > 0
+            ? `No se puede eliminar: tiene ${productCount} producto${productCount > 1 ? "s" : ""} asociado${productCount > 1 ? "s" : ""}. Reasigná o eliminá los productos primero.`
+            : undefined
+        }
       />
     </div>
   )

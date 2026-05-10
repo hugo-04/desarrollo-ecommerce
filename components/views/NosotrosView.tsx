@@ -11,6 +11,15 @@ import {
   fadeUp, fadeLeft, fadeRight, staggerContainer,
   viewportOnce, useCountUp,
 } from "@/hooks/useAnimations"
+import type { NosotrosData, NosotrosIconKey } from "@/features/nosotros/types"
+
+// ── Mapa de íconos por key ────────────────────────────────────────────────────
+const ICON_MAP: Record<NosotrosIconKey, React.ElementType> = {
+  shield:     IconShield,
+  truck:      IconTruck,
+  bolt:       IconBolt,
+  headphones: IconHeadphones,
+}
 
 // ── Stat con counter animado ──────────────────────────────────────────────────
 function AnimatedStat({ end, suffix = "", label }: { end: number; suffix?: string; label: string }) {
@@ -26,30 +35,8 @@ function AnimatedStat({ end, suffix = "", label }: { end: number; suffix?: strin
 }
 
 // ── Vista principal ───────────────────────────────────────────────────────────
-export function NosotrosView() {
-
-  const valores = [
-    {
-      icon: IconShield,
-      title: "Garantía de Originalidad",
-      description: "Todos nuestros productos son 100% originales con certificado de autenticidad y trazabilidad de lote. Nunca vendemos imitaciones ni productos reacondicionados.",
-    },
-    {
-      icon: IconTruck,
-      title: "Entrega Oportuna",
-      description: "Almacén propio en Los Olivos, Lima. Más de 500 referencias disponibles para entrega al día siguiente de confirmado tu depósito. Sin esperas de importación.",
-    },
-    {
-      icon: IconBolt,
-      title: "Asesoría Técnica Gratuita",
-      description: "Nuestros asesores te ayudan a identificar el producto correcto para tu equipo, modelo y condiciones de operación — sin costo adicional.",
-    },
-    {
-      icon: IconHeadphones,
-      title: "Responsabilidad Postventa",
-      description: "Si un producto presenta alguna falla de fabricación, gestionamos la garantía con el fabricante. Comprometidos con la satisfacción total de nuestros clientes.",
-    },
-  ]
+export function NosotrosView({ data }: { data: NosotrosData }) {
+  const { hero, stats, historia, mision, vision, valores, cta } = data
 
   return (
     <>
@@ -82,7 +69,7 @@ export function NosotrosView() {
           <motion.div variants={fadeUp} className="mb-6 flex justify-center">
             <span className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.07] px-5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-white/60 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35] animate-pulse" />
-              Quiénes somos
+              {hero.badge}
             </span>
           </motion.div>
 
@@ -91,12 +78,7 @@ export function NosotrosView() {
             variants={fadeUp}
             className="mx-auto mb-5 max-w-3xl text-center text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl"
           >
-            Somos{" "}
-            <span className="relative inline-block">
-              <span className="relative z-10 text-[#FF6B35]">INSUMIND</span>
-            </span>
-            {" "}— Tu Distribuidora Peruana de{" "}
-            <span className="text-[#FF6B35]">Insumos Industriales</span> y Mineros
+            {hero.h1}
           </motion.h1>
 
           {/* Subtitle */}
@@ -104,18 +86,16 @@ export function NosotrosView() {
             variants={fadeUp}
             className="mx-auto mb-14 max-w-2xl text-center text-sm leading-relaxed text-slate-400 sm:text-base"
           >
-            Insumind Perú S.A.C. — Insumos Mineros Industriales. Empresa peruana especializada
-            en la distribución de insumos industriales y mineros de alta calidad con garantía de originalidad.
+            {hero.subtitle}
           </motion.p>
 
           {/* Stats strip */}
           <motion.div variants={fadeUp}>
             <div className="mx-auto max-w-3xl overflow-hidden rounded-t-3xl border border-b-0 border-white/[0.08] bg-white/[0.04] backdrop-blur-sm">
               <div className="grid grid-cols-2 divide-x divide-white/[0.07] sm:grid-cols-4 divide-y sm:divide-y-0 border-white/[0.07]">
-                <AnimatedStat end={500} suffix="+" label="Referencias en Stock" />
-                <AnimatedStat end={20}  suffix="+" label="Marcas Originales" />
-                <AnimatedStat end={5}   suffix=""  label="Categorías" />
-                <AnimatedStat end={98}  suffix="%" label="Clientes Satisfechos" />
+                {stats.map((stat, i) => (
+                  <AnimatedStat key={i} end={stat.end} suffix={stat.suffix} label={stat.label} />
+                ))}
               </div>
             </div>
           </motion.div>
@@ -139,28 +119,18 @@ export function NosotrosView() {
               <div className="mb-4 flex items-center gap-3">
                 <div className="h-px w-8 bg-[#0066B3]" />
                 <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#0066B3]">
-                  Nuestra Historia
+                  {historia.sectionLabel}
                 </span>
               </div>
               <h2 className="mb-5 text-3xl font-extrabold leading-tight tracking-tight text-[#1e293b] lg:text-4xl">
-                Empresa peruana con un propósito claro: ser el proveedor más confiable de insumos industriales
+                {historia.h2}
               </h2>
-              <p className="mb-4 text-sm leading-[1.9] text-slate-600">
-                Insumind Perú S.A.C. — cuyo nombre significa Insumos Mineros Industriales — es una empresa
-                peruana fundada con un propósito claro: ser el proveedor más confiable y eficiente de materiales
-                y accesorios industriales para las empresas mineras, constructoras, manufactureras y pesqueras del Perú.
-              </p>
-              <p className="mb-8 text-sm leading-[1.9] text-slate-600">
-                Nacimos de la experiencia directa en el sector industrial peruano, comprendiendo la necesidad crítica
-                que tienen las empresas de contar con un proveedor serio, formal y rápido que garantice la autenticidad
-                de cada producto. En el mercado industrial, una pieza falsa o de baja calidad no solo genera pérdidas
-                económicas — puede paralizar operaciones completas y comprometer la seguridad de los trabajadores.
-                Por eso, en INSUMIND solo distribuimos productos 100% originales con garantía de fábrica y trazabilidad de lote.
-              </p>
+              <p className="mb-4 text-sm leading-[1.9] text-slate-600">{historia.p1}</p>
+              <p className="mb-8 text-sm leading-[1.9] text-slate-600">{historia.p2}</p>
 
               {/* Trust badges */}
               <div className="flex flex-wrap gap-2">
-                {["Productos 100% Originales", "RUC Activo SUNAT", "Factura Electrónica", "Stock Lima"].map((b) => (
+                {historia.trustBadges.map((b) => (
                   <span
                     key={b}
                     className="inline-flex items-center gap-1.5 rounded-full border border-[#0066B3]/20 bg-[#0066B3]/[0.05] px-3 py-1 text-[11px] font-bold text-[#0066B3]"
@@ -176,8 +146,8 @@ export function NosotrosView() {
             <motion.div variants={fadeRight} className="relative">
               <div className="relative overflow-hidden rounded-3xl shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?w=900&q=80"
-                  alt="Almacén de insumos industriales y mineros en Lima, Perú — INSUMIND"
+                  src={historia.imageUrl}
+                  alt={historia.imageAlt}
                   className="h-[420px] w-full object-cover lg:h-[500px]"
                 />
                 {/* Gradient overlay bottom */}
@@ -186,12 +156,12 @@ export function NosotrosView() {
                 <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-white/50">Sede en</p>
-                    <p className="text-xl font-black text-white">Los Olivos</p>
+                    <p className="text-xl font-black text-white">{historia.overlayCity}</p>
                     <p className="text-sm font-bold text-white/70">Lima, Perú</p>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-white/50">Stock</p>
-                    <p className="text-2xl font-black text-white">500+</p>
+                    <p className="text-2xl font-black text-white">{historia.overlayStock}</p>
                     <p className="text-xs font-bold text-white/70">referencias</p>
                   </div>
                 </div>
@@ -233,23 +203,17 @@ export function NosotrosView() {
             <div className="mb-8 h-1 w-14 rounded-full bg-[#FF6B35]" />
 
             <p className="mb-3 text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B35]">
-              Misión
+              {mision.badge}
             </p>
             <h3 className="mb-5 text-2xl font-extrabold leading-snug text-white sm:text-3xl lg:text-4xl">
-              Proveer a la industria y minería peruana con insumos originales y de calidad
+              {mision.h3}
             </h3>
             <p className="mb-8 max-w-md text-sm leading-[1.9] text-slate-300">
-              Ser el socio estratégico de abastecimiento más confiable del Perú — proveyendo insumos originales
-              con entrega oportuna, precios competitivos y asesoría técnica especializada para que las operaciones
-              industriales nunca se detengan.
+              {mision.description}
             </p>
 
             <ul className="space-y-3">
-              {[
-                "Productos 100% originales con garantía de fábrica",
-                "Asesoría técnica especializada sin costo adicional",
-                "Stock permanente · entrega al día siguiente en Lima",
-              ].map((item) => (
+              {mision.bullets.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm text-white/70">
                   <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#FF6B35]/20">
                     <IconCheck className="h-3 w-3 text-[#FF6B35]" />
@@ -278,23 +242,17 @@ export function NosotrosView() {
             <div className="mb-8 h-1 w-14 rounded-full bg-[#0066B3]" />
 
             <p className="mb-3 text-[10px] font-black uppercase tracking-[0.4em] text-[#0066B3]">
-              Visión
+              {vision.badge}
             </p>
             <h3 className="mb-5 text-2xl font-extrabold leading-snug text-[#1e293b] sm:text-3xl lg:text-4xl">
-              Ser la distribuidora industrial de referencia a nivel nacional
+              {vision.h3}
             </h3>
             <p className="mb-8 max-w-md text-sm leading-[1.9] text-slate-500">
-              Ser reconocidos por la garantía, confianza y calidad de cada producto que distribuimos,
-              expandiendo nuestra presencia en los principales sectores productivos del Perú: minería,
-              construcción, manufactura, pesca y agroindustria.
+              {vision.description}
             </p>
 
             <ul className="space-y-3">
-              {[
-                "Cobertura nacional en proyectos industriales y mineros",
-                "Referente en distribución de insumos originales en el Perú",
-                "Socio estratégico de empresas de todos los sectores productivos",
-              ].map((item) => (
+              {vision.bullets.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
                   <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0066B3]/10">
                     <IconCheck className="h-3 w-3 text-[#0066B3]" />
@@ -329,7 +287,7 @@ export function NosotrosView() {
                 <div className="h-px w-8 bg-[#0066B3]" />
               </div>
               <h2 className="text-3xl font-extrabold tracking-tight text-[#1e293b] lg:text-4xl">
-                "Garantía y Confianza en cada Insumo"
+                &ldquo;Garantía y Confianza en cada Insumo&rdquo;
               </h2>
               <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">
                 Cuatro pilares que guían cada cotización, cada entrega y cada asesoría técnica que realizamos.
@@ -341,25 +299,28 @@ export function NosotrosView() {
               variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
               className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
             >
-              {valores.map((valor, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeUp}
-                  whileHover={{ y: -6, transition: { duration: 0.25 } }}
-                  className="group relative rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-500 hover:border-[#FF6B35]/30 hover:shadow-xl"
-                >
-                  {/* Top accent */}
-                  <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl bg-gradient-to-r from-[#FF6B35]/0 via-[#FF6B35] to-[#FF6B35]/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              {valores.map((valor, index) => {
+                const Icon = ICON_MAP[valor.iconKey] ?? IconShield
+                return (
+                  <motion.div
+                    key={index}
+                    variants={fadeUp}
+                    whileHover={{ y: -6, transition: { duration: 0.25 } }}
+                    className="group relative rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-500 hover:border-[#FF6B35]/30 hover:shadow-xl"
+                  >
+                    {/* Top accent */}
+                    <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl bg-gradient-to-r from-[#FF6B35]/0 via-[#FF6B35] to-[#FF6B35]/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-                  {/* Icono */}
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#003D73]/[0.07] text-[#003D73] transition-all duration-300 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:shadow-lg group-hover:shadow-[#FF6B35]/25">
-                    <valor.icon className="h-5 w-5" />
-                  </div>
+                    {/* Icono */}
+                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#003D73]/[0.07] text-[#003D73] transition-all duration-300 group-hover:bg-[#FF6B35] group-hover:text-white group-hover:shadow-lg group-hover:shadow-[#FF6B35]/25">
+                      <Icon className="h-5 w-5" />
+                    </div>
 
-                  <h3 className="mb-2.5 text-sm font-extrabold text-[#1e293b]">{valor.title}</h3>
-                  <p className="text-sm leading-relaxed text-slate-500">{valor.description}</p>
-                </motion.div>
-              ))}
+                    <h3 className="mb-2.5 text-sm font-extrabold text-[#1e293b]">{valor.title}</h3>
+                    <p className="text-sm leading-relaxed text-slate-500">{valor.description}</p>
+                  </motion.div>
+                )
+              })}
             </motion.div>
           </motion.div>
         </div>
@@ -380,10 +341,10 @@ export function NosotrosView() {
           className="relative mx-auto max-w-4xl px-4 py-20 text-center lg:py-24"
         >
           <motion.h2 variants={fadeUp} className="mb-4 text-3xl font-extrabold tracking-tight text-white lg:text-4xl">
-            ¿Listo para trabajar con una distribuidora industrial de confianza?
+            {cta.h2}
           </motion.h2>
           <motion.p variants={fadeUp} className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-white/75">
-            Contáctanos hoy y descubre por qué las empresas industriales y mineras del Perú confían en Insumind Perú S.A.C.
+            {cta.description}
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4">
             <a

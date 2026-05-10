@@ -396,6 +396,88 @@ export function buildCategorySchema(
   }
 }
 
+export function brandUrl(name: string): string {
+  return `/marca/${encodeURIComponent(name)}`
+}
+
+export function generateBrandMeta(brand: {
+  name: string
+  description?: string | null
+  logo?: string | null
+}): Metadata {
+  const title       = `${brand.name} — Productos Industriales y Mineros | ${SITE_NAME}`
+  const description = (brand.description?.trim())
+    || `${brand.name} — insumos industriales y mineros originales con garantía de fábrica. Stock permanente en Lima, Perú. Cotización inmediata.`
+  const url         = brandUrl(brand.name)
+  const ogImage     = (brand.logo && brand.logo.startsWith("http")) ? brand.logo : OG_IMAGE
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      ...defaultOG,
+      url,
+      title,
+      description,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${brand.name} — ${SITE_NAME}` }],
+    },
+    twitter: {
+      card:        "summary_large_image",
+      title,
+      description,
+      images:      [ogImage],
+    },
+  }
+}
+
+export function buildBrandSchema(
+  brand: { name: string; description?: string | null; logo?: string | null },
+  productNames: string[] = [],
+) {
+  const url = `${SITE_URL}${brandUrl(brand.name)}`
+
+  return {
+    "@context":  "https://schema.org",
+    "@type":     "CollectionPage",
+    "@id":       `${url}#collection`,
+    name:        `Productos ${brand.name} — Insumos Industriales`,
+    description: brand.description ?? `${brand.name} — insumos industriales y mineros originales con garantía. Stock en Lima, Perú.`,
+    url,
+    inLanguage:  "es-PE",
+    about: {
+      "@type": "Brand",
+      name:    brand.name,
+      ...(brand.logo && brand.logo.startsWith("http") && { logo: brand.logo }),
+    },
+    provider: { "@type": "Organization", "@id": `${SITE_URL}/#organization`, name: SITE_NAME, url: SITE_URL },
+    ...(productNames.length > 0 && {
+      mainEntity: {
+        "@type":         "ItemList",
+        numberOfItems:   productNames.length,
+        itemListElement: productNames.map((name, i) => ({
+          "@type":   "ListItem",
+          position:  i + 1,
+          name,
+        })),
+      },
+    }),
+  }
+}
+
+export function buildBrandsListSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type":    "CollectionPage",
+    "@id":      `${SITE_URL}/marcas#collection`,
+    name:       "Marcas de Insumos Industriales y Mineros — INSUMIND",
+    description: "Catálogo de marcas líderes de insumos industriales y mineros disponibles en Insumind Perú. SKF, Parker, Gates, Donaldson, Timken y más.",
+    url:        `${SITE_URL}/marcas`,
+    inLanguage: "es-PE",
+    provider:   { "@type": "Organization", "@id": `${SITE_URL}/#organization`, name: SITE_NAME, url: SITE_URL },
+  }
+}
+
 export function buildProductSchema(product: {
   id: number
   name: string

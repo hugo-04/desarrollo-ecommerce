@@ -136,9 +136,16 @@ export async function updateCategoryAction(id: number, data: UpdateCategoryDTO) 
   return result
 }
 
+export async function getCategoryProductCountAction(id: number): Promise<number> {
+  return db.product.count({ where: { categoryId: id } })
+}
+
 export async function deleteCategoryAction(id: number) {
   const session = await getSession()
   if (!session) throw new Error("No autorizado")
+  const productCount = await db.product.count({ where: { categoryId: id } })
+  if (productCount > 0)
+    throw new Error(`No se puede eliminar: la categoría tiene ${productCount} producto${productCount > 1 ? "s" : ""} asociado${productCount > 1 ? "s" : ""}. Reasigná o eliminá los productos primero.`)
   const category = await getService().getById(id)
   const result = await getService().delete(id)
   if (category?.image) await deleteFromS3(category.image)

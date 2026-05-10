@@ -10,7 +10,7 @@ import { PrismaClient, Prisma } from "@prisma/client"
 
 // ─── Tipos internos ────────────────────────────────────────────────────────────
 
-type SubRow = { id: number; name: string }
+type SubRow = { id: number; name: string; image: string; imageAlt: string | null }
 
 type CategoryRow = {
   id:          number
@@ -59,7 +59,12 @@ export class DbCategoryRepository implements ICategoryRepository {
       imageTitle:      c.imageTitle  ?? undefined,
       description:     c.description ?? undefined,
       subcategories:   c.subs.map((s) => s.name),
-      subcategoryItems: c.subs.map((s) => ({ id: s.id, name: s.name })),
+      subcategoryItems: c.subs.map((s) => ({
+        id:       s.id,
+        name:     s.name,
+        image:    s.image || undefined,
+        imageAlt: s.imageAlt ?? undefined,
+      })),
       keywords:        c.keywords,
       count:           c.count,
       featured:        c.featured,

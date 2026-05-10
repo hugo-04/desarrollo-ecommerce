@@ -9,6 +9,7 @@ export const brandSchema = z.object({
   logo:           z.string().optional(),
   logoAlt:        z.string().max(125, "Máximo 125 caracteres para el alt text").optional(),
   showInCarousel: z.boolean(),
+  description:    z.string().max(320, "Máximo 320 caracteres para la descripción SEO").optional(),
 }).superRefine((data, ctx) => {
   if (data.showInCarousel && !data.logo?.trim()) {
     ctx.addIssue({

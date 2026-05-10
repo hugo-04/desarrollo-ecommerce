@@ -87,7 +87,7 @@ function BrandRow({ brand, index, removingId, onDelete }: BrandRowProps) {
       <TableCell className="px-4 py-3">
         <div className="flex gap-2">
           <Button asChild variant="outline" size="xs">
-            <Link href={`/marcas/${brand.id}/editar`}>Editar</Link>
+            <Link href={`/gestion-marcas/${brand.id}/editar`}>Editar</Link>
           </Button>
           <DeleteDialog
             trigger={
@@ -136,7 +136,7 @@ export function AdminMarcasView() {
       <AdminListHeader
         title="Marcas"
         subtitle={loading || fetching ? "Cargando…" : `${total} marca${total !== 1 ? "s" : ""}`}
-        newHref="/marcas/nueva"
+        newHref="/gestion-marcas/nueva"
         newLabel="Nueva marca"
         searchValue={search}
         searchPlaceholder="Buscar marca…"

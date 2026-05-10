@@ -42,8 +42,14 @@ model AdminUser {
 // Subcategorías (entidad propia — many-to-many con Category)
 // ──────────────────────────────────────────────────────────
 model Subcategory {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String?  @unique
+  image       String   @default("")
+  imageAlt    String?
+  imageTitle  String?
+  description String   @default("")
+  keywords    String[]
 
   categories Category[]
   products   Product[]
@@ -90,6 +96,7 @@ model Brand {
   logo           String  @default("")
   logoAlt        String?
   showInCarousel Boolean @default(false)
+  description    String?
 
   products Product[]
 
@@ -132,6 +139,106 @@ model Reclamacion {
   @@index([estado])
   @@index([createdAt(sort: Desc)])
   @@map("reclamaciones")
+}
+
+// ──────────────────────────────────────────────────────────
+// Hero Slider (portada principal del sitio)
+// ──────────────────────────────────────────────────────────
+model HeroSlide {
+  id       Int     @id @default(autoincrement())
+  label    String
+  image    String  @default("")
+  imageAlt String?
+  gradient String  @default("from-[#003D73] via-[#00316b] to-[#00244f]")
+  order    Int     @default(0)
+  active   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active, order])
+  @@map("hero_slides")
+}
+
+// ──────────────────────────────────────────────────────────
+// Blog
+// ──────────────────────────────────────────────────────────
+model BlogPost {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  excerpt     String   @default("")
+  content     String   @default("")
+  coverImage  String   @default("")
+  coverAlt    String?
+  image2      String   @default("")
+  image2Alt   String?
+  image3      String   @default("")
+  image3Alt   String?
+  tag         String?
+  tagCategory String?
+  metaTitle   String?
+  metaDesc    String?
+  keywords    String[]
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([published, createdAt(sort: Desc)])
+  @@map("blog_posts")
+}
+
+// ──────────────────────────────────────────────────────────
+// Nosotros — contenido editable (singleton, id=1)
+// ──────────────────────────────────────────────────────────
+model NosotrosConfig {
+  id        Int      @id @default(1)
+  data      Json
+  updatedAt DateTime @updatedAt
+
+  @@map("nosotros_config")
+}
+
+// ──────────────────────────────────────────────────────────
+// Especialidades (sección "Nuestras especialidades" del home)
+// ──────────────────────────────────────────────────────────
+model Especialidad {
+  id          Int     @id @default(autoincrement())
+  title       String
+  subtitle    String  @default("")
+  description String  @default("")
+  image       String  @default("")
+  imageAlt    String?
+  gradient    String  @default("from-[#1B2B4B] to-[#003D73]")
+  order       Int     @default(0)
+  active      Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active, order])
+  @@map("especialidades")
+}
+
+// ──────────────────────────────────────────────────────────
+// Entidades Bancarias (sección "Medios de Pago" del footer)
+// ──────────────────────────────────────────────────────────
+model EntidadBancaria {
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  logo       String  @default("")
+  logoAlt    String?
+  nroCuenta  String?
+  nroCci     String?
+  order      Int     @default(0)
+  active     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active, order])
+  @@map("entidades_bancarias")
 }
 
 // ──────────────────────────────────────────────────────────

@@ -39,6 +39,10 @@ export async function getBrandByIdAction(id: number) {
   return getService().getById(id)
 }
 
+export async function getBrandByNameAction(name: string) {
+  return getService().getByName(name)
+}
+
 // ─── CRUD admin (requieren sesión activa) ─────────────────────────────────────
 
 export async function createBrandAction(data: CreateBrandDTO) {
@@ -47,6 +51,7 @@ export async function createBrandAction(data: CreateBrandDTO) {
   const result = await getService().create(data)
   revalidatePath("/catalogo")
   revalidatePath("/marcas")
+  revalidatePath("/marca/[nombre]", "page")
   revalidatePath("/")
   return result
 }
@@ -60,6 +65,7 @@ export async function updateBrandAction(id: number, data: UpdateBrandDTO) {
     await deleteFromS3(old.logo)
   revalidatePath("/catalogo")
   revalidatePath("/marcas")
+  revalidatePath("/marca/[nombre]", "page")
   revalidatePath("/producto/[id]", "page")
   revalidatePath("/")
   return result
@@ -73,6 +79,7 @@ export async function deleteBrandAction(id: number) {
   if (brand?.logo) await deleteFromS3(brand.logo)
   revalidatePath("/catalogo")
   revalidatePath("/marcas")
+  revalidatePath("/marca/[nombre]", "page")
   revalidatePath("/")
   return result
 }

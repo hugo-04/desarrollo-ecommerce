@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { IconPhone, IconMail, IconMapPin, IconClock } from "@/components/icons"
 import { CONTACT } from "@/lib/contact"
+import { useEntidadesBancariasActivas } from "@/features/entidades-bancarias/hooks"
 
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
@@ -18,6 +19,9 @@ const LEGAL_LINKS = [
 ]
 
 export function Footer() {
+  const { data: entidades } = useEntidadesBancariasActivas()
+  const hasEntidades = entidades && entidades.length > 0
+
   return (
     <footer className="relative bg-[#003D73] text-white">
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#FF6B35] to-transparent" />
@@ -30,7 +34,7 @@ export function Footer() {
         ════════════════════════════════════════ */}
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-10 lg:gap-14">
 
-          {/* Col 1 — Marca (ancho completo en mobile, 1 col en desktop) */}
+          {/* Col 1 — Marca */}
           <div className="col-span-2 sm:col-span-1">
             <Image
               src="/logo/insumind-logo.png"
@@ -85,7 +89,7 @@ export function Footer() {
             </Link>
           </div>
 
-          {/* Col 4 — Contacto (ancho completo en mobile, 1 col en desktop) */}
+          {/* Col 4 — Contacto */}
           <div className="col-span-2 sm:col-span-1">
             <h3 className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-white/60">
               <span className="h-px w-3 bg-[#FF6B35]/60" />
@@ -116,8 +120,47 @@ export function Footer() {
           </div>
         </div>
 
+        {/* ════════════════════════════════════════
+            MEDIOS DE PAGO / ENTIDADES BANCARIAS
+        ════════════════════════════════════════ */}
+        {hasEntidades && (
+          <div className="mt-8 border-t border-white/[0.06] pt-6">
+            <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.3em] text-white/35">
+              Medios de Pago
+            </p>
+            <div className="flex flex-wrap items-start gap-2">
+              {entidades.map((ent) => (
+                <div
+                  key={ent.id}
+                  title={ent.name}
+                  className="flex flex-col items-center gap-1 rounded-lg bg-white/[0.08] px-3 py-2 ring-1 ring-white/10 transition-colors hover:bg-white/[0.14]"
+                >
+                  {/* Logo o nombre */}
+                  {ent.logo && ent.logo.startsWith("http") ? (
+                    <img
+                      src={ent.logo}
+                      alt={ent.logoAlt ?? ent.name}
+                      className="h-5 w-auto max-w-[60px] object-contain"
+                    />
+                  ) : (
+                    <span className="text-[11px] font-semibold text-white/60">{ent.name}</span>
+                  )}
+                  {/* Número de cuenta */}
+                  {ent.nroCuenta && (
+                    <span className="font-mono text-[9px] text-white/50 leading-tight">{ent.nroCuenta}</span>
+                  )}
+                  {/* CCI */}
+                  {ent.nroCci && (
+                    <span className="font-mono text-[8px] text-white/35 leading-tight">CCI: {ent.nroCci}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── Copyright + RUC ── */}
-        <div className="mt-10 border-t border-white/5 pt-5 text-center text-[11px] text-slate-400">
+        <div className="mt-8 border-t border-white/5 pt-5 text-center text-[11px] text-slate-400">
           © {new Date().getFullYear()} XXXXXXXXXX S.A.C.
           <span className="mx-2 opacity-40">·</span>
           <span>RUC: XXXXXXXXXXXXXXXX</span>

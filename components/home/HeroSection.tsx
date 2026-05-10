@@ -5,25 +5,24 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { IconArrowRight } from "@/components/icons"
+import type { HeroSlideDisplay } from "@/features/hero/types"
 
-const SLIDES = [
+// ─── Slides de fallback (hardcodeados como respaldo si no hay datos en BD) ────
+const FALLBACK_SLIDES: HeroSlideDisplay[] = [
   {
-    label: "Insumos Industriales",
-    bg:    "from-[#003D73] via-[#00316b] to-[#00244f]",
-    // Rodamientos / ball bearings industriales
-    image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80",
+    label:    "Insumos Industriales",
+    gradient: "from-[#003D73] via-[#00316b] to-[#00244f]",
+    image:    "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1920&q=80",
   },
   {
-    label: "Insumos Mineros",
-    bg:    "from-[#004d8f] via-[#003d72] to-[#002a52]",
-    // Maquinaria industrial / minería
-    image: "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?auto=format&fit=crop&w=1920&q=80",
+    label:    "Insumos Mineros",
+    gradient: "from-[#004d8f] via-[#003d72] to-[#002a52]",
+    image:    "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?auto=format&fit=crop&w=1920&q=80",
   },
   {
-    label: "SKF · Parker · Gates",
-    bg:    "from-[#002a5c] via-[#001f46] to-[#001530]",
-    // Componentes hidráulicos / fábrica
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1920&q=80",
+    label:    "SKF · Parker · Gates",
+    gradient: "from-[#002a5c] via-[#001f46] to-[#001530]",
+    image:    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1920&q=80",
   },
 ]
 
@@ -34,22 +33,34 @@ const STATS = [
   { value: "100%", label: "Original"           },
 ]
 
-export function HeroSection() {
+interface HeroSectionProps {
+  slides?: HeroSlideDisplay[]
+}
+
+export function HeroSection({ slides: slidesProp }: HeroSectionProps = {}) {
+  const slides = (slidesProp && slidesProp.length > 0) ? slidesProp : FALLBACK_SLIDES
   const [current, setCurrent] = useState(0)
 
+  // Reiniciar índice si cambia la cantidad de slides
   useEffect(() => {
-    const t = setInterval(() => setCurrent(p => (p + 1) % SLIDES.length), 5000)
-    return () => clearInterval(t)
-  }, [])
+    setCurrent(0)
+  }, [slides.length])
 
-  // Precarga el siguiente slide para que no haya parpadeo blanco al transicionar
   useEffect(() => {
-    SLIDES.forEach((slide, i) => {
-      if (i === 0) return // ya se carga con priority
+    const t = setInterval(() => setCurrent(p => (p + 1) % slides.length), 5000)
+    return () => clearInterval(t)
+  }, [slides.length])
+
+  // Precarga las imágenes siguientes para evitar parpadeo
+  useEffect(() => {
+    slides.forEach((slide, i) => {
+      if (i === 0) return
       const img = new window.Image()
       img.src = slide.image
     })
-  }, [])
+  }, [slides])
+
+  const safeIdx = Math.min(current, slides.length - 1)
 
   return (
     <section className="relative overflow-hidden sm:min-h-[75vh] lg:min-h-[600px]">
@@ -58,27 +69,26 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-[#002244]">
         <AnimatePresence mode="sync">
           <motion.div
-            key={current}
+            key={safeIdx}
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
             className="absolute inset-0"
           >
-            {/* Foto industrial — fondo real */}
             <Image
-              src={SLIDES[current].image}
-              alt=""
+              src={slides[safeIdx].image}
+              alt={slides[safeIdx].label}
               fill
-              priority={current === 0}
+              priority={safeIdx === 0}
               sizes="100vw"
               className="object-cover object-center"
             />
 
-            {/* Overlay degradado azul de marca (cubre ~65% de opacidad) */}
-            <div className={`absolute inset-0 bg-linear-to-br ${SLIDES[current].bg} opacity-70`} />
+            {/* Overlay gradiente de marca */}
+            <div className={`absolute inset-0 bg-linear-to-br ${slides[safeIdx].gradient} opacity-70`} />
 
-            {/* Oscurecimiento extra en lado izquierdo para legibilidad del texto */}
+            {/* Oscurecimiento izquierdo para legibilidad */}
             <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/20 to-transparent" />
 
             {/* Patrón de puntos sutil */}
@@ -104,7 +114,7 @@ export function HeroSection() {
       {/* Línea superior de acento naranja */}
       <div className="absolute inset-x-0 top-0 z-10 h-[3px] bg-linear-to-r from-transparent via-[#FF6B35]/80 to-transparent" />
 
-      {/* ── CONTENIDO: sobre el fondo ──────────────────────────────────────── */}
+      {/* ── CONTENIDO ──────────────────────────────────────────────────────── */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-10 pb-20 sm:py-24 sm:pb-24 lg:py-32 lg:pb-32">
         <div className="max-w-2xl">
 
@@ -183,17 +193,16 @@ export function HeroSection() {
               Ver Catálogo de Productos
             </Link>
           </motion.div>
-
         </div>
 
         {/* ── Indicador de slide ─────────────────────────────────────────────── */}
         <div className="absolute bottom-6 left-4 right-4 sm:left-auto sm:right-8 flex items-end justify-between sm:justify-end gap-6">
 
-          {/* Etiqueta del slide — sólo desktop */}
+          {/* Etiqueta del slide — solo desktop */}
           <div className="hidden sm:block">
             <AnimatePresence mode="wait">
               <motion.span
-                key={current}
+                key={safeIdx}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
@@ -201,7 +210,7 @@ export function HeroSection() {
                 className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white/80 backdrop-blur-sm"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35]" />
-                {SLIDES[current].label}
+                {slides[safeIdx].label}
               </motion.span>
             </AnimatePresence>
           </div>
@@ -211,29 +220,29 @@ export function HeroSection() {
             <div className="flex items-baseline gap-1">
               <AnimatePresence mode="wait">
                 <motion.span
-                  key={current}
+                  key={safeIdx}
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.25 }}
                   className="text-lg font-black text-white tabular-nums leading-none"
                 >
-                  {String(current + 1).padStart(2, '0')}
+                  {String(safeIdx + 1).padStart(2, '0')}
                 </motion.span>
               </AnimatePresence>
-              <span className="text-[10px] font-bold text-white/40">/ {String(SLIDES.length).padStart(2, '0')}</span>
+              <span className="text-[10px] font-bold text-white/40">/ {String(slides.length).padStart(2, '0')}</span>
             </div>
 
             <div className="flex gap-1.5">
-              {SLIDES.map((_, i) => (
+              {slides.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrent(i)}
                   aria-label={`Slide ${i + 1}`}
                   className="relative h-[3px] rounded-full overflow-hidden transition-all duration-300"
-                  style={{ width: i === current ? '40px' : '16px', background: 'rgba(255,255,255,0.2)' }}
+                  style={{ width: i === safeIdx ? '40px' : '16px', background: 'rgba(255,255,255,0.2)' }}
                 >
-                  {i === current && (
+                  {i === safeIdx && (
                     <motion.span
                       className="absolute inset-y-0 left-0 rounded-full"
                       style={{ background: '#FF6B35' }}
@@ -242,7 +251,7 @@ export function HeroSection() {
                       transition={{ duration: 5, ease: 'linear' }}
                     />
                   )}
-                  {i < current && (
+                  {i < safeIdx && (
                     <span className="absolute inset-0 rounded-full" style={{ background: 'rgba(255,107,53,0.5)' }} />
                   )}
                 </button>
@@ -250,7 +259,6 @@ export function HeroSection() {
             </div>
           </div>
         </div>
-
       </div>
     </section>
   )

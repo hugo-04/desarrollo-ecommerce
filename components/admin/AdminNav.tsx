@@ -3,7 +3,7 @@
 import type React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Package, Layers, Tag, Plus, ClipboardList } from "lucide-react"
+import { LayoutDashboard, Package, Layers, Tag, Plus, ClipboardList, BookOpen, FolderOpen, MonitorPlay, Users, Star, Landmark } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const NAV_SECTIONS: {
@@ -20,8 +20,19 @@ const NAV_SECTIONS: {
     label: "Catálogo",
     items: [
       { href: "/productos",  label: "Productos",  icon: Package, newHref: "/productos/nuevo"  },
-      { href: "/categorias", label: "Categorías", icon: Layers,  newHref: "/categorias/nueva" },
-      { href: "/marcas",     label: "Marcas",     icon: Tag,     newHref: "/marcas/nueva"      },
+      { href: "/categorias",    label: "Categorías",    icon: Layers,    newHref: "/categorias/nueva"    },
+      { href: "/subcategorias", label: "Subcategorías", icon: FolderOpen, newHref: "/subcategorias/nueva" },
+      { href: "/gestion-marcas", label: "Marcas",        icon: Tag,        newHref: "/gestion-marcas/nueva" },
+    ],
+  },
+  {
+    label: "Contenido",
+    items: [
+      { href: "/hero",              label: "Hero / Portada",    icon: MonitorPlay, newHref: "/hero/nuevo"              },
+      { href: "/blogs",             label: "Blog",              icon: BookOpen,    newHref: "/blogs/nuevo"             },
+      { href: "/especialidades",    label: "Especialidades",    icon: Star,        newHref: "/especialidades/nueva"    },
+      { href: "/entidades-bancarias", label: "Medios de Pago", icon: Landmark,    newHref: "/entidades-bancarias/nueva" },
+      { href: "/nosotros-config",   label: "Nosotros",          icon: Users },
     ],
   },
   {

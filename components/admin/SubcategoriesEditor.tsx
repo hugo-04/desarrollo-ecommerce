@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { ChevronDown, Search, Plus, X, Check } from "lucide-react"
+import Link from "next/link"
+import { ChevronDown, Search, Plus, X, Check, ExternalLink } from "lucide-react"
 import { getAllSubcategoriesAction, createSubcategoryAction } from "@/features/categorias/actions"
 import type { SubcategoryItem } from "@/lib/types"
 import { toast } from "sonner"
@@ -228,8 +229,9 @@ export function SubcategoriesEditor({ values, onChange }: SubcategoriesEditorPro
                 )}
               </div>
 
-              {/* Botón crear — siempre visible */}
-              <div className="border-t border-slate-100 p-1.5">
+              {/* Botones en el footer del dropdown */}
+              <div className="border-t border-slate-100 p-1.5 space-y-0.5">
+                {/* Crear rápido (modal inline) */}
                 <button
                   type="button"
                   onClick={openModal}
@@ -240,8 +242,19 @@ export function SubcategoriesEditor({ values, onChange }: SubcategoriesEditorPro
                   </div>
                   {searchTrimmed
                     ? `Crear subcategoría "${searchTrimmed}"`
-                    : "Crear subcategoría"}
+                    : "Crear subcategoría (rápido)"}
                 </button>
+                {/* Ir a la página completa de creación */}
+                <Link
+                  href={searchTrimmed ? `/subcategorias/nueva?nombre=${encodeURIComponent(searchTrimmed)}` : "/subcategorias/nueva"}
+                  target="_blank"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
+                >
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-slate-200 bg-slate-50">
+                    <ExternalLink className="h-3 w-3" />
+                  </div>
+                  Crear con imagen y SEO completo
+                </Link>
               </div>
             </div>
           )}

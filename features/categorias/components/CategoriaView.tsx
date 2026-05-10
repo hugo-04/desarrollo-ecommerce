@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import { ProductCard } from "@/components/product/ProductCard"
-import { Pagination } from "@/components/ui/pagination"
+import { CatalogPagination as Pagination } from "@/components/catalog/CatalogPagination"
 import { IconChevronRight } from "@/components/icons"
 import { getCatalogAction } from "@/features/productos/actions"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"

@@ -9,10 +9,12 @@
  * solo cambiarán los repositorios que las implementan.
  */
 
-/** Subcategoría como entidad — id + name para el editor admin */
+/** Subcategoría como entidad — id + name + imagen para nav y editor admin */
 export interface SubcategoryItem {
-  id:   number
-  name: string
+  id:       number
+  name:     string
+  image?:   string
+  imageAlt?: string
 }
 
 /** Par clave-valor para la ficha técnica de un producto (ej: Tensión → 22 kV) */
@@ -115,6 +117,8 @@ export interface Brand {
   logoAlt?: string
   /** Si true, el logo aparece en el carrusel de marcas del home */
   showInCarousel?: boolean
+  /** Texto SEO corto para la página pública de la marca */
+  description?: string
   createdAt?: string
   updatedAt?: string
   /** Cantidad de productos asociados (para filtros) */

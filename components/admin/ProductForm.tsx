@@ -16,12 +16,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { AlertCircle, CheckCircle2, Package, Image as ImageIcon, AlignLeft, Wrench } from "lucide-react"
+import { AlertCircle, CheckCircle2, Package, Image as ImageIcon, AlignLeft, Wrench, Trash2, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
-import { useCreateProduct, useUpdateProduct } from "@/features/productos/hooks"
+import { useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/features/productos/hooks"
 import { useCreateBrand } from "@/features/marcas/hooks"
 import { useCreateCategory } from "@/features/categorias/hooks"
+import { DeleteDialog } from "@/components/admin/DeleteDialog"
 import { RichEditor } from "@/components/admin/RichEditor"
 import { ImageUpload } from "@/components/ui/ImageUpload"
 import { QuickCreateBrandDialog } from "@/components/admin/QuickCreateBrandDialog"
@@ -131,6 +132,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
   const createProduct  = useCreateProduct()
   const updateProduct  = useUpdateProduct()
+  const deleteProduct  = useDeleteProduct()
   const createBrand    = useCreateBrand()
   const createCategory = useCreateCategory()
 
@@ -635,14 +637,39 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         </div>
 
         {isEdit && product && (
-          <div className="hidden items-center gap-3 md:flex">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="text-xs font-semibold text-slate-400">
-              ID <span className="text-slate-600">{product.id}</span>
-            </span>
+          <div className="flex items-center gap-3">
+            <div className="hidden items-center gap-3 md:flex">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-xs font-semibold text-slate-400">
+                ID <span className="text-slate-600">{product.id}</span>
+              </span>
+            </div>
+            <DeleteDialog
+              trigger={
+                <button
+                  type="button"
+                  disabled={deleteProduct.isPending || createProduct.isPending || updateProduct.isPending}
+                  className="flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-bold text-red-600 shadow-sm transition-all hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
+                >
+                  {deleteProduct.isPending
+                    ? <><Loader2 className="h-4 w-4 animate-spin" />Eliminando…</>
+                    : <><Trash2 className="h-4 w-4" />Eliminar</>}
+                </button>
+              }
+              itemName={product.name}
+              onConfirm={async () => {
+                try {
+                  await deleteProduct.mutateAsync(product.id)
+                  toast.success(`"${product.name}" eliminado correctamente`)
+                  router.push("/productos")
+                } catch (err) {
+                  toast.error(err instanceof Error ? err.message : "Error al eliminar el producto")
+                }
+              }}
+            />
           </div>
         )}
       </div>

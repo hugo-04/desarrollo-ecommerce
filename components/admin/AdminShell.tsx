@@ -80,7 +80,7 @@ export function AdminShell({ children, email, logoutAction }: AdminShellProps) {
         </div>
 
         {/* Navegación */}
-        <div className="flex-1 overflow-hidden py-4 px-3">
+        <div className="flex-1 overflow-y-auto py-4 px-3 custom-scrollbar">
           <AdminNav onNavigate={() => setOpen(false)} />
         </div>
 

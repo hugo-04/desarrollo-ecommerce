@@ -2,6 +2,7 @@ import { SEO, SITE_URL, SITE_NAME } from "@/lib/seo"
 import { HomeView } from "@/components/views/HomeView"
 import { getFeaturedCategoriesAction } from "@/features/categorias/actions"
 import { getBrandsForCarouselAction } from "@/features/marcas/actions"
+import { getHeroSlidesAction } from "@/features/hero/actions"
 import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 
 export const dynamic = "force-dynamic"
@@ -24,10 +25,12 @@ const homeSchema = {
 }
 
 export default async function HomePage() {
-  const [categories, brands] = await Promise.all([
+  const [categories, brands, heroSlides] = await Promise.all([
     getFeaturedCategoriesAction(),
     getBrandsForCarouselAction(),
+    getHeroSlidesAction(),
   ])
+  const heroDisplay = heroSlides.map(s => ({ label: s.label, image: s.image, gradient: s.gradient }))
   return (
     <>
       <script
@@ -35,7 +38,7 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
       />
       <PageViewTracker path="/" />
-      <HomeView categories={categories} brands={brands} />
+      <HomeView categories={categories} brands={brands} heroSlides={heroDisplay.length > 0 ? heroDisplay : undefined} />
     </>
   )
 }

@@ -18,6 +18,7 @@ export interface IBrandRepository {
   findAll(): Promise<Brand[]>
   findPaged(filters: BrandFilters): Promise<BrandPaginatedResult>
   findById(id: number): Promise<Brand | null>
+  findByName(name: string): Promise<Brand | null>
   findNames(): Promise<string[]>
   /** Devuelve solo marcas con showInCarousel=true — para el marquee del home */
   findCarousel(): Promise<Brand[]>
@@ -35,10 +36,11 @@ export class DbBrandRepository implements IBrandRepository {
    * Prisma devuelve logoAlt: string | null; Brand espera string | undefined.
    * Este mapper normaliza la diferencia.
    */
-  private map(b: { id: number; name: string; logo: string; logoAlt: string | null; showInCarousel: boolean; createdAt: Date; updatedAt: Date }): Brand {
+  private map(b: { id: number; name: string; logo: string; logoAlt: string | null; showInCarousel: boolean; description: string | null; createdAt: Date; updatedAt: Date }): Brand {
     return {
       id: b.id, name: b.name, logo: b.logo,
-      logoAlt: b.logoAlt ?? undefined,
+      logoAlt:     b.logoAlt     ?? undefined,
+      description: b.description ?? undefined,
       showInCarousel: b.showInCarousel,
       createdAt: b.createdAt.toISOString(),
       updatedAt: b.updatedAt.toISOString(),
@@ -52,6 +54,13 @@ export class DbBrandRepository implements IBrandRepository {
 
   async findById(id: number): Promise<Brand | null> {
     const b = await this.db.brand.findUnique({ where: { id } })
+    return b ? this.map(b) : null
+  }
+
+  async findByName(name: string): Promise<Brand | null> {
+    const b = await this.db.brand.findFirst({
+      where: { name: { equals: name, mode: "insensitive" } },
+    })
     return b ? this.map(b) : null
   }
 

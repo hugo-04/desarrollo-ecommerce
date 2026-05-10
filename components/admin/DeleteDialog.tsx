@@ -14,15 +14,14 @@ import {
 } from "@/components/ui/alert-dialog"
 
 interface DeleteDialogProps {
-  /** El botón o elemento que abre el diálogo */
   trigger: React.ReactNode
-  /** Nombre del ítem a eliminar — aparece en el título */
   itemName: string
-  /** Callback ejecutado al confirmar la eliminación */
   onConfirm: () => void
+  /** Mensaje de advertencia adicional que se muestra bajo la descripción principal */
+  warning?: string
 }
 
-export function DeleteDialog({ trigger, itemName, onConfirm }: DeleteDialogProps) {
+export function DeleteDialog({ trigger, itemName, onConfirm, warning }: DeleteDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
@@ -33,6 +32,11 @@ export function DeleteDialog({ trigger, itemName, onConfirm }: DeleteDialogProps
             Esta acción es permanente y no se puede deshacer.
           </AlertDialogDescription>
         </AlertDialogHeader>
+        {warning && (
+          <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            {warning}
+          </p>
+        )}
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction

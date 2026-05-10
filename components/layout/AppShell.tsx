@@ -25,6 +25,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname        = usePathname()
   const isCatalog       = pathname === "/catalogo"
   const isProductDetail = pathname?.startsWith("/producto/")
+  const isHome          = pathname === "/"
   const hideWhatsApp    = isCatalog || isProductDetail
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -112,7 +113,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Cotizar por WhatsApp"
-            className="fixed bottom-8 right-6 z-50 group flex items-center gap-2.5 rounded-full bg-[#25D366] px-5 py-3 shadow-xl shadow-black/20 transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl hover:shadow-green-500/30 hover:bg-[#22c55e]"
+            className={`fixed right-6 z-50 group flex items-center gap-2.5 rounded-full bg-[#25D366] px-5 py-3 shadow-xl shadow-black/20 transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl hover:shadow-green-500/30 hover:bg-[#22c55e] ${isHome ? "bottom-20 sm:bottom-8" : "bottom-8"}`}
           >
             <IconWhatsApp className="h-5 w-5 text-white shrink-0" />
             <span className="text-sm font-bold text-white leading-none whitespace-nowrap">

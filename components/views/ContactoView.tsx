@@ -139,7 +139,7 @@ const FAQS = [
 // ── Vista principal ───────────────────────────────────────────────────────────
 export function ContactoView() {
   const [form, setForm] = useState({
-    nombre: "", empresa: "", email: "", telefono: "",
+    nombre: "", empresa: "", ruc: "", email: "", telefono: "",
     tipo_producto: "", marca_codigo: "", cantidad: "", mensaje: "",
   })
   const [errors, setErrors] = useState<Record<string, boolean>>({})
@@ -364,7 +364,7 @@ export function ContactoView() {
                         <button
                           onClick={() => {
                             setSubmitted(false)
-                            setForm({ nombre: "", empresa: "", email: "", telefono: "", tipo_producto: "", marca_codigo: "", cantidad: "", mensaje: "" })
+                            setForm({ nombre: "", empresa: "", ruc: "", email: "", telefono: "", tipo_producto: "", marca_codigo: "", cantidad: "", mensaje: "" })
                           }}
                           className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50"
                         >
@@ -397,7 +397,7 @@ export function ContactoView() {
                         </p>
                       </div>
 
-                      {/* Fila 1 */}
+                      {/* Fila 1 — Nombre + Empresa */}
                       <div className="grid gap-4 sm:grid-cols-2">
                         <Field label="Nombre completo" required error={errors.nombre}>
                           <input
@@ -413,21 +413,32 @@ export function ContactoView() {
                         </Field>
                       </div>
 
-                      {/* Fila 2 */}
+                      {/* Fila 2 — RUC + Teléfono */}
                       <div className="grid gap-4 sm:grid-cols-2">
+                        <Field label="RUC">
+                          <input
+                            type="text" value={form.ruc} onChange={set("ruc")}
+                            placeholder="Ej: 20601234567"
+                            maxLength={11}
+                            inputMode="numeric"
+                            className={INPUT_CLS}
+                          />
+                        </Field>
                         <Field label="Teléfono / WhatsApp" required error={errors.telefono}>
                           <input
                             type="tel" value={form.telefono} onChange={set("telefono")} placeholder="+51 987 654 321"
                             className={`${INPUT_CLS} ${errors.telefono ? "border-red-300 focus:ring-red-200" : ""}`}
                           />
                         </Field>
-                        <Field label="Correo electrónico" required error={errors.email}>
-                          <input
-                            type="email" value={form.email} onChange={set("email")} placeholder="correo@empresa.com"
-                            className={`${INPUT_CLS} ${errors.email ? "border-red-300 focus:ring-red-200" : ""}`}
-                          />
-                        </Field>
                       </div>
+
+                      {/* Fila 3 — Email */}
+                      <Field label="Correo electrónico" required error={errors.email}>
+                        <input
+                          type="email" value={form.email} onChange={set("email")} placeholder="correo@empresa.com"
+                          className={`${INPUT_CLS} ${errors.email ? "border-red-300 focus:ring-red-200" : ""}`}
+                        />
+                      </Field>
 
                       {/* Tipo de producto */}
                       <Field label="Tipo de producto" required error={errors.tipo_producto}>

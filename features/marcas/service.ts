@@ -12,6 +12,7 @@ export class BrandService {
   getAll(): Promise<Brand[]>                                        { return this.repo.findAll() }
   getPaged(filters: BrandFilters): Promise<BrandPaginatedResult>    { return this.repo.findPaged(filters) }
   getById(id: number): Promise<Brand | null>                        { return this.repo.findById(id) }
+  getByName(name: string): Promise<Brand | null>                    { return this.repo.findByName(name) }
   getNames(): Promise<string[]>                                     { return this.repo.findNames() }
   getCarousel(): Promise<Brand[]>                                   { return this.repo.findCarousel() }
   create(data: CreateBrandDTO): Promise<Brand>                      { return this.repo.create(data) }
