@@ -5,6 +5,8 @@ export interface EntidadBancariaDTO {
   logoAlt?:    string
   nroCuenta?:  string
   nroCci?:     string
+  tipoCuenta?: string
+  nombreCuenta?: string
   order:       number
   active:      boolean
   createdAt?:  string

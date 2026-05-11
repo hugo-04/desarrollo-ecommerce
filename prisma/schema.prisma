@@ -230,8 +230,10 @@ model EntidadBancaria {
   logo       String  @default("")
   logoAlt    String?
   nroCuenta  String?
-  nroCci     String?
-  order      Int     @default(0)
+  nroCci       String?
+  tipoCuenta   String?
+  nombreCuenta String?
+  order        Int     @default(0)
   active     Boolean @default(true)
 
   createdAt DateTime @default(now())

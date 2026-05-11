@@ -13,6 +13,7 @@ import { toast } from "sonner"
 type SaveData = {
   name: string; logo: string; logoAlt?: string
   nroCuenta?: string; nroCci?: string
+  tipoCuenta?: string; nombreCuenta?: string
   order: number; active: boolean
 }
 
@@ -31,6 +32,8 @@ export function EntidadBancariaForm({ initialData, onSave, onDelete }: EntidadBa
   const [logoAlt,   setLogoAlt]   = useState(initialData?.logoAlt   ?? "")
   const [nroCuenta, setNroCuenta] = useState(initialData?.nroCuenta ?? "")
   const [nroCci,    setNroCci]    = useState(initialData?.nroCci    ?? "")
+  const [tipoCuenta, setTipoCuenta] = useState(initialData?.tipoCuenta ?? "")
+  const [nombreCuenta, setNombreCuenta] = useState(initialData?.nombreCuenta ?? "")
   const [order,     setOrder]     = useState(initialData?.order     ?? 0)
   const [active,    setActive]    = useState(initialData?.active    ?? true)
   const [tempKey,   setTempKey]   = useState<string | null>(null)
@@ -74,6 +77,8 @@ export function EntidadBancariaForm({ initialData, onSave, onDelete }: EntidadBa
         logoAlt:   logoAlt.trim()   || undefined,
         nroCuenta: nroCuenta.trim() || undefined,
         nroCci:    nroCci.trim()    || undefined,
+        tipoCuenta: tipoCuenta.trim() || undefined,
+        nombreCuenta: nombreCuenta.trim() || undefined,
         order,
         active,
       })
@@ -194,6 +199,36 @@ export function EntidadBancariaForm({ initialData, onSave, onDelete }: EntidadBa
               onChange={(e) => setNroCci(e.target.value)}
               placeholder="Ej: 00219300123456780135"
               className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 font-mono text-sm transition-all placeholder:text-slate-400 placeholder:font-sans focus:border-[#334155]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#334155]/15"
+            />
+          </div>
+
+          {/* Tipo de cuenta */}
+          <div className="mt-4">
+            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+              <CreditCard className="h-3 w-3 text-slate-400" />
+              Tipo de cuenta
+            </label>
+            <input
+              type="text"
+              value={tipoCuenta}
+              onChange={(e) => setTipoCuenta(e.target.value)}
+              placeholder="Ej: Corriente, Ahorros..."
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all focus:border-[#334155]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#334155]/15"
+            />
+          </div>
+
+          {/* Nombre de cuenta */}
+          <div className="mt-4">
+            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+              <CreditCard className="h-3 w-3 text-slate-400" />
+              Nombre de la cuenta
+            </label>
+            <input
+              type="text"
+              value={nombreCuenta}
+              onChange={(e) => setNombreCuenta(e.target.value)}
+              placeholder="Ej: CORP ELIMA S.A.C."
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm transition-all focus:border-[#334155]/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#334155]/15"
             />
           </div>
 

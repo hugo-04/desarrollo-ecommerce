@@ -58,11 +58,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     nearTop.current = latest < 80;
     setIsScrolled(latest > 50);
 
-    if (latest > previous && latest > 200) {
-      setHidden(true);
-    } else {
-      setHidden(false);
-    }
+    // El menú ahora siempre estará visible al hacer scroll.
+    setHidden(false);
   });
 
   // Transition según dirección y posición

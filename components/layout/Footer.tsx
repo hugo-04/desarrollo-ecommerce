@@ -126,34 +126,27 @@ export function Footer() {
         {hasEntidades && (
           <div className="mt-8 border-t border-white/[0.06] pt-6">
             <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.3em] text-white/35">
-              Medios de Pago
+              Transferencia Bancaria Directa
             </p>
-            <div className="flex flex-wrap items-start gap-2">
+            <div className="flex flex-wrap items-center gap-4">
               {entidades.map((ent) => (
-                <div
+                <Link
                   key={ent.id}
-                  title={ent.name}
-                  className="flex flex-col items-center gap-1 rounded-lg bg-white/[0.08] px-3 py-2 ring-1 ring-white/10 transition-colors hover:bg-white/[0.14]"
+                  href="/formas-de-pago"
+                  title={`Ver cuentas de ${ent.name}`}
+                  className="flex items-center justify-center rounded-lg bg-white/[0.08] px-4 py-2 ring-1 ring-white/10 transition-colors hover:bg-white/[0.14]"
                 >
                   {/* Logo o nombre */}
                   {ent.logo && ent.logo.startsWith("http") ? (
                     <img
                       src={ent.logo}
                       alt={ent.logoAlt ?? ent.name}
-                      className="h-5 w-auto max-w-[60px] object-contain"
+                      className="h-6 w-auto max-w-[80px] object-contain"
                     />
                   ) : (
-                    <span className="text-[11px] font-semibold text-white/60">{ent.name}</span>
+                    <span className="text-[12px] font-bold text-white/80">{ent.name}</span>
                   )}
-                  {/* Número de cuenta */}
-                  {ent.nroCuenta && (
-                    <span className="font-mono text-[9px] text-white/50 leading-tight">{ent.nroCuenta}</span>
-                  )}
-                  {/* CCI */}
-                  {ent.nroCci && (
-                    <span className="font-mono text-[8px] text-white/35 leading-tight">CCI: {ent.nroCci}</span>
-                  )}
-                </div>
+                </Link>
               ))}
             </div>
           </div>

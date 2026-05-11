@@ -583,7 +583,7 @@ function MarcasDropdown({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 6, scale: 0.97 }}
       transition={{ duration: 0.15 }}
-      className="absolute top-full left-1/2 z-50 mt-2 w-72 -translate-x-1/2 overflow-hidden rounded-2xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.12)] ring-1 ring-slate-200"
+      className="absolute top-full left-1/2 z-50 mt-2 w-[600px] -translate-x-1/2 overflow-hidden rounded-2xl bg-white shadow-[0_8px_40px_rgba(0,0,0,0.12)] ring-1 ring-slate-200"
     >
       {/* Header + Search */}
       <div className="border-b border-slate-100 px-4 py-3 space-y-3">
@@ -620,32 +620,34 @@ function MarcasDropdown({ onClose }: { onClose: () => void }) {
           <p className="py-4 text-center text-[11px] text-slate-400 italic">No hay resultados</p>
         ) : (
           <>
-            {brands.map((brand) => {
-              const hasLogo = brand.logo && brand.logo.startsWith("http")
-              return (
-                <Link
-                  key={brand.id}
-                  href={`/marca/${encodeURIComponent(brand.name)}`}
-                  onClick={onClose}
-                  className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50"
-                >
-                  <div className="flex h-7 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-100 transition-colors group-hover:bg-[#1B2B4B]/10">
-                    {hasLogo ? (
-                      <img src={brand.logo} alt={brand.logoAlt ?? brand.name} className="h-full w-full object-contain p-0.5" />
-                    ) : (
-                      <Award className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1B2B4B]" />
+            <div className="grid grid-cols-3 gap-1 px-2">
+              {brands.map((brand) => {
+                const hasLogo = brand.logo && brand.logo.startsWith("http")
+                return (
+                  <Link
+                    key={brand.id}
+                    href={`/marca/${encodeURIComponent(brand.name)}`}
+                    onClick={onClose}
+                    className="group flex items-center gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-slate-50"
+                  >
+                    <div className="flex h-7 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-100 transition-colors group-hover:bg-[#1B2B4B]/10">
+                      {hasLogo ? (
+                        <img src={brand.logo} alt={brand.logoAlt ?? brand.name} className="h-full w-full object-contain p-0.5" />
+                      ) : (
+                        <Award className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1B2B4B]" />
+                      )}
+                    </div>
+                    <span className="flex-1 truncate text-[12px] font-medium text-slate-600 transition-colors group-hover:text-[#1B2B4B]">
+                      {brand.name}
+                    </span>
+                    {brand.productCount !== undefined && (
+                      <span className="text-[10px] text-slate-400 group-hover:text-[#1B2B4B]">{brand.productCount}</span>
                     )}
-                  </div>
-                  <span className="flex-1 truncate text-[13px] font-medium text-slate-600 transition-colors group-hover:text-[#1B2B4B]">
-                    {brand.name}
-                  </span>
-                  {brand.productCount !== undefined && (
-                    <span className="text-[10px] text-slate-400 group-hover:text-[#1B2B4B]">{brand.productCount}</span>
-                  )}
-                </Link>
-              )
-            })}
-            <div ref={observerRef} className="h-4 w-full">
+                  </Link>
+                )
+              })}
+            </div>
+            <div ref={observerRef} className="h-4 w-full mt-2">
               {isFetchingNextPage && <div className="flex justify-center py-2"><Loader2 className="h-3 w-3 animate-spin text-slate-300" /></div>}
             </div>
           </>
