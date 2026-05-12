@@ -249,6 +249,7 @@ model EntidadBancaria {
 model Product {
   id              Int    @id @default(autoincrement())
   name            String @unique
+  slug            String? @unique
   description     String @default("")
   fullDescription String @default("")
 

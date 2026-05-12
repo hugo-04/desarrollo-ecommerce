@@ -30,6 +30,8 @@ export interface TechnicalSpec {
 export interface Product {
   id: number
   name: string
+  /** Slug SEO para URL /producto/[id]/[slug] */
+  slug?: string
   /** Nombres de las marcas (referencia por nombre, no por ID) */
   brands: string[]
   /** Nombre de la categoría (referencia por nombre, no por ID) */

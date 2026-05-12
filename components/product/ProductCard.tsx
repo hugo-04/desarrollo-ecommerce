@@ -9,6 +9,11 @@ import type { Product } from "@/lib/types"
 const BLUR_PLACEHOLDER =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
 
+function productUrl(product: Product): string {
+  const slug = product.slug ?? product.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+  return `/producto/${product.id}/${slug}`
+}
+
 interface ProductCardProps {
   product: Product
   showBadge?: boolean
@@ -18,7 +23,7 @@ interface ProductCardProps {
 export function ProductCard({ product, showBadge = false, priority = false }: ProductCardProps) {
   return (
     <Link
-      href={`/producto/${product.id}`}
+      href={productUrl(product)}
       className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-[0_16px_36px_rgba(28,40,112,0.10)]"
     >
       {/* ── Imagen ── */}

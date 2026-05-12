@@ -21,14 +21,17 @@ const staticPages: MetadataRoute.Sitemap = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const [products, categories] = await Promise.all([
-      db.product.findMany({ select: { id: true, updatedAt: true } }),
+      db.product.findMany({ select: { id: true, slug: true, name: true, updatedAt: true } }),
       db.category.findMany({ select: { slug: true, updatedAt: true } }),
     ])
 
-    const productPages: MetadataRoute.Sitemap = products.map((p: { id: any; updatedAt: any }) => ({
-      url: `${BASE_URL}/producto/${p.id}`,
-      lastModified: p.updatedAt,
-    }))
+    const productPages: MetadataRoute.Sitemap = products.map((p: { id: any; slug: any; name: any; updatedAt: any }) => {
+      const slug = p.slug ?? p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+      return {
+        url: `${BASE_URL}/producto/${p.id}/${slug}`,
+        lastModified: p.updatedAt,
+      }
+    })
 
     const categoryPages: MetadataRoute.Sitemap = categories.map((c: { slug: any; updatedAt: any }) => ({
       url: `${BASE_URL}/categoria/${c.slug}`,

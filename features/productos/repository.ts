@@ -47,6 +47,7 @@ export class DbProductRepository implements IProductRepository {
     return {
       id: p.id,
       name: p.name,
+      slug: p.slug ?? undefined,
       description: p.description,
       fullDescription: p.fullDescription,
       image: p.image,

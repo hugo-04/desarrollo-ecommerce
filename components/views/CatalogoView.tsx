@@ -248,7 +248,7 @@ export function CatalogoView({
                 {products.map((product) => (
                   <Link
                     key={product.id}
-                    href={`/producto/${product.id}`}
+                    href={`/producto/${product.id}/${product.slug ?? product.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
                     className="group flex cursor-pointer gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white p-3 transition-all hover:border-primary/30 hover:shadow-md"
                   >
                     <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-lg bg-slate-50">
