@@ -404,7 +404,7 @@ export function LibroReclamacionesView() {
               className="mt-0.5 accent-[#1C2870]"
             />
             <span className="text-xs leading-relaxed text-slate-600">
-              Declaro que los datos proporcionados son verídicos y autorizo a Electro Thina S.A.C. a utilizarlos
+              Declaro que los datos proporcionados son verídicos y autorizo a Insumind SAC a utilizarlos
               únicamente para la gestión de este reclamo, conforme a la Ley N° 29733 de Protección de Datos Personales.
             </span>
           </label>
@@ -420,7 +420,7 @@ export function LibroReclamacionesView() {
         </button>
 
         <p className="text-center text-[11px] text-slate-400">
-          Electro Thina S.A.C. · RUC: 20609410711 · Lima, Perú
+          Insumind SAC · Lima, Perú
         </p>
       </form>
     </div>
