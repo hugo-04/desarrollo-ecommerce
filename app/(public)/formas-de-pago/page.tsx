@@ -4,6 +4,8 @@ import { IconWhatsApp } from "@/components/icons"
 import { Mail } from "lucide-react"
 import { CONTACT, WA } from "@/lib/contact"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: "Formas de Pago | Insumind",
   description: "Conoce nuestras formas de pago y cuentas bancarias oficiales.",
