@@ -51,6 +51,7 @@ interface CatalogoViewProps {
   initialQuery?: string
   initialBestSellers?: boolean
   initialCategories: CategoryDTO[]
+  initialProducts?: Awaited<ReturnType<typeof import("@/features/productos/actions").getCatalogAction>>
 }
 
 export function CatalogoView({
@@ -58,6 +59,7 @@ export function CatalogoView({
   initialQuery = "",
   initialBestSellers = false,
   initialCategories,
+  initialProducts,
 }: CatalogoViewProps) {
   const [filterOpen, setFilterOpen] = useState(false)
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
@@ -88,7 +90,14 @@ export function CatalogoView({
     page: currentPage,
   }
 
-  const { data, isLoading: loading, isFetching: fetching } = useProducts(productFilters)
+  // Usar initialProducts solo cuando no hay filtros activos (coincide con el SSR fetch)
+  const hasActiveFilters = selectedCategories.length > 0 || selectedBrands.length > 0
+    || onlyBestSellers || searchQuery || currentPage > 1
+
+  const { data, isLoading: loading, isFetching: fetching } = useProducts(
+    productFilters,
+    !hasActiveFilters ? initialProducts : undefined,
+  )
   const products = data?.data ?? []
   const total = data?.total ?? 0
   const totalPages = data?.totalPages ?? 0

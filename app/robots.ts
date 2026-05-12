@@ -24,6 +24,6 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Applebot-Extended", allow: "/" },
       { userAgent: "Bytespider",        allow: "/" },
     ],
-    sitemap: "https://lorem-ipsum.com/sitemap.xml",
+    sitemap: "https://insumindperu.pe/sitemap.xml",
   }
 }

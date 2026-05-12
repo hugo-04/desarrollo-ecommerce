@@ -5,11 +5,13 @@ import { CatalogoView } from "@/components/views/CatalogoView"
 import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 import { cache } from "react"
 import { getActiveFilterOptionsAction } from "@/features/categorias/actions"
+import { getCatalogAction } from "@/features/productos/actions"
 
 // cache() deduplica llamadas idénticas dentro del mismo request (generateMetadata + component)
 const getFilterOptions = cache(getActiveFilterOptionsAction)
 
-export const dynamic = "force-dynamic"
+// ISR: revalida cada hora — datos del catálogo no cambian por segundo
+export const revalidate = 3600
 
 interface PageProps {
   searchParams: Promise<{ categoria?: string; q?: string; bestSellers?: string }>
@@ -26,8 +28,13 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 
 export default async function CatalogoPage({ searchParams }: PageProps) {
   const params = await searchParams
+  const hasFilters = params.categoria || params.q || params.bestSellers
 
-  const { categories } = await getFilterOptions()
+  // Fetch en paralelo: filtros + primera página de productos (sin filtros activos)
+  const [{ categories }, initialProducts] = await Promise.all([
+    getFilterOptions(),
+    hasFilters ? Promise.resolve(undefined) : getCatalogAction({ page: 1, limit: 24 }),
+  ])
 
   // Schema dinámico: si hay categoría activa → CollectionPage, si no → BreadcrumbList del catálogo
   const selectedCat = params.categoria
@@ -80,6 +87,7 @@ export default async function CatalogoPage({ searchParams }: PageProps) {
           initialQuery={params.q}
           initialBestSellers={params.bestSellers === "true"}
           initialCategories={categories}
+          initialProducts={initialProducts ?? undefined}
         />
       </Suspense>
     </>

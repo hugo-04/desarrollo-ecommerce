@@ -23,10 +23,11 @@ export const productKeys = {
 }
 
 // ─── useProducts ─────────────────────────────────────────────────────────────
-export function useProducts(filters: ProductFilters) {
+export function useProducts(filters: ProductFilters, initialData?: Awaited<ReturnType<typeof getCatalogAction>>) {
   return useQuery({
-    queryKey: productKeys.list(filters),
-    queryFn: () => getCatalogAction(filters),
+    queryKey:    productKeys.list(filters),
+    queryFn:     () => getCatalogAction(filters),
+    initialData,
   })
 }
 
