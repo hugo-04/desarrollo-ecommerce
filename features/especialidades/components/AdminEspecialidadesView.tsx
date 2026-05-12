@@ -39,8 +39,8 @@ function EspRow({ esp, index, removingId, onDelete }: {
       {/* Imagen */}
       <TableCell className="px-4 py-2">
         <div className={`relative flex h-12 w-20 overflow-hidden rounded-lg bg-gradient-to-br ${esp.gradient}`}>
-          {esp.image && esp.image.startsWith("http") && (
-            <img src={esp.image} alt={esp.imageAlt ?? esp.title} className="absolute inset-0 h-full w-full object-cover opacity-80" />
+          {esp.image && (
+            <img src={esp.image} alt={esp.imageAlt ?? esp.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-80" />
           )}
         </div>
       </TableCell>
@@ -105,7 +105,7 @@ export function AdminEspecialidadesView() {
   const {
     items, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
-    handleSearch, setPage, setPageSize, handleDelete,
+    handleSearch, commitSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<EspecialidadDTO>({
     pageSize: PAGE_SIZE,
     loadFn:   getEspecialidadesPagedAction,
@@ -122,6 +122,8 @@ export function AdminEspecialidadesView() {
         searchValue={search}
         searchPlaceholder="Buscar especialidad…"
         onSearch={handleSearch}
+        onSearchNow={commitSearch}
+        fetching={fetching}
       />
 
       <style>{`

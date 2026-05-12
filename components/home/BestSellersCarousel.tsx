@@ -59,9 +59,9 @@ export function BestSellersCarousel() {
             animate={{ x: `-${currentIndex * (100 / itemsPerView)}%` }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            {bestSellers.map((product) => (
+            {bestSellers.map((product, idx) => (
               <div key={product.id} className="w-1/2 shrink-0 px-1.5 sm:w-1/2 sm:px-2 lg:w-1/4">
-                <ProductCard product={product} showBadge />
+                <ProductCard product={product} showBadge priority={idx < 4} />
               </div>
             ))}
           </motion.div>

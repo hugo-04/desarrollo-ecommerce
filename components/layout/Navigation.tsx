@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Home, ShoppingBag, Users, PhoneCall, UserRound, X, Menu, ChevronDown, LayoutGrid, Award, BookOpen } from "lucide-react"
@@ -176,8 +177,8 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                               className="flex flex-1 items-center gap-3 py-3.5 pl-2 pr-1"
                             >
                               <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#1B2B4B]/[0.07] text-[#1B2B4B]">
-                                {cat.image && cat.image.startsWith("http") ? (
-                                  <img src={cat.image} alt={cat.imageAlt ?? cat.name} className="h-full w-full object-cover" />
+                                {cat.image ? (
+                                  <Image src={cat.image} alt={cat.imageAlt ?? cat.name} width={36} height={36} className="h-full w-full object-contain p-1" />
                                 ) : (
                                   <Icon className="h-4 w-4" />
                                 )}
@@ -231,9 +232,9 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                       onClick={() => setIsOpen(false)}
                                       className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-[#1B2B4B]"
                                     >
-                                      {sub.image && sub.image.startsWith("http") ? (
-                                        <div className="flex h-6 w-6 shrink-0 overflow-hidden rounded-md">
-                                          <img src={sub.image} alt={sub.imageAlt ?? sub.name} className="h-full w-full object-cover" />
+                                      {sub.image ? (
+                                        <div className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-md bg-[#1B2B4B]/[0.07]">
+                                          <Image src={sub.image} alt={sub.imageAlt ?? sub.name} width={24} height={24} className="h-full w-full object-contain p-0.5" />
                                         </div>
                                       ) : (
                                         <span className="h-1 w-1 shrink-0 rounded-full bg-slate-300" />
@@ -348,8 +349,8 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                   ? "bg-[#1B2B4B]/10 text-[#1B2B4B]"
                                   : "bg-slate-100 text-slate-400 group-hover:bg-[#1B2B4B]/10 group-hover:text-[#1B2B4B]"
                               }`}>
-                                {cat.image && cat.image.startsWith("http") ? (
-                                  <img src={cat.image} alt={cat.imageAlt ?? cat.name} className="h-full w-full object-cover" />
+                                {cat.image ? (
+                                  <Image src={cat.image} alt={cat.imageAlt ?? cat.name} width={28} height={28} className="h-full w-full object-contain p-0.5" />
                                 ) : (
                                   <Icon className="h-3.5 w-3.5" />
                                 )}
@@ -410,8 +411,8 @@ function MegaMenu({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (v: boole
                                 className="group flex items-center gap-2.5 rounded-xl border border-transparent px-2.5 py-2 transition-all hover:border-slate-200 hover:bg-slate-50"
                               >
                                 <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#1B2B4B]/[0.07] transition-colors group-hover:bg-[#1B2B4B]/15">
-                                  {sub.image && sub.image.startsWith("http") ? (
-                                    <img src={sub.image} alt={sub.imageAlt ?? sub.name} className="h-full w-full object-cover" />
+                                  {sub.image ? (
+                                    <Image src={sub.image} alt={sub.imageAlt ?? sub.name} width={32} height={32} className="h-full w-full object-contain p-0.5" />
                                   ) : (
                                     <IconChevronRight className="h-2.5 w-2.5 text-[#1B2B4B]" />
                                   )}
@@ -622,7 +623,7 @@ function MarcasDropdown({ onClose }: { onClose: () => void }) {
           <>
             <div className="grid grid-cols-3 gap-1 px-2">
               {brands.map((brand) => {
-                const hasLogo = brand.logo && brand.logo.startsWith("http")
+                const hasLogo = !!brand.logo
                 return (
                   <Link
                     key={brand.id}
@@ -632,7 +633,7 @@ function MarcasDropdown({ onClose }: { onClose: () => void }) {
                   >
                     <div className="flex h-7 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-100 transition-colors group-hover:bg-[#1B2B4B]/10">
                       {hasLogo ? (
-                        <img src={brand.logo} alt={brand.logoAlt ?? brand.name} className="h-full w-full object-contain p-0.5" />
+                        <Image src={brand.logo} alt={brand.logoAlt ?? brand.name} width={40} height={28} className="h-full w-full object-contain p-0.5" />
                       ) : (
                         <Award className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1B2B4B]" />
                       )}

@@ -62,10 +62,11 @@ export function ProductGallery({
           <button
             type="button"
             onClick={() => window.open(fichaTecnica, "_blank", "noopener,noreferrer")}
-            className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-2 text-[10px] font-bold text-[#cc1b1b] shadow-lg ring-1 ring-slate-200/50 backdrop-blur-md transition-all duration-300 hover:bg-[#cc1b1b] hover:text-white"
+            className="absolute bottom-4 right-4 z-20 flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-bold text-[#cc1b1b] shadow-xl ring-1 ring-[#cc1b1b]/20 backdrop-blur-md transition-all duration-300 hover:bg-[#cc1b1b] hover:text-white hover:shadow-[#cc1b1b]/30 hover:scale-105"
             title="Descargar Ficha Técnica (PDF)"
           >
-            <IconPDF className="h-4 w-4" /> FICHA PDF
+            <IconPDF className="h-5 w-5 shrink-0" />
+            <span>Descargar Ficha Técnica</span>
           </button>
         )}
 

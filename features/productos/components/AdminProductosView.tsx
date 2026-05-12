@@ -148,7 +148,7 @@ export function AdminProductosView() {
   const {
     items: paged, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
-    handleSearch, setPage, setPageSize, handleDelete,
+    handleSearch, commitSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<Product>({
     pageSize: PAGE_SIZE,
     loadFn:   getProductsPagedAction,
@@ -165,6 +165,8 @@ export function AdminProductosView() {
         searchValue={search}
         searchPlaceholder="Buscar por nombre, categoría o marca…"
         onSearch={handleSearch}
+        onSearchNow={commitSearch}
+        fetching={fetching}
       />
 
       <style>{`

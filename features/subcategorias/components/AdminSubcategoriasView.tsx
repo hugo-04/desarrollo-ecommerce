@@ -166,7 +166,7 @@ export function AdminSubcategoriasView() {
   const {
     items: paged, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
-    handleSearch, setPage, setPageSize, handleDelete,
+    handleSearch, commitSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<SubcategoryDTO>({
     pageSize: PAGE_SIZE,
     loadFn:   getSubcategoriesPagedAction,
@@ -183,6 +183,8 @@ export function AdminSubcategoriasView() {
         searchValue={search}
         searchPlaceholder="Buscar por nombre o slug…"
         onSearch={handleSearch}
+        onSearchNow={commitSearch}
+        fetching={fetching}
       />
 
       <style>{`

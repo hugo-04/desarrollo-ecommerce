@@ -74,7 +74,7 @@ export function useAdminPagedList<T extends { id: number }>({
     setPageState(page)
   }, [searchParams])
 
-  // Debounce: confirma inputValue → query + URL después de 400 ms sin tipear
+  // Debounce: confirma inputValue → query + URL después de 300 ms sin tipear
   useEffect(() => {
     if (isFirstRender.current) { isFirstRender.current = false; return }
     if (skipNextDebounce.current) { skipNextDebounce.current = false; return }
@@ -82,7 +82,7 @@ export function useAdminPagedList<T extends { id: number }>({
       setQuery(inputValue)
       setPageState(1)
       pushParams(inputValue, 1)
-    }, 400)
+    }, 300)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue])
@@ -105,6 +105,15 @@ export function useAdminPagedList<T extends { id: number }>({
 
   function handleSearch(q: string) {
     setInputValue(q)  // inmediato — el debounce confirma contra la DB
+  }
+
+  // Búsqueda inmediata: Enter o click en lupa — salta el debounce
+  function commitSearch(q: string) {
+    skipNextDebounce.current = true
+    setInputValue(q)
+    setQuery(q)
+    setPageState(1)
+    pushParams(q, 1)
   }
 
   function handlePage(p: number) {
@@ -150,16 +159,17 @@ export function useAdminPagedList<T extends { id: number }>({
   return {
     items,
     total,
-    loading:     isLoading,
-    fetching:    isFetching && !isLoading,
-    search:      inputValue,  // valor inmediato para el input controlado
+    loading:      isLoading,
+    fetching:     isFetching && !isLoading,
+    search:       inputValue,  // valor inmediato para el input controlado
     pageSize,
     currentPage,
     totalPages,
     removingId,
     handleSearch,
-    setPage:     handlePage,
-    setPageSize: handlePageSize,
+    commitSearch,
+    setPage:      handlePage,
+    setPageSize:  handlePageSize,
     handleDelete,
   }
 }

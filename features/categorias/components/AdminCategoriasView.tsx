@@ -148,7 +148,7 @@ export function AdminCategoriasView() {
   const {
     items: paged, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
-    handleSearch, setPage, setPageSize, handleDelete,
+    handleSearch, commitSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<CategoryDTO>({
     pageSize: PAGE_SIZE,
     loadFn:   getCategoriesPagedAction,
@@ -165,6 +165,8 @@ export function AdminCategoriasView() {
         searchValue={search}
         searchPlaceholder="Buscar por nombre o slug…"
         onSearch={handleSearch}
+        onSearchNow={commitSearch}
+        fetching={fetching}
       />
 
       <style>{`

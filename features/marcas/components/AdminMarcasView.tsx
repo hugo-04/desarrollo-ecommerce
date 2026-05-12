@@ -124,7 +124,7 @@ export function AdminMarcasView() {
   const {
     items, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
-    handleSearch, setPage, setPageSize, handleDelete,
+    handleSearch, commitSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<Brand>({
     pageSize: PAGE_SIZE,
     loadFn:   getBrandsPagedAction,
@@ -141,6 +141,8 @@ export function AdminMarcasView() {
         searchValue={search}
         searchPlaceholder="Buscar marca…"
         onSearch={handleSearch}
+        onSearchNow={commitSearch}
+        fetching={fetching}
       />
 
       <style>{`

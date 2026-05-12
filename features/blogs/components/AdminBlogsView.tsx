@@ -124,7 +124,7 @@ export function AdminBlogsView() {
   const {
     items: paged, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
-    handleSearch, setPage, setPageSize, handleDelete,
+    handleSearch, commitSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<BlogPost>({
     pageSize: PAGE_SIZE,
     loadFn:   getBlogPostsPagedAction,
@@ -141,6 +141,8 @@ export function AdminBlogsView() {
         searchValue={search}
         searchPlaceholder="Buscar por título del artículo…"
         onSearch={handleSearch}
+        onSearchNow={commitSearch}
+        fetching={fetching}
       />
 
       <style>{`

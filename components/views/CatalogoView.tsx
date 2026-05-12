@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { SlidersHorizontal } from "lucide-react"
 import { ProductCard } from "@/components/product/ProductCard"
 import { CatalogFilters } from "@/components/catalog/CatalogFilters"
@@ -16,8 +17,8 @@ import { IconChevronRight, IconSearch, IconStar, IconEye } from "@/components/ic
 import type { ProductFilters } from "@/features/productos/types"
 import type { CategoryDTO } from "@/features/categorias/types"
 
-const DEFAULT_PAGE_SIZE = 20
-const PAGE_SIZE_OPTIONS = [12, 20, 50]
+const DEFAULT_PAGE_SIZE = 24
+const PAGE_SIZE_OPTIONS = [12, 24, 48]
 
 // ── Card con animación de entrada ────────────────────────────────────────────
 
@@ -218,7 +219,7 @@ export function CatalogoView({
 
             {/* Skeleton — primera carga */}
             {loading && (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {Array.from({ length: pageSize }).map((_, i) => (
                   <div key={i} className="h-52 animate-pulse rounded-xl bg-slate-200 sm:h-72" />
                 ))}
@@ -234,7 +235,7 @@ export function CatalogoView({
 
             {/* Grid de productos */}
             {!loading && viewMode === "grid" && (
-              <div className={`grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-3 transition-opacity duration-200 ${fetching ? "opacity-60" : "opacity-100"}`}>
+              <div className={`grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 transition-opacity duration-200 ${fetching ? "opacity-60" : "opacity-100"}`}>
                 {products.map((product, idx) => (
                   <AnimatedCard key={product.id} product={product} index={idx} />
                 ))}
@@ -252,7 +253,11 @@ export function CatalogoView({
                   >
                     <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-lg bg-slate-50">
                       {product.image && (
-                        <img src={product.image} alt={product.name}
+                        <Image
+                          src={product.image}
+                          alt={product.imageAlt ?? product.name}
+                          width={112}
+                          height={112}
                           className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
                         />
                       )}

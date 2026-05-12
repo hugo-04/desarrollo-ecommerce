@@ -68,12 +68,7 @@ export function CatalogFilters({
         </span>
       </button>
 
-      {/* 
-          Contenedor único con scroll para ambas secciones (Categorías y Marcas).
-          Esto evita que aparezcan múltiples barras de scroll internas.
-      */}
-      <div className="max-h-[calc(100vh-250px)] overflow-y-auto pr-2 custom-scrollbar space-y-6">
-        
+      <div className="space-y-6">
         {/* Categories Section */}
         <FilterSection
           title="Categorias"
@@ -101,7 +96,6 @@ export function CatalogFilters({
             placeholder="Buscar marca..."
           />
         </FilterSection>
-
       </div>
     </div>
   )
@@ -127,7 +121,6 @@ function InfiniteFilterList({
 
   useEffect(() => setMounted(true), [])
 
-  // Debounce simple para evitar demasiadas peticiones
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 400)
     return () => clearTimeout(timer)
@@ -139,10 +132,11 @@ function InfiniteFilterList({
     hasNextPage,
     isFetchingNextPage,
     status
-  } = type === "category" 
-    ? useInfiniteCategories(debouncedSearch) 
+  } = type === "category"
+    ? useInfiniteCategories(debouncedSearch)
     : useInfiniteBrands(debouncedSearch)
 
+  const scrollRef = useRef<HTMLDivElement>(null)
   const observerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -152,7 +146,7 @@ function InfiniteFilterList({
       (entries) => {
         if (entries[0].isIntersecting) fetchNextPage()
       },
-      { threshold: 0.1 }
+      { root: scrollRef.current, threshold: 0.1 }
     )
 
     if (observerRef.current) observer.observe(observerRef.current)
@@ -163,6 +157,7 @@ function InfiniteFilterList({
 
   return (
     <div className="space-y-3">
+      {/* Búsqueda fija — no entra en el scroll */}
       <div className="relative">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
           <Search className="h-3 w-3 text-slate-400" />
@@ -176,13 +171,17 @@ function InfiniteFilterList({
         />
       </div>
 
-      <div className="space-y-0.5">
+      {/* Lista con scroll propio — el observer usa root=scrollRef */}
+      <div
+        ref={scrollRef}
+        className="max-h-[210px] overflow-y-auto custom-scrollbar space-y-0.5 pr-1"
+      >
         {!mounted || status === "pending" ? (
           <div className="flex justify-center py-4">
             <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
           </div>
         ) : allItems.length === 0 ? (
-          <p className="py-2 text-[11px] text-slate-400 text-center italic">No hay resultados</p>
+          <p className="py-2 text-center text-[11px] italic text-slate-400">No hay resultados</p>
         ) : (
           <>
             {allItems.map((item) => (
@@ -194,13 +193,13 @@ function InfiniteFilterList({
                 onChange={() => onToggle(item.name)}
               />
             ))}
-            {/* Trigger para el scroll infinito */}
+            {/* Sentinel — debe estar dentro del contenedor scrolleable */}
             <div ref={observerRef} className="h-4 w-full">
-               {isFetchingNextPage && (
-                 <div className="flex justify-center py-1">
-                   <Loader2 className="h-3 w-3 animate-spin text-slate-400" />
-                 </div>
-               )}
+              {isFetchingNextPage && (
+                <div className="flex justify-center py-1">
+                  <Loader2 className="h-3 w-3 animate-spin text-slate-400" />
+                </div>
+              )}
             </div>
           </>
         )}

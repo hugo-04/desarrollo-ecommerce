@@ -40,8 +40,8 @@ function EntidadRow({ ent, index, removingId, onDelete }: {
       {/* Logo */}
       <TableCell className="px-4 py-2">
         <div className="flex h-10 w-16 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-          {ent.logo && ent.logo.startsWith("http") ? (
-            <img src={ent.logo} alt={ent.logoAlt ?? ent.name} className="h-full w-full object-contain p-1" />
+          {ent.logo ? (
+            <img src={ent.logo} alt={ent.logoAlt ?? ent.name} loading="lazy" className="h-full w-full object-contain p-1" />
           ) : (
             <Landmark className="h-4 w-4 text-slate-300" />
           )}
@@ -105,7 +105,7 @@ export function AdminEntidadesBancariasView() {
   const {
     items, total, loading, fetching, search,
     pageSize, currentPage, totalPages, removingId,
-    handleSearch, setPage, setPageSize, handleDelete,
+    handleSearch, commitSearch, setPage, setPageSize, handleDelete,
   } = useAdminPagedList<EntidadBancariaDTO>({
     pageSize: PAGE_SIZE,
     loadFn:   getEntidadesBancariasPagedAction,
@@ -122,6 +122,8 @@ export function AdminEntidadesBancariasView() {
         searchValue={search}
         searchPlaceholder="Buscar entidad…"
         onSearch={handleSearch}
+        onSearchNow={commitSearch}
+        fetching={fetching}
       />
 
       <style>{`

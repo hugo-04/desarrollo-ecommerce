@@ -411,13 +411,13 @@ export function CatalogShowcase({ categories }: CatalogShowcaseProps) {
                   onMouseEnter={() => { prodPaused.current = true }}
                   onMouseLeave={() => { prodPaused.current = false }}
                 >
-                  {bestSellers.map((product) => (
+                  {bestSellers.map((product, idx) => (
                     <div
                       key={product.id}
                       className="shrink-0 px-2"
                       style={{ width: `${100 / prodItemsPerView}%` }}
                     >
-                      <ProductCard product={product} showBadge />
+                      <ProductCard product={product} showBadge priority={idx < 4} />
                     </div>
                   ))}
                 </Carousel>

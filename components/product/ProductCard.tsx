@@ -5,12 +5,17 @@ import Image from "next/image"
 import { IconFire, IconStar, IconPDF, IconEye } from "@/components/icons"
 import type { Product } from "@/lib/types"
 
+// Placeholder blur genérico (1×1 px gris claro) para perceived loading rápido
+const BLUR_PLACEHOLDER =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+
 interface ProductCardProps {
   product: Product
   showBadge?: boolean
+  priority?: boolean
 }
 
-export function ProductCard({ product, showBadge = false }: ProductCardProps) {
+export function ProductCard({ product, showBadge = false, priority = false }: ProductCardProps) {
   return (
     <Link
       href={`/producto/${product.id}`}
@@ -25,7 +30,10 @@ export function ProductCard({ product, showBadge = false }: ProductCardProps) {
             src={product.image}
             alt={product.imageAlt ?? product.name}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            priority={priority}
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
             className="relative z-10 object-contain drop-shadow-lg transition-transform duration-500 group-hover:scale-105"
           />
         )}
