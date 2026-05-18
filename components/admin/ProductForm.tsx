@@ -22,11 +22,13 @@ import { toast } from "sonner"
 import { useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/features/productos/hooks"
 import { useCreateBrand } from "@/features/marcas/hooks"
 import { useCreateCategory } from "@/features/categorias/hooks"
+import { createSubcategoryAction } from "@/features/categorias/actions"
 import { DeleteDialog } from "@/components/admin/DeleteDialog"
 import { RichEditor } from "@/components/admin/RichEditor"
 import { ImageUpload } from "@/components/ui/ImageUpload"
 import { QuickCreateBrandDialog } from "@/components/admin/QuickCreateBrandDialog"
 import { QuickCreateCategoryDialog } from "@/components/admin/QuickCreateCategoryDialog"
+import { QuickCreateSubcategoryDialog } from "@/components/admin/QuickCreateSubcategoryDialog"
 
 import { SearchableSelect } from "./product-form/SearchableSelect"
 import { SearchableMultiSelect } from "./product-form/SearchableMultiSelect"
@@ -50,8 +52,14 @@ interface ProductFormProps {
 }
 
 interface QuickCreateState {
-  type: "brand" | "category"
+  type: "brand" | "category" | "subcategory"
   defaultName: string
+}
+
+/** Item mínimo de subcategoría para el selector */
+interface SubcatOption {
+  id:   number
+  name: string
 }
 
 // ── Sub-componente: número de sección ─────────────────────────────────────────
@@ -84,7 +92,8 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const router = useRouter()
   const isEdit = Boolean(product)
 
-  // Opciones dinámicas (crecen con creaciones rápidas)
+  // ── Opciones dinámicas (crecen con creaciones rápidas) ────────────────────
+
   const [categoryOptions, setCategoryOptions] = useState(
     categories.map((c) => ({ value: c.name, label: c.name }))
   )
@@ -92,22 +101,35 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     brands.map((b) => ({ value: b.name, label: b.name }))
   )
 
-  // Selects
-  const [selectedCategory,    setSelectedCategory]    = useState(product?.category      ?? "")
-  const [selectedBrands,      setSelectedBrands]      = useState<string[]>(product?.brands ?? [])
-  const [selectedSubcatId,    setSelectedSubcatId]    = useState<number | null>(product?.subcategoryId ?? null)
+  /**
+   * Mapa mutable de nombre-de-categoría → lista de subcategorías.
+   * Se inicializa con los datos del servidor y se amplía al crear
+   * categorías o subcategorías rápidas desde el formulario.
+   */
+  const [catSubsMap, setCatSubsMap] = useState<Record<string, SubcatOption[]>>(
+    () => Object.fromEntries(
+      categories.map((c) => [c.name, c.subcategoryItems ?? []])
+    )
+  )
 
-  // Subcategorías disponibles según la categoría seleccionada
-  const subcategoryOptions = categories
-    .find((c) => c.name === selectedCategory)
-    ?.subcategoryItems ?? []
+  // ── Selects ───────────────────────────────────────────────────────────────
 
+  const [selectedCategory,  setSelectedCategory]  = useState(product?.category      ?? "")
+  const [selectedBrands,    setSelectedBrands]    = useState<string[]>(product?.brands ?? [])
+  const [selectedSubcatId,  setSelectedSubcatId]  = useState<number | null>(product?.subcategoryId ?? null)
+
+  // ── Opciones de subcategoría — derivadas del mapa según categoría activa ─
+
+  /** Lista de {id, name} de la categoría seleccionada actualmente */
+  const activeSubs: SubcatOption[] = catSubsMap[selectedCategory] ?? []
+
+  /** Opciones formateadas para SearchableSelect */
   const subcategorySelectOptions = [
     { value: "", label: "— Sin subcategoría —" },
-    ...subcategoryOptions.map((s) => ({ value: String(s.id), label: s.name })),
+    ...activeSubs.map((s) => ({ value: String(s.id), label: s.name })),
   ]
 
-  // Creación rápida
+  // ── Creación rápida ───────────────────────────────────────────────────────
   const [quickCreate, setQuickCreate] = useState<QuickCreateState | null>(null)
 
   // Campos del formulario
@@ -161,11 +183,39 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         name: catName, slug, image: "", subcategoryIds: [], count: 0, featured: false,
       })
       setCategoryOptions((prev) => [...prev, { value: newCat.name, label: newCat.name }])
+      // Inicializar mapa de subs para la categoría nueva (vacío por ahora)
+      setCatSubsMap((prev) => ({ ...prev, [newCat.name]: [] }))
       setSelectedCategory(newCat.name)
+      setSelectedSubcatId(null)
       setErrors((e) => ({ ...e, category: undefined }))
       toast.success(`Categoría "${catName}" creada`)
     } catch (err) {
       toast.error("Error al crear categoría")
+    }
+  }
+
+  // ── Creación rápida de subcategoría ───────────────────────────────────────
+
+  async function handleQuickCreateSubcategory(_: number, subName: string) {
+    if (!selectedCategory) {
+      toast.error("Primero seleccioná una categoría")
+      return
+    }
+    try {
+      // createSubcategoryAction es idempotente: devuelve existente si ya hay una igual
+      const newSub = await createSubcategoryAction(subName)
+      setCatSubsMap((prev) => {
+        const current = prev[selectedCategory] ?? []
+        // Evitar duplicados en la lista local
+        const alreadyExists = current.some((s) => s.id === newSub.id)
+        if (alreadyExists) return prev
+        return { ...prev, [selectedCategory]: [...current, { id: newSub.id, name: newSub.name }] }
+      })
+      // Seleccionar la subcategoría recién creada
+      setSelectedSubcatId(newSub.id)
+      toast.success(`Subcategoría "${newSub.name}" creada y seleccionada`)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error al crear subcategoría")
     }
   }
 
@@ -368,8 +418,8 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               onCreateNew={(n) => setQuickCreate({ type: "brand", defaultName: n })}
             />
 
-            {/* Subcategoría — visible solo si la categoría tiene subs */}
-            {subcategoryOptions.length > 0 && (
+            {/* Subcategoría — visible si la categoría tiene subs O si hay categoría seleccionada para crear */}
+            {selectedCategory && (
               <SearchableSelect
                 name="subcategoryId"
                 label="Subcategoría"
@@ -377,6 +427,8 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 value={selectedSubcatId ? String(selectedSubcatId) : ""}
                 onChange={(v) => setSelectedSubcatId(v ? Number(v) : null)}
                 placeholder="— Sin subcategoría —"
+                createNewLabel="subcategoría"
+                onCreateNew={(n) => setQuickCreate({ type: "subcategory", defaultName: n })}
               />
             )}
 
@@ -686,6 +738,12 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         onOpenChange={(open) => { if (!open) setQuickCreate(null) }}
         defaultName={quickCreate?.defaultName ?? ""}
         onCreate={handleQuickCreateCategory}
+      />
+      <QuickCreateSubcategoryDialog
+        open={quickCreate?.type === "subcategory"}
+        onOpenChange={(open) => { if (!open) setQuickCreate(null) }}
+        defaultName={quickCreate?.defaultName ?? ""}
+        onCreate={handleQuickCreateSubcategory}
       />
     </form>
   )
